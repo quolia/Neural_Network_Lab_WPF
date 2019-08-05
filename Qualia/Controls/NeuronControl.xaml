@@ -1,0 +1,37 @@
+﻿<local:NeuronBase x:Class="Qualia.Controls.NeuronControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Qualia.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <local:OnOffBox x:Name="CtlIsBias" Content="Is bias" />
+                <local:OnOffBox x:Name="CtlIsBiasConnected" Content="Is bias connected" />
+                <Label Name="CtlNumber" Content="1" />
+            </StackPanel>
+            <StackPanel Name="CtlActivationPanel" Orientation="Horizontal">
+                <Label Content="Activation init-er:" />
+                <local:SelectBox x:Name="CtlActivationIniter" />
+                <Label Content="a:" />
+                <local:DoubleBox x:Name="CtlActivationIniterParamA" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Weights init-er:" />
+                <local:SelectBox x:Name="CtlWeightsIniter" />
+                <Label Content="a:" />
+                <local:DoubleBox x:Name="CtlWeightsIniterParamA" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Activation func:" />
+                <local:SelectBox x:Name="CtlActivationFunc" />
+                <Label Content="a:" />
+                <local:DoubleBox x:Name="CtlActivationFuncParamA" />
+            </StackPanel>
+        </StackPanel>
+            
+    </Grid>
+</local:NeuronBase>

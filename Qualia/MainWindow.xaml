@@ -1,4 +1,4 @@
-﻿<Window x:Class="Qualia.MainWindow"
+﻿<Window x:Class="Qualia.Main"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -16,7 +16,30 @@
         <local:DataPresenter x:Name="CtlInputDataPresenter" />
         <GridSplitter Width="3" VerticalAlignment="Stretch" />
 
+        <local:NetworkPresenter x:Name="CtlNetworkPresenter" />
+
         <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" />
+
+        <StackPanel Grid.Column="2" Orientation="Vertical">
+            <Menu Name="CtlMenu">
+                <MenuItem />
+            </Menu>
+            <Button Name="CtlApplyChanges" Content="Apply" />
+            <TabControl Name="CtlTabs">
+                <TabItem Name="CtlTabSettings" Header="Settings">
+                    <ContentControl>
+                        <Grid>
+                            <local:SettingsControl x:Name="CtlSettingsPanel" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="CtlApplySettingsButton" Content="Apply" />
+                                <Button Name="CtlCancelSettingsButton" Content="Cancel" />
+                            </StackPanel>
+                        </Grid>
+                    </ContentControl>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+        
 
     </Grid>
 </Window>

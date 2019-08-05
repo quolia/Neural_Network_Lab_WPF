@@ -55,11 +55,46 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\Base\LayerBase.xaml">
+    <Compile Include="Controls\Base\DrawBox.cs" />
+    <Compile Include="Controls\Base\OnOffBox.cs" />
+    <Compile Include="Controls\Base\SelectBox.cs" />
+    <Compile Include="Controls\InputBiasControl.cs" />
+    <Compile Include="Tools\Activation.cs" />
+    <Compile Include="Tools\Config.cs" />
+    <Compile Include="Tools\Const.cs" />
+    <Compile Include="Tools\Draw.cs" />
+    <Compile Include="Tools\InitializeMode.cs" />
+    <Compile Include="Tools\List.cs" />
+    <Compile Include="Tools\Rand.cs" />
+    <Compile Include="Tools\RandomizeMode.cs" />
+    <Compile Include="Tools\Range.cs" />
+    <Compile Include="Tools\Task.cs" />
+    <Compile Include="Tools\Tools.cs" />
+    <Page Include="Controls\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Base\NeuronBase.xaml">
+    <Page Include="Controls\InputLayerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\InputNeuronControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NetworkControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NeuronControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OutputLayerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OutputNeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -87,6 +122,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,11 +136,29 @@
     </Compile>
     <Compile Include="Controls\Base\DoubleBox.cs" />
     <Compile Include="Controls\Base\IntBox.cs" />
-    <Compile Include="Controls\Base\LayerBase.xaml.cs">
-      <DependentUpon>LayerBase.xaml</DependentUpon>
+    <Compile Include="Controls\Base\LayerBase.cs" />
+    <Compile Include="Controls\Base\NeuronBase.cs" />
+    <Compile Include="Controls\HiddenLayerControl.xaml.cs">
+      <DependentUpon>HiddenLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Base\NeuronBase.xaml.cs">
-      <DependentUpon>NeuronBase.xaml</DependentUpon>
+    <Compile Include="Controls\InputLayerControl.xaml.cs">
+      <DependentUpon>InputLayerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InputNeuronControl.xaml.cs">
+      <DependentUpon>InputNeuronControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NetworkControl.xaml.cs">
+      <DependentUpon>NetworkControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NetworksManager.cs" />
+    <Compile Include="Controls\NeuronControl.xaml.cs">
+      <DependentUpon>NeuronControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OutputLayerControl.xaml.cs">
+      <DependentUpon>OutputLayerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OutputNeuronControl.xaml.cs">
+      <DependentUpon>OutputNeuronControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Presenter\DataPresenter.xaml.cs">
       <DependentUpon>DataPresenter.xaml</DependentUpon>
@@ -121,12 +178,18 @@
     <Compile Include="Controls\Presenter\StatisticPresenter.xaml.cs">
       <DependentUpon>StatisticPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SettingsControl.xaml.cs">
+      <DependentUpon>SettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\LayerDataModel.cs" />
+    <Compile Include="Models\NetworkDataModel.cs" />
+    <Compile Include="Models\NeuronDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

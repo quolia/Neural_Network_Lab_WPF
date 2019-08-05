@@ -17,16 +17,16 @@
 
         <StackPanel Orientation="Vertical">
             <Label Content="Task:" />
-            <ComboBox Name="CtlTask" />
+            <local:SelectBox x:Name="CtlTask" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Label Content="Input count:" />
-                <TextBox Name="CtlInputCount" Grid.Column="1" />
+                <local:IntBox x:Name="CtlInputCount" Grid.Column="1" ConfigParameter="InputNeuronsCount" MinimumValue="1" MaximumValue="10000" DefaultValue="10" Value="10" IsNullAllowed="False" />
             </Grid>
-            <local:PresenterControl x:Name="CtlPresenter" />
+            <local:DrawBox x:Name="CtlPresenter" />
         </StackPanel>
          
     </Grid>

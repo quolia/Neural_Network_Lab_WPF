@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <local:PresenterControl x:Name="CtlPresenter" />
+        <local:DrawBox x:Name="CtlPresenter" />
     </Grid>
 </UserControl>

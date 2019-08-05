@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media;
+
+namespace Tools
+{
+    public static class Draw
+    {
+        public static Color GetColor(byte a, Color c)
+        {
+            return Color.FromArgb(a, c.R, c.G, c.B);
+        }
+
+        public static Color GetColor(byte r, byte g, byte b)
+        {
+            return Color.FromRgb(r, g, b);
+        }
+
+        public static Color GetColor(double v, byte alpha = 255)
+        {
+            int s = Math.Sign(v);
+
+            v = Math.Abs(2 / (1 + Math.Exp(-v * 4)) - 1);
+
+            if (v > 1)
+                v = 1;
+
+            if (s >= 0)
+                return Color.FromArgb(alpha, (byte)(255 * v), (byte)(50 * v), (byte)(50 * v));
+            else
+                return Color.FromArgb(alpha, (byte)(50 * v), (byte)(50 * v), (byte)(255 * v));
+        }
+
+        public static Color GetColorDradient(Color from, Color to, byte alpha, double fraction)
+        {
+            if (fraction > 1)
+                fraction = 1;
+            else if (fraction < 0)
+                fraction = 0;
+
+            return Color.FromArgb(alpha,
+                                  (byte)(from.R - fraction * (from.R - to.R)),
+                                  (byte)(from.G - fraction * (from.G - to.G)),
+                                  (byte)(from.B - fraction * (from.B - to.B)));
+        }
+
+        public static Color GetColorDradient(Color from, Color zero, Color to, byte alpha, double fraction)
+        {
+            if (fraction < 0.5)
+            {
+                return GetColorDradient(from, zero, alpha, fraction * 2);
+            }
+            else
+            {
+                return GetColorDradient(zero, to, alpha, 2 * (fraction - 0.5));
+            }
+        }
+
+        public static Brush GetBrush(double v, byte alpha = 255)
+        {
+            return GetBrush(GetColor(v, alpha));
+        }
+
+        public static Brush GetBrush(Color c)
+        {
+            return new SolidColorBrush(c);
+        }
+
+        public static Pen GetPen(double v, float width = 1, byte alpha = 255)
+        {
+            if (width == 0)
+            {
+                width = Math.Abs(v) <= 1 ? 1 : (float)Math.Abs(v);
+                alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
+            }
+
+            return new Pen(GetBrush(v, alpha), width);
+        }
+
+        public static Pen GetPen(Color c, float width = 1)
+        {
+            return new Pen(GetBrush(c), width);
+        }
+
+        public static Color GetRandomColor(byte offsetFromTop, Color? baseColor = null)
+        {
+            if (baseColor == null)
+            {
+                baseColor = Colors.White;
+            }
+
+            var rand = (byte)Rand.Flat.Next(offsetFromTop);
+            return Color.FromArgb(255,
+                                  (byte)(Math.Max(baseColor.Value.R - offsetFromTop, 0) + rand),
+                                  (byte)(Math.Max(baseColor.Value.G - offsetFromTop, 0) + rand),
+                                  (byte)(Math.Max(baseColor.Value.B - offsetFromTop, 0) + rand));
+        }
+    }
+}
