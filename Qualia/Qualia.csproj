@@ -55,6 +55,38 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\Base\LayerBase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Base\NeuronBase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Presenter\DataPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PresenterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Presenter\MatrixPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Presenter\NetworkPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Presenter\PlotterPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Presenter\StatisticPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -62,6 +94,32 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\DoubleBox.cs" />
+    <Compile Include="Controls\Base\IntBox.cs" />
+    <Compile Include="Controls\Base\LayerBase.xaml.cs">
+      <DependentUpon>LayerBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Base\NeuronBase.xaml.cs">
+      <DependentUpon>NeuronBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Presenter\DataPresenter.xaml.cs">
+      <DependentUpon>DataPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PresenterControl.xaml.cs">
+      <DependentUpon>PresenterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Presenter\MatrixPresenter.xaml.cs">
+      <DependentUpon>MatrixPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Presenter\NetworkPresenter.xaml.cs">
+      <DependentUpon>NetworkPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Presenter\PlotterPresenter.xaml.cs">
+      <DependentUpon>PlotterPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Presenter\StatisticPresenter.xaml.cs">
+      <DependentUpon>StatisticPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -94,5 +152,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
