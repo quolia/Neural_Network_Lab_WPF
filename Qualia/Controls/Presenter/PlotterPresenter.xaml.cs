@@ -24,13 +24,14 @@ namespace Qualia.Controls
 
         public PlotterPresenter()
         {
+            InitializeComponent();
             AxisOffset = Config.Main.GetInt(Const.Param.AxisOffset, 6).Value;
         }
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
             //StartRender();
-            //Clear();
+            CtlPresenter.Clear();
 
             DrawPlotter();
 
@@ -40,7 +41,7 @@ namespace Qualia.Controls
                 Vanish(model.DynamicStatistic.CostData, GetPointCostData);
 
                 DrawData(model.DynamicStatistic.PercentData, model.Color, GetPointPercentData, false);
-                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(80, model.Color), GetPointCostData, true);
+                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(50, model.Color), GetPointCostData, true);
             }
 
             if (selectedModel != null)
@@ -56,25 +57,25 @@ namespace Qualia.Controls
             var penBlack = Tools.Draw.GetPen(Colors.Black);
             var penLightGray = Tools.Draw.GetPen(Colors.LightGray);
 
-            double step = ((double)Width - AxisOffset) / 10;
-            double y = Height - AxisOffset - AxisOffset / 2;
+            double step = ((double)ActualWidth - AxisOffset) / 10;
+            double y = ActualHeight - AxisOffset - AxisOffset / 2;
             double x = 0;
             for (x = 0; x < 11; ++x)
             {
-                CtlPresenter.G.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
-                CtlPresenter.G.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
+                CtlPresenter.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
+                CtlPresenter.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
             }
 
-            step = ((double)Height - AxisOffset) / 10;
+            step = ((double)ActualHeight - AxisOffset) / 10;
             x = AxisOffset / 2;
             for (y = 0; y < 11; ++y)
             {
-                CtlPresenter.G.DrawLine(penLightGray, new Point((float)x, (float)(Height - AxisOffset - step * y)), new Point(Width, (float)(Height - AxisOffset - step * y)));
-                CtlPresenter.G.DrawLine(penBlack, new Point((float)x, (float)(Height - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(Height - AxisOffset - step * y)));
+                CtlPresenter.DrawLine(penLightGray, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
+                CtlPresenter.DrawLine(penBlack, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
             }
 
-            CtlPresenter.G.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, Height));
-            CtlPresenter.G.DrawLine(penBlack, new Point(0, Height - AxisOffset), new Point(Width, Height - AxisOffset));
+            CtlPresenter.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, ActualHeight));
+            CtlPresenter.DrawLine(penBlack, new Point(0, ActualHeight - AxisOffset), new Point(ActualWidth, ActualHeight - AxisOffset));
         }
 
         private void DrawData(DynamicStatistic.PlotPoints data, Color color, PointFunc func, bool isRect)
@@ -95,15 +96,15 @@ namespace Qualia.Controls
                     foreach (var p in data)
                     {
                         var pp = func(data, p, d);
-                        CtlPresenter.G.DrawLine(pen, func(data, prev, d), pp);
+                        CtlPresenter.DrawLine(pen, func(data, prev, d), pp);
 
                         if (isRect)
                         {
-                            CtlPresenter.G.DrawRectangle(brush, pen, new Rect(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
+                            CtlPresenter.DrawRectangle(brush, pen, new Rect(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
                         }
                         else
                         {
-                            CtlPresenter.G.DrawRectangle(brush, pen, new Rect(pp.X - 7 / 2, pp.Y - 7 / 2, 7, 7));
+                            CtlPresenter.DrawEllipse(brush, pen, new Point(pp.X, pp.Y), 7 / 2, 7 / 2);
                         }
 
                         prev = p;
@@ -118,14 +119,14 @@ namespace Qualia.Controls
 
             var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, font, 6.5f, Brushes.Black, 1.25);
 
-            CtlPresenter.G.DrawText(text, new Point(AxisOffset * 3, Height - AxisOffset - 20));
+            CtlPresenter.DrawText(text, new Point(AxisOffset * 3, ActualHeight - AxisOffset - 20));
         }
 
         private Point GetPointPercentData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
         {
             var p0 = data.First();
-            var px = d == 0 ? AxisOffset : AxisOffset + (Width - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
-            var py = (Height - AxisOffset) * (1 - (point.Item1 / 100));
+            var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
+            var py = (ActualHeight - AxisOffset) * (1 - (point.Item1 / 100));
 
             return new Point((int)px, (int)py);
         }
@@ -133,8 +134,8 @@ namespace Qualia.Controls
         private Point GetPointCostData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
         {
             var p0 = data.First();
-            var px = d == 0 ? AxisOffset : AxisOffset + (Width - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
-            var py = (Height - AxisOffset) * (1 - Math.Min(1, point.Item1));
+            var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
+            var py = (ActualHeight - AxisOffset) * (1 - Math.Min(1, point.Item1));
 
             return new Point((int)px, (int)py);
         }

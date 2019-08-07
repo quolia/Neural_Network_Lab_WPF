@@ -11,25 +11,25 @@
             <StackPanel Orientation="Horizontal">
                 <local:OnOffBox x:Name="CtlIsBias" Content="Is bias" />
                 <local:OnOffBox x:Name="CtlIsBiasConnected" Content="Is bias connected" />
-                <Label Name="CtlNumber" Content="1" />
+                <Label Name="CtlNumber" Content="1"/>
             </StackPanel>
             <StackPanel Name="CtlActivationPanel" Orientation="Horizontal">
                 <Label Content="Activation init-er:" />
                 <local:SelectBox x:Name="CtlActivationIniter" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlActivationIniterParamA" />
+                <local:DoubleBox x:Name="CtlActivationIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationInitializerParamA" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Weights init-er:" />
                 <local:SelectBox x:Name="CtlWeightsIniter" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlWeightsIniterParamA" />
+                <local:DoubleBox x:Name="CtlWeightsIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="WeightsInitializerParamA" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Activation func:" />
                 <local:SelectBox x:Name="CtlActivationFunc" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlActivationFuncParamA" />
+                <local:DoubleBox x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
             </StackPanel>
         </StackPanel>
             

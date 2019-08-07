@@ -35,7 +35,7 @@ namespace Qualia.Controls
             PointSize = Config.Main.GetInt(Const.Param.PointSize, 7).Value;
             PointsRearrangeSnap = Config.Main.GetInt(Const.Param.PointsArrangeSnap, 10).Value;
 
-            CtlInputCount.Changed += CtlInputCount_ValueChanged;
+            //CtlInputCount.Changed += CtlInputCount_ValueChanged;
             SizeChanged += DataPresenter_SizeChanged;
             CtlTask.SelectedIndexChanged += CtlTask_SelectedIndexChanged;
         }
@@ -60,7 +60,10 @@ namespace Qualia.Controls
             NetworkTask.Helper.FillComboBox(CtlTask, config, Const.Param.Task, null);
 
             ValueChanged = onValueChanged;
+
+            CtlInputCount.Changed -= CtlInputCount_ValueChanged;
             CtlInputCount.Value = config.GetInt(Const.Param.InputNeuronsCount, Const.DefaultInputNeuronsCount).Value;
+            CtlInputCount.Changed += CtlInputCount_ValueChanged;
         }
 
         public void SaveConfig(Config config)
@@ -77,9 +80,9 @@ namespace Qualia.Controls
         private void DrawPoint(int x, int y, double value)
         {
             var brush = value == 0 ? Brushes.White : Draw.GetBrush(value);
-            var pen = value == 0 ?  Draw.GetPen(Colors.White) : Draw.GetPen(value);
+            var pen = Draw.GetPen(Colors.Black);
 
-            CtlPresenter.G.DrawRectangle(brush, pen, new Rect(x * PointSize, y * PointSize, PointSize, PointSize));
+            CtlPresenter.DrawRectangle(brush, pen, new Rect(x * PointSize, y * PointSize, PointSize, PointSize));
         }
 
         private void TogglePoint(int c, double value)
@@ -103,6 +106,8 @@ namespace Qualia.Controls
 
         private void Rearrange(int pointsCount)
         {
+            CtlPresenter.Clear();
+
             if (pointsCount == Const.CurrentValue)
             {
                 pointsCount = PointsCount;
@@ -112,11 +117,11 @@ namespace Qualia.Controls
                 PointsCount = pointsCount;
             }
 
-            int width = (int)Math.Max(Width, PointsRearrangeSnap * PointSize);
+            int width = (int)Math.Max(ActualWidth, PointsRearrangeSnap * PointSize);
 
             int snaps = width / (PointsRearrangeSnap * PointSize);
 
-            CtlPresenter.Height = 1 + PointSize * (int)Math.Ceiling(1 + (double)(PointsCount / (snaps * PointsRearrangeSnap)));
+            //CtlPresenter.Height = 1 + PointSize * (int)Math.Ceiling(1 + (double)(PointsCount / (snaps * PointsRearrangeSnap)));
 
             //CtlPresenter.StartRender();
 
@@ -136,13 +141,13 @@ namespace Qualia.Controls
 
         private Tuple<int, int> GetPointPosition(int pointNumber)
         {
-            var width = Math.Max(Width, PointsRearrangeSnap * PointSize);
+            int width = Math.Max((int)ActualWidth, PointsRearrangeSnap * PointSize);
 
-            var snaps = width / (PointsRearrangeSnap * PointSize);
-            var y = Math.Ceiling(pointNumber / (snaps * PointsRearrangeSnap));
-            var x = pointNumber - (y * snaps * PointsRearrangeSnap);
+            int snaps = width / (PointsRearrangeSnap * PointSize);
+            int y = (int)Math.Ceiling((double)(pointNumber / (snaps * PointsRearrangeSnap)));
+            int x = pointNumber - (y * snaps * PointsRearrangeSnap);
 
-            return new Tuple<int, int>((int)x, (int)y);
+            return new Tuple<int, int>(x, y);
         }
     }
 }

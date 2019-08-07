@@ -74,7 +74,7 @@ namespace Qualia.Controls
             Range.ForEach(neurons, n => AddBias(n));
         }
 
-        public InputNeuronControl AddNeuron()
+        public new InputNeuronControl AddNeuron()
         {
             var neuron = new InputNeuronControl(Children.Count);
             neuron.ActivationFunc = CtlActivationFunc.SelectedItem.ToString();

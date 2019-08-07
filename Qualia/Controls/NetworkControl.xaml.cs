@@ -30,7 +30,7 @@ namespace Qualia.Controls
 
         OutputLayerControl OutputLayer;
 
-        readonly IntPtr __h;
+        //readonly IntPtr __h;
 
         public NetworkControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
         {
@@ -195,7 +195,7 @@ protected override void OnResize(EventArgs e)
             RandomizeMode.Helper.FillComboBox(CtlRandomizer, Config, Const.Param.RandomizeMode, nameof(RandomizeMode.Random));
             CtlRandomizerParamA.Load(Config);
             CtlLearningRate.Load(Config);
-            var color = Config.GetArray(Const.Param.Color, "255,255,255,255");
+            var color = Config.GetArray(Const.Param.Color, "255,100,100,100");
             CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0], (byte)color[1], (byte)color[2], (byte)color[3]));
 
             //

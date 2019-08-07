@@ -22,13 +22,14 @@ namespace Qualia.Controls
 
         public StatisticPresenter()
         {
+            InitializeComponent();
             Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         }
 
         public void Draw(Dictionary<string, string> stat)
         {
             //StartRender();
-            //Clear();
+            CtlPresenter.Clear();
 
             if (stat == null)
             {
@@ -38,15 +39,19 @@ namespace Qualia.Controls
 
             //G.TextRenderingHint = TextRenderingHint.AntiAlias;
 
+            double maxWidth = 0;
             double y = 0;
             foreach (var pair in stat)
             {
-                var text = new FormattedText(pair.Key + ": " + pair.Value, Culture.Current, FlowDirection.LeftToRight, Font, 6.5f, Brushes.Black, 1.25);
+                var text = new FormattedText(pair.Key + ": " + pair.Value, Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);//, 1.25);
 
-                CtlPresenter.G.DrawText(text, new Point(10, y));
+                CtlPresenter.DrawText(text, new Point(10, y));
 
-                y += Font.CapsHeight;
+                y += text.Height;
+                maxWidth = Math.Max(text.WidthIncludingTrailingWhitespace, maxWidth);
             };
+
+            Width = maxWidth + 10;
 
             //CtlBox.Invalidate();
         }

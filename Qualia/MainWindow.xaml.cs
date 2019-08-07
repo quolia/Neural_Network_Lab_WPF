@@ -1,6 +1,8 @@
-﻿using Qualia.Controls;
+﻿using Microsoft.Win32;
+using Qualia.Controls;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -120,14 +122,14 @@ namespace Qualia
             CtlSettings.Load(Config.Main);
             CtlSettings.Changed -= OnSettingsChanged;
             CtlSettings.Changed += OnSettingsChanged;
-            CtlApplySettingsButton.Enabled = false;
-            CtlCancelSettingsButton.Enabled = false;
+            CtlApplySettingsButton.IsEnabled = false;
+            CtlCancelSettingsButton.IsEnabled = false;
         }
 
         private void OnSettingsChanged()
         {
-            CtlApplySettingsButton.Enabled = true;
-            CtlCancelSettingsButton.Enabled = true;
+            CtlApplySettingsButton.IsEnabled = true;
+            CtlCancelSettingsButton.IsEnabled = true;
         }
 
         private bool SaveSettings()
@@ -138,8 +140,8 @@ namespace Qualia
                 return false;
             }
             CtlSettings.Save(Config.Main);
-            CtlApplySettingsButton.Enabled = false;
-            CtlCancelSettingsButton.Enabled = false;
+            CtlApplySettingsButton.IsEnabled = false;
+            CtlCancelSettingsButton.IsEnabled = false;
             return true;
         }
 
@@ -159,7 +161,7 @@ namespace Qualia
 
             if (!File.Exists(name))
             {
-                name = "\\Networks\\" + Path.GetFileName(name);
+                name = "\\Networks\\" + System.IO.Path.GetFileName(name);
             }
 
             if (File.Exists(name))
@@ -178,7 +180,7 @@ namespace Qualia
             }
             else
             {
-                MessageBox.Show($"Network '{name}' is not found!", "Error", MessageBoxButtons.OK);
+                MessageBox.Show($"Network '{name}' is not found!", "Error", MessageBoxButton.OK);
                 Config.Main.Set(Const.Param.NetworksManagerName, "");
             }
         }
@@ -218,20 +220,20 @@ namespace Qualia
         {
             if (state == Const.Toggle.On)
             {
-                CtlApplyChanges.BackColor = Color.Yellow;
-                CtlApplyChanges.Enabled = true;
+                CtlApplyChanges.Background = Brushes.Yellow;
+                CtlApplyChanges.IsEnabled = true;
             }
             else
             {
-                CtlApplyChanges.BackColor = Color.FromKnownColor(KnownColor.Control);
-                CtlApplyChanges.Enabled = false;
+                CtlApplyChanges.Background = Brushes.White;
+                CtlApplyChanges.IsEnabled = false;
             }
         }
 
         private void OnNetworkUIChanged(Notification.ParameterChanged param, object newValue = null)
         {
             ToggleApplyChanges(Const.Toggle.On);
-            CtlMenuStart.Enabled = false;
+            CtlMenuStart.IsEnabled = false;
 
             if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -262,13 +264,13 @@ namespace Qualia
                 NetworksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
                 ToggleApplyChanges(Const.Toggle.Off);
-                CtlMenuStart.Enabled = true;
+                CtlMenuStart.IsEnabled = true;
             }
         }
 
-        private bool IsRunning => CtlMenuStop.Enabled;
+        private bool IsRunning => CtlMenuStop.IsEnabled;
 
-        private void CtlStart_Click(object sender, EventArgs e)
+        private void CtlMenuStart_Click(object sender, RoutedEventArgs e)
         {
             if (SaveConfig())
             {
@@ -277,10 +279,10 @@ namespace Qualia
                 CancellationTokenSource = new CancellationTokenSource();
                 CancellationToken = CancellationTokenSource.Token;
 
-                CtlMenuStart.Enabled = false;
-                CtlMenuReset.Enabled = false;
-                CtlMenuStop.Enabled = true;
-                CtlMenuDeleteNetwork.Enabled = false;
+                CtlMenuStart.IsEnabled = false;
+                CtlMenuReset.IsEnabled = false;
+                CtlMenuStop.IsEnabled = true;
+                CtlMenuDeleteNetwork.IsEnabled = false;
 
                 NetworksManager.PrepareModelsForRun();
 
@@ -356,7 +358,7 @@ namespace Qualia
                 {
                     using (var ev = new AutoResetEvent(false))
                     {
-                        BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke((Action)(() =>
                         {
                             CtlMatrixPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
                             NetworksManager.ResetErrorMatrix();
@@ -370,7 +372,7 @@ namespace Qualia
                 {
                     using (var ev = new AutoResetEvent(false))
                     {
-                        BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke((Action)(() =>
                         {
                             try
                             {
@@ -394,7 +396,7 @@ namespace Qualia
                 if ((long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
                 {
                     prevTime = DateTime.Now;
-                    BeginInvoke((Action)(() => CtlTime.Text = "Time: " + DateTime.Now.Subtract(StartTime).ToString(@"hh\:mm\:ss")));
+                    Dispatcher.BeginInvoke((Action)(() => CtlTime.Content = "Time: " + DateTime.Now.Subtract(StartTime).ToString(@"hh\:mm\:ss")));
                 }
             }
         }
@@ -473,26 +475,6 @@ namespace Qualia
             NetworksManager.ResetModelsStatistic();
         }
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (StopRequest())
-            {
-                try
-                {
-                    SaveConfig();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
-                    e.Cancel = true;
-                }
-            }
-            else
-            {
-                e.Cancel = true;
-            }
-        }
-
         private void CtlMenuNew_Click(object sender, EventArgs e)
         {
             CreateNetworksManager();
@@ -505,7 +487,7 @@ namespace Qualia
 
         private void CtlMenuDeleteNetwork_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Would you really like to delete the network?", "Confirm", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show("Would you really like to delete the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 DeleteNetworksManager();
             }
@@ -521,7 +503,7 @@ namespace Qualia
             WorkThread.Priority = ThreadPriority.Lowest;
             Thread.CurrentThread.Priority = ThreadPriority.Highest;
 
-            if (MessageBox.Show("Would you like to stop the network?", "Confirm", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show("Would you like to stop the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 StopRunning();
                 return true;
@@ -559,16 +541,16 @@ namespace Qualia
                 return;
             }
 
-            using (var loadDialog = new OpenFileDialog
+            var loadDialog = new OpenFileDialog
             {
-                InitialDirectory = Path.GetFullPath("Networks\\"),
+                InitialDirectory = System.IO.Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 FilterIndex = 2,
                 RestoreDirectory = true
-            })
+            };
             {
-                if (loadDialog.ShowDialog() == DialogResult.OK)
+                if (loadDialog.ShowDialog() == true)
                 {
                     LoadNetworksManager(loadDialog.FileName);
                 }
@@ -582,7 +564,7 @@ namespace Qualia
             {
                 if (!File.Exists(name))
                 {
-                    name = "\\Networks\\" + Path.GetFileName(name);
+                    name = "\\Networks\\" + System.IO.Path.GetFileName(name);
                 }
 
                 if (File.Exists(name))
@@ -600,29 +582,29 @@ namespace Qualia
 
             if (manager == null)
             {
-                Text = "Neural Network";
+                Title = "Neural Network";
 
-                CtlMenuStart.Enabled = false;
-                CtlMenuReset.Enabled = false;
-                CtlMainMenuSaveAs.Enabled = false;
-                CtlMenuNetwork.Enabled = false;
-                CtlNetworkContextMenu.Enabled = false;
+                CtlMenuStart.IsEnabled = false;
+                CtlMenuReset.IsEnabled = false;
+                CtlMainMenuSaveAs.IsEnabled = false;
+                CtlMenuNetwork.IsEnabled = false;
+                CtlNetworkContextMenu.IsEnabled = false;
             }
             else
             {
-                Text = "Neural Network | " + Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName));
+                Title = "Neural Network | " + System.IO.Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName));
 
-                CtlMenuStart.Enabled = true;
-                CtlMenuReset.Enabled = true;
-                CtlMainMenuSaveAs.Enabled = true;
-                CtlMenuNetwork.Enabled = true;
-                CtlNetworkContextMenu.Enabled = true;
+                CtlMenuStart.IsEnabled = true;
+                CtlMenuReset.IsEnabled = true;
+                CtlMainMenuSaveAs.IsEnabled = true;
+                CtlMenuNetwork.IsEnabled = true;
+                CtlNetworkContextMenu.IsEnabled = true;
             }
 
             OnNetworkUIChanged(Notification.ParameterChanged.Structure);
         }
 
-        private void CtlStop_Click(object sender, EventArgs e)
+        private void CtlMenuStop_Click(object sender, RoutedEventArgs e)
         {
             StopRunning();
         }
@@ -636,17 +618,17 @@ namespace Qualia
                 WorkThread = null;
             }
 
-            CtlMenuStart.Enabled = true;
-            CtlMenuStop.Enabled = false;
-            CtlMenuReset.Enabled = true;
+            CtlMenuStart.IsEnabled = true;
+            CtlMenuStop.IsEnabled = false;
+            CtlMenuReset.IsEnabled = true;
         }
 
-        private void CtlReset_Click(object sender, EventArgs e)
+        private void CtlMenuReset_Click(object sender, RoutedEventArgs e)
         {
             ApplyChangesToStandingNetworks();
         }
 
-        private void CtlApplyChanges_Click(object sender, EventArgs e)
+        private void CtlApplyChanges_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -654,43 +636,25 @@ namespace Qualia
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
                 return;
             }
 
             if (IsRunning)
             {
-                if (MessageBox.Show("Would you like running network to apply changes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("Would you like running network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     ApplyChangesToRunningNetworks();
                 }
             }
             else
             {
-                if (MessageBox.Show("Would you like network to apply changes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("Would you like network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     ApplyChangesToStandingNetworks();
-                    //LoadConfig(); 
+                    ////////LoadConfig(); 
                 }
             }
-        }
-
-        private void CtlMainMenuSaveAs_Click(object sender, EventArgs e)
-        {
-            if (SaveConfig())
-            {
-                NetworksManager.SaveAs();
-            }
-        }
-
-        private void CtlApplySettingsButton_Click(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void CtlCancelSettingsButton_Click(object sender, EventArgs e)
-        {
-            LoadSettings();
         }
 
         private void CtlTabs_SelectedIndexChanged(object sender, EventArgs e)
@@ -716,45 +680,93 @@ namespace Qualia
             }
         }
 
-        private void CtlMainMenuAddNetwork_Click(object sender, EventArgs e)
+        private void CtlMenuNetwork_Click(object sender, EventArgs e)
+        {
+            CtlMainMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMainMenuAddLayer.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMainMenuDeleteLayer.IsEnabled = CtlTabs.SelectedIndex > 0 && (CtlTabs.SelectedContent as NetworkControl).IsSelectedLayerHidden;
+            CtlMainMenuAddNeuron.IsEnabled = CtlTabs.SelectedIndex > 0;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (StopRequest())
+            {
+                try
+                {
+                    SaveConfig();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                    e.Cancel = true;
+                }
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void CtlNetworkContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            CtlMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+        }
+
+        private void CtlMainMenuNew_Click(object sender, RoutedEventArgs e)
+        {
+            CreateNetworksManager();
+        }
+
+        private void CtlMainMenuLoad_Click(object sender, RoutedEventArgs e)
+        {
+            LoadNetworksManager();
+        }
+
+        private void CtlMainMenuSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            if (SaveConfig())
+            {
+                NetworksManager.SaveAs();
+            }
+        }
+
+        private void CtlMainMenuAddNetwork_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.AddNetwork();
             ApplyChangesToStandingNetworks();
         }
 
-        private void CtlMainMenuDeleteNetwork_Click(object sender, EventArgs e)
+        private void CtlMainMenuDeleteNetwork_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.DeleteNetwork();
         }
 
-        private void CtlMainMenuAddLayer_Click(object sender, EventArgs e)
+        private void CtlMainMenuAddLayer_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.SelectedNetwork.AddLayer();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
-        private void CtlMainMenuDeleteLayer_Click(object sender, EventArgs e)
+        private void CtlMainMenuDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.SelectedNetwork.DeleteLayer();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
-        private void CtlMainMenuAddNeuron_Click(object sender, EventArgs e)
+        private void CtlMainMenuAddNeuron_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.SelectedNetwork.SelectedLayer.AddNeuron();
         }
 
-        private void CtlMenuNetwork_Click(object sender, EventArgs e)
+        private void CtlApplySettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            CtlMainMenuDeleteNetwork.Enabled = CtlTabs.SelectedIndex > 0;
-            CtlMainMenuAddLayer.Enabled = CtlTabs.SelectedIndex > 0;
-            CtlMainMenuDeleteLayer.Enabled = CtlTabs.SelectedIndex > 0 && (CtlTabs.SelectedTab.Controls[0] as NetworkControl).IsSelectedLayerHidden;
-            CtlMainMenuAddNeuron.Enabled = CtlTabs.SelectedIndex > 0;
+            SaveSettings();
         }
 
-        private void CtlNetworkContextMenu_Opening(object sender, CancelEventArgs e)
+        private void CtlCancelSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            CtlMenuDeleteNetwork.Enabled = CtlTabs.SelectedIndex > 0;
+            LoadSettings();
         }
     }
 }

@@ -38,8 +38,25 @@ namespace Tools
             return ((SolidColorBrush)brush).Color;
         }
 
-        //public static SelectedN
-        //CtlTabs.SelectedTab.Controls[0]
+        public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : class
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (child as T);
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
     }
 
     public static class Culture

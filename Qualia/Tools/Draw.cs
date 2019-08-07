@@ -1,12 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Tools
 {
+    public static class Render
+    {
+        static Render()
+        {
+            var flags = BindingFlags.NonPublic | BindingFlags.Static;
+            var dpiProperty = typeof(SystemParameters).GetProperty("Dpi", flags);
+
+            Dpi = (int)dpiProperty.GetValue(null, null);
+            PixelSize = 96.0 / Dpi;
+            PixelsPerDip = Dpi / 96.0;
+            HalfPixelSize = PixelSize / 2;
+        }
+
+        //Размер физического пикселя в виртуальных единицах
+        public static double PixelSize { get; private set; }
+
+        //Текущее разрешение
+        public static int Dpi { get; private set; }
+
+        public static double PixelsPerDip { get; private set; }
+
+        //Округление до границ пикселей
+        static public double SnapToPixels(double value)
+        {
+            value += HalfPixelSize;
+
+            //На нестандартных DPI размер пикселя в WPF-единицах дробный.
+            //Перемножение на 1000 нужно из-за потерь точности
+            //при представлении дробных чисел в double
+            //2.4 / 0.4 = 5.9999999999999991
+            //2400.0 / 400.0 = 6.0
+
+            var div = (value * 1000) / (PixelSize * 1000);
+
+            return (int)div * PixelSize;
+        }
+
+        static public double Scale(double x)
+        {
+            return x;// SnapToPixels(x);
+        }
+
+        static public double ScaleThickness(double x)
+        {
+          //  x *= Render.PixelSize;
+            return SnapToPixels(x);// x < 1 ? 1 : 0;
+        }
+
+        private static readonly double HalfPixelSize;
+    }
+
     public static class Draw
     {
         public static Color GetColor(byte a, Color c)
@@ -77,12 +130,12 @@ namespace Tools
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
-            return new Pen(GetBrush(v, alpha), width);
+            return new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
         }
 
         public static Pen GetPen(Color c, float width = 1)
         {
-            return new Pen(GetBrush(c), width);
+            return new Pen(GetBrush(c), Render.ScaleThickness(width));
         }
 
         public static Color GetRandomColor(byte offsetFromTop, Color? baseColor = null)

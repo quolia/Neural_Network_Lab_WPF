@@ -11,7 +11,7 @@
             <Label Content="Activation func:" />
             <local:SelectBox x:Name="CtlActivationFunc" />
             <Label Content="a:" />
-            <local:DoubleBox x:Name="CtlActivationFuncParamA" Width="60" />
+            <local:DoubleBox x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
             <Label Name="CtlNumber" Content="1" />
         </StackPanel>
     </Grid>

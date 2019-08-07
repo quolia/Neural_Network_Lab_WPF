@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using Tools;
 
@@ -36,7 +39,7 @@ namespace Qualia.Controls
 
         NetworkDataModel _prevSelectedNetworkModel;
 
-        public NetworkControl SelectedNetwork => (CtlTabs.SelectedContent as Panel).Children[0] as NetworkControl;
+        public NetworkControl SelectedNetwork => CtlTabs.SelectedContent as NetworkControl;
         public NetworkDataModel SelectedNetworkModel
         {
             get
@@ -52,9 +55,9 @@ namespace Qualia.Controls
             get
             {
                 var result = new List<NetworkControl>();
-                for (int i = 1; i < CtlTabs.TabCount; ++i)
+                for (int i = 1; i < CtlTabs.Items.Count; ++i)
                 {
-                    result.Add(CtlTabs.TabPages[i].Controls[0] as NetworkControl);
+                    result.Add(CtlTabs.Tab(i).Content as NetworkControl);
                 }
                 return result;
             }
@@ -62,16 +65,16 @@ namespace Qualia.Controls
 
         public Config CreateNewManager()
         {
-            using (var saveDialog = new SaveFileDialog
+            var saveDialog = new SaveFileDialog
             {
                 InitialDirectory = Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 FilterIndex = 2,
                 RestoreDirectory = true
-            })
+            };
             {
-                if (saveDialog.ShowDialog() == DialogResult.OK)
+                if (saveDialog.ShowDialog() == true)
                 {
                     if (File.Exists(saveDialog.FileName))
                     {
@@ -90,9 +93,9 @@ namespace Qualia.Controls
 
         private void ClearNetworks()
         {
-            while (CtlTabs.TabCount > 1)
+            while (CtlTabs.Items.Count > 1)
             {
-                CtlTabs.TabPages.RemoveAt(1);
+                CtlTabs.Items.RemoveAt(1);
             }
         }
 
@@ -128,19 +131,20 @@ namespace Qualia.Controls
         private void AddNetwork(long id)
         {
             var network = new NetworkControl(id, Config, OnNetworkUIChanged);
-            var tab = new TabPage($"Network {CtlTabs.TabCount}");
-            tab.Controls.Add(network);
-            CtlTabs.TabPages.Add(tab);
-            CtlTabs.SelectedIndex = CtlTabs.TabPages.IndexOf(tab);
+            var tab = new TabItem();
+            tab.Header = $"Network {CtlTabs.Items.Count}";
+            tab.Content = network;
+            CtlTabs.Items.Add(tab);
+            CtlTabs.SelectedItem = tab;;
         }
 
         public void DeleteNetwork()
         {
-            if (MessageBox.Show($"Would you really like to delete Network {CtlTabs.SelectedIndex}?", "Confirm", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show($"Would you really like to delete Network {CtlTabs.SelectedIndex}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 SelectedNetwork.VanishConfig();
-                var index = CtlTabs.TabPages.IndexOf(CtlTabs.SelectedTab);
-                CtlTabs.TabPages.Remove(CtlTabs.SelectedTab);
+                var index = CtlTabs.Items.IndexOf(CtlTabs.SelectedTab());
+                CtlTabs.Items.Remove(CtlTabs.SelectedTab());
                 CtlTabs.SelectedIndex = index - 1;
                 ResetNetworksTabsNames();
                 OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
@@ -149,9 +153,9 @@ namespace Qualia.Controls
 
         private void ResetNetworksTabsNames()
         {
-            for (int i = 1; i < CtlTabs.TabCount; ++i)
+            for (int i = 1; i < CtlTabs.Items.Count; ++i)
             {
-                CtlTabs.TabPages[i].Text = $"Network {i}";
+                CtlTabs.Tab(i).Header = $"Network {i}";
             }
         }
 
@@ -176,16 +180,16 @@ namespace Qualia.Controls
 
         public void SaveAs()
         {
-            using (var saveDialog = new SaveFileDialog
+            var saveDialog = new SaveFileDialog
             {
                 InitialDirectory = Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 FilterIndex = 2,
                 RestoreDirectory = true
-            })
+            };
             {
-                if (saveDialog.ShowDialog() == DialogResult.OK)
+                if (saveDialog.ShowDialog() == true)
                 {
                     if (File.Exists(saveDialog.FileName))
                     {

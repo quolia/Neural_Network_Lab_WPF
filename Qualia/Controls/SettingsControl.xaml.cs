@@ -48,24 +48,24 @@ namespace Qualia.Controls
 
         public void Load(Config config)
         {
-            Range.ForEach(CtlPanel.Controls.OfType<IConfigValue>(), c => c.Load(config));
-            Range.ForEach(CtlPanel.Controls.OfType<IConfigValue>(), c => c.SetChangeEvent(OnChanged));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Load(config));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(OnChanged));
             OnChanged();
         }
 
         public void Save(Config config)
         {
-            Range.ForEach(CtlPanel.Controls.OfType<IConfigValue>(), c => c.Save(config));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Save(config));
         }
 
         public void Vanish(Config config)
         {
-            Range.ForEach(CtlPanel.Controls.OfType<IConfigValue>(), c => c.Vanish(config));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Vanish(config));
         }
 
         public bool IsValid()
         {
-            return CtlPanel.Controls.OfType<IConfigValue>().All(c => c.IsValid());
+            return CtlPanel.FindVisualChildren<IConfigValue>().All(c => c.IsValid());
         }
 
         public void SetChangeEvent(Action action)

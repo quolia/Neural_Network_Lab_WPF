@@ -45,6 +45,8 @@ namespace Qualia.Controls
 
         public IntBox()
         {
+            Width = 60;
+            Height = 18;
             TextChanged += IntBox_TextChanged;
         }
 

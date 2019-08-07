@@ -8,23 +8,31 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
+                <Label Content="Color:" />
+                <Label Name="CtlColor" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Weights randomizer:" />
                 <local:SelectBox x:Name="CtlRandomizer" />
                 <Label Content="a:" />
                 <local:DoubleBox x:Name="CtlRandomizerParamA" ConfigParameter="RandomizeModeParamA" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
+                              
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
                 <Label Content="Learnng rate:" />
                 <local:DoubleBox x:Name="CtlLearningRate" ConfigParameter="LearningRate" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" IsNullAllowed="False" />
-                <Label Name="CtlColor" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" />
+
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <TabControl Name="CtlTabsLayers">
-                <TabItem Name="CtlTabInput" Header="Input" />
-                <TabItem Name="CtlTabOutput" Header="Output" />
+            <TabControl Name="CtlTabsLayers" Padding="0">
+                <TabItem Name="CtlTabInput" Header="Input" Margin="0" />
+                <TabItem Name="CtlTabOutput" Header="Output" Margin="0" />
             </TabControl>
         </StackPanel>
     </Grid>

@@ -13,6 +13,7 @@ namespace Qualia.Controls
 
         public SelectBox()
         {
+            Height = 22;
             SelectionChanged += SelectBox_SelectionChanged;
         }
 

@@ -4,63 +4,104 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Tools;
 
 namespace Qualia.Controls
 {
-    public class DrawBox : FrameworkElement
+    public class DrawBox : Panel
     {
-        private VisualCollection _children; 
+        private VisualCollection Visuals; 
 
         public DrawBox()
         {
-            _children = new VisualCollection(this);
-            /*
-            DrawingVisual drawingVisual = new DrawingVisual();
-
-            // Retrieve the DrawingContext in order to create new drawing content.
-            DrawingContext drawingContext = drawingVisual.RenderOpen();
-
-            // Create a rectangle and draw it in the DrawingContext.
-            Rect rect = new Rect(new System.Windows.Point(160, 100), new System.Windows.Size(320, 80));
-            drawingContext.DrawRectangle(System.Windows.Media.Brushes.LightBlue, (System.Windows.Media.Pen)null, rect);
-
-            // Persist the drawing content.
-            drawingContext.Close();
-            */
-            //return drawingVisual;
+            Visuals = new VisualCollection(this);
+            SnapsToDevicePixels = true;
+            UseLayoutRounding = true;
+            SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
         }
 
-        public DrawingContext G
+        public void Clear()
         {
-            get
-            {
-                var drawingVisual = new DrawingVisual();
-                _children.Add(drawingVisual);
-                var drawingContext = drawingVisual.RenderOpen();
-
-                Extension.Dispatch(this, () => drawingContext.Close());
-                return drawingContext;
-            }
+            Visuals.Clear();
         }
 
-        // Provide a required override for the VisualChildrenCount property.
+        private DrawingContext G()
+        {
+            var dv = new DrawingVisual();
+            Visuals.Add(dv);
+            return dv.RenderOpen();
+        }
+
         protected override int VisualChildrenCount
         {
-            get { return _children.Count; }
+            get { return Visuals.Count; }
         }
 
-        // Provide a required override for the GetVisualChild method.
         protected override Visual GetVisualChild(int index)
         {
-            if (index < 0 || index >= _children.Count)
+            if (index < 0 || index >= Visuals.Count)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            return _children[index];
+            return Visuals[index];
         }
 
+        public void DrawRectangle(Brush brush, Pen pen, Rect rect)
+        {
+            using (var g = G())
+            {
+                brush.Freeze();
+                pen.Freeze();
+                rect.X = Render.Scale(rect.X);
+                rect.Y = Render.Scale(rect.Y);
+                rect.Width = Render.Scale(rect.Width);
+                rect.Height = Render.Scale(rect.Height);
+                
+
+                g.DrawRectangle(brush, pen, rect);
+            }
+        }
+
+        public void DrawText(FormattedText text, Point point)
+        {
+            using (var g = G())
+            {  
+                point.X = Render.Scale(point.X);
+                point.Y = Render.Scale(point.Y);
+                g.DrawText(text, point);
+            }
+        }
+
+        public void DrawLine(Pen pen, Point point0, Point point1)
+        {
+            using (var g = G())
+            {
+                pen.Freeze();
+                point0.X = Render.Scale(point0.X);
+                point0.Y = Render.Scale(point0.Y);
+                point1.X = Render.Scale(point1.X);
+                point1.Y = Render.Scale(point1.Y);
+
+                g.DrawLine(pen, point0, point1);
+            }
+        }
+
+        public void DrawEllipse(Brush brush, Pen pen, Point center, double radiusX, double radiusY)
+        {
+            using (var g = G())
+            {
+                brush.Freeze();
+                pen.Freeze();
+                center.X = Render.Scale(center.X);
+                center.Y = Render.Scale(center.Y);
+                radiusX = Render.Scale(radiusX);
+                radiusY = Render.Scale(radiusY);
+
+                g.DrawEllipse(brush, pen, center, radiusX, radiusY);
+            }
+        }
     }
 }

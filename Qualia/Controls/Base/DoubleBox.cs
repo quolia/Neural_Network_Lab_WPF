@@ -45,6 +45,8 @@ namespace Qualia.Controls
 
         public DoubleBox()
         {
+            Width = 60;
+            Height = 18;
             TextChanged += DoubleBox_TextChanged;
         }
 

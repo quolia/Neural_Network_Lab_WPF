@@ -18,7 +18,8 @@ namespace Qualia.Controls
 
         public NeuronBase()
         {
-
+            BorderThickness = new Thickness(0, 5, 0, 0);
+            BorderBrush = Brushes.Red;
         }
 
         public NeuronBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)

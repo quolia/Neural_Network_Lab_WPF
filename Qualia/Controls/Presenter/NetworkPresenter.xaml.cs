@@ -22,23 +22,26 @@ namespace Qualia.Controls
         const int HORIZONTAL_OFFSET = 10;
         const int VERTICAL_OFFSET = 10;
         const int NEURON_SIZE = 8;
-        const int NEURON_RADIUS = NEURON_SIZE / 2;
+        const double NEURON_RADIUS = NEURON_SIZE / 2;
         const int BIAS_SIZE = 14;
-        const int BIAS_RADIUS = BIAS_SIZE / 2;
+        const double BIAS_RADIUS = BIAS_SIZE / 2;
 
         public NetworkPresenter()
         {
-            //Dock = DockStyle.Fill;
+            InitializeComponent();
+
+           
         }
+
 
         public int LayerDistance(NetworkDataModel model)
         {
-            return (int)(Width - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
+            return (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
         }
 
         private float VerticalDistance(int count)
         {
-            return Math.Min(((float)Height - 220) / count, NEURON_MAX_DIST);
+            return Math.Min(((float)ActualHeight - VERTICAL_OFFSET * 2) / count, NEURON_MAX_DIST);
         }
 
         private int LayerX(NetworkDataModel model, LayerDataModel layer)
@@ -68,9 +71,9 @@ namespace Qualia.Controls
                     {
                         var pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
                         
-                        CtlPresenter.G.DrawLine(pen,
-                                                new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)),
-                                                new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                        CtlPresenter.DrawLine(pen,
+                                              new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)),
+                                              new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
                     }
                 }
             });
@@ -92,16 +95,16 @@ namespace Qualia.Controls
 
                     if (neuron.IsBias)
                     {
-                        CtlPresenter.G.DrawEllipse(Brushes.Orange, biasColor,
-                                        new Point(LayerX(model, layer),
-                                        VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
-                                        BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor,
+                                                 new Point(LayerX(model, layer),
+                                                 VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
+                                                 BIAS_RADIUS, BIAS_RADIUS);
                     }
 
-                    CtlPresenter.G.DrawEllipse(brush, pen,
-                                    new Point(LayerX(model, layer),
-                                    VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
-                                    NEURON_RADIUS, NEURON_RADIUS);
+                    CtlPresenter.DrawEllipse(brush, pen,
+                                             new Point(LayerX(model, layer),
+                                             VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
+                                             NEURON_RADIUS, NEURON_RADIUS);
                     
                 }
             });
@@ -110,11 +113,11 @@ namespace Qualia.Controls
         private void Draw(bool fullState, NetworkDataModel model)
         {
             //StartRender();
-            //Clear();
+            CtlPresenter.Clear();
 
             if (model == null)
             {
-                //CtlBox.Invalidate();
+                
                 return;
             }
 
@@ -129,6 +132,8 @@ namespace Qualia.Controls
             }
 
             //CtlBox.Invalidate();
+
+            //CtlPresenter.InvalidateVisual();
         }
 
         public void RenderStanding(NetworkDataModel model)

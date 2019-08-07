@@ -7,16 +7,27 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Name="CtlPanel" Orientation="Vertical">
             <Label Content="Rounds per action:" />
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Draw error matrix:" />
-                <local:IntBox x:Name="CtlSkipRoundsToDrawErrorMatrix" ConfigParameter="SettingsSkipRoundsToDrawErrorMatrix" DefaultValue="1000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Draw network:" />
-                <local:IntBox x:Name="CtlSkipRoundsToDrawNetworks" ConfigParameter="SettingsSkipRoundsToDrawNetworks" DefaultValue="1000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
-            </StackPanel>
+            <Grid Margin="10,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Label HorizontalAlignment="Right" Content="Draw error matrix:" />
+                <local:IntBox HorizontalAlignment="Left" Grid.Column="1" x:Name="CtlSkipRoundsToDrawErrorMatrix" ConfigParameter="SettingsSkipRoundsToDrawErrorMatrix" DefaultValue="1000" Value="1000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
+
+                <Label HorizontalAlignment="Right" Grid.Row="1" Content="Draw network:" />
+                <local:IntBox HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" x:Name="CtlSkipRoundsToDrawNetworks" ConfigParameter="SettingsSkipRoundsToDrawNetworks" DefaultValue="10000" Value="10000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
+            </Grid>
         </StackPanel>   
     </Grid>
 </UserControl>

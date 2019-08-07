@@ -26,6 +26,7 @@ namespace Qualia.Controls
 
         public OnOffBox()
         {
+            Height = 18;
             Checked += OnOffBox_Checked;
             Unchecked += OnOffBox_Unchecked;
         }
