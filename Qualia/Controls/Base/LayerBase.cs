@@ -16,7 +16,7 @@ namespace Qualia.Controls
 
         public LayerBase()
         {
-            //
+            
         }
 
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)

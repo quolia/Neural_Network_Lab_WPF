@@ -112,6 +112,14 @@ namespace Qualia
 
         private void LoadConfig()
         {
+            Width = Config.Main.GetDouble(Const.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth).Value;
+            Height = Config.Main.GetDouble(Const.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight).Value;
+            Top = Config.Main.GetDouble(Const.Param.ScreenTop, 0).Value;
+            Left = Config.Main.GetDouble(Const.Param.ScreenLeft, 0).Value;
+            Topmost = Config.Main.GetBool(Const.Param.OnTop, false);
+            DataWidth.Width = new GridLength(Config.Main.GetDouble(Const.Param.DataWidth, 100).Value);
+            NetworkHeight.Height = new GridLength(Config.Main.GetDouble(Const.Param.NetworkHeight, 200).Value);
+
             var name = Config.Main.GetString(Const.Param.NetworksManagerName, null);
             LoadNetworksManager(name);
             LoadSettings();
@@ -187,6 +195,14 @@ namespace Qualia
 
         private bool SaveConfig()
         {
+            Config.Main.Set(Const.Param.ScreenWidth, ActualWidth);
+            Config.Main.Set(Const.Param.ScreenHeight, ActualHeight);
+            Config.Main.Set(Const.Param.ScreenTop, Top);
+            Config.Main.Set(Const.Param.ScreenLeft, Left);
+            Config.Main.Set(Const.Param.OnTop, Topmost);
+            Config.Main.Set(Const.Param.DataWidth, DataWidth.ActualWidth);
+            Config.Main.Set(Const.Param.NetworkHeight, NetworkHeight.ActualHeight);
+
             if (!SaveSettings())
             {
                 return false;

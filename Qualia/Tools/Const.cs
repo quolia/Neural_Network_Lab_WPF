@@ -33,7 +33,8 @@ namespace Tools
             OnTop,
             PointSize,
             PointsArrangeSnap,
-            DataPanelWidth,
+            DataWidth,
+            NetworkHeight,
             AxisOffset,
 
             NetworksManagerName,

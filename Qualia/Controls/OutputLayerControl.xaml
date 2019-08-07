@@ -6,7 +6,5 @@
              xmlns:local="clr-namespace:Qualia.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+
 </local:LayerBase>

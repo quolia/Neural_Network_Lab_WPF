@@ -91,9 +91,9 @@ namespace Qualia.Controls
                 CtlPresenter.DrawRectangle(brush, pen, new Rect(2 + axisOffset + (matrix.Output.Length) * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
             }
 
-            var text = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 6.5f, Brushes.Black, 1.25);
+            var text = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, 1.25);
 
-            CtlPresenter.DrawText(text, new Point(axisOffset, axisOffset - Font.CapsHeight - 1));
+            CtlPresenter.DrawText(text, new Point(axisOffset, axisOffset - text.Height - 1));
             //G.RotateTransform(-90);
             //G.DrawString("Input", Font, Brushes.Black, -axisOffset - (matrix.Output.Length) * size, axisOffset - Font.Height - 1);
             //G.RotateTransform(90);

@@ -14,7 +14,7 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <Label Content="Color:" />
-                <Label Name="CtlColor" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" />
+                <Label Name="CtlColor" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Weights randomizer:" />

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,7 +17,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class NetworkControl : UserControl
+    public partial class NetworkControl : System.Windows.Controls.UserControl
     {
         public readonly long Id;
         public Config Config;
@@ -244,7 +245,7 @@ protected override void OnResize(EventArgs e)
 
         public void DeleteLayer()
         {
-            if (MessageBox.Show($"Would you really like to delete layer L{CtlTabsLayers.SelectedIndex + 1}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (System.Windows.MessageBox.Show($"Would you really like to delete layer L{CtlTabsLayers.SelectedIndex + 1}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 var layer = CtlTabsLayers.SelectedTab().Content as HiddenLayerControl;
                 layer.VanishConfig();
@@ -328,25 +329,24 @@ protected override void OnResize(EventArgs e)
           //  viewer.Show();
         }
 
-        private void CtlColor_Click(object sender, EventArgs e)
+        private void CtlColor_Click(object sender, MouseButtonEventArgs e)
         {
-            /*
             using (var colorDialog = new ColorDialog())
             {
-                colorDialog.Color = CtlColor.BackColor;
+                var wpfColor = CtlColor.Foreground.GetColor();
+                colorDialog.Color = System.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B); ;
                 if (colorDialog.ShowDialog() == DialogResult.OK)
                 {
-                    CtlColor.BackColor = colorDialog.Color;
+                    CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A, colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B));
                     OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
                 }
             }
-            */
         }
         /*
-        private void CtlContextMenu_Opening(object sender, CancelEventArgs e)
-        {
-            CtlMenuDeleteLayer.Enabled = IsSelectedLayerHidden;
-        }
-        */
+private void CtlContextMenu_Opening(object sender, CancelEventArgs e)
+{
+   CtlMenuDeleteLayer.Enabled = IsSelectedLayerHidden;
+}
+*/
     }
 }
