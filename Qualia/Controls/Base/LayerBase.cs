@@ -31,11 +31,13 @@ namespace Qualia.Controls
         public virtual bool IsHidden => false;
         public virtual bool IsOutput => false;
 
+        public virtual Panel NeuronsHolder => throw new NotImplementedException();
+
         public virtual int NeuronsCount => GetNeuronsControls().Count;
 
         public List<NeuronBase> GetNeuronsControls()
         {
-            return Children.OfType<NeuronBase>().ToList();
+            return NeuronsHolder.Children.OfType<NeuronBase>().ToList();
         }
 
         public void AddNeuron()

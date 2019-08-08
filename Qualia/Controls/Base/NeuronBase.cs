@@ -130,7 +130,7 @@ namespace Qualia.Controls
 
         private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
         {
-            ((Parent as Panel).Parent as LayerBase).AddNeuron();
+            this.GetParentOfType<LayerBase>().AddNeuron();
         }
         /*
         private void NeuronBase_Layout(object sender, LayoutEventArgs e)

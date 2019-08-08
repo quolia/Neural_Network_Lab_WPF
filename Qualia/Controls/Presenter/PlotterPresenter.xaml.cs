@@ -50,6 +50,7 @@ namespace Qualia.Controls
             }
 
             //CtlBox.Invalidate();
+            CtlPresenter.Update();
         }
 
         private void DrawPlotter()

@@ -49,12 +49,15 @@ namespace Qualia.Controls
             return Visuals[index];
         }
 
+        public void Update()
+        {
+            UpdateLayout();
+        }
+
         public void DrawRectangle(Brush brush, Pen pen, Rect rect)
         {
             using (var g = G())
             {
-                brush.Freeze();
-                pen.Freeze();
                 rect.X = Render.Scale(rect.X);
                 rect.Y = Render.Scale(rect.Y);
                 rect.Width = Render.Scale(rect.Width);
@@ -79,7 +82,6 @@ namespace Qualia.Controls
         {
             using (var g = G())
             {
-                pen.Freeze();
                 point0.X = Render.Scale(point0.X);
                 point0.Y = Render.Scale(point0.Y);
                 point1.X = Render.Scale(point1.X);
@@ -93,8 +95,6 @@ namespace Qualia.Controls
         {
             using (var g = G())
             {
-                brush.Freeze();
-                pen.Freeze();
                 center.X = Render.Scale(center.X);
                 center.Y = Render.Scale(center.Y);
                 radiusX = Render.Scale(radiusX);

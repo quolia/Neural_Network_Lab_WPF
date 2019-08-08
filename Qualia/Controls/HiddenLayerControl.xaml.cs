@@ -42,6 +42,8 @@ namespace Qualia.Controls
 
         public override bool IsHidden => true;
 
+        public override Panel NeuronsHolder => CtlNeuronsHolder;
+
         private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
         {
             AddNeuron(Const.UnknownId);
@@ -50,7 +52,7 @@ namespace Qualia.Controls
         public override void AddNeuron(long id)
         {
             var neuron = new NeuronControl(id, Config, OnNetworkUIChanged);
-            Children.Add(neuron);
+            NeuronsHolder.Children.Add(neuron);
 
             if (id == Const.UnknownId)
             {

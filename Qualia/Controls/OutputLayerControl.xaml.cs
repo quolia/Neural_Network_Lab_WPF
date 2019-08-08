@@ -43,6 +43,7 @@ namespace Qualia.Controls
         }
 
         public override bool IsOutput => true;
+        public override Panel NeuronsHolder => CtlNeuronsHolder;
 
         private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
         {
@@ -52,7 +53,7 @@ namespace Qualia.Controls
         public override void AddNeuron(long id)
         {
             var neuron = new OutputNeuronControl(id, Config, OnNetworkUIChanged);
-            Children.Add(neuron);
+            NeuronsHolder.Children.Add(neuron);
 
             if (id == Const.UnknownId)
             {

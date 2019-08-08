@@ -20,6 +20,9 @@
                 <Label Content="a:" />
                 <local:DoubleBox x:Name="CtlActivationFuncParamA" ConfigParameter="ActivationFuncParamA" MinimumValue="-100" MaximumValue="100" IsNullAllowed="True" />
             </StackPanel>
+            <StackPanel Name="CtlNeuronsHolder" Orientation="Vertical">
+                
+            </StackPanel>
         </StackPanel>
             
     </Grid>

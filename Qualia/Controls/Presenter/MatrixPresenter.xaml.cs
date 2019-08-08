@@ -100,6 +100,8 @@ namespace Qualia.Controls
 
             //G.Flush(System.Drawing.Drawing2D.FlushIntention.Sync);
             //CtlBox.Invalidate();
+
+            CtlPresenter.Update();
         }
     }
 }

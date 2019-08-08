@@ -46,6 +46,7 @@ namespace Qualia.Controls
         }
 
         public override bool IsInput => true;
+        public override Panel NeuronsHolder => CtlNeuronsHolder;
         public override int NeuronsCount => GetNeuronsControls().Count;
 
         public double Initial0 => CtlInitial0.Value;
@@ -55,12 +56,12 @@ namespace Qualia.Controls
 
         public void OnInputDataChanged(int newCount)
         {
-            var controls = Children.OfType<InputNeuronControl>().ToList();
+            var controls = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
             foreach (var control in controls)
             {
-                Children.Remove(control);
+                NeuronsHolder.Children.Remove(control);
             }
-            Range.For(newCount, n => Children.Insert(0, AddNeuron()));
+            Range.For(newCount, n => NeuronsHolder.Children.Insert(0, AddNeuron()));
         }
 
         private void LoadConfig()
@@ -76,7 +77,7 @@ namespace Qualia.Controls
 
         public new InputNeuronControl AddNeuron()
         {
-            var neuron = new InputNeuronControl(Children.Count);
+            var neuron = new InputNeuronControl(NeuronsHolder.Children.Count);
             neuron.ActivationFunc = CtlActivationFunc.SelectedItem.ToString();
             neuron.ActivationFuncParamA = CtlActivationFuncParamA.ValueOrNull;
             return neuron;
@@ -90,7 +91,7 @@ namespace Qualia.Controls
         public void AddBias(long id)
         {
             var neuron = new InputBiasControl(id, Config, OnNetworkUIChanged);
-            Children.Add(neuron);
+            NeuronsHolder.Children.Add(neuron);
 
             if (id == Const.UnknownId)
             {

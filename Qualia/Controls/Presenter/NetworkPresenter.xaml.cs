@@ -134,6 +134,8 @@ namespace Qualia.Controls
             //CtlBox.Invalidate();
 
             //CtlPresenter.InvalidateVisual();
+
+            CtlPresenter.Update();
         }
 
         public void RenderStanding(NetworkDataModel model)

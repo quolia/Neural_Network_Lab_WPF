@@ -54,6 +54,7 @@ namespace Qualia.Controls
             Width = maxWidth + 10;
 
             //CtlBox.Invalidate();
+            CtlPresenter.Update();
         }
     }
 }

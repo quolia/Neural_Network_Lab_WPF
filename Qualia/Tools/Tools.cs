@@ -57,6 +57,53 @@ namespace Tools
                 }
             }
         }
+
+        public static IEnumerable<T> FindVisualChildren<T>(this ContentControl depObj) where T : class
+        {
+            if (depObj != null)
+            {
+                if (depObj.Content != null && depObj.Content is T)
+                {
+                    yield return depObj.Content as T;
+                }
+
+                if (depObj.Content is ContentControl)
+                {
+                    foreach (T childOfChild in FindVisualChildren<T>(depObj.Content as ContentControl))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+                else if (depObj.Content is DependencyObject)
+                {
+                    foreach (T childOfChild in FindVisualChildren<T>(depObj.Content as DependencyObject))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
+        public static T GetParentOfType<T>(this FrameworkElement depObj) where T : class
+        {
+            if (depObj.Parent == null)
+            {
+                return null;
+            }
+            
+            if (depObj.Parent is T)
+            {
+                return depObj.Parent as T;
+            }
+            else if (depObj.Parent is FrameworkElement)
+            {
+                return (depObj.Parent as FrameworkElement).GetParentOfType<T>();
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     public static class Culture

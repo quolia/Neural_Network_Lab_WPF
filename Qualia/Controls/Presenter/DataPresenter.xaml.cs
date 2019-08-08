@@ -137,6 +137,8 @@ namespace Qualia.Controls
             }
 
             //CtlPresenter.CtlBox.Invalidate();
+
+            CtlPresenter.Update();
         }
 
         private Tuple<int, int> GetPointPosition(int pointNumber)
