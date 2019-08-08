@@ -65,7 +65,8 @@ namespace Tools
             // Settings
 
             SettingsSkipRoundsToDrawErrorMatrix,
-            SettingsSkipRoundsToDrawNetworks
+            SettingsSkipRoundsToDrawNetworks,
+            SettingsSkipRoundsToDrawStatistic
         }
     }
 

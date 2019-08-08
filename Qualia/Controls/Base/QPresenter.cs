@@ -10,11 +10,11 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class DrawBox : Panel
+    public class QPresenter : Panel
     {
         private VisualCollection Visuals; 
 
-        public DrawBox()
+        public QPresenter()
         {
             Visuals = new VisualCollection(this);
             SnapsToDevicePixels = true;

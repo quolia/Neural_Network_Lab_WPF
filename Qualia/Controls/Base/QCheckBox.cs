@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public class OnOffBox : CheckBox
+    public class QCheckBox : CheckBox
     {
         public event Action<bool> CheckedChanged = delegate { };
 
@@ -24,7 +24,7 @@ namespace Qualia.Controls
             }
         }
 
-        public OnOffBox()
+        public QCheckBox()
         {
             Height = 18;
             Checked += OnOffBox_Checked;

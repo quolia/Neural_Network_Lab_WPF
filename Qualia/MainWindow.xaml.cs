@@ -376,9 +376,12 @@ namespace Qualia
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
                         {
-                            CtlMatrixPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
-                            NetworksManager.ResetErrorMatrix();
-                            ev.Set();
+                            lock (ApplyChangesLocker)
+                            {
+                                CtlMatrixPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
+                                NetworksManager.ResetErrorMatrix();
+                                ev.Set();
+                            }
                         }));
                         ev.WaitOne();
                     };
@@ -389,22 +392,29 @@ namespace Qualia
                     using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
-                        {
-                            try
+                        {      
+                            lock (ApplyChangesLocker)
                             {
-                                lock (ApplyChangesLocker)
-                                {
-                                    DrawModels(NetworksManager.Models);
-                                }
+                                DrawModels(NetworksManager.Models);
                             }
-                            catch (Exception ex)
-                            {
-                                int hha = 1;
-                            }
-
                             ev.Set();
                         }));
+                        ev.WaitOne();
+                    };
+                }
 
+                if (Round % Settings.SkipRoundsToDrawStatistic == 0)// || DateTime.Now.Subtract(startTime).TotalSeconds >= 10)
+                {
+                    using (var ev = new AutoResetEvent(false))
+                    {
+                        Dispatcher.BeginInvoke((Action)(() =>
+                        {
+                            lock (ApplyChangesLocker)
+                            {
+                                DrawStatistic(NetworksManager.Models);
+                            }
+                            ev.Set();
+                        }));
                         ev.WaitOne();
                     };
                 }
@@ -424,6 +434,70 @@ namespace Qualia
             CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel);
             CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
 
+            /*
+            var selected = NetworksManager.SelectedNetworkModel;
+
+            if (selected == null)
+            {
+                CtlStatisticsPresenter.Draw(null);
+            }
+            else
+            {
+                var stat = new Dictionary<string, string>();
+                var span = DateTime.Now.Subtract(StartTime);
+                stat.Add("Time", new DateTime(span.Ticks).ToString(@"HH\:mm\:ss"));
+
+                if (selected.Statistic.Percent > 0)
+                {
+                    var remains = new DateTime((long)(span.Ticks * 100 / selected.Statistic.Percent) - span.Ticks);
+                    stat.Add("Time remaining", new DateTime(remains.Ticks).ToString(@"HH\:mm\:ss"));
+                }
+                else
+                {
+                    stat.Add("Time remaining", "N/A");
+                }
+
+                if (selected.Statistic.LastGoodOutput > -1)
+                {
+                    stat.Add("Last good output", $"{selected.Statistic.LastGoodInput}={selected.Statistic.LastGoodOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastGoodOutputActivation, "N6")}%)");
+                    stat.Add("Last good cost", Converter.DoubleToText(selected.Statistic.LastGoodCost, "N6"));
+
+                }
+                else
+                {
+                    stat.Add("Last good output", "none");
+                    stat.Add("Last good cost", "none");
+                }
+
+                if (selected.Statistic.LastBadOutput > -1)
+                {
+                    stat.Add("Last bad output", $"{selected.Statistic.LastBadInput}={selected.Statistic.LastBadOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastBadOutputActivation, "N6")}%)");
+                    stat.Add("Last bad cost", Converter.DoubleToText(selected.Statistic.LastBadCost, "N6"));
+                }
+                else
+                {
+                    stat.Add("Last bad output", "none");
+                    stat.Add("Last bad cost", "none");
+                }
+
+                stat.Add("Average cost", Converter.DoubleToText(selected.Statistic.AverageCost, "N6"));
+                stat.Add("Percent", Converter.DoubleToText(selected.Statistic.Percent, "N6") + " %");
+                stat.Add("Learning rate", Converter.DoubleToText(selected.LearningRate));
+                stat.Add("Rounds", Round.ToString());
+                stat.Add("Rounds/sec", ((int)((double)Round / DateTime.Now.Subtract(StartTime).TotalSeconds)).ToString());
+
+                var renderStop = DateTime.Now;
+
+                stat.Add("Render time, msec", ((int)(renderStop.Subtract(renderStart).TotalMilliseconds)).ToString());
+                CtlStatisticsPresenter.Draw(stat);
+            }
+
+            NetworksManager.ResetModelsStatistic();
+            */
+        }
+
+        private void DrawStatistic(List<NetworkDataModel> models)
+        {
             foreach (var model in models)
             {
                 model.DynamicStatistic.Add(model.Statistic.Percent, model.Statistic.AverageCost);
@@ -484,7 +558,7 @@ namespace Qualia
 
                 var renderStop = DateTime.Now;
 
-                stat.Add("Render time, msec", ((int)(renderStop.Subtract(renderStart).TotalMilliseconds)).ToString());
+                //stat.Add("Render time, msec", ((int)(renderStop.Subtract(renderStart).TotalMilliseconds)).ToString());
                 CtlStatisticsPresenter.Draw(stat);
             }
 
@@ -783,6 +857,16 @@ namespace Qualia
         private void CtlCancelSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             LoadSettings();
+        }
+
+        private void CtlMenuRun_SubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            if (NetworksManager.SelectedNetwork == null && CtlTabs.Items.Count > 1)
+            {
+                CtlTabs.SelectedIndex = 1;
+            }
+
+            CtlMenuStart.IsEnabled = NetworksManager.SelectedNetwork != null;
         }
     }
 }

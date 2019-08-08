@@ -10,15 +10,15 @@
         <StackPanel Name="CtlHeadPanel" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <Label Content="Initial 0:" />
-                <local:DoubleBox x:Name="CtlInitial0" IsNullAllowed="False" DefaultValue="0" ConfigParameter="InputInitial0" MinimumValue="-100" MaximumValue="100" />
+                <local:QDouble x:Name="CtlInitial0" IsNullAllowed="False" DefaultValue="0" ConfigParameter="InputInitial0" MinimumValue="-100" MaximumValue="100" />
                 <Label Content="Initial 1:" />
-                <local:DoubleBox x:Name="CtlInitial1" IsNullAllowed="False" DefaultValue="1" ConfigParameter="InputInitial1" MinimumValue="-100" MaximumValue="100" />
+                <local:QDouble x:Name="CtlInitial1" IsNullAllowed="False" DefaultValue="1" ConfigParameter="InputInitial1" MinimumValue="-100" MaximumValue="100" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Activation func:" />
-                <local:SelectBox x:Name="CtlActivationFunc" />
+                <local:QComboBox x:Name="CtlActivationFunc" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlActivationFuncParamA" ConfigParameter="ActivationFuncParamA" MinimumValue="-100" MaximumValue="100" IsNullAllowed="True" />
+                <local:QDouble x:Name="CtlActivationFuncParamA" ConfigParameter="ActivationFuncParamA" MinimumValue="-100" MaximumValue="100" IsNullAllowed="True" />
             </StackPanel>
             <StackPanel Name="CtlNeuronsHolder" Orientation="Vertical">
                 

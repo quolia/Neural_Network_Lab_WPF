@@ -61,9 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Base\DrawBox.cs" />
-    <Compile Include="Controls\Base\OnOffBox.cs" />
-    <Compile Include="Controls\Base\SelectBox.cs" />
+    <Compile Include="Controls\Base\QPresenter.cs" />
+    <Compile Include="Controls\Base\QCheckBox.cs" />
+    <Compile Include="Controls\Base\QComboBox.cs" />
     <Compile Include="Controls\InputBiasControl.cs" />
     <Compile Include="Tools\Activation.cs" />
     <Compile Include="Tools\Config.cs" />
@@ -144,8 +144,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Base\DoubleBox.cs" />
-    <Compile Include="Controls\Base\IntBox.cs" />
+    <Compile Include="Controls\Base\QDouble.cs" />
+    <Compile Include="Controls\Base\QInt.cs" />
     <Compile Include="Controls\Base\LayerBase.cs" />
     <Compile Include="Controls\Base\NeuronBase.cs" />
     <Compile Include="Controls\HiddenLayerControl.xaml.cs">

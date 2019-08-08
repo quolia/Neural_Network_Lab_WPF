@@ -9,27 +9,27 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <local:OnOffBox x:Name="CtlIsBias" Content="Is bias" />
-                <local:OnOffBox x:Name="CtlIsBiasConnected" Content="Is bias connected" />
+                <local:QCheckBox x:Name="CtlIsBias" Content="Is bias" />
+                <local:QCheckBox x:Name="CtlIsBiasConnected" Content="Is bias connected" />
                 <Label Name="CtlNumber" Content="1"/>
             </StackPanel>
             <StackPanel Name="CtlActivationPanel" Orientation="Horizontal">
                 <Label Content="Activation init-er:" />
-                <local:SelectBox x:Name="CtlActivationIniter" />
+                <local:QComboBox x:Name="CtlActivationIniter" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlActivationIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationInitializerParamA" />
+                <local:QDouble x:Name="CtlActivationIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationInitializerParamA" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Weights init-er:" />
-                <local:SelectBox x:Name="CtlWeightsIniter" />
+                <local:QComboBox x:Name="CtlWeightsIniter" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlWeightsIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="WeightsInitializerParamA" />
+                <local:QDouble x:Name="CtlWeightsIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="WeightsInitializerParamA" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Activation func:" />
-                <local:SelectBox x:Name="CtlActivationFunc" />
+                <local:QComboBox x:Name="CtlActivationFunc" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
+                <local:QDouble x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
             </StackPanel>
         </StackPanel>
             

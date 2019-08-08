@@ -18,14 +18,14 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Weights randomizer:" />
-                <local:SelectBox x:Name="CtlRandomizer" />
+                <local:QComboBox x:Name="CtlRandomizer" />
                 <Label Content="a:" />
-                <local:DoubleBox x:Name="CtlRandomizerParamA" ConfigParameter="RandomizeModeParamA" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
+                <local:QDouble x:Name="CtlRandomizerParamA" ConfigParameter="RandomizeModeParamA" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
                               
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Learnng rate:" />
-                <local:DoubleBox x:Name="CtlLearningRate" ConfigParameter="LearningRate" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" IsNullAllowed="False" />
+                <local:QDouble x:Name="CtlLearningRate" ConfigParameter="LearningRate" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" IsNullAllowed="False" />
 
             </StackPanel>
         </StackPanel>

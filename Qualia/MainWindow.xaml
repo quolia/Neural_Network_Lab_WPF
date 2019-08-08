@@ -80,7 +80,7 @@
                     <Separator />
                     <MenuItem Name="CtlMainMenuAddNeuron" Header="Add Neuron" Click="CtlMainMenuAddNeuron_Click" />
                 </MenuItem>
-                <MenuItem Header="Run">
+                <MenuItem Name="CtlMenuRun" Header="Run" SubmenuOpened="CtlMenuRun_SubmenuOpened">
                     <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="CtlMenuStart_Click" />
                     <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="CtlMenuStop_Click" />
                     <MenuItem Name="CtlMenuReset" Header="Reset" Click="CtlMenuReset_Click" />

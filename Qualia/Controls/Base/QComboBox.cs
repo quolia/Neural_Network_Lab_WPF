@@ -7,11 +7,11 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public class SelectBox : ComboBox
+    public class QComboBox : ComboBox
     {
         public event Action<int> SelectedIndexChanged = delegate { };
 
-        public SelectBox()
+        public QComboBox()
         {
             Height = 22;
             SelectionChanged += SelectBox_SelectionChanged;

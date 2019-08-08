@@ -9,7 +9,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class IntBox : TextBox, IConfigValue
+    public class QDouble : TextBox, IConfigValue
     {
         public event Action Changed = delegate { };
 
@@ -19,19 +19,19 @@ namespace Qualia.Controls
             set;
         }
 
-        public int? DefaultValue
+        public Double? DefaultValue
         {
             get;
             set;
         }
 
-        public int MinimumValue
+        public double MinimumValue
         {
             get;
             set;
         }
 
-        public int MaximumValue
+        public double MaximumValue
         {
             get;
             set;
@@ -43,14 +43,14 @@ namespace Qualia.Controls
             set;
         }
 
-        public IntBox()
+        public QDouble()
         {
             Width = 60;
             Height = 18;
-            TextChanged += IntBox_TextChanged;
+            TextChanged += DoubleBox_TextChanged;
         }
 
-        private void IntBox_TextChanged(object sender, EventArgs e)
+        private void DoubleBox_TextChanged(object sender, EventArgs e)
         {
             if (IsValid())
             {
@@ -70,7 +70,7 @@ namespace Qualia.Controls
                 return true;
             }
 
-            return Converter.TryTextToInt(Text, out int? value) && value >= MinimumValue && value <= MaximumValue;
+            return Converter.TryTextToDouble(Text, out double? value) && value >= MinimumValue && value <= MaximumValue;
         }
 
         public bool IsNull()
@@ -78,23 +78,12 @@ namespace Qualia.Controls
             return String.IsNullOrEmpty(Text);
         }
 
-        public int Value
-        {
-            get
-            {
-                return IsValid() ? (IsNull() ? throw new InvalidValueException(ConfigParameter, "null") : Converter.TextToInt(Text).Value) : throw new InvalidValueException(ConfigParameter, Text);
-            }
-
-            set
-            {
-                Text = Converter.IntToText(value);
-            }
-        }
-                public int? ValueOrNull => IsNull() && IsNullAllowed ? (int?)null : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(ConfigParameter, Text);
+        public double Value => IsValid() ? (IsNull() ? throw new InvalidValueException(ConfigParameter, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(ConfigParameter, Text);
+        public double? ValueOrNull => IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(ConfigParameter, Text);
 
         public void Load(Config config)
         {
-            Text = Converter.IntToText(config.GetInt(ConfigParameter, DefaultValue));
+            Text = Converter.DoubleToText(config.GetDouble(ConfigParameter, DefaultValue));
         }
 
         public void Save(Config config)
