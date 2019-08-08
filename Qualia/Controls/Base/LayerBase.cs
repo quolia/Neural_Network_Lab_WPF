@@ -64,6 +64,13 @@ namespace Qualia.Controls
         {
             throw new NotImplementedException();
         }
+
+        public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            Console.WriteLine((sender as ScrollViewer).ViewportWidth);
+            MaxWidth = (sender as ScrollViewer).ViewportWidth;// - ((sender as ScrollViewer).ComputedVerticalScrollBarVisibility == Visibility.Visible ? SystemParameters.VerticalScrollBarWidth : 0);
+        }
+
         /*
         private void CtlFlow_Layout(object sender, LayoutEventArgs e)
         {

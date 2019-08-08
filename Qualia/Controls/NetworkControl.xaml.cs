@@ -95,8 +95,12 @@ protected override void OnResize(EventArgs e)
         private void AddLayer(long id)
         {
             var layer = new HiddenLayerControl(id, Config, OnNetworkUIChanged);
+            var sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+            sv.Content = layer;
+            sv.ScrollChanged += layer.OnScrollChanged;
+
             var tab = new TabItem();
-            tab.Content = layer;
+            tab.Content = sv;
             CtlTabsLayers.Items.Insert(CtlTabsLayers.Items.Count - 1, tab);
             CtlTabsLayers.SelectedItem = tab;
             ResetLayersTabsNames();
@@ -202,16 +206,18 @@ protected override void OnResize(EventArgs e)
             var outputLayerId = layers.Length > 0 ? layers[layers.Length - 1] : Const.UnknownId;
 
             InputLayer = new InputLayerControl(inputLayerId, Config, OnNetworkUIChanged);
-            CtlTabInput.Content = InputLayer;
+            var sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+            sv.Content = InputLayer;
+            CtlTabInput.Content = sv;
+            sv.ScrollChanged += InputLayer.OnScrollChanged;
 
             OutputLayer = new OutputLayerControl(outputLayerId, Config, OnNetworkUIChanged);
-            var sv = new ScrollViewer();
-
+            sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
             sv.Content = OutputLayer;
             CtlTabOutput.Content = sv;
-            CtlTabOutput.VerticalAlignment = VerticalAlignment.Stretch;
-            CtlTabOutput.VerticalContentAlignment = VerticalAlignment.Stretch;
+            sv.ScrollChanged += OutputLayer.OnScrollChanged;
 
+            
 
             Range.ForEach(layers, l =>
             {
@@ -222,6 +228,8 @@ protected override void OnResize(EventArgs e)
             CtlTabsLayers.SelectedIndex = Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
             //CtlTabsLayers.ResumeLayout();
         }
+
+
 
         public int[] GetLayersSize()
         {

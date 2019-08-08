@@ -81,5 +81,7 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.Neurons);
             Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
         }
+
+
     }
 }
