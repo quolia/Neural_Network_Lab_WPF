@@ -21,7 +21,7 @@
                 <local:QComboBox x:Name="CtlRandomizer" />
                 <Label Content="a:" />
                 <local:QDouble x:Name="CtlRandomizerParamA" ConfigParameter="RandomizeModeParamA" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
-                              
+
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Learnng rate:" />
@@ -29,11 +29,9 @@
 
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Row="1">
-            <TabControl Name="CtlTabsLayers" Padding="0">
-                <TabItem Name="CtlTabInput" Header="Input" Margin="0" />
-                <TabItem Name="CtlTabOutput" Header="Output" Margin="0" />
-            </TabControl>
-        </StackPanel>
+        <TabControl Grid.Row="1" Name="CtlTabsLayers" Padding="0">
+            <TabItem Name="CtlTabInput" Header="Input" Margin="0" />
+            <TabItem Name="CtlTabOutput" Header="Output" Margin="0" VerticalContentAlignment="Stretch" />
+        </TabControl>
     </Grid>
 </UserControl>

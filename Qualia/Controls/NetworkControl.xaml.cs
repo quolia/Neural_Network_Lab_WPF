@@ -31,23 +31,17 @@ namespace Qualia.Controls
 
         OutputLayerControl OutputLayer;
 
-        //readonly IntPtr __h;
-
         public NetworkControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
         {
             InitializeComponent();
-            //Dock = DockStyle.Fill;
             OnNetworkUIChanged = onNetworkUIChanged;
-
-            //https://stackoverflow.com/questions/1532301/visual-studio-tabcontrol-tabpages-insert-not-working
-            //__h = CtlTabsLayers.Handle;
 
             Id = UniqId.GetId(id);
             Config = config.Extend(Id);
 
             LoadConfig();
 
-            CtlTabsLayers.SelectionChanged += CtlTabsLayers_SelectionChanged;// .SelectedIndexChanged += CtlTabsLayers_SelectedIndexChanged;
+            CtlTabsLayers.SelectionChanged += CtlTabsLayers_SelectionChanged;
             CtlRandomizerParamA.Changed += OnChanged;
             CtlRandomizer.SelectedIndexChanged += CtlRandomizer_SelectedValueChanged;
             CtlLearningRate.Changed += OnChanged;
@@ -183,9 +177,9 @@ protected override void OnResize(EventArgs e)
             var result = new List<LayerBase>();
             for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
-                if (CtlTabsLayers.Tab(i).Content is LayerBase layer)
+                //if (CtlTabsLayers.Tab(i).Content is LayerBase layer)
                 {
-                    result.Add(layer);
+                    result.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
                 }
             }
             return result;
@@ -211,7 +205,13 @@ protected override void OnResize(EventArgs e)
             CtlTabInput.Content = InputLayer;
 
             OutputLayer = new OutputLayerControl(outputLayerId, Config, OnNetworkUIChanged);
-            CtlTabOutput.Content = OutputLayer;
+            var sv = new ScrollViewer();
+
+            sv.Content = OutputLayer;
+            CtlTabOutput.Content = sv;
+            CtlTabOutput.VerticalAlignment = VerticalAlignment.Stretch;
+            CtlTabOutput.VerticalContentAlignment = VerticalAlignment.Stretch;
+
 
             Range.ForEach(layers, l =>
             {
