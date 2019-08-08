@@ -41,7 +41,7 @@ namespace Qualia.Controls
                 Vanish(model.DynamicStatistic.CostData, GetPointCostData);
 
                 DrawData(model.DynamicStatistic.PercentData, model.Color, GetPointPercentData, false);
-                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(50, model.Color), GetPointCostData, true);
+                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(100, model.Color), GetPointCostData, true);
             }
 
             if (selectedModel != null)
@@ -83,34 +83,28 @@ namespace Qualia.Controls
         {
             var pen = Tools.Draw.GetPen(color);
             var brush = Tools.Draw.GetBrush(color);
+            
+            var f = data.First();
+            var l = data.Last();
 
-            //using (var brush = new SolidBrush(color))
+            var d = l.Item2.Subtract(f.Item2).Ticks;
+
+            var prev = f;
+            foreach (var p in data)
             {
-                for (int n = 0; n < data.Count; ++n)
+                var pp = func(data, p, d);
+                CtlPresenter.DrawLine(pen, func(data, prev, d), pp);
+
+                if (isRect)
                 {
-                    var f = data.First();
-                    var l = data.Last();
-
-                    var d = l.Item2.Subtract(f.Item2).Ticks;
-
-                    var prev = f;
-                    foreach (var p in data)
-                    {
-                        var pp = func(data, p, d);
-                        CtlPresenter.DrawLine(pen, func(data, prev, d), pp);
-
-                        if (isRect)
-                        {
-                            CtlPresenter.DrawRectangle(brush, pen, new Rect(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
-                        }
-                        else
-                        {
-                            CtlPresenter.DrawEllipse(brush, pen, new Point(pp.X, pp.Y), 7 / 2, 7 / 2);
-                        }
-
-                        prev = p;
-                    }
+                    CtlPresenter.DrawRectangle(brush, pen, new Rect(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
                 }
+                else
+                {
+                    CtlPresenter.DrawEllipse(brush, pen, new Point(pp.X, pp.Y), 7 / 2, 7 / 2);
+                }
+
+                prev = p;
             }
         }
 
@@ -154,17 +148,19 @@ namespace Qualia.Controls
                 {
                     var d = data.Last().Item2.Subtract(data.First().Item2).Ticks;
                     var p0 = func(data, data[i], d);
+                    var p1 = func(data, data[i + 1], d);
                     var p2 = func(data, data[i + 2], d);
 
-                    if ((Math.Abs(p0.X - p2.X) < vanishArea && Math.Abs(p0.Y - p2.Y) < vanishArea))
+                    if ((Math.Abs(p0.X - p2.X) < vanishArea && Math.Abs(p0.Y - p2.Y) < vanishArea) &&
+                        (Math.Abs(p0.X - p1.X) < vanishArea && Math.Abs(p0.Y - p1.Y) < vanishArea) &&
+                        (Math.Abs(p1.X - p2.X) < vanishArea && Math.Abs(p1.Y - p2.Y) < vanishArea))
                     {
                         pointsToRemove.Add(data[i + 1]);
                         //i += 2;
                     }
                     else
                     {
-                        var p1 = func(data, data[i + 1], d);
-                        if ((p0.X == p1.X && p1.X == p2.X) || (p0.Y == p1.Y && p1.Y == p2.Y))
+                        if ((p0.X == p1.X && p1.X == p2.X && Math.Abs(p0.Y - p1.Y) < vanishArea) || (p0.Y == p1.Y && p1.Y == p2.Y && Math.Abs(p0.X - p1.X) < vanishArea))
                         {
                             pointsToRemove.Add(data[i + 1]);
                             //i += 2;

@@ -19,6 +19,7 @@ namespace Qualia.Controls
     public partial class StatisticPresenter : UserControl
     {
         Typeface Font;
+        double MaxWidth = 0;
 
         public StatisticPresenter()
         {
@@ -39,7 +40,7 @@ namespace Qualia.Controls
 
             //G.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-            double maxWidth = 0;
+            
             double y = 0;
             foreach (var pair in stat)
             {
@@ -48,10 +49,10 @@ namespace Qualia.Controls
                 CtlPresenter.DrawText(text, new Point(10, y));
 
                 y += text.Height;
-                maxWidth = Math.Max(text.WidthIncludingTrailingWhitespace, maxWidth);
+                MaxWidth = Math.Max(text.WidthIncludingTrailingWhitespace, MaxWidth);
             };
 
-            Width = maxWidth + 10;
+            Width = MaxWidth + 10;
 
             //CtlBox.Invalidate();
             CtlPresenter.Update();
