@@ -16,14 +16,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel  Orientation="Vertical" >
-            <Label Content="Task:" />
+            <local:QLabel Content="Task:" />
             <local:QComboBox x:Name="CtlTask" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label Content="Input count:" />
+                <local:QLabel Content="Input count:" />
                 <local:QInt x:Name="CtlInputCount" Grid.Column="1" ConfigParameter="InputNeuronsCount" MinimumValue="1" MaximumValue="10000" DefaultValue="10" Value="10" IsNullAllowed="False" />
             </Grid>
 

@@ -78,12 +78,40 @@ namespace Qualia.Controls
             return String.IsNullOrEmpty(Text);
         }
 
-        public double Value => IsValid() ? (IsNull() ? throw new InvalidValueException(ConfigParameter, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(ConfigParameter, Text);
-        public double? ValueOrNull => IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(ConfigParameter, Text);
+        public double Value
+        {
+            get
+            {
+                return IsValid() ? (IsNull() ? throw new InvalidValueException(ConfigParameter, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(ConfigParameter, Text);
+            }
+
+            set
+            {
+                Text = Converter.DoubleToText(value);
+                DoubleBox_TextChanged(null, null);
+            }
+        }
+
+        public double? ValueOrNull
+        {
+            get
+            {
+                return IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(ConfigParameter, Text);
+            }
+
+            set
+            {
+                Text = Converter.DoubleToText(value);
+                DoubleBox_TextChanged(null, null);
+            }
+        }
 
         public void Load(Config config)
         {
-            Text = Converter.DoubleToText(config.GetDouble(ConfigParameter, DefaultValue));
+            if (IsNullAllowed)
+                ValueOrNull = config.GetDouble(ConfigParameter, DefaultValue);
+            else
+                Value = config.GetDouble(ConfigParameter, DefaultValue).Value;
         }
 
         public void Save(Config config)

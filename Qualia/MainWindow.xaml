@@ -48,7 +48,7 @@
 
 
                         <local:MatrixPresenter Grid.Column="2" x:Name="CtlMatrixPresenter" />
-                    <Label Grid.Column="2" Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                    <local:QLabel Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
          
                 
                 </Grid>

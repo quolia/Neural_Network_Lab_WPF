@@ -17,11 +17,11 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-            <Label Content="Activation func:" />
+        <local:QLabel Content="Activation func:" />
             <local:QComboBox Grid.Column="1" x:Name="CtlActivationFunc" />
             <Label Grid.Column="2" Content="a:" />
         <local:QDouble Width="Auto"  Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
-        <Label  Grid.Column="4" Name="CtlNumber" Content="1" />
+        <local:QLabel  Grid.Column="4" x:Name="CtlNumber" Content="1" />
 
     </Grid>
 </local:NeuronBase>

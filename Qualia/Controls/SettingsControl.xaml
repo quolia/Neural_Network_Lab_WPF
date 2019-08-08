@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Name="CtlPanel" Orientation="Vertical">
-            <Label Content="Rounds per action:" />
+            <local:QLabel Content="Rounds per action:" />
             <Grid Margin="10,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -23,13 +23,13 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Label HorizontalAlignment="Right" Content="Draw error matrix:" />
+                <local:QLabel HorizontalAlignment="Right" Content="Draw error matrix:" />
                 <local:QInt HorizontalAlignment="Left" Grid.Column="1" x:Name="CtlSkipRoundsToDrawErrorMatrix" ConfigParameter="SettingsSkipRoundsToDrawErrorMatrix" DefaultValue="1000" Value="1000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
 
-                <Label HorizontalAlignment="Right" Grid.Row="1" Content="Draw network:" />
+                <local:QLabel HorizontalAlignment="Right" Grid.Row="1" Content="Draw network:" />
                 <local:QInt HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" x:Name="CtlSkipRoundsToDrawNetworks" ConfigParameter="SettingsSkipRoundsToDrawNetworks" DefaultValue="10000" Value="10000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
 
-                <Label HorizontalAlignment="Right" Grid.Row="2" Content="Draw statistic:" />
+                <local:QLabel HorizontalAlignment="Right" Grid.Row="2" Content="Draw statistic:" />
                 <local:QInt HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" x:Name="CtlSkipRoundsToDrawStatistic" ConfigParameter="SettingsSkipRoundsToDrawStatistic" DefaultValue="10000" Value="10000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
 
             </Grid>

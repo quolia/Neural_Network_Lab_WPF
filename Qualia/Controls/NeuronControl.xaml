@@ -27,23 +27,23 @@
             <local:QCheckBox x:Name="CtlIsBias" Content="Is bias" />
             <local:QCheckBox x:Name="CtlIsBiasConnected" Content="Is bias connected" Margin="10,0,0,0" />
         </StackPanel>
-        <Label Grid.Column="3" Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
-        
-        
+        <local:QLabel Grid.Column="3" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
+
+
+        <local:QLabel Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
         <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationIniter" />
-        <Label Grid.Row="1" Grid.Column="2" Content="a:" />
+        <local:QLabel Grid.Row="1" Grid.Column="2" Content="a:" />
         <local:QDouble Width="Auto" Grid.Row="1" Grid.Column="3" x:Name="CtlActivationIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationInitializerParamA" />
 
-        <Label Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
+        <local:QLabel Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
         <local:QComboBox Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsIniter" />
-        <Label Grid.Row="2" Grid.Column="2" Content="a:" />
+        <local:QLabel Grid.Row="2" Grid.Column="2" Content="a:" />
         <local:QDouble Width="Auto" Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="WeightsInitializerParamA" />
 
-        <Label Grid.Row="3" Grid.Column="0" Content="Activation func:" />
+        <local:QLabel Grid.Row="3" Grid.Column="0" Content="Activation func:" />
         <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunc" />
-        <Label Grid.Row="3" Grid.Column="2" Content="a:" />
+        <local:QLabel Grid.Row="3" Grid.Column="2" Content="a:" />
         <local:QDouble Width="Auto" Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
 
             

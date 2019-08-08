@@ -88,13 +88,30 @@ namespace Qualia.Controls
             set
             {
                 Text = Converter.IntToText(value);
+                IntBox_TextChanged(null, null);
             }
         }
-                public int? ValueOrNull => IsNull() && IsNullAllowed ? (int?)null : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(ConfigParameter, Text);
+
+        public int? ValueOrNull
+        {
+            get
+            {
+                return IsNull() && IsNullAllowed ? (int?)null : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(ConfigParameter, Text);
+            }
+
+            set
+            {
+                Text = Converter.IntToText(value);
+                IntBox_TextChanged(null, null);
+            }
+        }
 
         public void Load(Config config)
         {
-            Text = Converter.IntToText(config.GetInt(ConfigParameter, DefaultValue));
+            if (IsNullAllowed)
+                ValueOrNull = config.GetInt(ConfigParameter, DefaultValue);
+            else
+                Value = config.GetInt(ConfigParameter, DefaultValue).Value;
         }
 
         public void Save(Config config)
