@@ -242,7 +242,7 @@ protected override void OnResize(EventArgs e)
         private double? RandomizerParamA => CtlRandomizerParamA.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
 
-        public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().Content as LayerBase;
+        public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
         public Type SelectedLayerType => CtlTabsLayers.SelectedTab().Content.GetType();
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 

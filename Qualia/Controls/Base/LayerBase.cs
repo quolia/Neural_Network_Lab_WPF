@@ -67,8 +67,7 @@ namespace Qualia.Controls
 
         public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            Console.WriteLine((sender as ScrollViewer).ViewportWidth);
-            MaxWidth = (sender as ScrollViewer).ViewportWidth;// - ((sender as ScrollViewer).ComputedVerticalScrollBarVisibility == Visibility.Visible ? SystemParameters.VerticalScrollBarWidth : 0);
+            MaxWidth = (sender as ScrollViewer).ViewportWidth;
         }
 
         /*

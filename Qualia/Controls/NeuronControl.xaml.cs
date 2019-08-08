@@ -81,7 +81,7 @@ namespace Qualia.Controls
         private void CtlIsBias_CheckedChanged(bool isChecked)
         {
             CtlIsBiasConnected.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
-            CtlActivationPanel.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
+            CtlActivation.Height = isChecked ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
             StateChanged();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
@@ -103,7 +103,7 @@ namespace Qualia.Controls
             CtlIsBias.IsChecked = Config.GetBool(Const.Param.IsBias, false);
             CtlIsBiasConnected.Visibility = CtlIsBias.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
             CtlIsBiasConnected.IsChecked = CtlIsBias.IsChecked == true && Config.GetBool(Const.Param.IsBiasConnected, false);
-            CtlActivationPanel.Visibility = CtlIsBias.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+            CtlActivation.Height = CtlIsBias.IsChecked == true ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
 
             InitializeMode.Helper.FillComboBox(CtlActivationIniter, Config, Const.Param.ActivationInitializer, nameof(InitializeMode.Constant));
             CtlActivationIniterParamA.Load(Config);
