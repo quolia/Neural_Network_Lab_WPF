@@ -87,7 +87,7 @@
                 </MenuItem>
             </Menu>
             <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="CtlApplyChanges_Click" />
-            <TabControl Grid.Row="2" Name="CtlTabs" >
+            <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="CtlTabs_SelectionChanged" >
                 <TabControl.ContextMenu>
                     <ContextMenu Name="CtlNetworkContextMenu" Opened="CtlNetworkContextMenu_Opened">
                         <MenuItem Name="CtlMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />

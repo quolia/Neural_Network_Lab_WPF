@@ -645,7 +645,7 @@ namespace Qualia
             }
         }
 
-        private void CtlTabs_SelectedIndexChanged(object sender, EventArgs e)
+        private void CtlTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // newly selected network must not affect NetworksManager until it saved
 
