@@ -25,6 +25,8 @@ namespace Qualia.Controls
             ContextMenu.Items.Add(new MenuItem() { Header = "Delete..." });
             (ContextMenu.Items[1] as MenuItem).Click += DeleteNeuron_Click;
 
+            ContextMenu.InvalidateVisual();
+
             OnNetworkUIChanged = onNetworkUIChanged;
 
             Id = UniqId.GetId(id);
@@ -42,6 +44,13 @@ namespace Qualia.Controls
         private void AddNeuron_Click(object sender, RoutedEventArgs e)
         {
             this.GetParentOfType<LayerBase>().AddNeuron();
+
+            // The code below is needed to refresh Tabcontrol.
+            // Without it newly added neuron control is not visible for hit test (some WPF issue).
+
+            int selectedIndex = this.GetParentOfType<TabControl>().SelectedIndex;
+            this.GetParentOfType<TabControl>().SelectedIndex = 0;
+            this.GetParentOfType<TabControl>().SelectedIndex = selectedIndex;
         }
 
         private void DeleteNeuron_Click(object sender, RoutedEventArgs e)

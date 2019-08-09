@@ -15,11 +15,6 @@ namespace Qualia.Controls
         public readonly Config Config;
         public readonly Action<Notification.ParameterChanged, object> OnNetworkUIChanged;
 
-        public LayerBase()
-        {
-            
-        }
-
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;

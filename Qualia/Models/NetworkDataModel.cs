@@ -122,7 +122,7 @@ namespace Qualia
                             }
                             else
                             {
-                                return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationDerivative.Do(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                                return 0;// neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationDerivative.Do(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                             }
                         }
                         else
@@ -130,7 +130,6 @@ namespace Qualia
                             return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationDerivative.Do(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                         }
                     });
-                    int f = 1;
                 });
             });
 

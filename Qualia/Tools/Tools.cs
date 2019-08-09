@@ -164,7 +164,7 @@ namespace Tools
         public int LastGoodInput;
         public double LastGoodCost;
 
-        public Statistic(bool init)
+        public Statistic()
         {
             Rounds = 0;
             CorrectRounds = 0;

@@ -88,7 +88,7 @@ namespace Tools
                         }
                         else
                         {
-                            weight.Weight = a.Value * Rand.GetFlatRandom() * Math.Sqrt(1 / layer.Previous.Neurons.Count);
+                            weight.Weight = a.Value * Rand.GetFlatRandom() * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
                     }
                 }
@@ -114,7 +114,7 @@ namespace Tools
                         }
                         else
                         {
-                            weight.Weight = a.Value * Rand.GetFlatRandom() * Math.Sqrt(2 / layer.Previous.Neurons.Count);
+                            weight.Weight = a.Value * Rand.GetFlatRandom() * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
                     }
                 }

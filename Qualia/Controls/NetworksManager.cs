@@ -271,7 +271,7 @@ namespace Qualia.Controls
 
         public void ResetModelsStatistic()
         {
-            Range.ForEach(Models, m => m.Statistic = new Statistic(true));
+            Range.ForEach(Models, m => m.Statistic = new Statistic());
         }
 
         private void ResetModelsDynamicStatistic()

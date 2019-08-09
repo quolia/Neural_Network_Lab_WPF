@@ -41,11 +41,6 @@ namespace Qualia.Controls
 
         public override Panel NeuronsHolder => CtlNeuronsHolder;
 
-        private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
-        {
-            AddNeuron(Const.UnknownId);
-        }
-
         public override void AddNeuron(long id)
         {
             var neuron = new NeuronControl(id, Config, OnNetworkUIChanged);
@@ -59,10 +54,7 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            bool result = true;
-            var neurons = GetNeuronsControls();
-            Range.ForEach(neurons, n => result &= n.IsValid());
-            return result;
+            return GetNeuronsControls().All(n => n.IsValid());
         }
 
         public override void SaveConfig()

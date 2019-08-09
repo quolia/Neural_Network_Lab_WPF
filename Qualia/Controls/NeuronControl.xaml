@@ -34,17 +34,17 @@
         <local:QLabel Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
         <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationIniter" />
         <local:QLabel Grid.Row="1" Grid.Column="2" Content="a:" />
-        <local:QDouble Width="Auto" Grid.Row="1" Grid.Column="3" x:Name="CtlActivationIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationInitializerParamA" />
+        <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="1" Grid.Column="3" x:Name="CtlActivationIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationInitializerParamA" />
 
         <local:QLabel Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
         <local:QComboBox Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsIniter" />
         <local:QLabel Grid.Row="2" Grid.Column="2" Content="a:" />
-        <local:QDouble Width="Auto" Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="WeightsInitializerParamA" />
+        <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsIniterParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="WeightsInitializerParamA" />
 
         <local:QLabel Grid.Row="3" Grid.Column="0" Content="Activation func:" />
         <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunc" />
         <local:QLabel Grid.Row="3" Grid.Column="2" Content="a:" />
-        <local:QDouble Width="Auto" Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
+        <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
 
             
     </Grid>
