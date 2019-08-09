@@ -41,36 +41,11 @@ namespace Qualia.Controls
 
             LoadConfig();
 
-            CtlTabsLayers.SelectionChanged += CtlTabsLayers_SelectionChanged;
             CtlRandomizerParamA.Changed += OnChanged;
             CtlRandomizer.SelectedIndexChanged += CtlRandomizer_SelectedValueChanged;
             CtlLearningRate.Changed += OnChanged;
         }
 
-        private void CtlTabsLayers_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //CtlMenuDeleteLayer.Enabled = CtlTabsLayers.SelectedIndex > 0 && CtlTabsLayers.SelectedIndex < CtlTabsLayers.TabCount - 1;
-        }
-
-        /*
-protected override void OnResize(EventArgs e)
-{
-   CtlTabsLayers.SuspendLayout();
-   base.OnResize(e);
-   CtlTabsLayers.ResumeLayout();// .Visible = true;
-}
-*/
-        /*
-        public void ResizeBegin()
-        {
-            CtlTabsLayers.SuspendLayout();
-        }
-
-        public void ResizeEnd()
-        {
-            CtlTabsLayers.ResumeLayout();
-        }
-        */
         private void OnChanged()
         {
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
@@ -78,13 +53,7 @@ protected override void OnResize(EventArgs e)
 
         private void CtlRandomizer_SelectedValueChanged(int index)
         {
-            //CtlLearningRateLabel.Focus();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
-        }
-
-        private void CtlTabsLayers_SelectedIndexChanged(object sender, EventArgs e)
-        {
-           // CtlMenuDeleteLayer.Enabled = CtlTabsLayers.SelectedIndex > 0 && CtlTabsLayers.SelectedIndex < CtlTabsLayers.TabCount - 1;
         }
 
         public void AddLayer()
@@ -128,8 +97,6 @@ protected override void OnResize(EventArgs e)
                     CtlTabsLayers.Tab(i).Header = $"L{i} ({layers[i].NeuronsCount})";
                 }
             }
-
-            //Refresh();
         }
 
         public bool IsValid()
@@ -176,10 +143,7 @@ protected override void OnResize(EventArgs e)
             var result = new List<LayerBase>();
             for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
-                //if (CtlTabsLayers.Tab(i).Content is LayerBase layer)
-                {
-                    result.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
-                }
+                result.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
             }
             return result;
         }
@@ -194,7 +158,6 @@ protected override void OnResize(EventArgs e)
 
             //
 
-            //CtlTabsLayers.SuspendLayout();
             var layers = Config.GetArray(Const.Param.Layers);
 
             var inputLayerId = layers.Length > 0 ? layers[0] : Const.UnknownId;
@@ -212,8 +175,6 @@ protected override void OnResize(EventArgs e)
             CtlTabOutput.Content = sv;
             sv.ScrollChanged += OutputLayer.OnScrollChanged;
 
-            
-
             Range.ForEach(layers, l =>
             {
                 if (l != layers.First() && l != layers.Last())
@@ -221,10 +182,8 @@ protected override void OnResize(EventArgs e)
             });
 
             CtlTabsLayers.SelectedIndex = Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
-            //CtlTabsLayers.ResumeLayout();
+
         }
-
-
 
         public int[] GetLayersSize()
         {

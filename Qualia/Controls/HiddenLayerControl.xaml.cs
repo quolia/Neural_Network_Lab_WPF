@@ -16,9 +16,6 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for HiddenLayerControl.xaml
-    /// </summary>
     public partial class HiddenLayerControl : LayerBase
     {
         public HiddenLayerControl()

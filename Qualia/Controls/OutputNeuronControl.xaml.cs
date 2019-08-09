@@ -16,17 +16,8 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for OutputNeuronControl.xaml
-    /// </summary>
     public partial class OutputNeuronControl : NeuronBase
     {
-        /*
-        public OutputNeuronControl()
-        {
-            InitializeComponent();
-        }
-        */
         public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
@@ -55,7 +46,6 @@ namespace Qualia.Controls
 
         private void CtlActivationFunc_SelectedIndexChanged(int index)
         {
-            //CtlActivationFuncParamALabel.Focus();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
 

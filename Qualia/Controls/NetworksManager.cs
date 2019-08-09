@@ -35,8 +35,6 @@ namespace Qualia.Controls
             }
         }
 
-        //public int InputNeuronsCount => Models.First().Layers[0].Neurons.Where(c => !c.IsBias).Count();
-
         NetworkDataModel _prevSelectedNetworkModel;
 
         public NetworkControl SelectedNetwork => CtlTabs.SelectedContent as NetworkControl;
@@ -211,8 +209,6 @@ namespace Qualia.Controls
         public void RefreshNetworksDataModels()
         {
             Models = CreateNetworksDataModels();
-            //ResetModelsStatistic();
-            //ResetModelsDynamicStatistic();
         }
 
         public void MergeModels(List<NetworkDataModel> models)

@@ -107,10 +107,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\PresenterControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Presenter\MatrixPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,9 +163,6 @@
     </Compile>
     <Compile Include="Controls\Presenter\DataPresenter.xaml.cs">
       <DependentUpon>DataPresenter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\PresenterControl.xaml.cs">
-      <DependentUpon>PresenterControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Presenter\MatrixPresenter.xaml.cs">
       <DependentUpon>MatrixPresenter.xaml</DependentUpon>

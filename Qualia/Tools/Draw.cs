@@ -22,27 +22,16 @@ namespace Tools
             HalfPixelSize = PixelSize / 2;
         }
 
-        //Размер физического пикселя в виртуальных единицах
         public static double PixelSize { get; private set; }
 
-        //Текущее разрешение
         public static int Dpi { get; private set; }
 
         public static double PixelsPerDip { get; private set; }
 
-        //Округление до границ пикселей
         static public double SnapToPixels(double value)
         {
             value += HalfPixelSize;
-
-            //На нестандартных DPI размер пикселя в WPF-единицах дробный.
-            //Перемножение на 1000 нужно из-за потерь точности
-            //при представлении дробных чисел в double
-            //2.4 / 0.4 = 5.9999999999999991
-            //2400.0 / 400.0 = 6.0
-
             var div = (value * 1000) / (PixelSize * 1000);
-
             return (int)div * PixelSize;
         }
 
@@ -53,8 +42,7 @@ namespace Tools
 
         static public double ScaleThickness(double x)
         {
-          //  x *= Render.PixelSize;
-            return SnapToPixels(x);// x < 1 ? 1 : 0;
+            return SnapToPixels(x);
         }
 
         private static readonly double HalfPixelSize;

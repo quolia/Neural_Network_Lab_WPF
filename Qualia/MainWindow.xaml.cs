@@ -38,24 +38,13 @@ namespace Qualia
          
             Loaded += Main_Load;
 
-            
-
-            //Resize += Main_Resize;
             //SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             //SetStyle(ControlStyles.SupportsTransparentBackColor, false);
-        }
-
-        private void Main_Resize(object sender, EventArgs e)
-        {
-            //Update();
-
-
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
             //Config.Main.Clear();
-
 
             CreateDirectories();
 
@@ -63,34 +52,6 @@ namespace Qualia
 
             LoadConfig();
         }
-        /*
-        protected override void OnResizeBegin(EventArgs e)
-        {
-            if (NetworksManager != null)
-            {
-                //NetworksManager.SelectedNetwork.ResizeBegin();
-            }
-
-            //CtlManagerPanel.SuspendLayout();
-            //CtlBottomPanel.SuspendLayout();
-            CtlInputDataPresenter.SuspendLayout();
-            base.OnResizeBegin(e);
-        }
-        protected override void OnResizeEnd(EventArgs e)
-        {
-            if (NetworksManager != null)
-            {
-                //NetworksManager.SelectedNetwork.ResizeEnd();
-            }
-
-            //CtlManagerPanel.ResumeLayout();
-            //CtlBottomPanel.ResumeLayout();
-            CtlInputDataPresenter.ResumeLayout();
-            base.OnResizeEnd(e);
-
-            Width = 16 * Height / 9;
-        }
-        */
 
         private void NetworkPresenter_SizeChanged(object sender, EventArgs e)
         {
@@ -401,7 +362,7 @@ namespace Qualia
                     };
                 }
 
-                if (Round % Settings.SkipRoundsToDrawStatistic == 0)// || DateTime.Now.Subtract(startTime).TotalSeconds >= 10)
+                if (Round % Settings.SkipRoundsToDrawStatistic == 0)
                 {
                     using (var ev = new AutoResetEvent(false))
                     {
@@ -431,67 +392,6 @@ namespace Qualia
 
             CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel);
             CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
-
-            /*
-            var selected = NetworksManager.SelectedNetworkModel;
-
-            if (selected == null)
-            {
-                CtlStatisticsPresenter.Draw(null);
-            }
-            else
-            {
-                var stat = new Dictionary<string, string>();
-                var span = DateTime.Now.Subtract(StartTime);
-                stat.Add("Time", new DateTime(span.Ticks).ToString(@"HH\:mm\:ss"));
-
-                if (selected.Statistic.Percent > 0)
-                {
-                    var remains = new DateTime((long)(span.Ticks * 100 / selected.Statistic.Percent) - span.Ticks);
-                    stat.Add("Time remaining", new DateTime(remains.Ticks).ToString(@"HH\:mm\:ss"));
-                }
-                else
-                {
-                    stat.Add("Time remaining", "N/A");
-                }
-
-                if (selected.Statistic.LastGoodOutput > -1)
-                {
-                    stat.Add("Last good output", $"{selected.Statistic.LastGoodInput}={selected.Statistic.LastGoodOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastGoodOutputActivation, "N6")}%)");
-                    stat.Add("Last good cost", Converter.DoubleToText(selected.Statistic.LastGoodCost, "N6"));
-
-                }
-                else
-                {
-                    stat.Add("Last good output", "none");
-                    stat.Add("Last good cost", "none");
-                }
-
-                if (selected.Statistic.LastBadOutput > -1)
-                {
-                    stat.Add("Last bad output", $"{selected.Statistic.LastBadInput}={selected.Statistic.LastBadOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastBadOutputActivation, "N6")}%)");
-                    stat.Add("Last bad cost", Converter.DoubleToText(selected.Statistic.LastBadCost, "N6"));
-                }
-                else
-                {
-                    stat.Add("Last bad output", "none");
-                    stat.Add("Last bad cost", "none");
-                }
-
-                stat.Add("Average cost", Converter.DoubleToText(selected.Statistic.AverageCost, "N6"));
-                stat.Add("Percent", Converter.DoubleToText(selected.Statistic.Percent, "N6") + " %");
-                stat.Add("Learning rate", Converter.DoubleToText(selected.LearningRate));
-                stat.Add("Rounds", Round.ToString());
-                stat.Add("Rounds/sec", ((int)((double)Round / DateTime.Now.Subtract(StartTime).TotalSeconds)).ToString());
-
-                var renderStop = DateTime.Now;
-
-                stat.Add("Render time, msec", ((int)(renderStop.Subtract(renderStart).TotalMilliseconds)).ToString());
-                CtlStatisticsPresenter.Draw(stat);
-            }
-
-            NetworksManager.ResetModelsStatistic();
-            */
         }
 
         private void DrawStatistic(List<NetworkDataModel> models)

@@ -89,7 +89,7 @@ namespace Tools
 
             for (long c = 0; c < count; ++c)
             {
-                result[c] = spread * a;// (Math.Pow(a, 6) + a / spread);
+                result[c] = spread * a;
                 a += step;
             }
 

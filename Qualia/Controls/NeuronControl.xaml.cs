@@ -16,18 +16,8 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for NeuronControl.xaml
-    /// </summary>
     public partial class NeuronControl : NeuronBase
     {
-        /*
-        public NeuronControl()
-        {
-            InitializeComponent();
-        }
-        */
-
         public NeuronControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
@@ -47,19 +37,16 @@ namespace Qualia.Controls
 
         private void CtlWeightsIniter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //CtlWeightsIniterLabel.Focus();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
 
         private void CtlActivationIniter_SelectionChanged(int index)
         {
-            //CtlActivationIniterLabel.Focus();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
 
         private void CtlActivationFunc_SelectedIndexChanged(int index)
         {
-            //CtlActivationFuncParamALabel.Focus();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
 

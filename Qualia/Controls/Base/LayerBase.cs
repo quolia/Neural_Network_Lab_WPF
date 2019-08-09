@@ -80,12 +80,5 @@ namespace Qualia.Controls
         {
             MaxWidth = (sender as ScrollViewer).ViewportWidth;
         }
-
-        /*
-        private void CtlFlow_ControlAdded(object sender, ControlEventArgs e)
-        {
-            CtlFlow.ScrollControlIntoView(e.Control);
-        }
-        */
     }
 }

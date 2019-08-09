@@ -16,9 +16,6 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for InputNeuronControl.xaml
-    /// </summary>
     public partial class InputNeuronControl : NeuronBase
     {
         public InputNeuronControl(long id)

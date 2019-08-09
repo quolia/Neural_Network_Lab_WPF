@@ -16,9 +16,6 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for InputLayerControl.xaml
-    /// </summary>
     public partial class InputLayerControl : LayerBase
     {
         public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
@@ -41,7 +38,6 @@ namespace Qualia.Controls
 
         private void CtlActivationFunc_SelectedIndexChanged(int index)
         {
-            //CtlActivationFuncLabel.Focus();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
 

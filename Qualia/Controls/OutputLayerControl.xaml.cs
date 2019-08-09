@@ -16,18 +16,8 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for OutputLayerControl.xaml
-    /// </summary>
     public partial class OutputLayerControl : LayerBase
     {
-        /*
-        public OutputLayerControl()
-        {
-            InitializeComponent();
-        }
-        */
-
         public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
@@ -81,7 +71,5 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.Neurons);
             Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
         }
-
-
     }
 }
