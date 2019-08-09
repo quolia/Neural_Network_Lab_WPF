@@ -30,6 +30,15 @@ namespace Qualia.Controls
             if (config != null)
             {
                 Config = config.Extend(Id);
+            }            
+        }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            var sv = this.GetParentOfType<ScrollViewer>();
+            if (sv != null)
+            {
+                sv.ScrollToBottom();
             }
         }
 

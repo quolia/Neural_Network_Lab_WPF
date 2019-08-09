@@ -30,7 +30,6 @@ namespace Qualia.Controls
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
-            //StartRender();
             CtlPresenter.Clear();
 
             DrawPlotter();
@@ -40,8 +39,8 @@ namespace Qualia.Controls
                 Vanish(model.DynamicStatistic.PercentData, GetPointPercentData);
                 Vanish(model.DynamicStatistic.CostData, GetPointCostData);
 
-                DrawData(model.DynamicStatistic.PercentData, model.Color, GetPointPercentData, false);
-                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(100, model.Color), GetPointCostData, true);
+                DrawData(model.DynamicStatistic.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
+                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
             }
 
             if (selectedModel != null)
@@ -49,7 +48,6 @@ namespace Qualia.Controls
                 DrawLabel(selectedModel.DynamicStatistic.PercentData, selectedModel.Color);
             }
 
-            //CtlBox.Invalidate();
             CtlPresenter.Update();
         }
 
@@ -111,10 +109,8 @@ namespace Qualia.Controls
         private void DrawLabel(DynamicStatistic.PlotPoints data, Color color)
         {
             var font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-
-            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, font, 6.5f, Brushes.Black, 1.25);
-
-            CtlPresenter.DrawText(text, new Point(AxisOffset * 3, ActualHeight - AxisOffset - 20));
+            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, font, 10, Brushes.Black, Render.PixelsPerDip);
+            CtlPresenter.DrawText(text, new Point((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
         private Point GetPointPercentData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
@@ -156,14 +152,12 @@ namespace Qualia.Controls
                         (Math.Abs(p1.X - p2.X) < vanishArea && Math.Abs(p1.Y - p2.Y) < vanishArea))
                     {
                         pointsToRemove.Add(data[i + 1]);
-                        //i += 2;
                     }
                     else
                     {
                         if ((p0.X == p1.X && p1.X == p2.X && Math.Abs(p0.Y - p1.Y) < vanishArea) || (p0.Y == p1.Y && p1.Y == p2.Y && Math.Abs(p0.X - p1.X) < vanishArea))
                         {
                             pointsToRemove.Add(data[i + 1]);
-                            //i += 2;
                         }
                     }
                 }

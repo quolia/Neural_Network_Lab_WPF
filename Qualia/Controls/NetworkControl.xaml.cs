@@ -269,6 +269,9 @@ protected override void OnResize(EventArgs e)
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
                 Color = CtlColor.Foreground.GetColor(),
+                //Statistic = new Statistic(true),
+                //DynamicStatistic = new DynamicStatistic(),
+                //ErrorMatrix = new ErrorMatrix(),
                 RandomizeMode = Randomizer,
                 RandomizerParamA = RandomizerParamA,
                 LearningRate = LearningRate,

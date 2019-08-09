@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using Tools;
 
@@ -22,9 +23,19 @@ namespace Qualia.Controls
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
+            LayoutUpdated += LayerBase_LayoutUpdated;
 
             Id = UniqId.GetId(id);
             Config = config.Extend(Id);
+        }
+
+        private void LayerBase_LayoutUpdated(object sender, EventArgs e)
+        {
+            int ordinalNumber = 0;
+            foreach (NeuronBase control in GetNeuronsControls())
+            {
+                control.OrdinalNumberChanged(++ordinalNumber);
+            }
         }
 
         public virtual bool IsInput => false;
@@ -70,22 +81,6 @@ namespace Qualia.Controls
             MaxWidth = (sender as ScrollViewer).ViewportWidth;
         }
 
-        /*
-        private void CtlFlow_Layout(object sender, LayoutEventArgs e)
-        {
-            if (CtlFlow.Controls.Count > 0)
-            {
-                CtlFlow.SuspendLayout();
-                int ordinalNumber = 0;
-                foreach (NeuronBase control in CtlFlow.Controls)
-                {
-                    control.OrdinalNumberChanged(++ordinalNumber);
-                    control.Width = CtlFlow.Width - (CtlFlow.VerticalScroll.Visible ? System.Windows.Forms.SystemInformation.VerticalScrollBarWidth : 0);
-                }
-                CtlFlow.ResumeLayout();
-            }
-        }
-        */
         /*
         private void CtlFlow_ControlAdded(object sender, ControlEventArgs e)
         {

@@ -68,13 +68,26 @@ namespace Qualia.Controls
             }
         }
 
-        public void DrawText(FormattedText text, Point point)
+        public void DrawText(FormattedText text, Point point, double angle = 0)
         {
             using (var g = G())
-            {  
+            {
                 point.X = Render.Scale(point.X);
                 point.Y = Render.Scale(point.Y);
+
+                if (angle != 0)
+                {
+                    RotateTransform rt = new RotateTransform();
+                    rt.Angle = angle;
+                    g.PushTransform(rt);
+                }
+
                 g.DrawText(text, point);
+
+                if (angle != 0)
+                {
+                    g.Pop();
+                }
             }
         }
 

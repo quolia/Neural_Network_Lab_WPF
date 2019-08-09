@@ -19,7 +19,7 @@ namespace Qualia.Controls
     public partial class StatisticPresenter : UserControl
     {
         Typeface Font;
-        double MaxWidth = 0;
+        double MaximalWidth = 0;
 
         public StatisticPresenter()
         {
@@ -29,32 +29,25 @@ namespace Qualia.Controls
 
         public void Draw(Dictionary<string, string> stat)
         {
-            //StartRender();
             CtlPresenter.Clear();
 
             if (stat == null)
             {
-                //CtlBox.Invalidate();
                 return;
             }
 
-            //G.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            
             double y = 0;
             foreach (var pair in stat)
             {
-                var text = new FormattedText(pair.Key + ": " + pair.Value, Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);//, 1.25);
-
+                var text = new FormattedText(pair.Key + ": " + pair.Value, Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
                 CtlPresenter.DrawText(text, new Point(10, y));
 
                 y += text.Height;
-                MaxWidth = Math.Max(text.WidthIncludingTrailingWhitespace, MaxWidth);
+                MaximalWidth = Math.Max(text.WidthIncludingTrailingWhitespace, MaximalWidth);
             };
 
-            Width = MaxWidth + 10;
+            Width = MaximalWidth + 10;
 
-            //CtlBox.Invalidate();
             CtlPresenter.Update();
         }
     }

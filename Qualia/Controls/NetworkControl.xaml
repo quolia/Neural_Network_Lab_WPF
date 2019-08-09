@@ -24,7 +24,7 @@
 
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:QLabel Content="Learnng rate:" />
+                <local:QLabel Content="Learning rate:" />
                 <local:QDouble x:Name="CtlLearningRate" ConfigParameter="LearningRate" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" IsNullAllowed="False" />
 
             </StackPanel>

@@ -35,7 +35,6 @@ namespace Qualia.Controls
             PointSize = Config.Main.GetInt(Const.Param.PointSize, 7).Value;
             PointsRearrangeSnap = Config.Main.GetInt(Const.Param.PointsArrangeSnap, 10).Value;
 
-            //CtlInputCount.Changed += CtlInputCount_ValueChanged;
             SizeChanged += DataPresenter_SizeChanged;
             CtlTask.SelectedIndexChanged += CtlTask_SelectedIndexChanged;
         }
@@ -118,12 +117,7 @@ namespace Qualia.Controls
             }
 
             int width = (int)Math.Max(ActualWidth, PointsRearrangeSnap * PointSize);
-
             int snaps = width / (PointsRearrangeSnap * PointSize);
-
-            //CtlPresenter.Height = 1 + PointSize * (int)Math.Ceiling(1 + (double)(PointsCount / (snaps * PointsRearrangeSnap)));
-
-            //CtlPresenter.StartRender();
 
             Range.For(PointsCount, p =>
             {
@@ -135,8 +129,6 @@ namespace Qualia.Controls
             {
                 Range.For(Data.Length, y => TogglePoint(y, Data[y] > Threshold ? Data[y] : 0));
             }
-
-            //CtlPresenter.CtlBox.Invalidate();
 
             CtlPresenter.Update();
         }

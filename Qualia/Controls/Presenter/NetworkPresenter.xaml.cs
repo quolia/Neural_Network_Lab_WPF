@@ -29,10 +29,7 @@ namespace Qualia.Controls
         public NetworkPresenter()
         {
             InitializeComponent();
-
-           
         }
-
 
         public int LayerDistance(NetworkDataModel model)
         {
@@ -92,7 +89,6 @@ namespace Qualia.Controls
                     var brush = Tools.Draw.GetBrush(neuron.Activation);
                     var pen = Tools.Draw.GetPen(neuron.Activation);
 
-
                     if (neuron.IsBias)
                     {
                         CtlPresenter.DrawEllipse(Brushes.Orange, biasColor,
@@ -104,20 +100,17 @@ namespace Qualia.Controls
                     CtlPresenter.DrawEllipse(brush, pen,
                                              new Point(LayerX(model, layer),
                                              VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
-                                             NEURON_RADIUS, NEURON_RADIUS);
-                    
+                                             NEURON_RADIUS, NEURON_RADIUS);  
                 }
             });
         }
 
         private void Draw(bool fullState, NetworkDataModel model)
         {
-            //StartRender();
             CtlPresenter.Clear();
 
             if (model == null)
-            {
-                
+            {               
                 return;
             }
 
@@ -130,10 +123,6 @@ namespace Qualia.Controls
 
                 Range.ForEach(model.Layers, layer => DrawLayerNeurons(fullState, model, layer));
             }
-
-            //CtlBox.Invalidate();
-
-            //CtlPresenter.InvalidateVisual();
 
             CtlPresenter.Update();
         }
