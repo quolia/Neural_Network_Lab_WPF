@@ -32,8 +32,6 @@ namespace Qualia
         DateTime StartTime;
         long Round;
 
-        //Label CtlAutoSize;
-
         public Main()
         {
             InitializeComponent();
@@ -770,14 +768,6 @@ namespace Qualia
             }
         }
 
-        private void CtlMenuNetwork_Click(object sender, EventArgs e)
-        {
-            CtlMainMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
-            CtlMainMenuAddLayer.IsEnabled = CtlTabs.SelectedIndex > 0;
-            CtlMainMenuDeleteLayer.IsEnabled = CtlTabs.SelectedIndex > 0 && (CtlTabs.SelectedContent as NetworkControl).IsSelectedLayerHidden;
-            CtlMainMenuAddNeuron.IsEnabled = CtlTabs.SelectedIndex > 0;
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (StopRequest())
@@ -796,11 +786,6 @@ namespace Qualia
             {
                 e.Cancel = true;
             }
-        }
-
-        private void CtlNetworkContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
-        {
-            CtlMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
         }
 
         private void CtlMainMenuNew_Click(object sender, RoutedEventArgs e)
@@ -867,6 +852,19 @@ namespace Qualia
             }
 
             CtlMenuStart.IsEnabled = NetworksManager.SelectedNetwork != null;
+        }
+
+        private void CtlMenuNetwork_SubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            CtlMainMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMainMenuAddLayer.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMainMenuDeleteLayer.IsEnabled = CtlTabs.SelectedIndex > 0 && (CtlTabs.SelectedContent as NetworkControl).IsSelectedLayerHidden;
+            CtlMainMenuAddNeuron.IsEnabled = CtlTabs.SelectedIndex > 0;
+        }
+
+        private void CtlNetworkContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            CtlMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
         }
     }
 }

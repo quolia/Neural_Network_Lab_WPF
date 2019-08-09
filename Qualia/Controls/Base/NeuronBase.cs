@@ -16,14 +16,15 @@ namespace Qualia.Controls
         public Config Config;
         public readonly Action<Notification.ParameterChanged, object> OnNetworkUIChanged;
 
-        public NeuronBase()
-        {
-            //BorderThickness = new Thickness(0, 5, 0, 0);
-            //BorderBrush = Brushes.Red;
-        }
-
         public NeuronBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
         {
+            ContextMenu = new ContextMenu();
+            ContextMenu.Opened += ContextMenu_Opened;
+            ContextMenu.Items.Add(new MenuItem() { Header = "Add" });
+            (ContextMenu.Items[0] as MenuItem).Click += AddNeuron_Click;
+            ContextMenu.Items.Add(new MenuItem() { Header = "Delete..." });
+            (ContextMenu.Items[1] as MenuItem).Click += DeleteNeuron_Click;
+
             OnNetworkUIChanged = onNetworkUIChanged;
 
             Id = UniqId.GetId(id);
@@ -31,6 +32,21 @@ namespace Qualia.Controls
             {
                 Config = config.Extend(Id);
             }            
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            (ContextMenu.Items[1] as MenuItem).IsEnabled = this.GetParentOfType<LayerBase>().NeuronsCount > 1;
+        }
+
+        private void AddNeuron_Click(object sender, RoutedEventArgs e)
+        {
+            this.GetParentOfType<LayerBase>().AddNeuron();
+        }
+
+        private void DeleteNeuron_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteNeuron();
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)
@@ -109,14 +125,9 @@ namespace Qualia.Controls
             throw new NotImplementedException();
         }
 
-        private void CtlMenuDeleteNeuron_Click(object sender, EventArgs e)
-        {
-            DeleteNeuron();
-        }
-
         private void DeleteNeuron()
         {
-            if ((Parent as Panel).Children.OfType<NeuronBase>().Count() == 1)
+            if (this.GetParentOfType<LayerBase>().NeuronsCount < 2)
             {
                 MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
                 return;
@@ -136,38 +147,5 @@ namespace Qualia.Controls
                 Background = color;
             }
         }
-
-        private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
-        {
-            this.GetParentOfType<LayerBase>().AddNeuron();
-        }
-        /*
-        private void NeuronBase_Layout(object sender, LayoutEventArgs e)
-        {
-            bool designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
-
-            if (!designMode)
-            {
-                int height = 0;
-                SuspendLayout();
-                foreach (Control c in Controls)
-                {
-                    if (c.Visible)
-                    {
-                        height += c.Height;
-                    }
-                }
-                Height = height;
-                ResumeLayout();
-            }
-        }
-        */
-
-            /*
-        private void CtlContextMenu_Opening(object sender, CancelEventArgs e)
-        {
-            CtlMenuDeleteNeuron.Enabled = Parent.Controls.OfType<NeuronBase>().Count() > 1;
-        }
-        */
     }
 }

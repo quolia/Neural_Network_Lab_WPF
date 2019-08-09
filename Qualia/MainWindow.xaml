@@ -71,7 +71,7 @@
                     <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="CtlMainMenuLoad_Click" />
                     <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="CtlMainMenuSaveAs_Click" />
                 </MenuItem>
-                <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False">
+                <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="CtlMenuNetwork_SubmenuOpened">
                     <MenuItem Name="CtlMainMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />
                     <MenuItem Name="CtlMainMenuDeleteNetwork" Header="Delete Network..." Click="CtlMainMenuDeleteNetwork_Click" />
                     <Separator />
@@ -89,7 +89,7 @@
             <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="CtlApplyChanges_Click" />
             <TabControl Grid.Row="2" Name="CtlTabs" >
                 <TabControl.ContextMenu>
-                    <ContextMenu Name="CtlNetworkContextMenu" ContextMenuOpening="CtlNetworkContextMenu_ContextMenuOpening">
+                    <ContextMenu Name="CtlNetworkContextMenu" Opened="CtlNetworkContextMenu_Opened">
                         <MenuItem Name="CtlMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />
                         <MenuItem Name="CtlMenuDeleteNetwork" Header="Delete Network..." Click="CtlMainMenuDeleteNetwork_Click" />
                     </ContextMenu>

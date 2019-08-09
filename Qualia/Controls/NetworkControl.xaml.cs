@@ -132,11 +132,6 @@ protected override void OnResize(EventArgs e)
             //Refresh();
         }
 
-        private void CtlMenuAddLayer_Click(object sender, EventArgs e)
-        {
-            AddLayer();
-        }
-
         public bool IsValid()
         {
             return CtlRandomizerParamA.IsValid() &&
@@ -243,21 +238,14 @@ protected override void OnResize(EventArgs e)
         private double LearningRate => CtlLearningRate.Value;
 
         public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
-        public Type SelectedLayerType => CtlTabsLayers.SelectedTab().Content.GetType();
+        public Type SelectedLayerType => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First().GetType();
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
-
-        private void CtlMenuDeleteLayer_Click(object sender, EventArgs e)
-        {
-            DeleteLayer();
-        }
 
         public void DeleteLayer()
         {
             if (System.Windows.MessageBox.Show($"Would you really like to delete layer L{CtlTabsLayers.SelectedIndex + 1}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                var layer = CtlTabsLayers.SelectedTab().Content as HiddenLayerControl;
-                layer.VanishConfig();
-
+                SelectedLayer.VanishConfig();
                 CtlTabsLayers.Items.Remove(CtlTabsLayers.SelectedTab());
                 ResetLayersTabsNames();
                 OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
@@ -269,9 +257,6 @@ protected override void OnResize(EventArgs e)
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
                 Color = CtlColor.Foreground.GetColor(),
-                //Statistic = new Statistic(true),
-                //DynamicStatistic = new DynamicStatistic(),
-                //ErrorMatrix = new ErrorMatrix(),
                 RandomizeMode = Randomizer,
                 RandomizerParamA = RandomizerParamA,
                 LearningRate = LearningRate,
@@ -353,11 +338,20 @@ protected override void OnResize(EventArgs e)
                 }
             }
         }
-        /*
-private void CtlContextMenu_Opening(object sender, CancelEventArgs e)
-{
-   CtlMenuDeleteLayer.Enabled = IsSelectedLayerHidden;
-}
-*/
+
+        private void CtlLayerContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            CtlMenuDeleteLayer.IsEnabled = IsSelectedLayerHidden;
+        }
+
+        private void CtlMenuAddLayer_Click(object sender, RoutedEventArgs e)
+        {
+            AddLayer();
+        }
+
+        private void CtlMenuDeleteLayer_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteLayer();
+        }
     }
 }
