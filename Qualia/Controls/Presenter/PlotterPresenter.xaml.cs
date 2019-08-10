@@ -109,7 +109,7 @@ namespace Qualia.Controls
         private void DrawLabel(DynamicStatistic.PlotPoints data, Color color)
         {
             var font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, font, 10, Brushes.Black, Render.PixelsPerDip);
+            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
             CtlPresenter.DrawText(text, new Point((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 

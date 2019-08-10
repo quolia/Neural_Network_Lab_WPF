@@ -13,6 +13,9 @@ namespace Qualia
         public long VisualId;
         public ListX<LayerDataModel> Layers = new ListX<LayerDataModel>();
 
+        public bool IsEnabled;
+
+        public Color Color;
         public double LearningRate;
         public string RandomizeMode;
         public double? RandomizerParamA;
@@ -23,8 +26,8 @@ namespace Qualia
         public Statistic Statistic;
         public DynamicStatistic DynamicStatistic;
         public ErrorMatrix ErrorMatrix;
-        public Color Color;
-
+        public Dictionary<string, string> LastStatistic;
+        
         public NetworkDataModel(long visualId, int[] layersSize)
         {
             VisualId = visualId;

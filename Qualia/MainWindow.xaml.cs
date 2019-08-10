@@ -282,12 +282,19 @@ namespace Qualia
 
             while (!CancellationToken.IsCancellationRequested)
             {
+                Thread.Sleep(0);
+
                 lock (ApplyChangesLocker)
                 {
                     NetworksManager.PrepareModelsForRound();
 
                     foreach (var model in NetworksManager.Models)
                     {
+                        if (!model.IsEnabled)
+                        {
+                            continue;
+                        }
+
                         model.FeedForward();
 
                         var output = model.GetMaxActivatedOutputNeuron();
@@ -458,6 +465,7 @@ namespace Qualia
 
                 //stat.Add("Render time, msec", ((int)(renderStop.Subtract(renderStart).TotalMilliseconds)).ToString());
                 CtlStatisticsPresenter.Draw(stat);
+                selected.LastStatistic = stat;
             }
 
             NetworksManager.ResetModelsStatistic();
@@ -570,7 +578,7 @@ namespace Qualia
 
             if (manager == null)
             {
-                Title = "Neural Network";
+                CtlNetworkName.Content = "...";
 
                 CtlMenuStart.IsEnabled = false;
                 CtlMenuReset.IsEnabled = false;
@@ -580,7 +588,7 @@ namespace Qualia
             }
             else
             {
-                Title = "Neural Network | " + System.IO.Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName));
+                CtlNetworkName.Content = System.IO.Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;
@@ -658,7 +666,7 @@ namespace Qualia
                         CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
                         CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel);
                         CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
-                        CtlStatisticsPresenter.Draw(null);
+                        CtlStatisticsPresenter.Draw(NetworksManager.SelectedNetworkModel.LastStatistic);
                     }
                 }
                 else

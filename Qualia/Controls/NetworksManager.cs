@@ -118,7 +118,7 @@ namespace Qualia.Controls
                 network.InputLayer.OnInputDataChanged(newCount);
             }
             ResetLayersTabsNames();
-            OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount, null);
+            //OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount, null);
         }
 
         public void AddNetwork()
@@ -133,7 +133,13 @@ namespace Qualia.Controls
             tab.Header = $"Network {CtlTabs.Items.Count}";
             tab.Content = network;
             CtlTabs.Items.Add(tab);
-            CtlTabs.SelectedItem = tab;;
+            CtlTabs.SelectedItem = tab;
+
+            if (id == Const.UnknownId)
+            {
+                network.InputLayer.OnInputDataChanged(CtlInputData.InputCount);
+                network.ResetLayersTabsNames();
+            }
         }
 
         public void DeleteNetwork()

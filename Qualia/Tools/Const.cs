@@ -61,6 +61,7 @@ namespace Tools
             ActivationFunc,
             ActivationFuncParamA,
             Task,
+            NetworkEnabled,
 
             // Settings
 

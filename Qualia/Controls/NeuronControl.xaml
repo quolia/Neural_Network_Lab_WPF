@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              BorderThickness="0,1,0,0"
              BorderBrush="Gray"
+             Padding="3"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>

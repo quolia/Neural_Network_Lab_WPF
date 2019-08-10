@@ -7,12 +7,6 @@
         Closing="Window_Closing"
         mc:Ignorable="d" Height="450" Width="800" Title="Neural Network">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary x:Key="DICT" Source="ResourceDictionary.xaml" />
-        </ResourceDictionary>
-    </Window.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="DataWidth" />
@@ -65,27 +59,34 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Menu Name="CtlMenu" Background="White">
-                <MenuItem Header="File">
-                    <MenuItem Name="CtlMainMenuNew" Header="New..." Click="CtlMainMenuNew_Click" />
-                    <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="CtlMainMenuLoad_Click" />
-                    <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="CtlMainMenuSaveAs_Click" />
-                </MenuItem>
-                <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="CtlMenuNetwork_SubmenuOpened">
-                    <MenuItem Name="CtlMainMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />
-                    <MenuItem Name="CtlMainMenuDeleteNetwork" Header="Delete Network..." Click="CtlMainMenuDeleteNetwork_Click" />
-                    <Separator />
-                    <MenuItem Name="CtlMainMenuAddLayer" Header="Add Layer" Click="CtlMainMenuAddLayer_Click" />
-                    <MenuItem Name="CtlMainMenuDeleteLayer" Header="Delete Layer..." Click="CtlMainMenuDeleteLayer_Click" />
-                    <Separator />
-                    <MenuItem Name="CtlMainMenuAddNeuron" Header="Add Neuron" Click="CtlMainMenuAddNeuron_Click" />
-                </MenuItem>
-                <MenuItem Name="CtlMenuRun" Header="Run" SubmenuOpened="CtlMenuRun_SubmenuOpened">
-                    <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="CtlMenuStart_Click" />
-                    <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="CtlMenuStop_Click" />
-                    <MenuItem Name="CtlMenuReset" Header="Reset" Click="CtlMenuReset_Click" />
-                </MenuItem>
-            </Menu>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Menu Name="CtlMenu" Background="White">
+                    <MenuItem Header="File">
+                        <MenuItem Name="CtlMainMenuNew" Header="New..." Click="CtlMainMenuNew_Click" />
+                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="CtlMainMenuLoad_Click" />
+                        <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="CtlMainMenuSaveAs_Click" />
+                    </MenuItem>
+                    <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="CtlMenuNetwork_SubmenuOpened">
+                        <MenuItem Name="CtlMainMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />
+                        <MenuItem Name="CtlMainMenuDeleteNetwork" Header="Delete Network..." Click="CtlMainMenuDeleteNetwork_Click" />
+                        <Separator />
+                        <MenuItem Name="CtlMainMenuAddLayer" Header="Add Layer" Click="CtlMainMenuAddLayer_Click" />
+                        <MenuItem Name="CtlMainMenuDeleteLayer" Header="Delete Layer..." Click="CtlMainMenuDeleteLayer_Click" />
+                        <Separator />
+                        <MenuItem Name="CtlMainMenuAddNeuron" Header="Add Neuron" Click="CtlMainMenuAddNeuron_Click" />
+                    </MenuItem>
+                    <MenuItem Name="CtlMenuRun" Header="Run" SubmenuOpened="CtlMenuRun_SubmenuOpened">
+                        <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="CtlMenuStart_Click" />
+                        <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="CtlMenuStop_Click" />
+                        <MenuItem Name="CtlMenuReset" Header="Reset" Click="CtlMenuReset_Click" />
+                    </MenuItem>
+                </Menu>
+                <local:QLabel Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
+            </Grid>
             <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="CtlApplyChanges_Click" />
             <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="CtlTabs_SelectionChanged" >
                 <TabControl.ContextMenu>
