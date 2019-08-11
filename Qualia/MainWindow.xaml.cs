@@ -22,7 +22,7 @@ using Tools;
 
 namespace Qualia
 {
-    public partial class Main : Window
+    public partial class Main : Window, INetworkTaskChanged
     {
         Thread WorkThread;
         CancellationToken CancellationToken;
@@ -228,11 +228,14 @@ namespace Qualia
 
             if (File.Exists(name))
             {
-                var manager = new NetworksManager(CtlInputDataPresenter, CtlTabs, name, OnNetworkUIChanged);
+                NetworksManager = new NetworksManager(CtlInputDataPresenter, CtlTabs, name, OnNetworkUIChanged);
                 Config.Main.Set(Const.Param.NetworksManagerName, name);
-                ReplaceNetworksManagerControl(manager);
-                if (manager.IsValid())
+                ReplaceNetworksManagerControl(NetworksManager);
+                if (NetworksManager.IsValid())
                 {
+                    CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
+                    //TaskChanged();
+
                     ApplyChangesToStandingNetworks();
                 }
                 else
@@ -610,12 +613,14 @@ namespace Qualia
                 return;
             }
 
-            var network = new NetworksManager(CtlInputDataPresenter, CtlTabs, null, OnNetworkUIChanged);
-            if (network.Config != null)
+            var manager = new NetworksManager(CtlInputDataPresenter, CtlTabs, null, OnNetworkUIChanged);
+            if (manager.Config != null)
             {
-                ReplaceNetworksManagerControl(network);
-                if (network.IsValid())
+                NetworksManager = manager;
+                ReplaceNetworksManagerControl(NetworksManager);
+                if (NetworksManager.IsValid())
                 {
+                    CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
                     ApplyChangesToStandingNetworks();
                 }
                 else
@@ -669,8 +674,6 @@ namespace Qualia
 
         private void ReplaceNetworksManagerControl(NetworksManager manager)
         {
-            NetworksManager = manager;
-
             if (manager == null)
             {
                 CtlNetworkName.Content = "...";
@@ -868,6 +871,20 @@ namespace Qualia
         private void CtlNetworkContextMenu_Opened(object sender, RoutedEventArgs e)
         {
             CtlMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+        }
+
+        public void TaskChanged()
+        {
+            CtlInputDataPresenter.Task.Load(NetworksManager.Config);
+            TaskParameterChanged();
+        }
+
+        public void TaskParameterChanged()
+        {
+            NetworksManager.RebuildNetworksForTask(CtlInputDataPresenter.Task);
+            NetworksManager.ResetLayersTabsNames();
+            NetworksManager.RefreshNetworksDataModels();
+            CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
         }
     }
 }

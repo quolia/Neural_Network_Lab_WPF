@@ -4,12 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Tools;
 
 namespace Qualia.Controls
 {
-    public class QCheckBox : CheckBox
+    public class QCheckBox : CheckBox, IConfigValue
     {
-        public event Action<bool> CheckedChanged = delegate { };
+        public event Action Changed = delegate { };
+
+        public bool DefaultValue
+        {
+            get;
+            set;
+        }
 
         public bool IsOn
         {
@@ -33,12 +40,37 @@ namespace Qualia.Controls
 
         private void OnOffBox_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CheckedChanged(false);
+            Changed();
         }
 
         private void OnOffBox_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CheckedChanged(true);
+            Changed();
+        }
+
+        public void Load(Config config)
+        {
+            IsOn = config.GetBool(Name, DefaultValue);
+        }
+
+        public void Save(Config config)
+        {
+            config.Set(Name, IsOn);
+        }
+
+        public void Vanish(Config config)
+        {
+            config.Remove(Name);
+        }
+
+        public bool IsValid()
+        {
+            return true;
+        }
+
+        public void SetChangeEvent(Action action)
+        {
+            Changed = action;
         }
     }
 }

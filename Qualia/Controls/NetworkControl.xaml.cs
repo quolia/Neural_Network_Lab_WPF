@@ -30,7 +30,7 @@ namespace Qualia.Controls
         }
 
         OutputLayerControl OutputLayer;
-        public bool IsNetworkEnabled => CtlIsEnabled.IsOn;
+        public bool IsNetworkEnabled => CtlIsNetworkEnabled.IsOn;
 
         public NetworkControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
         {
@@ -45,10 +45,10 @@ namespace Qualia.Controls
             CtlRandomizerParamA.Changed += OnChanged;
             CtlRandomizer.SelectedIndexChanged += CtlRandomizer_SelectedValueChanged;
             CtlLearningRate.Changed += OnChanged;
-            CtlIsEnabled.CheckedChanged += CtlIsEnabled_CheckedChanged;
+            CtlIsNetworkEnabled.Changed += CtlIsNetworkEnabled_Changed;
         }
 
-        private void CtlIsEnabled_CheckedChanged(bool isChecked)
+        private void CtlIsNetworkEnabled_Changed()
         {
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
         }
@@ -115,11 +115,11 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Config.Set(Const.Param.NetworkEnabled, CtlIsEnabled.IsOn);
             Config.Set(Const.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
             Config.Set(Const.Param.RandomizeMode, Randomizer);
             Config.Set(Const.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
 
+            CtlIsNetworkEnabled.Save(Config);
             CtlRandomizerParamA.Save(Config);
             CtlLearningRate.Save(Config);
 
@@ -134,16 +134,15 @@ namespace Qualia.Controls
 
         public void VanishConfig()
         {
-            Config.Remove(Const.Param.NetworkEnabled);
             Config.Remove(Const.Param.SelectedLayerIndex);
             Config.Remove(Const.Param.RandomizeMode);
             Config.Remove(Const.Param.Color);
 
+            CtlIsNetworkEnabled.Vanish(Config);
             CtlRandomizerParamA.Vanish(Config);
             CtlLearningRate.Vanish(Config);
 
-            var layers = GetLayersControls();
-            Range.ForEach(layers, l => l.VanishConfig());
+            Range.ForEach(GetLayersControls(), l => l.VanishConfig());
             Config.Remove(Const.Param.Layers);
         }
 
@@ -162,7 +161,7 @@ namespace Qualia.Controls
             RandomizeMode.Helper.FillComboBox(CtlRandomizer, Config, Const.Param.RandomizeMode, nameof(RandomizeMode.Random));
             CtlRandomizerParamA.Load(Config);
             CtlLearningRate.Load(Config);
-            CtlIsEnabled.IsOn = Config.GetBool(Const.Param.NetworkEnabled, true);
+            CtlIsNetworkEnabled.Load(Config);
             var color = Config.GetArray(Const.Param.Color, "255,100,100,100");
             CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0], (byte)color[1], (byte)color[2], (byte)color[3]));
 
@@ -222,7 +221,7 @@ namespace Qualia.Controls
         {
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
-                IsEnabled = CtlIsEnabled.IsOn,
+                IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = Randomizer,
                 RandomizerParamA = RandomizerParamA,

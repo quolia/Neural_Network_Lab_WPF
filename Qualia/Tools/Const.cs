@@ -31,6 +31,7 @@ namespace Tools
             ScreenLeft,
             ScreenTop,
             OnTop,
+
             PointSize,
             PointsArrangeSnap,
             DataWidth,
@@ -43,7 +44,6 @@ namespace Tools
             SelectedLayerIndex,
             InputNeuronsMinCount,
             InputNeuronsMaxCount,
-            InputNeuronsCount,
             RandomizeMode,
             ActivationInitializer,
             ActivationInitializerParamA,
@@ -52,16 +52,22 @@ namespace Tools
             Layers,
             Neurons,
             RandomizeModeParamA,
-            IsBias,
-            IsBiasConnected,
             LearningRate,
             InputInitial0,
             InputInitial1,
             Color,
             ActivationFunc,
             ActivationFuncParamA,
+            InputNeuronsCount,
+
+            // Task
+
             Task,
-            NetworkEnabled,
+            TaskInputCount,
+            TaskMinNumber,
+            TaskMaxNumber,
+            TaskSymmetric,
+
 
             // Settings
 

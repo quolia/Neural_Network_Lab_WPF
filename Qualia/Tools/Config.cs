@@ -41,7 +41,25 @@ namespace Tools
             return GetValue(name, defaultValue);
         }
 
+        public string GetString(string name, string defaultValue = null)
+        {
+            return GetValue(name, defaultValue);
+        }
+
         public double? GetDouble(Const.Param name, double? defaultValue = null)
+        {
+            if (Converter.TryTextToDouble(GetValue(name, Converter.DoubleToText(defaultValue)), out double? value))
+            {
+                return value;
+            }
+            else
+            {
+                Set(name, defaultValue);
+                return defaultValue;
+            }
+        }
+
+        public double? GetDouble(string name, double? defaultValue = null)
         {
             if (Converter.TryTextToDouble(GetValue(name, Converter.DoubleToText(defaultValue)), out double? value))
             {
@@ -59,7 +77,17 @@ namespace Tools
             return (int?)GetDouble(name, defaultValue);
         }
 
+        public int? GetInt(string name, int? defaultValue = null)
+        {
+            return (int?)GetDouble(name, defaultValue);
+        }
+
         public bool GetBool(Const.Param name, bool defaultValue = false)
+        {
+            return 1 == GetInt(name, defaultValue ? 1 : 0);
+        }
+
+        public bool GetBool(string name, bool defaultValue = false)
         {
             return 1 == GetInt(name, defaultValue ? 1 : 0);
         }
@@ -75,12 +103,33 @@ namespace Tools
             return String.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
+        public long[] GetArray(string name, string defaultValue = null)
+        {
+            if (defaultValue == null)
+            {
+                defaultValue = "";
+            }
+
+            string value = GetValue(name, defaultValue);
+            return String.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+        }
+
         public void Remove(Const.Param name)
         {
             var values = GetValues();
-            if (values.TryGetValue(name.ToString("G") + Extender, out string value))
+            if (values.TryGetValue(name.ToString("G") + Extender, out _))
             {
                 values.Remove(name.ToString("G") + Extender);
+            }
+            SaveValues(values);
+        }
+
+        public void Remove(string name)
+        {
+            var values = GetValues();
+            if (values.TryGetValue(name + Extender, out _))
+            {
+                values.Remove(name + Extender);
             }
             SaveValues(values);
         }
@@ -92,7 +141,24 @@ namespace Tools
             SaveValues(values);
         }
 
+        public void Set(string name, string value)
+        {
+            if (name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase))
+            {
+                name = name.Substring(3);
+            }
+
+            var values = GetValues();
+            values[name + Extender] = value;
+            SaveValues(values);
+        }
+
         public void Set(Const.Param name, double? value)
+        {
+            Set(name, Converter.DoubleToText(value));
+        }
+
+        public void Set(string name, double? value)
         {
             Set(name, Converter.DoubleToText(value));
         }
@@ -102,7 +168,17 @@ namespace Tools
             Set(name, value.ToString());
         }
 
+        public void Set(string name, int value)
+        {
+            Set(name, value.ToString());
+        }
+
         public void Set(Const.Param name, bool value)
+        {
+            Set(name, value ? 1 : 0);
+        }
+
+        public void Set(string name, bool value)
         {
             Set(name, value ? 1 : 0);
         }
@@ -112,11 +188,36 @@ namespace Tools
             Set(name, String.Join(",", list.Select(l => l.ToString())));
         }
 
+        public void Set<T>(string name, IEnumerable<T> list)
+        {
+            Set(name, String.Join(",", list.Select(l => l.ToString())));
+        }
+
         private string GetValue(Const.Param name, string defaultValue = null)
         {
             var values = GetValues();
 
             if (values.TryGetValue(name.ToString("G") + Extender, out string value))
+            {
+                return value;
+            }
+            else
+            {
+                Set(name, defaultValue);
+                return defaultValue;
+            }
+        }
+
+        private string GetValue(string name, string defaultValue = null)
+        {
+            if (name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase))
+            {
+                name = name.Substring(3);
+            }
+
+            var values = GetValues();
+
+            if (values.TryGetValue(name + Extender, out string value))
             {
                 return value;
             }

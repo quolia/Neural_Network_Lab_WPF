@@ -13,7 +13,6 @@ namespace Qualia.Controls
 
         public QComboBox()
         {
-            //Height = 22;
             Padding = new System.Windows.Thickness(3, 2, 3, 2);
             SelectionChanged += SelectBox_SelectionChanged;
         }

@@ -23,14 +23,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-
         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-            <local:QCheckBox x:Name="CtlIsBias" Content="Is bias" />
-            <local:QCheckBox x:Name="CtlIsBiasConnected" Content="Is bias connected" Margin="10,0,0,0" />
+            <local:QCheckBox x:Name="CtlIsBias" Content="Is bias" DefaultValue="False" />
+            <local:QCheckBox x:Name="CtlIsBiasConnected" Content="Is bias connected" DefaultValue="False" Margin="10,0,0,0" />
         </StackPanel>
         <local:QLabel Grid.Column="3" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
-
-
 
         <local:QLabel Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
         <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationIniter" />
@@ -46,7 +43,5 @@
         <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunc" />
         <local:QLabel Grid.Row="3" Grid.Column="2" Content="a:" />
         <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" ConfigParameter="ActivationFuncParamA" />
-
-            
     </Grid>
 </local:NeuronBase>

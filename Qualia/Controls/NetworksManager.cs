@@ -106,19 +106,11 @@ namespace Qualia.Controls
             }
             Range.For(networks.Length, i => AddNetwork(networks[i]));
             CtlTabs.SelectedIndex = Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
-            CtlInputData.LoadConfig(Config, OnInputDataChanged);
-            OnInputDataChanged(CtlInputData.InputCount);
+            /*
+            CtlInputData.LoadConfig(Config, this);
+            TaskChanged();
             RefreshNetworksDataModels();
-        }
-
-        private void OnInputDataChanged(int newCount)
-        {
-            foreach (var network in Networks)
-            {
-                network.InputLayer.OnInputDataChanged(newCount);
-            }
-            ResetLayersTabsNames();
-            //OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount, null);
+            */
         }
 
         public void AddNetwork()
@@ -137,7 +129,7 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                network.InputLayer.OnInputDataChanged(CtlInputData.InputCount);
+                CtlInputData.Task.RebuildNetwork(network);
                 network.ResetLayersTabsNames();
             }
         }
@@ -180,6 +172,11 @@ namespace Qualia.Controls
         public void ResetLayersTabsNames()
         {
             Range.ForEach(Networks, n => n.ResetLayersTabsNames());
+        }
+
+        public void RebuildNetworksForTask(INetworkTask task)
+        {
+            Range.ForEach(Networks, n => task.RebuildNetwork(n));
         }
 
         public void SaveAs()

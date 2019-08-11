@@ -1,4 +1,5 @@
 ﻿using Qualia;
+using Qualia.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,18 @@ using System.Windows.Controls;
 
 namespace Tools
 {
-    public interface INetworkTask
+    public interface INetworkTask : IConfigValue
     {
         void Do(NetworkDataModel model);
+        Control GetVisualControl();
+        void RebuildNetwork(NetworkControl network);
+        int GetInputCount();
+    }
+
+    public interface INetworkTaskChanged
+    {
+        void TaskChanged();
+        void TaskParameterChanged();
     }
 
     public static class NetworkTask
@@ -20,6 +30,37 @@ namespace Tools
         public class CountDotsSymmetric : INetworkTask
         {
             public static INetworkTask Instance = new CountDotsSymmetric();
+            static CountDotsControl Control = new CountDotsControl();
+
+            public CountDotsSymmetric()
+            {
+
+            }
+
+            public void LoadConfig(Config config)
+            {
+
+            }
+
+            public void SaveConfig(Config config)
+            {
+
+            }
+
+            public Control GetVisualControl()
+            {
+                return Control;
+            }
+
+            public void RebuildNetwork(NetworkControl network)
+            {
+
+            }
+
+            public int GetInputCount()
+            {
+                return 0;
+            }
 
             public void Do(NetworkDataModel model)
             {
@@ -46,15 +87,81 @@ namespace Tools
                 int k = 0;
                 Range.ForEach(model.Layers.First().Neurons.Where(n => !n.IsBias), n => n.Activation = shaffle[k++]);
             }
+
+            public void Load(Config config)
+            {
+
+            }
+
+            public void Save(Config config)
+            {
+
+            }
+
+            public void Vanish(Config config)
+            {
+
+            }
+
+            public bool IsValid()
+            {
+                return false;
+            }
+
+            public void SetChangeEvent(Action action)
+            {
+
+            }
         }
 
         public class CountDotsAsymmetric : INetworkTask
         {
             public static INetworkTask Instance = new CountDotsAsymmetric();
+            static CountDotsControl Control = new CountDotsControl();
+
+            public Control GetVisualControl()
+            {
+                return Control;
+            }
+
+            public void Load(Config config)
+            {
+                Control.Load(config);
+            }
+
+            public void Save(Config config)
+            {
+                Control.Save(config);
+            }
+
+            public void RebuildNetwork(NetworkControl network)
+            {
+                network.InputLayer.OnInputDataChanged(Control.InputCount);
+            }
+
+            public int GetInputCount()
+            {
+                return Control.InputCount;
+            }
 
             public void Do(NetworkDataModel model)
             {
                 Range.For(Rand.Flat.Next(11), i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+            }
+
+            public void Vanish(Config config)
+            {
+                Control.Vanish(config);
+            }
+
+            public bool IsValid()
+            {
+                return Control.IsValid();
+            }
+
+            public void SetChangeEvent(Action action)
+            {
+                Control.SetChangeEvent(action);
             }
         }
 

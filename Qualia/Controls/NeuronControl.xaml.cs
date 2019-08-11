@@ -29,8 +29,8 @@ namespace Qualia.Controls
             CtlActivationIniter.SelectedIndexChanged += CtlActivationIniter_SelectionChanged; 
             CtlWeightsIniterParamA.Changed += OnChanged;
             CtlWeightsIniter.SelectionChanged += CtlWeightsIniter_SelectionChanged;
-            CtlIsBias.CheckedChanged += CtlIsBias_CheckedChanged;
-            CtlIsBiasConnected.CheckedChanged += CtlIsBiasConnected_CheckedChanged;
+            CtlIsBias.Changed += CtlIsBias_CheckedChanged;
+            CtlIsBiasConnected.Changed += CtlIsBiasConnected_CheckedChanged;
             CtlActivationFunc.SelectedIndexChanged += CtlActivationFunc_SelectedIndexChanged;
             CtlActivationFuncParamA.Changed += OnChanged;
         }
@@ -60,15 +60,15 @@ namespace Qualia.Controls
             CtlNumber.Content = number.ToString();
         }
 
-        private void CtlIsBiasConnected_CheckedChanged(bool isChecked)
+        private void CtlIsBiasConnected_CheckedChanged()
         {
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
 
-        private void CtlIsBias_CheckedChanged(bool isChecked)
+        private void CtlIsBias_CheckedChanged()
         {
-            CtlIsBiasConnected.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
-            CtlActivation.Height = isChecked ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
+            CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
+            CtlActivation.Height = CtlIsBias.IsOn ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
             StateChanged();
             OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
         }
@@ -87,10 +87,11 @@ namespace Qualia.Controls
             InitializeMode.Helper.FillComboBox(CtlWeightsIniter, Config, Const.Param.WeightsInitializer, nameof(InitializeMode.None));
             CtlWeightsIniterParamA.Load(Config);
 
-            CtlIsBias.IsChecked = Config.GetBool(Const.Param.IsBias, false);
-            CtlIsBiasConnected.Visibility = CtlIsBias.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
-            CtlIsBiasConnected.IsChecked = CtlIsBias.IsChecked == true && Config.GetBool(Const.Param.IsBiasConnected, false);
-            CtlActivation.Height = CtlIsBias.IsChecked == true ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
+            CtlIsBias.Load(Config);
+            CtlIsBiasConnected.Load(Config);
+            CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
+            CtlIsBiasConnected.IsOn &= CtlIsBias.IsOn;
+            CtlActivation.Height = CtlIsBias.IsOn ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
 
             InitializeMode.Helper.FillComboBox(CtlActivationIniter, Config, Const.Param.ActivationInitializer, nameof(InitializeMode.Constant));
             CtlActivationIniterParamA.Load(Config);
@@ -103,7 +104,7 @@ namespace Qualia.Controls
 
         public bool IsValidActivationIniterParamA()
         {
-            return !IsBias || Converter.TryTextToDouble(CtlActivationIniterParamA.Text, out double? result);
+            return !IsBias || Converter.TryTextToDouble(CtlActivationIniterParamA.Text, out _);
         }
 
         public override bool IsValid()
@@ -113,7 +114,7 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            if (CtlIsBias.IsChecked == true)
+            if (CtlIsBias.IsOn)
             {
                 Config.Set(Const.Param.ActivationInitializer, CtlActivationIniter.SelectedItem.ToString());
                 CtlActivationIniterParamA.Save(Config);
@@ -130,21 +131,21 @@ namespace Qualia.Controls
             Config.Set(Const.Param.ActivationFunc, CtlActivationFunc.SelectedItem.ToString());
             CtlActivationFuncParamA.Save(Config);
 
-            Config.Set(Const.Param.IsBias, CtlIsBias.IsChecked == true);
-            Config.Set(Const.Param.IsBiasConnected, CtlIsBias.IsChecked == true && CtlIsBiasConnected.IsChecked == true);
+            CtlIsBias.Save(Config);
+            CtlIsBiasConnected.Save(Config);
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.ActivationInitializer);
             Config.Remove(Const.Param.WeightsInitializer);
-            Config.Remove(Const.Param.IsBias);
-            Config.Remove(Const.Param.IsBiasConnected);
             Config.Remove(Const.Param.ActivationFunc);
 
             CtlWeightsIniterParamA.Vanish(Config);
             CtlActivationIniterParamA.Vanish(Config);
             CtlActivationFuncParamA.Vanish(Config);
+            CtlIsBias.Vanish(Config);
+            CtlIsBiasConnected.Vanish(Config);
         }
     }
 }

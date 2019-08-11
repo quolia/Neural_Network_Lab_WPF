@@ -64,6 +64,9 @@
     <Compile Include="Controls\Base\QCheckBox.cs" />
     <Compile Include="Controls\Base\QComboBox.cs" />
     <Compile Include="Controls\InputBiasControl.cs" />
+    <Compile Include="Controls\Task\CountDotsControl.xaml.cs">
+      <DependentUpon>CountDotsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tools\Activation.cs" />
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Const.cs" />
@@ -124,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Task\CountDotsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

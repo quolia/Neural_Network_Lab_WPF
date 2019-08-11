@@ -16,7 +16,7 @@
                 <local:QLabel Content="Color:" />
                 <local:QLabel x:Name="CtlColor" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
                 <Grid>
-                    <local:QCheckBox x:Name="CtlIsEnabled" Content="Enable" VerticalAlignment="Center" />
+                    <local:QCheckBox x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
                 </Grid>
             </StackPanel>
             <StackPanel Orientation="Horizontal">

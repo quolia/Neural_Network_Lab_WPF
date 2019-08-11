@@ -18,15 +18,16 @@ namespace Qualia.Controls
 {
     public partial class DataPresenter : UserControl
     {
-        public Action<int> ValueChanged = delegate { };
-
+        public INetworkTask Task;
+        
         int PointSize;
         int PointsRearrangeSnap;
         int PointsCount;
         double Threshold;
         double[] Data;
 
-        public INetworkTask Task;
+        INetworkTaskChanged TaskChanged;
+
 
         public DataPresenter()
         {
@@ -42,6 +43,10 @@ namespace Qualia.Controls
         private void CtlTask_SelectedIndexChanged(int index)
         {
             Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+            Task.SetChangeEvent(TaskParameterChanged);
+            CtlHolder.Children.Clear();
+            CtlHolder.Children.Add(Task.GetVisualControl());
+            TaskChanged.TaskChanged();
         }
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
@@ -49,31 +54,26 @@ namespace Qualia.Controls
             Rearrange(Const.CurrentValue);
         }
 
-        public int InputCount => (int)CtlInputCount.Value;
-
-        public void LoadConfig(Config config, Action<int> onValueChanged)
+        public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            CtlInputCount.MinimumValue = Config.Main.GetInt(Const.Param.InputNeuronsMinCount, 10).Value;
-            CtlInputCount.MaximumValue = Config.Main.GetInt(Const.Param.InputNeuronsMaxCount, 10000).Value;
-
+            TaskChanged = taskChanged;
             NetworkTask.Helper.FillComboBox(CtlTask, config, Const.Param.Task, null);
+            Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+            Task.SetChangeEvent(TaskParameterChanged);
+            CtlHolder.Children.Clear();
+            CtlHolder.Children.Add(Task.GetVisualControl());
+            Task.Load(config);
+        }
 
-            ValueChanged = onValueChanged;
-
-            CtlInputCount.Changed -= CtlInputCount_ValueChanged;
-            CtlInputCount.Value = config.GetInt(Const.Param.InputNeuronsCount, Const.DefaultInputNeuronsCount).Value;
-            CtlInputCount.Changed += CtlInputCount_ValueChanged;
+        void TaskParameterChanged()
+        {
+            TaskChanged.TaskParameterChanged();
         }
 
         public void SaveConfig(Config config)
         {
-            config.Set(Const.Param.InputNeuronsCount, (int)CtlInputCount.Value);
             config.Set(Const.Param.Task, CtlTask.SelectedItem.ToString());
-        }
-
-        private void CtlInputCount_ValueChanged()
-        {
-            ValueChanged((int)CtlInputCount.Value);
+            Task.Save(config);
         }
 
         private void DrawPoint(int x, int y, double value)
@@ -100,7 +100,7 @@ namespace Qualia.Controls
 
         public void RearrangeWithNewPointsCount()
         {
-            Rearrange((int)CtlInputCount.Value);
+            Rearrange(Task.GetInputCount());
         }
 
         private void Rearrange(int pointsCount)
