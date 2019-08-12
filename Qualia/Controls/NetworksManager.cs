@@ -108,7 +108,7 @@ namespace Qualia.Controls
             CtlTabs.SelectedIndex = Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
             //CtlInputData.LoadConfig(Config, this);
             //TaskParameterChanged();
-            //RefreshNetworksDataModels();
+            RefreshNetworksDataModels();
         }
 
 
@@ -119,6 +119,7 @@ namespace Qualia.Controls
                 network.InputLayer.OnInputDataChanged(task.GetInputCount());
             }
             ResetLayersTabsNames();
+            RefreshNetworksDataModels();
         }
 
         public void AddNetwork()

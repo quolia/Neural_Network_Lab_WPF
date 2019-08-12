@@ -46,7 +46,10 @@ namespace Qualia.Controls
             Task.SetChangeEvent(TaskParameterChanged);
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(Task.GetVisualControl());
-            TaskChanged.TaskChanged();
+            if (TaskChanged != null)
+            {
+                TaskChanged.TaskChanged();
+            }
         }
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
@@ -55,19 +58,25 @@ namespace Qualia.Controls
         }
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
-        {
-            TaskChanged = taskChanged;
+        {  
             NetworkTask.Helper.FillComboBox(CtlTask, config, null);
             Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
-            Task.SetChangeEvent(TaskParameterChanged);
+            //Task.SetChangeEvent(TaskParameterChanged);
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(Task.GetVisualControl());
             Task.Load(config);
+            Task.SetChangeEvent(TaskParameterChanged);
+            TaskChanged = taskChanged;
+            TaskParameterChanged();
         }
 
         void TaskParameterChanged()
         {
-            TaskChanged.TaskParameterChanged();
+            if (TaskChanged != null)
+            {
+                RearrangeWithNewPointsCount();
+                TaskChanged.TaskParameterChanged();
+            }
         }
 
         public void SaveConfig(Config config)

@@ -231,7 +231,6 @@ namespace Qualia
                 NetworksManager = new NetworksManager(CtlInputDataPresenter, CtlTabs, name, OnNetworkUIChanged);
                 Config.Main.Set(Const.Param.NetworksManagerName, name);
                 CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
-                //TaskChanged();
 
                 ReplaceNetworksManagerControl(NetworksManager);
                 if (NetworksManager.IsValid())
@@ -618,8 +617,6 @@ namespace Qualia
             {
                 NetworksManager = network;
                 CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
-                //TaskChanged();
-                //RefreshNetworksDataModels();
 
                 ReplaceNetworksManagerControl(NetworksManager);
                 if (NetworksManager.IsValid())
