@@ -26,6 +26,9 @@ namespace Qualia.Controls
         }
 
         public int InputCount => CtlTaskInputCount.Value;
+        public bool IsSymmetric => CtlIsSymmetric.IsOn;
+        public int MaxNumber => CtlTaskMaxNumber.Value;
+        public int MinNumber => CtlTaskMinNumber.Value;
 
         private void Changed()
         {
@@ -52,7 +55,8 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            return this.FindVisualChildren<IConfigValue>().All(c => c.IsValid());
+            return this.FindVisualChildren<IConfigValue>().All(c => c.IsValid()) &&
+                   CtlTaskInputCount.Value >= CtlTaskMaxNumber.Value;
         }
 
         public void SetChangeEvent(Action onChange)

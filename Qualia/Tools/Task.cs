@@ -141,12 +141,24 @@ namespace Tools
 
             public List<string> GetClasses()
             {
-                return new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+                var classes = new List<string>();
+                for (int i = Control.MinNumber; i <= Control.MaxNumber; ++i)
+                {
+                    classes.Add(i.ToString());
+                }
+                return classes;
             }
 
             public void Do(NetworkDataModel model)
             {
-                Range.For(Rand.Flat.Next(11), i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+                if (Control.IsSymmetric)
+                {
+
+                }
+                else
+                {
+                    Range.For(Rand.Flat.Next(Control.MinNumber, Control.MaxNumber + 1), i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+                }
             }
 
             public void Vanish(Config config)

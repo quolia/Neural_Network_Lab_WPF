@@ -18,7 +18,7 @@ namespace Qualia.Controls
 {
     public partial class SettingsControl : UserControl, IConfigValue
     {
-        public event Action Changed = delegate { };
+        event Action Changed = delegate { };
 
         object Locker = new object();
         Settings _Settings;

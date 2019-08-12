@@ -182,8 +182,7 @@ namespace Qualia
         private void LoadSettings()
         {
             CtlSettings.Load(Config.Main);
-            CtlSettings.Changed -= OnSettingsChanged;
-            CtlSettings.Changed += OnSettingsChanged;
+            CtlSettings.SetChangeEvent(OnSettingsChanged);
             CtlApplySettingsButton.IsEnabled = false;
             CtlCancelSettingsButton.IsEnabled = false;
         }
@@ -313,7 +312,19 @@ namespace Qualia
             {
                 if (NetworksManager != null)
                 {
-                    NetworksManager.ResetLayersTabsNames();
+                    if (NetworksManager.IsValid())
+                    {
+                        NetworksManager.ResetLayersTabsNames();
+                    }
+                    else
+                    {
+                        ToggleApplyChanges(Const.Toggle.Off);
+                    }
+                }
+
+                if (!CtlInputDataPresenter.Task.IsValid())
+                {
+                    ToggleApplyChanges(Const.Toggle.Off);
                 }
             }
         }
