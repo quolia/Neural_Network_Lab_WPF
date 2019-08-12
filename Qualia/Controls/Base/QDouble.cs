@@ -11,13 +11,7 @@ namespace Qualia.Controls
 {
     public class QDouble : TextBox, IConfigValue
     {
-        public event Action Changed = delegate { };
-
-        public Const.Param ConfigParameter
-        {
-            get;
-            set;
-        }
+        event Action OnChanged = delegate { };
 
         public Double? DefaultValue
         {
@@ -55,7 +49,7 @@ namespace Qualia.Controls
             if (IsValid())
             {
                 Background = Brushes.White;
-                Changed();
+                OnChanged();
             }
             else
             {
@@ -82,7 +76,7 @@ namespace Qualia.Controls
         {
             get
             {
-                return IsValid() ? (IsNull() ? throw new InvalidValueException(ConfigParameter, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(ConfigParameter, Text);
+                return IsValid() ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(Name, Text);
             }
 
             set
@@ -96,7 +90,7 @@ namespace Qualia.Controls
         {
             get
             {
-                return IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(ConfigParameter, Text);
+                return IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
             }
 
             set
@@ -109,25 +103,25 @@ namespace Qualia.Controls
         public void Load(Config config)
         {
             if (IsNullAllowed)
-                ValueOrNull = config.GetDouble(ConfigParameter, DefaultValue);
+                ValueOrNull = config.GetDouble(Name, DefaultValue);
             else
-                Value = config.GetDouble(ConfigParameter, DefaultValue).Value;
+                Value = config.GetDouble(Name, DefaultValue).Value;
         }
 
         public void Save(Config config)
         {
-            config.Set(ConfigParameter, IsNullAllowed ? ValueOrNull : Value);
+            config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
         }
 
         public void Vanish(Config config)
         {
-            config.Remove(ConfigParameter);
+            config.Remove(Name);
         }
 
-        public void SetChangeEvent(Action action)
+        public void SetChangeEvent(Action onChanged)
         {
-            Changed -= action;
-            Changed += action;
+            OnChanged -= onChanged;
+            OnChanged += onChanged;
         }
     }
 }

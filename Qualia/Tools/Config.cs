@@ -27,6 +27,11 @@ namespace Tools
             Name = name;
         }
 
+        private string CutName(string name)
+        {
+            return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name; 
+        }
+
         public Config Extend(long extender)
         {
             var config = new Config(Name)
@@ -143,10 +148,7 @@ namespace Tools
 
         public void Set(string name, string value)
         {
-            if (name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase))
-            {
-                name = name.Substring(3);
-            }
+            name = CutName(name);
 
             var values = GetValues();
             values[name + Extender] = value;
@@ -210,10 +212,7 @@ namespace Tools
 
         private string GetValue(string name, string defaultValue = null)
         {
-            if (name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase))
-            {
-                name = name.Substring(3);
-            }
+            name = CutName(name);
 
             var values = GetValues();
 

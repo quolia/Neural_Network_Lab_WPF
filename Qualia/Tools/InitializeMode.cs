@@ -59,9 +59,9 @@ namespace Tools
                 return (double)method.Invoke(null, new object[] { a });
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, Const.Param param, string defaultValue)
+            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(InitializeMode.Helper), cb, config, param, defaultValue);
+                Initializer.FillComboBox(typeof(InitializeMode.Helper), cb, config, cb.Name, defaultValue);
             }
         }
     }

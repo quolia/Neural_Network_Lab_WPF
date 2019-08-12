@@ -153,9 +153,9 @@ namespace Tools
                 method.Invoke(null, new object[] { N, a });
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, Const.Param param, string defaultValue)
+            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(RandomizeMode.Helper), cb, config, param, defaultValue);
+                Initializer.FillComboBox(typeof(RandomizeMode.Helper), cb, config, cb.Name, defaultValue);
             }
         }
     }

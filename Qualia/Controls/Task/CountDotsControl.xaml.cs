@@ -18,14 +18,14 @@ namespace Qualia.Controls
 {
     public partial class CountDotsControl : UserControl, IConfigValue
     {
-        Action OnChange;
+        event Action OnChange = delegate { };
 
         public CountDotsControl()
         {
             InitializeComponent();
         }
 
-        public int InputCount => CtlInputCount.Value;
+        public int InputCount => CtlTaskInputCount.Value;
 
         private void Changed()
         {
@@ -57,7 +57,8 @@ namespace Qualia.Controls
 
         public void SetChangeEvent(Action onChange)
         {
-            OnChange = onChange;
+            OnChange -= onChange;
+            OnChange += onChange;
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(Changed));
         }
     }

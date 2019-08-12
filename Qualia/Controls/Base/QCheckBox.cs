@@ -10,7 +10,7 @@ namespace Qualia.Controls
 {
     public class QCheckBox : CheckBox, IConfigValue
     {
-        public event Action Changed = delegate { };
+        event Action Changed = delegate { };
 
         public bool DefaultValue
         {
@@ -34,16 +34,11 @@ namespace Qualia.Controls
         public QCheckBox()
         {
             Height = 18;
-            Checked += OnOffBox_Checked;
-            Unchecked += OnOffBox_Unchecked;
+            Checked += OnOffBox_Changed;
+            Unchecked += OnOffBox_Changed;
         }
 
-        private void OnOffBox_Unchecked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Changed();
-        }
-
-        private void OnOffBox_Checked(object sender, System.Windows.RoutedEventArgs e)
+        private void OnOffBox_Changed(object sender, System.Windows.RoutedEventArgs e)
         {
             Changed();
         }

@@ -37,10 +37,10 @@ namespace Qualia.Controls
             PointsRearrangeSnap = Config.Main.GetInt(Const.Param.PointsArrangeSnap, 10).Value;
 
             SizeChanged += DataPresenter_SizeChanged;
-            CtlTask.SelectedIndexChanged += CtlTask_SelectedIndexChanged;
+            CtlTask.SetChangeEvent(CtlTask_SelectedIndexChanged);
         }
 
-        private void CtlTask_SelectedIndexChanged(int index)
+        private void CtlTask_SelectedIndexChanged()
         {
             Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
             Task.SetChangeEvent(TaskParameterChanged);
@@ -57,7 +57,7 @@ namespace Qualia.Controls
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
             TaskChanged = taskChanged;
-            NetworkTask.Helper.FillComboBox(CtlTask, config, Const.Param.Task, null);
+            NetworkTask.Helper.FillComboBox(CtlTask, config, null);
             Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
             Task.SetChangeEvent(TaskParameterChanged);
             CtlHolder.Children.Clear();

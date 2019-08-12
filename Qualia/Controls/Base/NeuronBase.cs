@@ -14,9 +14,10 @@ namespace Qualia.Controls
     {
         public readonly long Id;
         public Config Config;
-        public readonly Action<Notification.ParameterChanged, object> OnNetworkUIChanged;
 
-        public NeuronBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
+        public Action<Notification.ParameterChanged> OnNetworkUIChanged;
+
+        public NeuronBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             ContextMenu = new ContextMenu();
             ContextMenu.Opened += ContextMenu_Opened;
@@ -24,8 +25,6 @@ namespace Qualia.Controls
             (ContextMenu.Items[0] as MenuItem).Click += AddNeuron_Click;
             ContextMenu.Items.Add(new MenuItem() { Header = "Delete..." });
             (ContextMenu.Items[1] as MenuItem).Click += DeleteNeuron_Click;
-
-            ContextMenu.InvalidateVisual();
 
             OnNetworkUIChanged = onNetworkUIChanged;
 
@@ -149,7 +148,7 @@ namespace Qualia.Controls
             {
                 (Parent as Panel).Children.Remove(this);
                 VanishConfig();
-                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount, null);
+                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
             else
             {

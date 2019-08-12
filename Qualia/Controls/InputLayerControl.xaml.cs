@@ -18,35 +18,30 @@ namespace Qualia.Controls
 {
     public partial class InputLayerControl : LayerBase
     {
-        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
+        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
             LoadConfig();
 
-            CtlInitial0.Changed += ParameterChanged;
-            CtlInitial1.Changed += ParameterChanged;
-            CtlActivationFunc.SelectedIndexChanged += CtlActivationFunc_SelectedIndexChanged;
-            CtlActivationFuncParamA.Changed += ParameterChanged;
+            CtlInputInitial0.SetChangeEvent(ParameterChanged);
+            CtlInputInitial1.SetChangeEvent(ParameterChanged);
+            CtlActivationFunc.SetChangeEvent(ParameterChanged);
+            CtlActivationFuncParamA.SetChangeEvent(ParameterChanged);
         }
 
         private void ParameterChanged()
         {
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
-        }
-
-        private void CtlActivationFunc_SelectedIndexChanged(int index)
-        {
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
+            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
         }
 
         public override bool IsInput => true;
         public override Panel NeuronsHolder => CtlNeuronsHolder;
         public override int NeuronsCount => GetNeuronsControls().Count;
 
-        public double Initial0 => CtlInitial0.Value;
-        public double Initial1 => CtlInitial1.Value;
+        public double Initial0 => CtlInputInitial0.Value;
+        public double Initial1 => CtlInputInitial1.Value;
         public string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
         public double ActivationFuncParamA => CtlActivationFuncParamA.Value;
 
@@ -62,9 +57,9 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, Const.Param.ActivationFunc, nameof(ActivationFunction.None));
-            CtlInitial0.Load(Config);
-            CtlInitial1.Load(Config);
+            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.None));
+            CtlInputInitial0.Load(Config);
+            CtlInputInitial1.Load(Config);
             CtlActivationFuncParamA.Load(Config);
 
             var neurons = Config.GetArray(Const.Param.Neurons);
@@ -91,21 +86,23 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount, null);
+                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
         }
 
         public override bool IsValid()
         {
-            bool result = CtlInitial0.IsValid() && CtlInitial1.IsValid() && CtlActivationFuncParamA.IsValid();
-            return result &= GetNeuronsControls().All(n => n.IsValid());
+            return CtlInputInitial0.IsValid() &&
+                   CtlInputInitial1.IsValid() &&
+                   CtlActivationFuncParamA.IsValid() &&
+                   GetNeuronsControls().All(n => n.IsValid());
         }
 
         public override void SaveConfig()
         {
-            Config.Set(Const.Param.ActivationFunc, CtlActivationFunc.SelectedItem.ToString());
-            CtlInitial0.Save(Config);
-            CtlInitial1.Save(Config);
+            CtlActivationFunc.Save(Config);
+            CtlInputInitial0.Save(Config);
+            CtlInputInitial1.Save(Config);
             CtlActivationFuncParamA.Save(Config);
 
             var neurons = GetNeuronsControls().Where(n => n.IsBias);
@@ -117,8 +114,8 @@ namespace Qualia.Controls
         {
             Config.Remove(Const.Param.InputNeuronsCount);
             Config.Remove(Const.Param.Neurons);
-            CtlInitial0.Vanish(Config);
-            CtlInitial1.Vanish(Config);
+            CtlInputInitial0.Vanish(Config);
+            CtlInputInitial1.Vanish(Config);
             CtlActivationFuncParamA.Vanish(Config);
             Config.Remove(Const.Param.ActivationFunc);
             Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());

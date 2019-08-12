@@ -18,7 +18,7 @@ namespace Qualia.Controls
 {
     public partial class OutputLayerControl : LayerBase
     {
-        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
+        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
@@ -47,7 +47,7 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount, null);
+                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
         }
 

@@ -251,12 +251,25 @@ namespace Tools
         {
             //
         }
+
+        public InvalidValueException(string param, string value)
+            : base($"Invalid value {(param.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? param.Substring(3) : param)} = '{value}'.")
+        {
+            //
+        }
     }
 
     public static class Initializer
     {
-        public static void FillComboBox(Type helper, ComboBox cb, Config config, Const.Param param, string defaultValue)
+        private static string CutName(string name)
         {
+            return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name;
+        }
+
+        public static void FillComboBox(Type helper, ComboBox cb, Config config, string param, string defaultValue)
+        {
+            param = CutName(param);
+
             cb.Items.Clear();
             var items = (string[])helper.GetMethod("GetItems").Invoke(null, null);
             foreach (var i in items)

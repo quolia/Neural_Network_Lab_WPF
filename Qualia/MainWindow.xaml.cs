@@ -230,12 +230,12 @@ namespace Qualia
             {
                 NetworksManager = new NetworksManager(CtlInputDataPresenter, CtlTabs, name, OnNetworkUIChanged);
                 Config.Main.Set(Const.Param.NetworksManagerName, name);
+                CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
+                //TaskChanged();
+
                 ReplaceNetworksManagerControl(NetworksManager);
                 if (NetworksManager.IsValid())
                 {
-                    CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
-                    //TaskChanged();
-
                     ApplyChangesToStandingNetworks();
                 }
                 else
@@ -303,7 +303,7 @@ namespace Qualia
             }
         }
 
-        private void OnNetworkUIChanged(Notification.ParameterChanged param, object newValue = null)
+        private void OnNetworkUIChanged(Notification.ParameterChanged param)
         {
             ToggleApplyChanges(Const.Toggle.On);
             CtlMenuStart.IsEnabled = false;
@@ -613,14 +613,17 @@ namespace Qualia
                 return;
             }
 
-            var manager = new NetworksManager(CtlInputDataPresenter, CtlTabs, null, OnNetworkUIChanged);
-            if (manager.Config != null)
+            var network = new NetworksManager(CtlInputDataPresenter, CtlTabs, null, OnNetworkUIChanged);
+            if (network.Config != null)
             {
-                NetworksManager = manager;
+                NetworksManager = network;
+                CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
+                //TaskChanged();
+                //RefreshNetworksDataModels();
+
                 ReplaceNetworksManagerControl(NetworksManager);
                 if (NetworksManager.IsValid())
                 {
-                    CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
                     ApplyChangesToStandingNetworks();
                 }
                 else
@@ -826,13 +829,13 @@ namespace Qualia
         private void CtlMainMenuAddLayer_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.SelectedNetwork.AddLayer();
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
+            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
         }
 
         private void CtlMainMenuDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             NetworksManager.SelectedNetwork.DeleteLayer();
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
+            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
         }
 
         private void CtlMainMenuAddNeuron_Click(object sender, RoutedEventArgs e)
@@ -883,7 +886,6 @@ namespace Qualia
         {
             NetworksManager.RebuildNetworksForTask(CtlInputDataPresenter.Task);
             NetworksManager.ResetLayersTabsNames();
-            NetworksManager.RefreshNetworksDataModels();
             CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
         }
     }

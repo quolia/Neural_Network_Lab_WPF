@@ -11,7 +11,6 @@ namespace Qualia.Controls
     {
         public QLabel()
         {
-            //Height = 18;
             Padding = new System.Windows.Thickness(3);
         }
     }

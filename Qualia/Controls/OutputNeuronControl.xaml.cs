@@ -18,15 +18,15 @@ namespace Qualia.Controls
 {
     public partial class OutputNeuronControl : NeuronBase
     {
-        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
+        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
             LoadConfig();
 
-            CtlActivationFunc.SelectedIndexChanged += CtlActivationFunc_SelectedIndexChanged;
-            CtlActivationFuncParamA.Changed += OnChanged;
+            CtlActivationFunc.SetChangeEvent(OnChanged);
+            CtlActivationFuncParamA.SetChangeEvent(OnChanged);
         }
 
         public override string WeightsInitializer => nameof(InitializeMode.None);
@@ -38,20 +38,15 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, Const.Param.ActivationFunc, nameof(ActivationFunction.LogisticSigmoid));
+            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
             CtlActivationFuncParamA.Load(Config);
 
             StateChanged();
         }
 
-        private void CtlActivationFunc_SelectedIndexChanged(int index)
-        {
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure, false);
-        }
-
         private void OnChanged()
         {
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
+            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
         }
 
         public override void OrdinalNumberChanged(int number)

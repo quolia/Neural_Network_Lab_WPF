@@ -177,9 +177,9 @@ namespace Tools
                 return (INetworkTask)typeof(NetworkTask).GetNestedTypes().Where(c => c.Name == name).First().GetField("Instance").GetValue(null);
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, Const.Param param, string defaultValue)
+            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(NetworkTask.Helper), cb, config, param, defaultValue);
+                Initializer.FillComboBox(typeof(NetworkTask.Helper), cb, config, cb.Name, defaultValue);
             }
         }
     }

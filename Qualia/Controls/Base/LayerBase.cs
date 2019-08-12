@@ -13,9 +13,10 @@ namespace Qualia.Controls
     {
         public readonly long Id;
         public readonly Config Config;
-        public readonly Action<Notification.ParameterChanged, object> OnNetworkUIChanged;
+         
+        public Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
-        public LayerBase(long id, Config config, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
+        public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
             LayoutUpdated += LayerBase_LayoutUpdated;

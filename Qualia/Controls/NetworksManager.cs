@@ -16,12 +16,12 @@ namespace Qualia.Controls
         public readonly Config Config;
         public List<NetworkDataModel> Models;
 
-        Action<Notification.ParameterChanged, object> OnNetworkUIChanged;
+        Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
         readonly TabControl CtlTabs;
         readonly DataPresenter CtlInputData;
 
-        public NetworksManager(DataPresenter inputData, TabControl tabs, string name, Action<Notification.ParameterChanged, object> onNetworkUIChanged)
+        public NetworksManager(DataPresenter inputData, TabControl tabs, string name, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
             CtlInputData = inputData;
@@ -106,11 +106,19 @@ namespace Qualia.Controls
             }
             Range.For(networks.Length, i => AddNetwork(networks[i]));
             CtlTabs.SelectedIndex = Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
-            /*
-            CtlInputData.LoadConfig(Config, this);
-            TaskChanged();
-            RefreshNetworksDataModels();
-            */
+            //CtlInputData.LoadConfig(Config, this);
+            //TaskParameterChanged();
+            //RefreshNetworksDataModels();
+        }
+
+
+        public void RebuildNetworksForTask(INetworkTask task)
+        {
+            foreach (var network in Networks)
+            {
+                network.InputLayer.OnInputDataChanged(task.GetInputCount());
+            }
+            ResetLayersTabsNames();
         }
 
         public void AddNetwork()
@@ -129,7 +137,7 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                CtlInputData.Task.RebuildNetwork(network);
+                network.InputLayer.OnInputDataChanged(CtlInputData.Task.GetInputCount());
                 network.ResetLayersTabsNames();
             }
         }
@@ -143,7 +151,7 @@ namespace Qualia.Controls
                 CtlTabs.Items.Remove(CtlTabs.SelectedTab());
                 CtlTabs.SelectedIndex = index - 1;
                 ResetNetworksTabsNames();
-                OnNetworkUIChanged(Notification.ParameterChanged.Structure, null);
+                OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -172,11 +180,6 @@ namespace Qualia.Controls
         public void ResetLayersTabsNames()
         {
             Range.ForEach(Networks, n => n.ResetLayersTabsNames());
-        }
-
-        public void RebuildNetworksForTask(INetworkTask task)
-        {
-            Range.ForEach(Networks, n => task.RebuildNetwork(n));
         }
 
         public void SaveAs()

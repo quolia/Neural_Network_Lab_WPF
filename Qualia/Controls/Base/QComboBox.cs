@@ -4,12 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Tools;
 
 namespace Qualia.Controls
 {
-    public class QComboBox : ComboBox
+    public class QComboBox : ComboBox, IConfigValue
     {
-        public event Action<int> SelectedIndexChanged = delegate { };
+        event Action OnChanged = delegate { };
+
+        string DefaultValue
+        {
+            get;
+            set;
+        }
 
         public QComboBox()
         {
@@ -19,7 +26,33 @@ namespace Qualia.Controls
 
         private void SelectBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectedIndexChanged(SelectedIndex);
+            OnChanged();
+        }
+
+        public void Load(Config config)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public void Save(Config config)
+        {
+            config.Set(Name, SelectedItem.ToString());
+        }
+
+        public void Vanish(Config config)
+        {
+            config.Remove(Name);
+        }
+
+        public bool IsValid()
+        {
+            return true;
+        }
+
+        public void SetChangeEvent(Action onChanged)
+        {
+            OnChanged -= onChanged;
+            OnChanged += onChanged;
         }
     }
 }
