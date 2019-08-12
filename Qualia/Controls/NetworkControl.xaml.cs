@@ -207,17 +207,18 @@ namespace Qualia.Controls
             }
         }
 
-        public NetworkDataModel CreateNetworkDataModel()
+        public NetworkDataModel CreateNetworkDataModel(INetworkTask task)
         {
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
+                Task = task,
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = Randomizer,
                 RandomizerParamA = RandomizerParamA,
                 LearningRate = LearningRate,
-                InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, null),
-                InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, null)
+                InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
+                InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA)
             };
 
             model.Activate();

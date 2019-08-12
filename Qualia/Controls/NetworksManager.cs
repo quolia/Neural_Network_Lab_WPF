@@ -18,13 +18,12 @@ namespace Qualia.Controls
 
         Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
-        readonly TabControl CtlTabs;
-        readonly DataPresenter CtlInputData;
+        TabControl CtlTabs;
+        INetworkTask Task;
 
-        public NetworksManager(DataPresenter inputData, TabControl tabs, string name, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public NetworksManager(TabControl tabs, string name, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
-            CtlInputData = inputData;
             CtlTabs = tabs;
 
             Config = String.IsNullOrEmpty(name) ? CreateNewManager() : new Config(name);
@@ -114,12 +113,15 @@ namespace Qualia.Controls
 
         public void RebuildNetworksForTask(INetworkTask task)
         {
+            Task = task;
+
             foreach (var network in Networks)
             {
                 network.InputLayer.OnTaskChanged(task);
             }
-            ResetLayersTabsNames();
-            RefreshNetworksDataModels();
+            //ResetLayersTabsNames();
+            //RefreshNetworksDataModels();
+            OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
 
         public void AddNetwork()
@@ -138,7 +140,7 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                network.InputLayer.OnTaskChanged(CtlInputData.Task);
+                network.InputLayer.OnTaskChanged(Task);
                 network.ResetLayersTabsNames();
             }
         }
@@ -171,8 +173,6 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            CtlInputData.SaveConfig(Config);
-
             Config.Set(Const.Param.Networks, Networks.Select(l => l.Id));
             Config.Set(Const.Param.SelectedNetworkIndex, CtlTabs.SelectedIndex - 1);
             Range.ForEach(Networks, n => n.SaveConfig());
@@ -209,7 +209,7 @@ namespace Qualia.Controls
         public List<NetworkDataModel> CreateNetworksDataModels()
         {
             var result = new List<NetworkDataModel>();
-            Range.ForEach(Networks, n => result.Add(n.CreateNetworkDataModel()));
+            Range.ForEach(Networks, n => result.Add(n.CreateNetworkDataModel(Task)));
             return result;
         }
 
@@ -253,7 +253,7 @@ namespace Qualia.Controls
                 Range.ForEach(model.Layers.First().Neurons.Where(n => !n.IsBias), n => n.Activation = model.InputInitial0);
                 if (model == Models.First())
                 {
-                    CtlInputData.Task.Do(model);
+                    Task.Do(model);
                 }
             }
 
@@ -288,7 +288,7 @@ namespace Qualia.Controls
 
         public void ResetErrorMatrix()
         {
-            Range.ForEach(Models, m => m.ErrorMatrix = new ErrorMatrix());
+            Range.ForEach(Models, m => m.ErrorMatrix = new ErrorMatrix(m.Task));
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Tools
         void Do(NetworkDataModel model);
         Control GetVisualControl();
         int GetInputCount();
+        List<string> GetClasses();
     }
 
     public interface INetworkTaskChanged
@@ -34,6 +35,11 @@ namespace Tools
             public CountDotsSymmetric()
             {
 
+            }
+
+            public List<string> GetClasses()
+            {
+                return null;
             }
 
             public void LoadConfig(Config config)
@@ -131,6 +137,11 @@ namespace Tools
             public int GetInputCount()
             {
                 return Control.InputCount;
+            }
+
+            public List<string> GetClasses()
+            {
+                return new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
             }
 
             public void Do(NetworkDataModel model)

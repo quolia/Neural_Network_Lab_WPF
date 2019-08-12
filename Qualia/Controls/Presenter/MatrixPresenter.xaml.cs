@@ -65,7 +65,7 @@ namespace Qualia.Controls
                     CtlPresenter.DrawRectangle(brush, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
                 }
             }
-
+        
             long outputMax = Math.Max(matrix.Output.Max(), 1);
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
@@ -73,7 +73,11 @@ namespace Qualia.Controls
                 var brush = Tools.Draw.GetBrush(color);
                 var pen = Tools.Draw.GetPen(Colors.Silver);
 
-                CtlPresenter.DrawRectangle(brush, pen, new Rect(axisOffset + x * size, 2 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
+                CtlPresenter.DrawRectangle(brush, pen, new Rect(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
+
+                var clText = new FormattedText(matrix.Classes[x], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
+                CtlPresenter.DrawText(clText, new Point(axisOffset + x * size + (size - clText.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
+
             }
 
             long inputMax = Math.Max(matrix.Input.Max(), 1);
@@ -82,7 +86,11 @@ namespace Qualia.Controls
                 var color = Tools.Draw.GetColorDradient(Colors.White, Colors.Green, 100, (double)matrix.Input[y] / (double)inputMax);
                 var brush = Tools.Draw.GetBrush(color);
                 var pen = Tools.Draw.GetPen(Colors.Silver);
-                CtlPresenter.DrawRectangle(brush, pen, new Rect(2 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
+                CtlPresenter.DrawRectangle(brush, pen, new Rect(11 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
+
+                var clText = new FormattedText(matrix.Classes[y], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
+                CtlPresenter.DrawText(clText, new Point(1 + axisOffset + matrix.Output.Length * size + (size - clText.Width) / 2, axisOffset + y * size));
+
             }
 
             var text = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);

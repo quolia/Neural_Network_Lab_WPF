@@ -43,7 +43,7 @@ namespace Qualia.Controls
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
         public string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
-        public double ActivationFuncParamA => CtlActivationFuncParamA.Value;
+        public double? ActivationFuncParamA => CtlActivationFuncParamA.ValueOrNull;
 
         public void OnTaskChanged(INetworkTask task)
         {

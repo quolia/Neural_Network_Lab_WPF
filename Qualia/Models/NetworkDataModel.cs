@@ -21,7 +21,7 @@ namespace Qualia
         public double? RandomizerParamA;
         public double InputInitial0;
         public double InputInitial1;
-        public string Task;
+        public INetworkTask Task;
 
         public Statistic Statistic;
         public DynamicStatistic DynamicStatistic;

@@ -211,9 +211,18 @@ namespace Tools
 
     public class ErrorMatrix
     {
-        public long[] Input = new long[11];
-        public long[] Output = new long[11];
-        public long[,] Matrix = new long[11, 11];
+        public long[] Input;
+        public long[] Output;
+        public long[,] Matrix;
+        public List<string> Classes;
+
+        public ErrorMatrix(INetworkTask task)
+        {
+            Classes = task.GetClasses();
+            Input = new long[Classes.Count];
+            Output = new long[Classes.Count];
+            Matrix = new long[Classes.Count, Classes.Count];
+        }
 
         public long Count
         {

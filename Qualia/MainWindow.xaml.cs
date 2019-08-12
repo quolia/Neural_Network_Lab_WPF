@@ -228,7 +228,7 @@ namespace Qualia
 
             if (File.Exists(name))
             {
-                NetworksManager = new NetworksManager(CtlInputDataPresenter, CtlTabs, name, OnNetworkUIChanged);
+                NetworksManager = new NetworksManager(CtlTabs, name, OnNetworkUIChanged);
                 Config.Main.Set(Const.Param.NetworksManagerName, name);
                 CtlInputDataPresenter.LoadConfig(NetworksManager.Config, this);
 
@@ -266,6 +266,8 @@ namespace Qualia
 
             if (NetworksManager != null)
             {
+                CtlInputDataPresenter.SaveConfig(NetworksManager.Config);
+
                 if (!NetworksManager.IsValid())
                 {
                     MessageBox.Show("Network parameter is invalid", "Error");
@@ -612,7 +614,7 @@ namespace Qualia
                 return;
             }
 
-            var network = new NetworksManager(CtlInputDataPresenter, CtlTabs, null, OnNetworkUIChanged);
+            var network = new NetworksManager(CtlTabs, null, OnNetworkUIChanged);
             if (network.Config != null)
             {
                 NetworksManager = network;
