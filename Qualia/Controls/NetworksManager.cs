@@ -116,7 +116,7 @@ namespace Qualia.Controls
         {
             foreach (var network in Networks)
             {
-                network.InputLayer.OnInputDataChanged(task.GetInputCount());
+                network.InputLayer.OnTaskChanged(task);
             }
             ResetLayersTabsNames();
             RefreshNetworksDataModels();
@@ -138,7 +138,7 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                network.InputLayer.OnInputDataChanged(CtlInputData.Task.GetInputCount());
+                network.InputLayer.OnTaskChanged(CtlInputData.Task);
                 network.ResetLayersTabsNames();
             }
         }

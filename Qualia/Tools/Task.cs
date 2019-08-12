@@ -13,7 +13,6 @@ namespace Tools
     {
         void Do(NetworkDataModel model);
         Control GetVisualControl();
-        void RebuildNetwork(NetworkControl network);
         int GetInputCount();
     }
 
@@ -50,11 +49,6 @@ namespace Tools
             public Control GetVisualControl()
             {
                 return Control;
-            }
-
-            public void RebuildNetwork(NetworkControl network)
-            {
-
             }
 
             public int GetInputCount()
@@ -132,11 +126,6 @@ namespace Tools
             public void Save(Config config)
             {
                 Control.Save(config);
-            }
-
-            public void RebuildNetwork(NetworkControl network)
-            {
-                network.InputLayer.OnInputDataChanged(Control.InputCount);
             }
 
             public int GetInputCount()

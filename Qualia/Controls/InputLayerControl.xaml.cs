@@ -45,14 +45,14 @@ namespace Qualia.Controls
         public string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
         public double ActivationFuncParamA => CtlActivationFuncParamA.Value;
 
-        public void OnInputDataChanged(int newCount)
+        public void OnTaskChanged(INetworkTask task)
         {
             var controls = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
             foreach (var control in controls)
             {
                 NeuronsHolder.Children.Remove(control);
             }
-            Range.For(newCount, n => NeuronsHolder.Children.Insert(0, AddNeuron()));
+            Range.For(task.GetInputCount(), n => NeuronsHolder.Children.Insert(0, AddNeuron()));
         }
 
         private void LoadConfig()
