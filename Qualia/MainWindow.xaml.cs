@@ -333,6 +333,7 @@ namespace Qualia
         {
             lock (ApplyChangesLocker)
             {
+                CtlInputDataPresenter.Task.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
                 var newModels = NetworksManager.CreateNetworksDataModels();
                 NetworksManager.MergeModels(newModels);
@@ -345,6 +346,7 @@ namespace Qualia
         {
             lock (ApplyChangesLocker)
             {
+                CtlInputDataPresenter.Task.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
                 NetworksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);

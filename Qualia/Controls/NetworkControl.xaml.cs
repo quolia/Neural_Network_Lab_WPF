@@ -211,6 +211,7 @@ namespace Qualia.Controls
         {
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
+                ErrorMatrix = task == null ? null : new ErrorMatrix(task.GetClasses()),
                 Classes = task?.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),

@@ -267,6 +267,11 @@ namespace Qualia.Controls
                     {
                         neuron.Activation = Models.First().Layers.First().Neurons[neuron.Id].Activation;
                     }
+
+                    for (int i = 0; i < model.Target.Length; ++i)
+                    {
+                        model.Target[i] = Models.First().Target[i];
+                    }
                 }
             }
         }

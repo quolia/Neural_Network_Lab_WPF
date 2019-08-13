@@ -15,7 +15,7 @@ namespace Tools
         Control GetVisualControl();
         int GetInputCount();
         List<string> GetClasses();
-        //void GetResult(NetworkDataModel model, out int input, out int output, out double cost, out bool correct);
+        void ApplyChanges();
     }
 
     public interface INetworkTaskChanged
@@ -26,21 +26,31 @@ namespace Tools
 
     public static class NetworkTask
     {
-        static Dictionary<int, double[]> _arrays = new Dictionary<int, double[]>();
-
         public class CountDotsAsymmetric : INetworkTask
         {
             public static INetworkTask Instance = new CountDotsAsymmetric();
             static CountDotsControl Control = new CountDotsControl();
+
+            bool IsSymmetric;
+            int MinNumber;
+            int MaxNumber;
 
             public Control GetVisualControl()
             {
                 return Control;
             }
 
+            public void ApplyChanges()
+            {
+                IsSymmetric = Control.IsSymmetric;
+                MinNumber = Control.MinNumber;
+                MaxNumber = Control.MaxNumber;
+            }
+
             public void Load(Config config)
             {
                 Control.Load(config);
+                ApplyChanges();
             }
 
             public void Save(Config config)
@@ -65,15 +75,15 @@ namespace Tools
 
             public void Do(NetworkDataModel model)
             {
-                if (Control.IsSymmetric)
+                if (IsSymmetric)
                 {
 
                 }
                 else
                 {
-                    var number = Rand.Flat.Next(Control.MinNumber, Control.MaxNumber + 1);
+                    var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
                     Range.For(number, i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
-                    Range.For(model.Target.Length, i => model.Target[i] = (i == number - Control.MinNumber) ? 1 : 0);
+                    Range.For(model.Target.Length, i => model.Target[i] = (i == number - MinNumber) ? 1 : 0);
                 }
             }
 
@@ -87,9 +97,9 @@ namespace Tools
                 return Control.IsValid();
             }
 
-            public void SetChangeEvent(Action action)
+            public void SetChangeEvent(Action onChanged)
             {
-                Control.SetChangeEvent(action);
+                Control.SetChangeEvent(onChanged);
             }
 
             public void InvalidateValue()

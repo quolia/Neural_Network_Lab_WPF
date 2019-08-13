@@ -163,7 +163,7 @@ namespace Qualia
         {
             newModel.Statistic = Statistic;
             newModel.DynamicStatistic = DynamicStatistic;
-            newModel.ErrorMatrix = ErrorMatrix;
+            //newModel.ErrorMatrix = ErrorMatrix;
 
             foreach (var newLayer in newModel.Layers)
             {
