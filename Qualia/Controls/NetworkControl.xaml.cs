@@ -106,9 +106,9 @@ namespace Qualia.Controls
         public void SaveConfig()
         {
             Config.Set(Const.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
-            Config.Set(Const.Param.RandomizeMode, Randomizer);
             Config.Set(Const.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
 
+            CtlRandomizeMode.Save(Config);
             CtlIsNetworkEnabled.Save(Config);
             CtlRandomizeModeParamA.Save(Config);
             CtlLearningRate.Save(Config);
@@ -125,9 +125,9 @@ namespace Qualia.Controls
         public void VanishConfig()
         {
             Config.Remove(Const.Param.SelectedLayerIndex);
-            Config.Remove(Const.Param.RandomizeMode);
             Config.Remove(Const.Param.Color);
 
+            CtlRandomizeMode.Vanish(Config);
             CtlIsNetworkEnabled.Vanish(Config);
             CtlRandomizeModeParamA.Vanish(Config);
             CtlLearningRate.Vanish(Config);
@@ -148,7 +148,7 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(RandomizeMode.Random));
+            Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.Random));
             CtlRandomizeModeParamA.Load(Config);
             CtlLearningRate.Load(Config);
             CtlIsNetworkEnabled.Load(Config);
@@ -189,7 +189,7 @@ namespace Qualia.Controls
         }
 
         public int InputNeuronsCount => InputLayer.GetNeuronsControls().Where(c => !c.IsBias).Count();
-        private string Randomizer => CtlRandomizeMode.SelectedItem.ToString();
+        private string RandomizeMode => CtlRandomizeMode.SelectedItem.ToString();
         private double? RandomizerParamA => CtlRandomizeModeParamA.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
         public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
@@ -214,7 +214,7 @@ namespace Qualia.Controls
                 Classes = task?.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
-                RandomizeMode = Randomizer,
+                RandomizeMode = RandomizeMode,
                 RandomizerParamA = RandomizerParamA,
                 LearningRate = LearningRate,
                 InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),

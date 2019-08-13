@@ -42,38 +42,9 @@ namespace Tools
             Networks,
             SelectedNetworkIndex,
             SelectedLayerIndex,
-            InputNeuronsMinCount,
-            InputNeuronsMaxCount,
-            RandomizeMode,
-            ActivationInitializer,
-            ActivationInitializerParamA,
-            WeightsInitializer,
-            WeightsInitializerParamA,
             Layers,
             Neurons,
-            RandomizeModeParamA,
-            LearningRate,
-            InputInitial0,
-            InputInitial1,
-            Color,
-            ActivationFunc,
-            ActivationFuncParamA,
-            InputNeuronsCount,
-
-            // Task
-
-            Task,
-            TaskInputCount,
-            TaskMinNumber,
-            TaskMaxNumber,
-            TaskSymmetric,
-
-
-            // Settings
-
-            SettingsSkipRoundsToDrawErrorMatrix,
-            SettingsSkipRoundsToDrawNetworks,
-            SettingsSkipRoundsToDrawStatistic
+            Color
         }
     }
 

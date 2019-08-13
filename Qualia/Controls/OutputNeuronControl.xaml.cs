@@ -61,13 +61,13 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            Config.Set(Const.Param.ActivationFunc, CtlActivationFunc.SelectedItem.ToString());
+            CtlActivationFunc.Save(Config);
             CtlActivationFuncParamA.Save(Config);
         }
 
         public override void VanishConfig()
         {
-            Config.Remove(Const.Param.ActivationFunc);
+            CtlActivationFunc.Vanish(Config);
             CtlActivationFuncParamA.Vanish(Config);
         }
     }

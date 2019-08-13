@@ -112,12 +112,11 @@ namespace Qualia.Controls
 
         public override void VanishConfig()
         {
-            Config.Remove(Const.Param.InputNeuronsCount);
             Config.Remove(Const.Param.Neurons);
             CtlInputInitial0.Vanish(Config);
             CtlInputInitial1.Vanish(Config);
+            CtlActivationFunc.Vanish(Config);
             CtlActivationFuncParamA.Vanish(Config);
-            Config.Remove(Const.Param.ActivationFunc);
             Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
         }
 

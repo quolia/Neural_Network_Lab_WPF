@@ -61,7 +61,6 @@ namespace Qualia.Controls
         {  
             NetworkTask.Helper.FillComboBox(CtlTask, config, null);
             Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
-            //Task.SetChangeEvent(TaskParameterChanged);
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(Task.GetVisualControl());
             Task.Load(config);
@@ -81,7 +80,7 @@ namespace Qualia.Controls
 
         public void SaveConfig(Config config)
         {
-            config.Set(Const.Param.Task, CtlTask.SelectedItem.ToString());
+            CtlTask.Save(config);
             Task.Save(config);
         }
 
