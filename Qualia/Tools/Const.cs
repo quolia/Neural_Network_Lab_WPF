@@ -36,7 +36,6 @@ namespace Tools
             PointsArrangeSnap,
             DataWidth,
             NetworkHeight,
-            AxisOffset,
 
             NetworksManagerName,
             Networks,

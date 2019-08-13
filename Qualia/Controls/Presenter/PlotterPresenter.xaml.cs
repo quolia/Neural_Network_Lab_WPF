@@ -20,12 +20,11 @@ namespace Qualia.Controls
 
     public partial class PlotterPresenter : UserControl
     {
-        int AxisOffset;
+        int AxisOffset = 6;
 
         public PlotterPresenter()
         {
             InitializeComponent();
-            AxisOffset = Config.Main.GetInt(Const.Param.AxisOffset, 6).Value;
         }
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
