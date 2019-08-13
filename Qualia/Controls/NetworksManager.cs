@@ -105,8 +105,6 @@ namespace Qualia.Controls
             }
             Range.For(networks.Length, i => AddNetwork(networks[i]));
             CtlTabs.SelectedIndex = Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
-            //CtlInputData.LoadConfig(Config, this);
-            //TaskParameterChanged();
             RefreshNetworksDataModels();
         }
 
@@ -117,10 +115,8 @@ namespace Qualia.Controls
 
             foreach (var network in Networks)
             {
-                network.InputLayer.OnTaskChanged(task);
+                network.OnTaskChanged(task);
             }
-            //ResetLayersTabsNames();
-            //RefreshNetworksDataModels();
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
 

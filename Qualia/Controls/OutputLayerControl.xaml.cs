@@ -71,5 +71,20 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.Neurons);
             Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
         }
+
+        public void OnTaskChanged(INetworkTask task)
+        {
+            var controls = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
+
+            for (int i = controls.Count; i < task.GetClasses().Count; ++i)
+            {
+                AddNeuron();
+            }
+
+            for (int i = task.GetClasses().Count; i < controls.Count; ++i)
+            {
+                NeuronsHolder.Children.RemoveAt(NeuronsHolder.Children.Count - 1);
+            }
+        }
     }
 }

@@ -122,6 +122,12 @@ namespace Qualia.Controls
             ResetLayersTabsNames();
         }
 
+        public void OnTaskChanged(INetworkTask task)
+        {
+            InputLayer.OnTaskChanged(task);
+            OutputLayer.OnTaskChanged(task);
+        }
+
         public void VanishConfig()
         {
             Config.Remove(Const.Param.SelectedLayerIndex);
