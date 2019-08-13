@@ -211,7 +211,7 @@ namespace Qualia.Controls
         {
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
-                Task = task,
+                Classes = task?.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = Randomizer,

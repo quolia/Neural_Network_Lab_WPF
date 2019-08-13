@@ -406,23 +406,23 @@ namespace Qualia
                         }
 
                         model.FeedForward();
-
+                        
                         var output = model.GetMaxActivatedOutputNeuron();
-                        var input = model.GetNumberOfFirstLayerActiveNeurons();
-                        var cost = model.Cost(input);
+                        var input = model.GetTarget();
+                        var cost = model.Cost();
                         if (input == output.Id)
                         {
                             ++model.Statistic.CorrectRounds;
 
-                            model.Statistic.LastGoodInput = input;
-                            model.Statistic.LastGoodOutput = output.Id;
+                            model.Statistic.LastGoodInput = model.Classes[input];
+                            model.Statistic.LastGoodOutput = model.Classes[output.Id];
                             model.Statistic.LastGoodOutputActivation = output.Activation;
                             model.Statistic.LastGoodCost = cost;
                         }
                         else
                         {
-                            model.Statistic.LastBadInput = input;
-                            model.Statistic.LastBadOutput = output.Id;
+                            model.Statistic.LastBadInput = model.Classes[input];
+                            model.Statistic.LastBadOutput = model.Classes[output.Id];
                             model.Statistic.LastBadOutputActivation = output.Activation;
                             model.Statistic.LastBadCost = cost;
                         }
@@ -431,7 +431,7 @@ namespace Qualia
 
                         ++model.Statistic.Rounds;
 
-                        model.BackPropagation(input);
+                        model.BackPropagation();
 
                         if (model.Statistic.Rounds == 1)
                         {
@@ -542,7 +542,7 @@ namespace Qualia
                     stat.Add("Time remaining", "N/A");
                 }
 
-                if (selected.Statistic.LastGoodOutput > -1)
+                if (selected.Statistic.LastGoodOutput != null)
                 {
                     stat.Add("Last good output", $"{selected.Statistic.LastGoodInput}={selected.Statistic.LastGoodOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastGoodOutputActivation, "N6")}%)");
                     stat.Add("Last good cost", Converter.DoubleToText(selected.Statistic.LastGoodCost, "N6"));
@@ -554,7 +554,7 @@ namespace Qualia
                     stat.Add("Last good cost", "none");
                 }
 
-                if (selected.Statistic.LastBadOutput > -1)
+                if (selected.Statistic.LastBadOutput != null)
                 {
                     stat.Add("Last bad output", $"{selected.Statistic.LastBadInput}={selected.Statistic.LastBadOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastBadOutputActivation, "N6")}%)");
                     stat.Add("Last bad cost", Converter.DoubleToText(selected.Statistic.LastBadCost, "N6"));

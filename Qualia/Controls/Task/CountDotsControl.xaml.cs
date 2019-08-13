@@ -55,8 +55,16 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            return this.FindVisualChildren<IConfigValue>().All(c => c.IsValid()) &&
-                   CtlTaskInputCount.Value >= CtlTaskMaxNumber.Value;
+            if (this.FindVisualChildren<IConfigValue>().All(c => c.IsValid()))
+            {
+                if (CtlTaskInputCount.Value >= CtlTaskMaxNumber.Value)
+                {
+                    return true;
+                }
+
+                CtlTaskInputCount.InvalidateValue();
+            }
+            return false;
         }
 
         public void SetChangeEvent(Action onChange)
@@ -64,6 +72,11 @@ namespace Qualia.Controls
             OnChange -= onChange;
             OnChange += onChange;
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(Changed));
+        }
+
+        public void InvalidateValue()
+        {
+            throw new NotImplementedException();
         }
     }
 }

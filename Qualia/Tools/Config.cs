@@ -14,6 +14,7 @@ namespace Tools
         void Vanish(Config config);
         bool IsValid();
         void SetChangeEvent(Action action);
+        void InvalidateValue();
     }
 
     public class Config

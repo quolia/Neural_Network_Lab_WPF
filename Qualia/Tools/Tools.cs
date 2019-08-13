@@ -154,14 +154,14 @@ namespace Tools
         public double Percent => Rounds == 0 ? 0 : 100 * (double)CorrectRounds / (double)Rounds;
         public double AverageCost;
 
-        public int LastBadOutput;
+        public string LastBadOutput;
         public double LastBadOutputActivation;
-        public int LastBadInput;
+        public string LastBadInput;
         public double LastBadCost;
 
-        public int LastGoodOutput;
+        public string LastGoodOutput;
         public double LastGoodOutputActivation;
-        public int LastGoodInput;
+        public string LastGoodInput;
         public double LastGoodCost;
 
         public Statistic()
@@ -170,14 +170,14 @@ namespace Tools
             CorrectRounds = 0;
             AverageCost = 1;
 
-            LastBadOutput = -1;
+            LastBadOutput = null;
             LastBadOutputActivation = 0;
-            LastBadInput = 0;
+            LastBadInput = null;
             LastBadCost = 0;
 
-            LastGoodOutput = -1;
+            LastGoodOutput = null;
             LastGoodOutputActivation = 0;
-            LastGoodInput = 0;
+            LastGoodInput = null;
             LastGoodCost = 0;
         }
     }
@@ -216,9 +216,9 @@ namespace Tools
         public long[,] Matrix;
         public List<string> Classes;
 
-        public ErrorMatrix(INetworkTask task)
+        public ErrorMatrix(List<string> classes)
         {
-            Classes = task.GetClasses();
+            Classes = classes;
             Input = new long[Classes.Count];
             Output = new long[Classes.Count];
             Matrix = new long[Classes.Count, Classes.Count];

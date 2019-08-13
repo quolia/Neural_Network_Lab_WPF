@@ -123,5 +123,10 @@ namespace Qualia.Controls
             OnChanged -= onChanged;
             OnChanged += onChanged;
         }
+
+        public void InvalidateValue()
+        {
+            Background = Brushes.Tomato;
+        }
     }
 }

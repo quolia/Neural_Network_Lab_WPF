@@ -12,6 +12,8 @@ namespace Qualia
     {
         public long VisualId;
         public ListX<LayerDataModel> Layers = new ListX<LayerDataModel>();
+        public double[] Target;
+        public List<string> Classes;
 
         public bool IsEnabled;
 
@@ -21,7 +23,6 @@ namespace Qualia
         public double? RandomizerParamA;
         public double InputInitial0;
         public double InputInitial1;
-        public INetworkTask Task;
 
         public Statistic Statistic;
         public DynamicStatistic DynamicStatistic;
@@ -33,6 +34,8 @@ namespace Qualia
             VisualId = visualId;
             Range.For(layersSize.Length, n =>
                 CreateLayer(layersSize[n], n < layersSize.Length - 1 ? layersSize[n + 1] : 0));
+
+            Target = new double[Layers.Last().Height];
         }
 
         public void CreateLayer(int neuronCount, int weightsCount)
@@ -40,9 +43,9 @@ namespace Qualia
             Layers.Add(new LayerDataModel(Layers.Count, neuronCount, weightsCount));
         }
 
-        public double Cost(int x)
+        public double Cost()
         {
-            return Layers.Last().Neurons.Sum(n => Math.Pow(n.Activation - (x == n.Id ? 1 : 0), 2));
+            return Layers.Last().Neurons.Sum(n => Math.Pow(n.Activation - Target[n.Id], 2));
         }
 
         public double InputThreshold => (InputInitial0 + InputInitial1) / 2;
@@ -83,6 +86,18 @@ namespace Qualia
             return Layers.First().Neurons.Where(n => !n.IsBias).Count(n => n.Activation > InputThreshold);
         }
 
+        public int GetTarget()
+        {
+            for (int i = 0; i < Target.Length; ++i)
+            {
+                if (Target[i] == 1)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public void FeedForward()
         {
             Range.ForEachTrimEnd(Layers, -1, layer =>
@@ -103,13 +118,13 @@ namespace Qualia
             }));
         }
 
-        public void BackPropagation(int targetValue)
+        public void BackPropagation()
         {
             // backpropogation
 
             ClearErrors();
             Range.ForEach(Layers.Last().Neurons, neuron =>
-            neuron.Error = ((neuron.Id == targetValue ? 1 : 0) - neuron.Activation) * neuron.ActivationDerivative.Do(neuron.Activation, neuron.ActivationFuncParamA));
+            neuron.Error = 2 * (Target[neuron.Id] - neuron.Activation) * neuron.ActivationDerivative.Do(neuron.Activation, neuron.ActivationFuncParamA));
 
             Range.BackEachTrimEnd(Layers, -1, layer =>
             {

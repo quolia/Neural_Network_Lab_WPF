@@ -54,5 +54,10 @@ namespace Qualia.Controls
             OnChanged -= onChanged;
             OnChanged += onChanged;
         }
+
+        public void InvalidateValue()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

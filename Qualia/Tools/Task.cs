@@ -15,6 +15,7 @@ namespace Tools
         Control GetVisualControl();
         int GetInputCount();
         List<string> GetClasses();
+        //void GetResult(NetworkDataModel model, out int input, out int output, out double cost, out bool correct);
     }
 
     public interface INetworkTaskChanged
@@ -26,93 +27,6 @@ namespace Tools
     public static class NetworkTask
     {
         static Dictionary<int, double[]> _arrays = new Dictionary<int, double[]>();
-
-        public class CountDotsSymmetric : INetworkTask
-        {
-            public static INetworkTask Instance = new CountDotsSymmetric();
-            static CountDotsControl Control = new CountDotsControl();
-
-            public CountDotsSymmetric()
-            {
-
-            }
-
-            public List<string> GetClasses()
-            {
-                return null;
-            }
-
-            public void LoadConfig(Config config)
-            {
-
-            }
-
-            public void SaveConfig(Config config)
-            {
-
-            }
-
-            public Control GetVisualControl()
-            {
-                return Control;
-            }
-
-            public int GetInputCount()
-            {
-                return 0;
-            }
-
-            public void Do(NetworkDataModel model)
-            {
-                int bound = 10;
-
-                int number = Rand.Flat.Next(bound + 1);
-                if (number == 0)
-                {
-                    return;
-                }
-
-                if (!_arrays.ContainsKey(bound))
-                {
-                    _arrays.Add(bound, new double[bound]);
-                }
-
-                for (int i = 0; i < _arrays[bound].Length; ++i)
-                {
-                    _arrays[bound][i] = i < number ? model.InputInitial1 : model.InputInitial0;
-                }
-
-                var shaffle = _arrays[bound].OrderBy(a => Rand.Flat.Next()).ToArray();
-
-                int k = 0;
-                Range.ForEach(model.Layers.First().Neurons.Where(n => !n.IsBias), n => n.Activation = shaffle[k++]);
-            }
-
-            public void Load(Config config)
-            {
-
-            }
-
-            public void Save(Config config)
-            {
-
-            }
-
-            public void Vanish(Config config)
-            {
-
-            }
-
-            public bool IsValid()
-            {
-                return false;
-            }
-
-            public void SetChangeEvent(Action action)
-            {
-
-            }
-        }
 
         public class CountDotsAsymmetric : INetworkTask
         {
@@ -157,7 +71,9 @@ namespace Tools
                 }
                 else
                 {
-                    Range.For(Rand.Flat.Next(Control.MinNumber, Control.MaxNumber + 1), i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+                    var number = Rand.Flat.Next(Control.MinNumber, Control.MaxNumber + 1);
+                    Range.For(number, i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+                    Range.For(model.Target.Length, i => model.Target[i] = (i == number - Control.MinNumber) ? 1 : 0);
                 }
             }
 
@@ -174,6 +90,11 @@ namespace Tools
             public void SetChangeEvent(Action action)
             {
                 Control.SetChangeEvent(action);
+            }
+
+            public void InvalidateValue()
+            {
+                throw new NotImplementedException();
             }
         }
 
