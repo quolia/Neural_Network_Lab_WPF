@@ -23,6 +23,8 @@ namespace Tools
         public readonly string Name;
         string Extender;
 
+        static Dictionary<string, Dictionary<string, string>> Cache = new Dictionary<string, Dictionary<string, string>>();
+
         public Config(string name)
         {
             Name = name;
@@ -230,23 +232,44 @@ namespace Tools
 
         private void SaveValues(Dictionary<string, string> values)
         {
-            var lines = new List<string>();
-            foreach (var pair in values)
+            if (Cache.ContainsKey(Name))
             {
-                lines.Add(pair.Key + ":" + pair.Value);
+                Cache[Name] = values;
             }
+            else
+            {
+                Cache.Add(Name, values);
+            }
+        }
 
-            File.WriteAllLines(Name, lines);
+        public void FlushToDrive()
+        {
+            if (Cache.ContainsKey(Name))
+            {
+                var values = Cache[Name];
+
+                var lines = new List<string>();
+                foreach (var pair in values)
+                {
+                    lines.Add(pair.Key + ":" + pair.Value);
+                }
+
+                File.WriteAllLines(Name, lines);
+            }
         }
 
         private Dictionary<string, string> GetValues()
-        {
+        {            
+            if (Cache.ContainsKey(Name))
+            {
+                return Cache[Name];
+            }
+
             var result = new Dictionary<string, string>();
 
             if (!File.Exists(Name))
             {
-                var f = File.CreateText(Name);
-                f.Close();
+                Clear();
             }
 
             var lines = File.ReadAllLines(Name);
@@ -263,12 +286,15 @@ namespace Tools
                 }
             }
 
+            Cache.Add(Name, result);
+
             return result;
         }
 
         public void Clear()
         {
             File.WriteAllLines(Name, new string[] { });
+            Cache.Clear();
         }
     }
 }

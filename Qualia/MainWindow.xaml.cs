@@ -278,6 +278,10 @@ namespace Qualia
                 }
             }
 
+            Config.Main.FlushToDrive();
+            NetworksManager.Config.FlushToDrive();
+
+
             return true;
         }
 

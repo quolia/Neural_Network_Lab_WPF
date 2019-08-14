@@ -82,6 +82,7 @@ namespace Qualia.Controls
         {
             CtlTask.Save(config);
             Task.Save(config);
+            config.FlushToDrive();
         }
 
         private void DrawPoint(int x, int y, double value)

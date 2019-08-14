@@ -56,11 +56,13 @@ namespace Qualia.Controls
         public void Save(Config config)
         {
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Save(config));
+            config.FlushToDrive();
         }
 
         public void Vanish(Config config)
         {
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Vanish(config));
+            config.FlushToDrive();
         }
 
         public bool IsValid()
