@@ -378,7 +378,8 @@ namespace Qualia
                 NetworksManager.PrepareModelsForRun();
 
                 NetworksManager.PrepareModelsForRound();
-                CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
+                CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.SelectedNetworkModel);//(NetworksManager.Models.First());
+                //CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
                 NetworksManager.FeedForward(); // initialize state
 
                 Round = 0;
@@ -452,7 +453,7 @@ namespace Qualia
                     ++Round;
                 }
 
-                if (NetworksManager.Models[0].ErrorMatrix.Count % Settings.SkipRoundsToDrawErrorMatrix == 0)
+                if (Round % Settings.SkipRoundsToDrawErrorMatrix == 0)
                 {
                     using (var ev = new AutoResetEvent(false))
                     {

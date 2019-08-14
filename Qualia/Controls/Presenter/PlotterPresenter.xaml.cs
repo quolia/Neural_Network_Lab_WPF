@@ -35,6 +35,11 @@ namespace Qualia.Controls
 
             foreach (var model in models)
             {
+                if (!model.IsEnabled)
+                {
+                    continue;
+                }
+
                 Vanish(model.DynamicStatistic.PercentData, GetPointPercentData);
                 Vanish(model.DynamicStatistic.CostData, GetPointCostData);
 
@@ -78,6 +83,11 @@ namespace Qualia.Controls
 
         private void DrawData(DynamicStatistic.PlotPoints data, Color color, PointFunc func, bool isRect)
         {
+            if (data == null || data.FirstOrDefault() == null)
+            {
+                return;
+            }
+
             var pen = Tools.Draw.GetPen(color);
             var brush = Tools.Draw.GetBrush(color);
             

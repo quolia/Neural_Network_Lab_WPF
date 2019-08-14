@@ -104,12 +104,12 @@ namespace Qualia
             {
                 if (nextNeuron.IsBias && nextNeuron.IsBiasConnected)
                 {
-                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons.Where(n => n.IsBias), bias => bias.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
+                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons, bias => bias.IsBias ? bias.AxW(nextNeuron) : 0), nextNeuron.ActivationFuncParamA);
                 }
 
                 if (!nextNeuron.IsBias)
                 {
-                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons.Where(n => n.Activation != 0), neuron => neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
+                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons, neuron => neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
                 }
 
                 // not connected bias doesn't change it's activation
