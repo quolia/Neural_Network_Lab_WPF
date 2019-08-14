@@ -26,6 +26,8 @@ namespace Qualia
         public double InputInitial0;
         public double InputInitial1;
 
+        public ICostFunction CostFunction;
+
         public Statistic Statistic;
         public DynamicStatistic DynamicStatistic;
         public ErrorMatrix ErrorMatrix;
@@ -43,11 +45,6 @@ namespace Qualia
         public void CreateLayer(int neuronCount, int weightsCount)
         {
             Layers.Add(new LayerDataModel(Layers.Count, neuronCount, weightsCount));
-        }
-
-        public double Cost()
-        {
-            return Layers.Last().Neurons.Sum(n => Math.Pow(n.Activation - Target[n.Id], 2));
         }
 
         public double InputThreshold => (InputInitial0 + InputInitial1) / 2;
@@ -102,23 +99,6 @@ namespace Qualia
 
         public void FeedForward()
         {
-            /*
-            using (var context = new Context())
-            {
-                // For each available accelerator...
-                foreach (var acceleratorId in Accelerator.Accelerators)
-                {
-                    // A lightning context encapsulates an ILGPU accelerator
-                    using (var accelerator = Accelerator.Create(context, acceleratorId))
-                    {
-                        Console.WriteLine($"Performing operations on {accelerator}");
-
-                        accelerator.Allocate<double>
-                    }
-                }
-            }
-            */
-
             Range.ForEachTrimEnd(Layers, -1, layer =>
             Range.ForEach(layer.Next.Neurons, nextNeuron =>
             {
@@ -143,7 +123,7 @@ namespace Qualia
 
             ClearErrors();
             Range.ForEach(Layers.Last().Neurons, neuron =>
-            neuron.Error = 2 * (Target[neuron.Id] - neuron.Activation) * neuron.ActivationDerivative.Do(neuron.Activation, neuron.ActivationFuncParamA));
+            neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA));
 
             Range.BackEachTrimEnd(Layers, -1, layer =>
             {
@@ -155,16 +135,16 @@ namespace Qualia
                         {
                             if (neuron.IsBiasConnected)
                             {
-                                return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationDerivative.Do(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                                return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                             }
                             else
                             {
-                                return 0;// neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationDerivative.Do(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                                return 0;// neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                             }
                         }
                         else
                         {
-                            return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationDerivative.Do(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                            return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                         }
                     });
                 });

@@ -10,6 +10,7 @@ namespace Tools
     public interface IActivationFunction
     {
         double Do(double x, double? a);
+        double Derivative(double x, double? a);
     }
 
     public static class ActivationFunction
@@ -22,6 +23,11 @@ namespace Tools
             {
                 return x;
             }
+
+            public double Derivative(double x, double? a)
+            {
+                return x;
+            }
         }
 
         public class LogisticSigmoid : IActivationFunction
@@ -31,6 +37,11 @@ namespace Tools
             public double Do(double x, double? a)
             {
                 return 1 / (1 + Math.Exp(-x));           //2/​(1+​exp(​(‑x)*​4))-​1
+            }
+
+            public double Derivative(double x, double? a)
+            {
+                return x * (1 - x);
             }
         }
 
@@ -49,37 +60,6 @@ namespace Tools
             public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
             {
                 Initializer.FillComboBox(typeof(ActivationFunction.Helper), cb, config, cb.Name, defaultValue);
-            }
-        }
-    }
-
-    public static class ActivationDerivative
-    {
-        public class None : IActivationFunction
-        {
-            public static IActivationFunction Instance = new None();
-
-            public double Do(double x, double? a)
-            {
-                return x;
-            }
-        }
-
-        public class LogisticSigmoid : IActivationFunction
-        {
-            public static IActivationFunction Instance = new LogisticSigmoid();
-
-            public double Do(double x, double? a)
-            {
-                return x * (1 - x);
-            }
-        }
-
-        public static class Helper
-        {
-            public static IActivationFunction GetInstance(string name)
-            {
-                return (IActivationFunction)typeof(ActivationDerivative).GetNestedTypes().Where(c => c.Name == name).First().GetField("Instance").GetValue(null);
             }
         }
     }

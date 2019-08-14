@@ -415,7 +415,7 @@ namespace Qualia
                         
                         var output = model.GetMaxActivatedOutputNeuron();
                         var input = model.GetTarget();
-                        var cost = model.Cost();
+                        var cost = model.CostFunction.Do(model);
                         if (input == output.Id)
                         {
                             ++model.Statistic.CorrectRounds;

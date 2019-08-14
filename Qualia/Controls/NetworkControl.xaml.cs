@@ -46,6 +46,7 @@ namespace Qualia.Controls
             CtlRandomizeMode.SetChangeEvent(OnChanged);
             CtlLearningRate.SetChangeEvent(OnChanged);
             CtlIsNetworkEnabled.SetChangeEvent(OnChanged);
+            CtlCostFunction.SetChangeEvent(OnChanged);
         }
 
         private void OnChanged()
@@ -112,6 +113,7 @@ namespace Qualia.Controls
             CtlIsNetworkEnabled.Save(Config);
             CtlRandomizeModeParamA.Save(Config);
             CtlLearningRate.Save(Config);
+            CtlCostFunction.Save(Config);
 
             var layers = GetLayersControls();
             Range.ForEach(layers, l => l.SaveConfig());
@@ -137,6 +139,7 @@ namespace Qualia.Controls
             CtlIsNetworkEnabled.Vanish(Config);
             CtlRandomizeModeParamA.Vanish(Config);
             CtlLearningRate.Vanish(Config);
+            CtlCostFunction.Vanish(Config);
 
             Range.ForEach(GetLayersControls(), l => l.VanishConfig());
             Config.Remove(Const.Param.Layers);
@@ -155,6 +158,7 @@ namespace Qualia.Controls
         private void LoadConfig()
         {
             Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.Random));
+            Tools.CostFunction.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunction.MSE));
             CtlRandomizeModeParamA.Load(Config);
             CtlLearningRate.Load(Config);
             CtlIsNetworkEnabled.Load(Config);
@@ -225,7 +229,8 @@ namespace Qualia.Controls
                 RandomizerParamA = RandomizerParamA,
                 LearningRate = LearningRate,
                 InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
-                InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA)
+                InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA),
+                CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString())
             };
 
             model.Activate();
@@ -244,7 +249,6 @@ namespace Qualia.Controls
                     neuronModel.IsBiasConnected = neurons[nn].IsBiasConnected;
 
                     neuronModel.ActivationFunction = ActivationFunction.Helper.GetInstance(neurons[nn].ActivationFunc);
-                    neuronModel.ActivationDerivative = ActivationDerivative.Helper.GetInstance(neurons[nn].ActivationFunc);
                     neuronModel.ActivationFuncParamA = neurons[nn].ActivationFuncParamA;
 
                     neuronModel.WeightsInitializer = neurons[nn].WeightsInitializer;

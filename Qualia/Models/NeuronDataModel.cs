@@ -25,7 +25,6 @@ namespace Qualia
         public double? WeightsInitializerParamA;
 
         public IActivationFunction ActivationFunction;
-        public IActivationFunction ActivationDerivative;
         public double? ActivationFuncParamA;
 
         public ListX<WeightDataModel> Weights = new ListX<WeightDataModel>();

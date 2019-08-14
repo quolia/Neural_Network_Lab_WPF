@@ -29,7 +29,10 @@
             <StackPanel Orientation="Horizontal">
                 <local:QLabel Content="Learning rate:" />
                 <local:QDouble x:Name="CtlLearningRate" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" IsNullAllowed="False" />
-
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <local:QLabel Content="Cost function:" />
+                <local:QComboBox x:Name="CtlCostFunction" />
             </StackPanel>
         </StackPanel>
         <TabControl Grid.Row="1" Name="CtlTabsLayers" Padding="0">

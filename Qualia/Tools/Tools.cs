@@ -191,7 +191,7 @@ namespace Tools
         {
             var now = DateTime.Now;
             PercentData.Add(new PlotPoint(percent, now));
-            CostData.Add(new PlotPoint(cost, now));
+            CostData.Add(new PlotPoint(cost * 10, now)); // *10 - align with 1
         }
 
         public class PlotPoint : Tuple<double, DateTime>

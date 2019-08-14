@@ -107,6 +107,7 @@
     <Compile Include="Tools\ActivationFunction.cs" />
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Const.cs" />
+    <Compile Include="Tools\CostFunction.cs" />
     <Compile Include="Tools\Draw.cs" />
     <Compile Include="Tools\InitializeMode.cs" />
     <Compile Include="Tools\List.cs" />
