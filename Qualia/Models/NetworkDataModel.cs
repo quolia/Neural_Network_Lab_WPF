@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ILGPU;
+using ILGPU.Runtime;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -100,6 +102,23 @@ namespace Qualia
 
         public void FeedForward()
         {
+            /*
+            using (var context = new Context())
+            {
+                // For each available accelerator...
+                foreach (var acceleratorId in Accelerator.Accelerators)
+                {
+                    // A lightning context encapsulates an ILGPU accelerator
+                    using (var accelerator = Accelerator.Create(context, acceleratorId))
+                    {
+                        Console.WriteLine($"Performing operations on {accelerator}");
+
+                        accelerator.Allocate<double>
+                    }
+                }
+            }
+            */
+
             Range.ForEachTrimEnd(Layers, -1, layer =>
             Range.ForEach(layer.Next.Neurons, nextNeuron =>
             {
@@ -110,7 +129,7 @@ namespace Qualia
 
                 if (!nextNeuron.IsBias)
                 {
-                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons, neuron => neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
+                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons.Where(n => n.Activation != 0), neuron => neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
                 }
 
                 // not connected bias doesn't change it's activation
