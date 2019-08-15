@@ -50,6 +50,16 @@ namespace Tools
 
     public static class Draw
     {
+        public static System.Drawing.Color MediaColorToSystemColor(Color wpfColor)
+        {
+            return System.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B); ;
+        }
+
+        public static Color SystemColorToMediaColor(System.Drawing.Color color)
+        {
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
         public static Color GetColor(byte a, Color c)
         {
             return Color.FromArgb(a, c.R, c.G, c.B);

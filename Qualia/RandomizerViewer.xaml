@@ -5,14 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qualia.Controls"
         mc:Ignorable="d"
+        Background="White"
         Title="Randomizer" Height="450" Width="800">
 
-    
-    <Canvas Name="CtlCenter" >
-        <local:QPresenter x:Name="CtlPresenter"  />
+    <Canvas Name="CtlCanvas">
+        <local:PresenterControlHost x:Name="CtlPresenter" />
     </Canvas>
-    
-    <local:RazorPainterWPFCtl x:Name="razorPainterWPFCtl1" Margin="10"/>
-    
 
 </Window>

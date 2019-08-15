@@ -11,12 +11,12 @@ namespace Qualia.Controls
         public RazorBackendCtl()
         {
             InitializeComponent();
-
+            
             SetStyle(ControlStyles.DoubleBuffer, false);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.Opaque, true);
-
+            
             this.MinimumSize = new System.Drawing.Size(1, 1);
         }
     }
