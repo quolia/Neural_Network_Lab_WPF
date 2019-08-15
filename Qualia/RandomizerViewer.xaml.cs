@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Qualia.Controls;
+using System;
 using System.Drawing;
 using System.Windows;
 using Tools;
 
 namespace Qualia
 {
-    public partial class RandomizerViewer : Window
+    public partial class RandomizerViewer : WindowResizeControl
     {
         string Randomizer;
         double? A;
@@ -37,9 +38,6 @@ namespace Qualia
             SizeChanged += RandomizerViewer_SizeChanged;
 
             Loaded += RandomizerViewer_Loaded;
-            
-
-           
         }
 
         private void RandomizerViewer_Loaded(object sender, RoutedEventArgs e)
@@ -48,7 +46,7 @@ namespace Qualia
         }
 
         private void RandomizerViewer_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
+        {   
             CtlPresenter.SetValue(System.Windows.Controls.Canvas.LeftProperty, (CtlCanvas.ActualWidth - CtlPresenter.ActualWidth) / 2);
             CtlPresenter.SetValue(System.Windows.Controls.Canvas.TopProperty, (CtlCanvas.ActualHeight - CtlPresenter.ActualHeight) / 2);
         }
