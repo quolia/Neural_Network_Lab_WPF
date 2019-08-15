@@ -27,7 +27,7 @@ namespace Tools
 
             public double Derivative(NetworkDataModel model, NeuronDataModel neuron)
             {
-                return (model.Target[neuron.Id] - neuron.Activation) / model.Layers.Last().Neurons.Count;
+                return (model.Target[neuron.Id] - neuron.Activation);// / model.Layers.Last().Neurons.Count;
             }
         }
 

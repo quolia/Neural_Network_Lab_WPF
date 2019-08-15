@@ -16,6 +16,7 @@ namespace Tools
         int GetInputCount();
         List<string> GetClasses();
         void ApplyChanges();
+        bool IsGridSnapAdjustmentAllowed();
     }
 
     public interface INetworkTaskChanged
@@ -38,6 +39,11 @@ namespace Tools
             public Control GetVisualControl()
             {
                 return Control;
+            }
+
+            public bool IsGridSnapAdjustmentAllowed()
+            {
+                return true;
             }
 
             public void ApplyChanges()
@@ -77,7 +83,13 @@ namespace Tools
             {
                 if (IsSymmetric)
                 {
-
+                    var shuffled = model.Layers.First().Neurons.OrderBy(n => Rand.Flat.Next()).ToList();
+                    var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
+                    for (int i = 0; i < shuffled.Count; ++i)
+                    {
+                        shuffled[i].Activation = i < number ? 1 : 0;
+                    }
+                    Range.For(model.Target.Length, i => model.Target[i] = (i == number - MinNumber) ? 1 : 0);
                 }
                 else
                 {

@@ -28,7 +28,6 @@ namespace Qualia.Controls
 
         INetworkTaskChanged TaskChanged;
 
-
         public DataPresenter()
         {
             InitializeComponent();
@@ -54,7 +53,10 @@ namespace Qualia.Controls
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
         {
-            Rearrange(Const.CurrentValue);
+            if (Task != null && Task.IsGridSnapAdjustmentAllowed())
+            {
+                Rearrange(Const.CurrentValue);
+            }
         }
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
