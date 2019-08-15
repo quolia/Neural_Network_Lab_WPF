@@ -84,6 +84,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -98,6 +99,7 @@
     <Compile Include="Controls\Task\CountDotsControl.xaml.cs">
       <DependentUpon>CountDotsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WindowResizeControl.cs" />
     <Compile Include="RandomizerViewer.xaml.cs">
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
