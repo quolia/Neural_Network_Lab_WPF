@@ -95,6 +95,16 @@
     <Compile Include="Controls\Base\QPresenter.cs" />
     <Compile Include="Controls\Base\QCheckBox.cs" />
     <Compile Include="Controls\Base\QComboBox.cs" />
+    <Compile Include="Controls\Base\Razor\RazorBackendCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\Razor\RazorBackendCtl.Designer.cs">
+      <DependentUpon>RazorBackendCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Base\Razor\RazorPainter.cs" />
+    <Compile Include="Controls\Base\Razor\RazorPainterWPFCtl.xaml.cs">
+      <DependentUpon>RazorPainterWPFCtl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\InputBiasControl.cs" />
     <Compile Include="Controls\Task\CountDotsControl.xaml.cs">
       <DependentUpon>CountDotsControl.xaml</DependentUpon>
@@ -115,6 +125,10 @@
     <Compile Include="Tools\Range.cs" />
     <Compile Include="Tools\Task.cs" />
     <Compile Include="Tools\Tools.cs" />
+    <Page Include="Controls\Base\Razor\RazorPainterWPFCtl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

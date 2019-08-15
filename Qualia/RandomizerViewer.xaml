@@ -7,8 +7,12 @@
         mc:Ignorable="d"
         Title="Randomizer" Height="450" Width="800">
 
+    
     <Canvas Name="CtlCenter" >
         <local:QPresenter x:Name="CtlPresenter"  />
     </Canvas>
+    
+    <local:RazorPainterWPFCtl x:Name="razorPainterWPFCtl1" Margin="10"/>
+    
 
 </Window>
