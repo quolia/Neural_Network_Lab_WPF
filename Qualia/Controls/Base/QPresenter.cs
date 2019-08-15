@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Tools;
 
 namespace Qualia.Controls
 {
     public class QPresenter : Panel
     {
-        private VisualCollection Visuals; 
+        private VisualCollection Visuals;
+
+        public Func<double, double> Scale = Render.Scale;
 
         public QPresenter()
         {
@@ -32,6 +36,11 @@ namespace Qualia.Controls
             var dv = new DrawingVisual();
             Visuals.Add(dv);
             return dv.RenderOpen();
+        }
+
+        public void AddVisual(Visual visual)
+        {
+            Visuals.Add(visual);
         }
 
         protected override int VisualChildrenCount
@@ -58,12 +67,11 @@ namespace Qualia.Controls
         {
             using (var g = G())
             {
-                rect.X = Render.Scale(rect.X);
-                rect.Y = Render.Scale(rect.Y);
-                rect.Width = Render.Scale(rect.Width);
-                rect.Height = Render.Scale(rect.Height);
+                rect.X = Scale(rect.X);
+                rect.Y = Scale(rect.Y);
+                rect.Width = Scale(rect.Width);
+                rect.Height = Scale(rect.Height);
                 
-
                 g.DrawRectangle(brush, pen, rect);
             }
         }
@@ -72,8 +80,8 @@ namespace Qualia.Controls
         {
             using (var g = G())
             {
-                point.X = Render.Scale(point.X);
-                point.Y = Render.Scale(point.Y);
+                point.X = Scale(point.X);
+                point.Y = Scale(point.Y);
 
                 if (angle != 0)
                 {
@@ -95,10 +103,10 @@ namespace Qualia.Controls
         {
             using (var g = G())
             {
-                point0.X = Render.Scale(point0.X);
-                point0.Y = Render.Scale(point0.Y);
-                point1.X = Render.Scale(point1.X);
-                point1.Y = Render.Scale(point1.Y);
+                point0.X = Scale(point0.X);
+                point0.Y = Scale(point0.Y);
+                point1.X = Scale(point1.X);
+                point1.Y = Scale(point1.Y);
 
                 g.DrawLine(pen, point0, point1);
             }
@@ -108,13 +116,56 @@ namespace Qualia.Controls
         {
             using (var g = G())
             {
-                center.X = Render.Scale(center.X);
-                center.Y = Render.Scale(center.Y);
-                radiusX = Render.Scale(radiusX);
-                radiusY = Render.Scale(radiusY);
+                center.X = Scale(center.X);
+                center.Y = Scale(center.Y);
+                radiusX = Scale(radiusX);
+                radiusY = Scale(radiusY);
 
                 g.DrawEllipse(brush, pen, center, radiusX, radiusY);
             }
+        }
+
+        public Image GetImage()
+        {
+            int imageWidth = (int)SystemParameters.PrimaryScreenWidth;
+            int imageHeight = (int)SystemParameters.PrimaryScreenHeight;
+            
+            RenderTargetBitmap bitmap = new RenderTargetBitmap(imageWidth, imageHeight, 96, 96, PixelFormats.Pbgra32);
+            bitmap.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+
+
+            //foreach (var visual in Visuals)
+            {
+                bitmap.Render(this);
+            }
+
+            var image = new Image();
+            image.Width = 100;// imageWidth;
+            image.Height = 100;// imageHeight;
+
+            //image.SnapsToDevicePixels = true;
+            //image.UseLayoutRounding = true;
+            //image.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+            /*
+            BitmapImage bmp = new BitmapImage() { CacheOption = BitmapCacheOption.OnLoad };
+            MemoryStream outStream = new MemoryStream();
+            encoder.Save(outStream);
+            outStream.Seek(0, SeekOrigin.Begin);
+            bmp.BeginInit();
+            bmp.StreamSource = outStream;
+            bmp.EndInit();
+            currentImage.Source = bmp;
+            */
+
+            //image.Width = bitmap.PixelWidth;
+            //image.Height = bitmap.PixelHeight;
+           
+            image.Source = bitmap;
+
+            //image.HorizontalAlignment = HorizontalAlignment.Stretch;
+            //image.VerticalAlignment = VerticalAlignment.Stretch;
+
+            return image;
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Tools
 
         static public double Scale(double x)
         {
-            return x;// SnapToPixels(x);
+            return x;// x / PixelsPerDip;// x;//SnapToPixels(x);
         }
 
         static public double ScaleThickness(double x)

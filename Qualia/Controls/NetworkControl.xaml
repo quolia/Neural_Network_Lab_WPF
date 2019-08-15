@@ -24,7 +24,7 @@
                 <local:QComboBox x:Name="CtlRandomizeMode" />
                 <local:QLabel Content="a:" />
                 <local:QDouble x:Name="CtlRandomizeModeParamA" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
-
+                <Button Name="CtlRandomizerButton" Content="View" Margin="10,0,0,0" Padding="3" Click="CtlRandomizerButton_Click" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:QLabel Content="Learning rate:" />

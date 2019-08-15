@@ -98,6 +98,9 @@
     <Compile Include="Controls\Task\CountDotsControl.xaml.cs">
       <DependentUpon>CountDotsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RandomizerViewer.xaml.cs">
+      <DependentUpon>RandomizerViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tools\ActivationFunction.cs" />
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Const.cs" />
@@ -222,6 +225,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RandomizerViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\LayerDataModel.cs" />

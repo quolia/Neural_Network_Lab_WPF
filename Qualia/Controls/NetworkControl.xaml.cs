@@ -321,5 +321,11 @@ namespace Qualia.Controls
         {
             DeleteLayer();
         }
+
+        private void CtlRandomizerButton_Click(object sender, RoutedEventArgs e)
+        {
+            var viewer = new RandomizerViewer(RandomizeMode, RandomizerParamA);
+            viewer.Show();
+        }
     }
 }
