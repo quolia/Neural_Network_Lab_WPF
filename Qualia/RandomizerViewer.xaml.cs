@@ -18,7 +18,6 @@ namespace Qualia
         public RandomizerViewer()
         {
             InitializeComponent();
-
         }
 
         public RandomizerViewer(string randomizer, double? a)

@@ -230,7 +230,7 @@ namespace Qualia
                     }
                 }
 
-                if (!CtlInputDataPresenter.Task.IsValid())
+                if (CtlInputDataPresenter.Task != null && !CtlInputDataPresenter.Task.IsValid())
                 {
                     ToggleApplyChanges(Const.Toggle.Off);
                 }

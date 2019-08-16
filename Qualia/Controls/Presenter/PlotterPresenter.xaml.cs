@@ -47,7 +47,7 @@ namespace Qualia.Controls
                 DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
             }
 
-            if (selectedModel != null)
+            if (selectedModel != null && selectedModel.DynamicStatistic.PercentData.Count > 0)
             {
                 DrawLabel(selectedModel.DynamicStatistic.PercentData, selectedModel.Color);
             }

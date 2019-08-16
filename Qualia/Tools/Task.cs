@@ -95,6 +95,7 @@ namespace Tools
                 {
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
                     Range.For(number, i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+                    number = model.GetNumberOfFirstLayerActiveNeurons();
                     Range.For(model.Target.Length, i => model.Target[i] = (i == number - MinNumber) ? 1 : 0);
                 }
             }

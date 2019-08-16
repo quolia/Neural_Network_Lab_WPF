@@ -52,7 +52,10 @@ namespace Qualia.Controls
             {
                 NeuronsHolder.Children.Remove(control);
             }
-            Range.For(task.GetInputCount(), n => NeuronsHolder.Children.Insert(0, AddNeuron()));
+            if (task != null)
+            {
+                Range.For(task.GetInputCount(), n => NeuronsHolder.Children.Insert(0, AddNeuron()));
+            }
         }
 
         private void LoadConfig()
