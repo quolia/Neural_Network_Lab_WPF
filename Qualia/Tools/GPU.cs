@@ -1,26 +1,164 @@
 ﻿using ILGPU;
+using ILGPU.Backends;
 using ILGPU.Runtime;
+using Qualia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tools;
-using Qualia;
 
 namespace Tools
 {
-    public class GPU : IDisposable
+    public struct NetworkGPU
+    {
+        ArrayView<LayerGPU> Layers;
+
+        public NetworkGPU(NetworkDataModel model)
+        {
+            var layers = GPU.Instance.Accelerator.Allocate<LayerGPU>(model.Layers.Count);
+            for (int i = 0; i < model.Layers.Count; ++i)
+            {
+                layers.CopyFrom(new LayerGPU(model.Layers[i]), i);
+            }
+            Layers = layers.View;
+        }
+       /*
+        public void FeedForward()
+        {
+            for (int l = 0; l < Layers.Length - 1; ++l)
+            {
+                Layers.CopyTo(out LayerGPU layer, l);
+                Layers.CopyTo(out LayerGPU layerNext, l + 1);
+
+                for (int nn = 0; nn < layerNext.Neurons.Length; ++nn)
+                {
+                    layerNext.Neurons.CopyTo(out NeuronGPU nextNeuron, nn);
+
+                    if (nextNeuron.IsBias && nextNeuron.IsBiasConnected)
+                    {
+                        double sum = 0;
+                        for (int n = 0; n < layer.Neurons.Length; ++n)
+                        {
+                            layer.Neurons.CopyTo(out NeuronGPU bias, n);
+                            sum += (bias.IsBias ? bias.AxW(nextNeuron) : 0);
+                        }
+
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(sum, nextNeuron.ActivationFuncParamA);
+                    }
+
+                    if (!nextNeuron.IsBias)
+                    {
+                        double sum = 0;
+                        for (int n = 0; n < layer.Neurons.Length; ++n)
+                        {
+                            layer.Neurons.CopyTo(out NeuronGPU neuron, n);
+                            sum += (neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron));
+                        }
+
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(sum, nextNeuron.ActivationFuncParamA);
+                    }
+                }
+            }
+        }
+        */
+    }
+
+    public struct LayerGPU
+    {
+        public int Id;
+        public ArrayView<NeuronGPU> Neurons;
+
+        public LayerGPU(LayerDataModel layer)
+        {
+            Id = layer.Id;
+            var neurons = GPU.Instance.Accelerator.Allocate<NeuronGPU>(layer.Neurons.Count);
+            for(int i = 0; i < layer.Neurons.Count; ++i)
+            {
+                neurons.CopyFrom(new NeuronGPU(layer.Neurons[i]), i);
+            }
+
+            Neurons = neurons.View;
+        }
+    }
+
+    public struct NeuronGPU
+    {
+        public int Id;
+        public bool IsBias;
+        public bool IsBiasConnected;
+        public double Activation;
+        public IActivationFunction ActivationFunction;
+        public double? ActivationFuncParamA;
+
+        ArrayView<WeightGPU> Weights;
+
+        public NeuronGPU(NeuronDataModel neuron)
+        {
+            Id = neuron.Id;
+            IsBias = neuron.IsBias;
+            IsBiasConnected = neuron.IsBiasConnected;
+            Activation = neuron.Activation;
+            ActivationFunction = neuron.ActivationFunction;
+            ActivationFuncParamA = neuron.ActivationFuncParamA;
+
+            var weights = GPU.Instance.Accelerator.Allocate<WeightGPU>(neuron.Weights.Count);
+            for (int i = 0; i < neuron.Weights.Count; ++i)
+            {
+                weights.CopyFrom(new WeightGPU(neuron.Weights[i]), i);
+            }
+            Weights = weights.View;
+        }
+
+        public double AxW(NeuronGPU nextNeuron)
+        {
+            var weight = Weights[nextNeuron.Id];
+
+            return Activation * weight.Weight;
+        }
+    }
+
+    public struct WeightGPU
+    {
+        public double Weight;
+
+        public WeightGPU(WeightDataModel weight)
+        {
+            Weight = weight.Weight;
+        }
+    }
+
+    public struct NeuronGPUEx
+    {
+        public int GlobalId;
+        public int Id;
+        public bool IsBias;
+        public bool IsBiasConnected;
+        public double Activation;
+        //public string ActivationFunction;
+        public double ActivationFuncParamA;
+
+
+        public NeuronGPUEx(NeuronDataModel neuron, int globalId)
+        {
+            GlobalId = globalId;
+            Id = neuron.Id;
+            IsBias = neuron.IsBias;
+            IsBiasConnected = neuron.IsBiasConnected;
+            Activation = neuron.Activation;
+           // ActivationFunction = null;// GPU.Instance.Accelerator.CompileKernel(typeof(ActivationFunction).GetMethod("None1"));
+            ActivationFuncParamA = 0;// neuron.ActivationFuncParamA;
+        }
+    }
+
+        public class GPU : IDisposable
     {
         public static GPU Instance = new GPU();
 
         Context Context;
-        Accelerator Accelerator;
+        public Accelerator Accelerator;
 
         Dictionary<int, List<MemoryBuffer<double>>> Buffers;
 
-        Action<Index, ArrayView<double>, ArrayView<double>, ArrayView<double>> KernelProduct;
-        Action<Index, ArrayView<double>, ArrayView<double>> KernelSum;
+        Action<Index, ArrayView2D<double>, ArrayView2D<double>> KernelProduct;
 
         public GPU()
         {
@@ -30,12 +168,15 @@ namespace Tools
             var acceleratorId = Accelerator.Accelerators.First(a => a.AcceleratorType == AcceleratorType.Cuda);
             Accelerator = Accelerator.Create(Context, acceleratorId);
 
-            KernelProduct = Accelerator.LoadAutoGroupedStreamKernel<Index, ArrayView<double>, ArrayView<double>, ArrayView<double>>(Product);
-            KernelSum = Accelerator.LoadAutoGroupedStreamKernel<Index, ArrayView<double>, ArrayView<double>>(Sum);
-
+            KernelProduct = Accelerator.LoadAutoGroupedStreamKernel<Index, ArrayView2D<double>, ArrayView2D<double>>(Product);
         }
 
-        private MemoryBuffer<double> GetBuffer(int size)
+        public NetworkGPU GetNetworkGPU(NetworkDataModel model)
+        {
+            return new NetworkGPU(model);
+        }
+
+        public MemoryBuffer<double> GetBuffer(int size)
         {
             if (!Buffers.ContainsKey(size))
             {
@@ -54,7 +195,7 @@ namespace Tools
                 buffer = list.First();
                 list.RemoveAt(0);
             }
-
+            
             return buffer;
         }
 
@@ -78,44 +219,48 @@ namespace Tools
             }
         }
 
-        private static void Product(Index index, ArrayView<double> a, ArrayView<double> w, ArrayView<double> s)
+        private static void Product(Index index, ArrayView2D<double> layer, ArrayView2D<double> layerNext)
         {
-            s[index] = a[index] * w[index];
+            //for (int n = 0; n < layerNext.Height; ++n)
+            int n = index;
+            {
+                double sum = 0;
+                if (layerNext[1, n] == 1 && layerNext[1, n] == 2) // connected bias
+                {
+                    for (int p = 0; p < layer.Height; ++p)
+                    {
+                        sum += layer[1, p] == 1 ? layer[0, p] * layer[3 + n, p] : 0;
+                    }
+                }
+
+                if (layerNext[1, n] == 0) // not bias
+                {
+                    for (int p = 0; p < layer.Height; ++p)
+                    {
+                        sum += layer[0, p] * layer[3 + n, p];
+                    }
+                }
+
+                layerNext[0, n] = sum;
+            }
         }
 
-        private static void Sum(Index index, ArrayView<double> s, ArrayView<double> r)
+        public void FeedForward(NetworkDataModel model)
         {
-            double sum = 0;
-            for (int i = 0; i < s.Length; ++i)
+            for (int i = 0; i < model.Layers.Count - 1; ++i)
             {
-                sum += s[i];
+                var neurons = model.Layers[i].GetNeurons();
+                var neuronsNext = model.Layers[i + 1].GetNeurons();
+                KernelProduct(neuronsNext.Height, neurons, neuronsNext);
+                Accelerator.Synchronize();
+                for (int n = 0; n < neuronsNext.Height; ++n)
+                {
+                    neuronsNext.CopyTo(out double activation, new Index2(0, n));
+
+                    model.Layers[i + 1].Neurons[n].Activation = model.Layers[i + 1].Neurons[n].ActivationFunction.Do(activation, model.Layers[i + 1].Neurons[n].ActivationFuncParamA);
+                    neuronsNext.CopyFrom(model.Layers[i + 1].Neurons[n].Activation, new Index2(0, n));
+                } 
             }
-            r[0] = sum;
-        }
-
-        public double SumActivation(ListX<NeuronDataModel> neurons, NeuronDataModel nextNeuron)
-        {
-            var a = GetBuffer(neurons.Count);
-            var w = GetBuffer(neurons.Count);
-            var s = GetBuffer(neurons.Count);
-            var r = GetBuffer(1);
-
-            var neuron = neurons.First();
-            while (neuron != null)
-            {
-                a.CopyFrom(neuron.Activation, neuron.Id);
-                w.CopyFrom(neuron.WeightTo(nextNeuron).Weight, neuron.Id);
-                neuron = neuron.Next;
-            }
-
-            KernelProduct(a.Length, a.View, w.View, s.View);
-            Accelerator.Synchronize();
-
-            KernelSum(1, s.View, r.View);
-            Accelerator.Synchronize();
-
-            r.CopyTo(out double sum, 0);
-            return sum;
         }
     }
 }

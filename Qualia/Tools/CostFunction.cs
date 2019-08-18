@@ -22,12 +22,12 @@ namespace Tools
 
             public double Do(NetworkDataModel model)
             {
-                return model.Layers.Last().Neurons.Sum(n => Math.Pow(model.Target[n.Id] - n.Activation, 2));
+                return model.Layers.Last().Neurons.Sum(n => Math.Pow(model.TargetValues[n.Id] - n.Activation, 2));
             }
 
             public double Derivative(NetworkDataModel model, NeuronDataModel neuron)
             {
-                return (model.Target[neuron.Id] - neuron.Activation);// / model.Layers.Last().Neurons.Count;
+                return (model.TargetValues[neuron.Id] - neuron.Activation);// / model.Layers.Last().Neurons.Count;
             }
         }
 

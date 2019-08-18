@@ -316,10 +316,11 @@ namespace Qualia
                             continue;
                         }
 
+                        //GPU.Instance.FeedForward(model);
                         model.FeedForward();
                         
                         var output = model.GetMaxActivatedOutputNeuron();
-                        var input = model.GetTarget();
+                        var input = model.TargetOutput;
                         var cost = model.CostFunction.Do(model);
                         if (input == output.Id)
                         {
@@ -406,7 +407,7 @@ namespace Qualia
                     };
                 }
 
-                if ((long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
+                if (Round % 10 == 0 && (long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
                 {
                     prevTime = DateTime.Now;
                     Dispatcher.BeginInvoke((Action)(() => CtlTime.Content = "Time: " + DateTime.Now.Subtract(StartTime).ToString(@"hh\:mm\:ss")));

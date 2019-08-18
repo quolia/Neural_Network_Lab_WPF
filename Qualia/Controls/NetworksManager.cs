@@ -244,30 +244,34 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            foreach (var model in Models)
-            {
-                Range.ForEach(model.Layers.First().Neurons.Where(n => !n.IsBias), n => n.Activation = model.InputInitial0);
-                if (model == Models.First())
-                {
-                    Task.Do(model);
-                }
-            }
-
+            Task.Do(Models.First());
+    
             // copy first layer state to other networks
 
             foreach (var model in Models)
             {
                 if (model != Models.First())
                 {
-                    foreach (var neuron in model.Layers.First().Neurons.Where(n => !n.IsBias))
+                    var neuron = model.Layers.First().Neurons.First();
+                    var neuronFirstModel = Models.First().Layers.First().Neurons.First();
+
+                    while (neuron != null)
                     {
-                        neuron.Activation = Models.First().Layers.First().Neurons[neuron.Id].Activation;
+                        if (!neuron.IsBias)
+                        {
+                            neuron.Activation = neuronFirstModel.Activation;
+                        }
+
+                        neuron = neuron.Next;
+                        neuronFirstModel = neuronFirstModel.Next;
                     }
 
-                    for (int i = 0; i < model.Target.Length; ++i)
+                    for (int i = 0; i < model.TargetValues.Length; ++i)
                     {
-                        model.Target[i] = Models.First().Target[i];
+                        model.TargetValues[i] = Models.First().TargetValues[i];
                     }
+
+                    model.TargetOutput = Models.First().TargetOutput;
                 }
             }
         }

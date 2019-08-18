@@ -83,20 +83,44 @@ namespace Tools
             {
                 if (IsSymmetric)
                 {
-                    var shuffled = model.Layers.First().Neurons.OrderBy(n => Rand.Flat.Next()).ToList();
+                    var shuffled = model.Layers.First().Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
+                    
                     for (int i = 0; i < shuffled.Count; ++i)
                     {
-                        shuffled[i].Activation = i < number ? 1 : 0;
+                        shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
                     }
-                    Range.For(model.Target.Length, i => model.Target[i] = (i == number - MinNumber) ? 1 : 0);
+
+                    for (int i = 0; i < model.TargetValues.Length; ++i)
+                    {
+                        model.TargetValues[i] = (i == number - MinNumber) ? 1 : 0;
+                    }
+
+                    model.TargetOutput = number - MinNumber;
                 }
                 else
                 {
+                    foreach (var neuron in model.Layers.First().Neurons)
+                    {
+                        if (!neuron.IsBias)
+                        {
+                            neuron.Activation = model.InputInitial0;
+                        }
+                    }
+
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
-                    Range.For(number, i => model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1);
+                    for (int i = 0; i < number; ++i)
+                    {
+                        model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1;
+                    }
+
                     number = model.GetNumberOfFirstLayerActiveNeurons();
-                    Range.For(model.Target.Length, i => model.Target[i] = (i == number - MinNumber) ? 1 : 0);
+                    for (int i = 0; i < model.TargetValues.Length; ++i)
+                    {
+                        model.TargetValues[i] = (i == number - MinNumber) ? 1 : 0;
+                    }
+
+                    model.TargetOutput = number - MinNumber;
                 }
             }
 

@@ -14,7 +14,8 @@ namespace Qualia
     {
         public long VisualId;
         public ListX<LayerDataModel> Layers = new ListX<LayerDataModel>();
-        public double[] Target;
+        public double[] TargetValues;
+        public int TargetOutput;
         public List<string> Classes;
 
         public bool IsEnabled;
@@ -39,7 +40,7 @@ namespace Qualia
             Range.For(layersSize.Length, n =>
                 CreateLayer(layersSize[n], n < layersSize.Length - 1 ? layersSize[n + 1] : 0));
 
-            Target = new double[Layers.Last().Height];
+            TargetValues = new double[Layers.Last().Height];
         }
 
         public void CreateLayer(int neuronCount, int weightsCount)
@@ -51,19 +52,23 @@ namespace Qualia
 
         public void ClearErrors()
         {
-            Range.ForEach(Layers, l => l.ClearErrors());
+            foreach (var layer in Layers)
+            {
+                layer.ClearErrors();
+            }
         }
 
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
-            var max = Layers.Last().Neurons.First();
-            Range.ForEach(Layers.Last().Neurons, neuron =>
+            var neurons = Layers.Last().Neurons;
+            var max = neurons.First();
+            foreach (var neuron in neurons)
             {
                 if (neuron.Activation > max.Activation)
                 {
                     max = neuron;
                 }
-            });
+            };
 
             return max;
         }
@@ -82,14 +87,14 @@ namespace Qualia
 
         public int GetNumberOfFirstLayerActiveNeurons()
         {
-            return Layers.First().Neurons.Where(n => !n.IsBias).Count(n => n.Activation > InputThreshold);
+            return Layers.First().Neurons.Count(n => !n.IsBias && n.Activation > InputThreshold);
         }
 
         public int GetTarget()
         {
-            for (int i = 0; i < Target.Length; ++i)
+            for (int i = 0; i < TargetValues.Length; ++i)
             {
-                if (Target[i] == 1)
+                if (TargetValues[i] == 1)
                 {
                     return i;
                 }
@@ -97,31 +102,30 @@ namespace Qualia
             return -1;
         }
 
-        public double SumActivation(ListX<NeuronDataModel> neurons, NeuronDataModel nextNeuron)
-        {
-            return GPU.Instance.SumActivation(neurons, nextNeuron);
-        }
-
         public void FeedForward()
         {
-            Range.ForEachTrimEnd(Layers, -1, layer =>
-            Range.ForEach(layer.Next.Neurons, nextNeuron =>
+            foreach (var layer in Layers)
             {
-                if (nextNeuron.IsBias && nextNeuron.IsBiasConnected)
+                if (layer == Layers.Last())
                 {
-                    
-                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons, bias => bias.IsBias ? bias.AxW(nextNeuron) : 0), nextNeuron.ActivationFuncParamA);
+                    break;
                 }
 
-                if (!nextNeuron.IsBias)
+                foreach (var nextNeuron in layer.Next.Neurons)
                 {
-                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(Range.SumForEach(layer.Neurons, neuron => neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
-                    //nextNeuron.Activation = nextNeuron.ActivationFunction.Do(SumActivation(layer.Neurons, nextNeuron), nextNeuron.ActivationFuncParamA);
+                    if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
+                    {
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(layer.Neurons.Sum(bias => bias.IsBias ? bias.AxW(nextNeuron) : 0), nextNeuron.ActivationFuncParamA);
+                    }
+
+                    if (!nextNeuron.IsBias)
+                    {
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(layer.Neurons.Sum(neuron => neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
+                    }
+
+                    // not connected bias doesn't change it's activation
                 }
-
-                // not connected bias doesn't change it's activation
-
-            }));
+            }
         }
 
         public void BackPropagation()
@@ -129,14 +133,18 @@ namespace Qualia
             // backpropogation
 
             ClearErrors();
-            Range.ForEach(Layers.Last().Neurons, neuron =>
-            neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA));
-
-            Range.BackEachTrimEnd(Layers, -1, layer =>
+            foreach (var neuron in Layers.Last().Neurons)
             {
-                Range.ForEach(layer.Previous.Neurons, neuronPrev =>
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+            }
+
+            var layer = Layers.Last();
+
+            while (layer != Layers.First())
+            {
+                foreach (var neuronPrev in layer.Previous.Neurons)
                 {
-                    neuronPrev.Error = Range.SumForEach(layer.Neurons, neuron =>
+                    neuronPrev.Error = layer.Neurons.Sum(neuron =>
                     {
                         if (neuronPrev.IsBias)
                         {
@@ -154,15 +162,27 @@ namespace Qualia
                             return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                         }
                     });
-                });
-            });
+                }
+
+                layer = layer.Previous;
+            }
 
             // update weights
 
-            Range.BackEachTrimEnd(Layers, -1, layer =>
+            layer = Layers.Last();
+
+            while (layer != Layers.First())
             {
-                Range.ForEach(layer.Previous.Neurons, layer.Neurons, (neuronPrev, neuron) => neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate));
-            });
+                foreach (var neuronPrev in layer.Previous.Neurons)
+                {
+                    foreach (var neuron in layer.Neurons)
+                    {
+                        neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate);
+                    }
+                }
+
+                layer = layer.Previous;
+            }
         }
 
         public NetworkDataModel Merge(NetworkDataModel newModel)
