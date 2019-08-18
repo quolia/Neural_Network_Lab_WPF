@@ -26,7 +26,7 @@ namespace Qualia.Controls
             Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         }
 
-        public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
+        public void Draw(ErrorMatrix matrix)
         {
             int size = 9;
 
@@ -36,8 +36,6 @@ namespace Qualia.Controls
             long badMax = 1;
             long axisOffset = 12;
             long bound = 60;
-
-            var matrix = selectedModel.ErrorMatrix;
 
             for (int y = 0; y < matrix.Output.Length; ++y)
             {

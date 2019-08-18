@@ -360,19 +360,21 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawErrorMatrix == 0)
                 {
-                    using (var ev = new AutoResetEvent(false))
+                    //using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
                         {
                             lock (ApplyChangesLocker)
                             {
-                                CtlMatrixPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
+                                var errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
                                 NetworksManager.ResetErrorMatrix();
-                                ev.Set();
+                                CtlMatrixPresenter.Draw(errorMatrix);
+                                
+                                //ev.Set();
                             }
                         }));
-                        ev.WaitOne();
-                    };
+                        //ev.WaitOne();
+                    }
                 }
 
                 if (Round % Settings.SkipRoundsToDrawNetworks == 0)// || DateTime.Now.Subtract(startTime).TotalSeconds >= 10)

@@ -60,20 +60,23 @@ namespace Qualia.Controls
         {
             double threshold = model.Layers.First() == layer1 ? model.InputThreshold : 0;
 
-            Range.ForEach(layer1.Neurons, layer2.Neurons, (neuron1, neuron2) =>
+            foreach (var neuron1 in layer1.Neurons)
             {
-                if (!neuron2.IsBias || (neuron1.IsBias && neuron2.IsBiasConnected))
+                foreach (var neuron2 in layer2.Neurons)
                 {
-                    if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
+                    if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
                     {
-                        var pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
-                        
-                        CtlPresenter.DrawLine(pen,
-                                              new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)),
-                                              new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                        if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
+                        {
+                            var pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+
+                            CtlPresenter.DrawLine(pen,
+                                                  new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)),
+                                                  new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                        }
                     }
                 }
-            });
+            }
         }
 
         private void DrawLayerNeurons(bool fullState, NetworkDataModel model, LayerDataModel layer)
@@ -82,12 +85,12 @@ namespace Qualia.Controls
 
             var biasColor = Tools.Draw.GetPen(Colors.Orange);
 
-            Range.ForEach(layer.Neurons, neuron =>
+            foreach (var neuron in layer.Neurons)
             {
                 if (fullState || (neuron.IsBias || neuron.Activation > threshold))
-                {
-                    var brush = Tools.Draw.GetBrush(neuron.Activation);
+                {                   
                     var pen = Tools.Draw.GetPen(neuron.Activation);
+                    var brush = pen.Brush; // Tools.Draw.GetBrush(neuron.Activation);
 
                     if (neuron.IsBias)
                     {
@@ -102,7 +105,7 @@ namespace Qualia.Controls
                                              VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
                                              NEURON_RADIUS, NEURON_RADIUS);  
                 }
-            });
+            }
         }
 
         private void Draw(bool fullState, NetworkDataModel model)
@@ -118,10 +121,21 @@ namespace Qualia.Controls
             {
                 if (model.Layers.Count > 0)
                 {
-                    Range.ForEachTrimEnd(model.Layers, -1, layer => DrawLayersLinks(fullState, model, layer, layer.Next));
+                    foreach (var layer in model.Layers)
+                    {
+                        if (layer == model.Layers.Last())
+                        {
+                            break;
+                        }
+
+                        DrawLayersLinks(fullState, model, layer, layer.Next);
+                    }
                 }
 
-                Range.ForEach(model.Layers, layer => DrawLayerNeurons(fullState, model, layer));
+                foreach (var layer in model.Layers)
+                {
+                    DrawLayerNeurons(fullState, model, layer);
+                }
             }
 
             CtlPresenter.Update();
