@@ -41,13 +41,16 @@ namespace Qualia.Controls
 
         private void CtlTask_SelectedIndexChanged()
         {
-            Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
-            Task.SetChangeEvent(TaskParameterChanged);
-            CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(Task.GetVisualControl());
-            if (TaskChanged != null)
+            if (CtlTask.SelectedItem != null)
             {
-                TaskChanged.TaskChanged();
+                Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+                Task.SetChangeEvent(TaskParameterChanged);
+                CtlHolder.Children.Clear();
+                CtlHolder.Children.Add(Task.GetVisualControl());
+                if (TaskChanged != null)
+                {
+                    TaskChanged.TaskChanged();
+                }
             }
         }
 

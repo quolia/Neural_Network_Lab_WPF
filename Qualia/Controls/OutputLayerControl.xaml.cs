@@ -24,7 +24,7 @@ namespace Qualia.Controls
             InitializeComponent();
 
             var neurons = Config.GetArray(Const.Param.Neurons);
-            Range.ForEach(neurons, n => AddNeuron(n));
+            neurons.ToList().ForEach(n => AddNeuron(n));
 
             if (neurons.Length == 0)
             {
@@ -53,23 +53,20 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            bool result = true;
-            var neurons = GetNeuronsControls();
-            Range.ForEach(neurons, n => result &= n.IsValid());
-            return result;
+            return GetNeuronsControls().All(n => n.IsValid());
         }
 
         public override void SaveConfig()
         {
             var neurons = GetNeuronsControls();
             Config.Set(Const.Param.Neurons, neurons.Select(n => n.Id));
-            Range.ForEach(neurons, n => n.SaveConfig());
+            neurons.ForEach(n => n.SaveConfig());
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
-            Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
+            GetNeuronsControls().ForEach(n => n.VanishConfig());
         }
 
         public void OnTaskChanged(INetworkTask task)

@@ -61,9 +61,7 @@ namespace Tools
                 {
                     foreach (var weight in neuron.Weights)
                     {
-
                         weight.Weight = InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
-
                     }
                 }
             }

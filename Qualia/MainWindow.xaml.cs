@@ -300,13 +300,11 @@ namespace Qualia
         private void RunNetwork()
         {
             DateTime prevTime = DateTime.Now;
+            bool IsErrorMatrixRendering = false;
+
 
             while (!CancellationToken.IsCancellationRequested)
             {
-                Thread.Sleep(0);
-
-                bool IsErrorMatrixRendering = false;
-
                 lock (ApplyChangesLocker)
                 {
                     NetworksManager.PrepareModelsForRound();
@@ -362,6 +360,8 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawErrorMatrix == 0 && !IsErrorMatrixRendering)
                 {
+                    Thread.Sleep(0);
+
                     //using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
@@ -383,6 +383,8 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawNetworks == 0)// || DateTime.Now.Subtract(startTime).TotalSeconds >= 10)
                 {
+                    Thread.Sleep(0);
+
                     using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
@@ -399,6 +401,8 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawStatistic == 0)
                 {
+                    Thread.Sleep(0);
+
                     using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
@@ -413,7 +417,7 @@ namespace Qualia
                     };
                 }
 
-                if (Round % 10 == 0 && (long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
+                if (Round % 50 == 0 && (long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
                 {
                     prevTime = DateTime.Now;
                     Dispatcher.BeginInvoke((Action)(() => CtlTime.Content = "Time: " + DateTime.Now.Subtract(StartTime).ToString(@"hh\:mm\:ss")));
@@ -431,10 +435,7 @@ namespace Qualia
 
         private void DrawStatistic(List<NetworkDataModel> models)
         {
-            foreach (var model in models)
-            {
-                model.DynamicStatistic.Add(model.Statistic.Percent, model.Statistic.AverageCost);
-            }
+            models.ForEach(m => m.DynamicStatistic.Add(m.Statistic.Percent, m.Statistic.AverageCost));
 
             CtlPlotPresenter.Draw(models, NetworksManager.SelectedNetworkModel);
 

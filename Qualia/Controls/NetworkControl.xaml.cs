@@ -116,7 +116,7 @@ namespace Qualia.Controls
             CtlCostFunction.Save(Config);
 
             var layers = GetLayersControls();
-            Range.ForEach(layers, l => l.SaveConfig());
+            layers.ForEach(l => l.SaveConfig());
             Config.Set(Const.Param.Layers, layers.Select(l => l.Id));
 
             //
@@ -141,7 +141,7 @@ namespace Qualia.Controls
             CtlLearningRate.Vanish(Config);
             CtlCostFunction.Vanish(Config);
 
-            Range.ForEach(GetLayersControls(), l => l.VanishConfig());
+            GetLayersControls().ForEach(l => l.VanishConfig());
             Config.Remove(Const.Param.Layers);
         }
 
@@ -184,11 +184,11 @@ namespace Qualia.Controls
             CtlTabOutput.Content = sv;
             sv.ScrollChanged += OutputLayer.OnScrollChanged;
 
-            Range.ForEach(layers, l =>
+            foreach (var layer in layers)
             {
-                if (l != layers.First() && l != layers.Last())
-                    AddLayer(l);
-            });
+                if (layer != layers.First() && layer != layers.Last())
+                    AddLayer(layer);
+            }
 
             CtlTabsLayers.SelectedIndex = Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
         }
@@ -256,10 +256,7 @@ namespace Qualia.Controls
                     double initValue = InitializeMode.Helper.Invoke(neurons[nn].WeightsInitializer, neurons[nn].WeightsInitializerParamA);
                     if (!InitializeMode.Helper.IsSkipValue(initValue))
                     {
-                        foreach (var weight in neuronModel.Weights)
-                        {
-                            weight.Weight = InitializeMode.Helper.Invoke(neurons[nn].WeightsInitializer, neurons[nn].WeightsInitializerParamA);
-                        }
+                        neuronModel.Weights.ForEach(w => w.Weight = InitializeMode.Helper.Invoke(neurons[nn].WeightsInitializer, neurons[nn].WeightsInitializerParamA));
                     }
 
                     if (neuronModel.IsBias)

@@ -53,10 +53,7 @@ namespace Qualia
 
         public void ClearErrors()
         {
-            foreach (var layer in Layers)
-            {
-                layer.ClearErrors();
-            }
+            Layers.ForEach(l => l.ClearErrors());
         }
 
         public NeuronDataModel GetMaxActivatedOutputNeuron()
@@ -76,13 +73,13 @@ namespace Qualia
 
         public void InitState()
         {
-            Range.ForEach(Layers.First().Neurons, n => n.Activation = InputInitial1);
+            Layers.First().Neurons.ForEach(n => n.Activation = InputInitial1);
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
         public void Activate()
         {
-            Range.ForEach(Layers, layer => Range.ForEach(layer.Neurons, n => n.Activation = InputInitial1));
+            Layers.ForEach(layer => layer.Neurons.ForEach(n => n.Activation = InputInitial1));
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 

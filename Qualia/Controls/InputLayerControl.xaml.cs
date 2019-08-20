@@ -48,10 +48,7 @@ namespace Qualia.Controls
         public void OnTaskChanged(INetworkTask task)
         {
             var controls = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
-            foreach (var control in controls)
-            {
-                NeuronsHolder.Children.Remove(control);
-            }
+            controls.ForEach(c => NeuronsHolder.Children.Remove(c));
             if (task != null)
             {
                 Range.For(task.GetInputCount(), n => NeuronsHolder.Children.Insert(0, AddNeuron()));
@@ -66,7 +63,10 @@ namespace Qualia.Controls
             CtlActivationFuncParamA.Load(Config);
 
             var neurons = Config.GetArray(Const.Param.Neurons);
-            Range.ForEach(neurons, n => AddBias(n));
+            foreach (var bias in neurons)
+            {
+                AddBias(bias);
+            }
         }
 
         public new InputNeuronControl AddNeuron()
@@ -110,7 +110,10 @@ namespace Qualia.Controls
 
             var neurons = GetNeuronsControls().Where(n => n.IsBias);
             Config.Set(Const.Param.Neurons, neurons.Select(n => n.Id));
-            Range.ForEach(neurons, n => n.SaveConfig());
+            foreach (var neuron in neurons)
+            {
+                neuron.SaveConfig();
+            }
         }
 
         public override void VanishConfig()
@@ -120,7 +123,10 @@ namespace Qualia.Controls
             CtlInputInitial1.Vanish(Config);
             CtlActivationFunc.Vanish(Config);
             CtlActivationFuncParamA.Vanish(Config);
-            Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
+            foreach (var neuron in GetNeuronsControls())
+            {
+                neuron.VanishConfig();
+            }
         }
 
         private void CtlMenuAddBias_Click(object sender, EventArgs e)

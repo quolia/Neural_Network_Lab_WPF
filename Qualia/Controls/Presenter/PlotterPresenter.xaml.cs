@@ -41,12 +41,12 @@ namespace Qualia.Controls
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
 
-            if (IsBaseRedrawNeeded)
+            //if (IsBaseRedrawNeeded)
             {
                 CtlPresenter.Clear();
 
                 DrawPlotter();
-
+                /*
                 CtlBaseVisual = new DrawingVisual();
                 var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
                 using (var dc = CtlBaseVisual.RenderOpen())
@@ -55,9 +55,10 @@ namespace Qualia.Controls
                 }
 
                 IsBaseRedrawNeeded = false;
+                */
             }
 
-            CtlPresenter.Clear();
+            //CtlPresenter.Clear();
             CtlPresenter.AddVisual(CtlBaseVisual);
 
             foreach (var model in models)
@@ -198,10 +199,7 @@ namespace Qualia.Controls
                     }
                 }
 
-                foreach (var p in pointsToRemove)
-                {
-                    data.Remove(p);
-                }
+                pointsToRemove.ForEach(p => data.Remove(p));
             }
         }
     }

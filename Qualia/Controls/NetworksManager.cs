@@ -112,11 +112,7 @@ namespace Qualia.Controls
         public void RebuildNetworksForTask(INetworkTask task)
         {
             Task = task;
-
-            foreach (var network in Networks)
-            {
-                network.OnTaskChanged(task);
-            }
+            Networks.ForEach(n => n.OnTaskChanged(task));
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
 
@@ -171,12 +167,12 @@ namespace Qualia.Controls
         {
             Config.Set(Const.Param.Networks, Networks.Select(l => l.Id));
             Config.Set(Const.Param.SelectedNetworkIndex, CtlTabs.SelectedIndex - 1);
-            Range.ForEach(Networks, n => n.SaveConfig());
+            Networks.ForEach(n => n.SaveConfig());
         }
 
         public void ResetLayersTabsNames()
         {
-            Range.ForEach(Networks, n => n.ResetLayersTabsNames());
+            Networks.ForEach(n => n.ResetLayersTabsNames());
         }
 
         public void SaveAs()
@@ -205,7 +201,7 @@ namespace Qualia.Controls
         public List<NetworkDataModel> CreateNetworksDataModels()
         {
             var result = new List<NetworkDataModel>();
-            Range.ForEach(Networks, n => result.Add(n.CreateNetworkDataModel(Task)));
+            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(Task)));
             return result;
         }
 
@@ -236,7 +232,7 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRun()
         {
-            Range.ForEach(Models, m => m.InitState());
+            Models.ForEach(m => m.InitState());
             ResetModelsDynamicStatistic();
             ResetModelsStatistic();
             ResetErrorMatrix();
@@ -250,10 +246,11 @@ namespace Qualia.Controls
 
             foreach (var model in Models)
             {
+                var neuronFirstModel = Models.First().Layers.First().Neurons.First();
+
                 if (model != Models.First())
                 {
                     var neuron = model.Layers.First().Neurons.First();
-                    var neuronFirstModel = Models.First().Layers.First().Neurons.First();
 
                     while (neuron != null)
                     {
@@ -266,10 +263,7 @@ namespace Qualia.Controls
                         neuronFirstModel = neuronFirstModel.Next;
                     }
 
-                    for (int i = 0; i < model.TargetValues.Length; ++i)
-                    {
-                        model.TargetValues[i] = Models.First().TargetValues[i];
-                    }
+                    Array.Copy(Models.First().TargetValues, model.TargetValues, model.TargetValues.Length);
 
                     model.TargetOutput = Models.First().TargetOutput;
                 }
@@ -278,22 +272,22 @@ namespace Qualia.Controls
 
         public void FeedForward()
         {
-            Range.ForEach(Models, m => m.FeedForward());
+            Models.ForEach(m => m.FeedForward());
         }
 
         public void ResetModelsStatistic()
         {
-            Range.ForEach(Models, m => m.Statistic = new Statistic());
+            Models.ForEach(m => m.Statistic = new Statistic());
         }
 
         private void ResetModelsDynamicStatistic()
         {
-            Range.ForEach(Models, m => m.DynamicStatistic = new DynamicStatistic());
+            Models.ForEach(m => m.DynamicStatistic = new DynamicStatistic());
         }
 
         public void ResetErrorMatrix()
         {
-            Range.ForEach(Models, m => m.ErrorMatrix = new ErrorMatrix(m.Classes));
+            Models.ForEach(m => m.ErrorMatrix = new ErrorMatrix(m.Classes));
         }
     }
 }

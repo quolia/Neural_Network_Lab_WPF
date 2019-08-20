@@ -8,6 +8,13 @@ namespace Tools
 {
     public class ListX<T> : List<T> where T : class
     {
+        T[] Array;
+
+        public new T this[int index]
+        {
+            get => Array[index];
+        }
+
         public T RandomElementTrimEnd(int count = 0)
         {
             return this[Rand.Flat.Next(Count - count)];
@@ -29,6 +36,17 @@ namespace Tools
             else
             {
                 (this as List<T>).Add(obj);
+            }
+
+            RefreshArray();
+        }
+
+        private void RefreshArray()
+        {
+            Array = new T[Count];
+            for (int i = 0; i < Count; ++i)
+            {
+                Array[i] = base[i];
             }
         }
     }

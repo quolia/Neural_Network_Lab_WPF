@@ -50,10 +50,7 @@ namespace Qualia
 
         public void ClearErrors()
         {
-            foreach (var neuron in Neurons)
-            {
-                neuron.Error = 0;
-            }
+            Neurons.ForEach(n => n.Error = 0);
         }
     }
 }

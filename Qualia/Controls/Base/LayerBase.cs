@@ -28,10 +28,7 @@ namespace Qualia.Controls
         private void LayerBase_LayoutUpdated(object sender, EventArgs e)
         {
             int ordinalNumber = 0;
-            foreach (NeuronBase control in GetNeuronsControls())
-            {
-                control.OrdinalNumberChanged(++ordinalNumber);
-            }
+            GetNeuronsControls().ForEach(c => c.OrdinalNumberChanged(++ordinalNumber));
         }
 
         public virtual bool IsInput => false;

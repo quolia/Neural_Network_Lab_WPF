@@ -34,7 +34,11 @@ namespace Qualia.Controls
             {
                 neurons = new long[] { Const.UnknownId };
             }
-            Range.ForEach(neurons, n => AddNeuron(n));
+
+            foreach (var neuron in neurons)
+            {
+                AddNeuron(neuron);
+            }
         }
 
         public override bool IsHidden => true;
@@ -61,13 +65,13 @@ namespace Qualia.Controls
         {
             var neurons = GetNeuronsControls();
             Config.Set(Const.Param.Neurons, neurons.Select(n => n.Id));
-            Range.ForEach(neurons, n => n.SaveConfig());
+            neurons.ForEach(n => n.SaveConfig());
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
-            Range.ForEach(GetNeuronsControls(), n => n.VanishConfig());
+            GetNeuronsControls().ForEach(n => n.VanishConfig());
         }
     }
 }

@@ -155,11 +155,7 @@ namespace Qualia.Controls
                         DrawLayersLinks(fullState, model, layer, layer.Next);
                     }
                 }
-
-                foreach (var layer in model.Layers)
-                {
-                    DrawLayerNeurons(fullState, model, layer);
-                }
+                model.Layers.ForEach(l => DrawLayerNeurons(fullState, model, l));
             }
 
             CtlPresenter.Update();
