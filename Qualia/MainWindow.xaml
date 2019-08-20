@@ -23,9 +23,8 @@
                     <RowDefinition Name="NetworkHeight" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                
-                
-                    <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
+                     
+                <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
 
                 <Grid Grid.Row="1">
@@ -34,19 +33,11 @@
                         <ColumnDefinition Width="Auto" MinWidth="20" />
                         <ColumnDefinition Width="200" />
                     </Grid.ColumnDefinitions>
-
-                        
-            
-                <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
-                <local:StatisticPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
-
-
-                        <local:MatrixPresenter Grid.Column="2" x:Name="CtlMatrixPresenter" />
+                    <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
+                    <local:StatisticPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
+                    <local:MatrixPresenter Grid.Column="2" x:Name="CtlMatrixPresenter" />
                     <local:QLabel Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
-         
-                
                 </Grid>
-     
             </Grid>
         </ScrollViewer>
 

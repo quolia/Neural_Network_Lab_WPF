@@ -30,6 +30,8 @@ namespace Tools
 
         static public double SnapToPixels(double value)
         {
+            return PixelSize;
+
             value += HalfPixelSize;
             var div = (value * 1000) / (PixelSize * 1000);
             return (int)div * PixelSize;

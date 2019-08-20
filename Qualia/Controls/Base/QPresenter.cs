@@ -125,60 +125,24 @@ namespace Qualia.Controls
             }
         }
 
-
         public Image GetImage(double width = 0, double height = 0)
         {
-            int imageWidth = width == 0 ? (int)SystemParameters.PrimaryScreenWidth : (int)width ;
-            int imageHeight =  height == 0 ? (int)SystemParameters.PrimaryScreenHeight : (int)height ;
+            double w = width == 0 ? SystemParameters.PrimaryScreenWidth : width ;
+            double h = height == 0 ? SystemParameters.PrimaryScreenHeight : height ;
 
-           // var visual = new DrawingVisual();
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)w, (int)h, Render.Dpi, Render.Dpi, PixelFormats.Pbgra32);
 
-           //g (var dc = visual.RenderOpen())
-          //  {
-            //    dc.DrawRectangle(new VisualBrush(this), null, rect);
-//}
+           Measure(RenderSize);
+           Arrange(new Rect(RenderSize)); 
 
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)width + 1, (int)height, 96, 96, PixelFormats.Pbgra32);
-            //bitmap.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-
-            // this.Measure(this.RenderSize); //Important
-            // this.Arrange(new Rect(this.RenderSize)); //Important
-
-   
-
-
-            //RenderOptions.SetBitmapScalingMode(bitmap, (BitmapScalingMode)4);
             foreach (var visual in Visuals)
-            {
-               
+            {               
                 bitmap.Render(visual);
             }
             bitmap.Freeze();
 
-            /*
-            PngBitmapEncoder png = new PngBitmapEncoder();
-            png.Frames.Add(BitmapFrame.Create(bitmap));
-            MemoryStream stream = new MemoryStream();
-            png.Save(stream);
-            Image image = Image.FromStream(stream);
-            */
-
-
-
             var image = new Image();
-
-
-           
-            /*
-            image.Measure(new Size(width,
-            height));
-            Size sizeImage = image.DesiredSize;
-            image.Arrange(new Rect(new Point(0, 0), sizeImage));
-            
-            image.Stretch = Stretch.UniformToFill;
-            */
             image.Source = bitmap;
-
             return image;
         }
     }

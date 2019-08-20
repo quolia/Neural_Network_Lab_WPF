@@ -21,17 +21,44 @@ namespace Qualia.Controls
     public partial class PlotterPresenter : UserControl
     {
         int AxisOffset = 6;
+        DrawingVisual CtlBaseVisual;
+        bool IsBaseRedrawNeeded = true;
 
         public PlotterPresenter()
         {
             InitializeComponent();
+                        SnapsToDevicePixels = true;
+            UseLayoutRounding = true;
+            SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+            CtlPresenter.SizeChanged += PlotterPresenter_SizeChanged;
+        }
+
+        private void PlotterPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            IsBaseRedrawNeeded = true;
         }
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
-            CtlPresenter.Clear();
 
-            DrawPlotter();
+            if (IsBaseRedrawNeeded)
+            {
+                CtlPresenter.Clear();
+
+                DrawPlotter();
+
+                CtlBaseVisual = new DrawingVisual();
+                var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
+                using (var dc = CtlBaseVisual.RenderOpen())
+                {
+                    dc.DrawImage(image.Source, new Rect(0, 0, image.Source.Width / Render.PixelSize, image.Source.Height / Render.PixelSize));
+                }
+
+                IsBaseRedrawNeeded = false;
+            }
+
+            CtlPresenter.Clear();
+            CtlPresenter.AddVisual(CtlBaseVisual);
 
             foreach (var model in models)
             {

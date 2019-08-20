@@ -26,6 +26,9 @@ namespace Qualia.Controls
         {
             InitializeComponent();
             Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+            SnapsToDevicePixels = true;
+            UseLayoutRounding = true;
+            SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
         }
 
         List<string> Classes;
@@ -60,7 +63,6 @@ namespace Qualia.Controls
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    //var brush = Tools.Draw.GetBrush(Colors.Silver);
                     var pen = Tools.Draw.GetPen(Colors.Silver);
                     CtlPresenter.DrawRectangle(null, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
                 }
@@ -86,68 +88,6 @@ namespace Qualia.Controls
             CtlPresenter.Update();
         }
 
-        public BitmapSource SnapShotPNG(UIElement source)
-        {
-            double actualWidth = source.RenderSize.Width;
-            double actualHeight = source.RenderSize.Height;
-
-            RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)actualWidth, (int)actualHeight, 96, 96, PixelFormats.Pbgra32);
-
-
-            DrawingVisual visual = new DrawingVisual();
-
-            using (DrawingContext context = visual.RenderOpen())
-            {
-                VisualBrush sourceBrush = new VisualBrush(source);
-                context.DrawRectangle(sourceBrush, null, new Rect(new Point(0, 0), new Point(actualWidth, actualHeight)));
-            }
-            source.Measure(source.RenderSize); //Important
-            source.Arrange(new Rect(source.RenderSize)); //Important
-
-            renderTarget.Render(visual);
-
-            try
-            {
-                return new CroppedBitmap(renderTarget, new Int32Rect(0, 0, (int)actualWidth, (int)actualHeight));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public BitmapSource CaptureScreen(UIElement visualElement, int? desiredLongestEdge = null)
-        {
-            double scale = 1;
-            if (desiredLongestEdge.HasValue)
-            {
-                if (visualElement.RenderSize.Width > visualElement.RenderSize.Height)
-                {
-                    scale = desiredLongestEdge.Value / visualElement.RenderSize.Width;
-                }
-                else
-                {
-                    scale = desiredLongestEdge.Value / visualElement.RenderSize.Height;
-                }
-            }
-
-            var targetBitmap =
-                         new RenderTargetBitmap(
-                            (int)Math.Ceiling(scale * (visualElement.RenderSize.Width + 1)),
-                             (int)Math.Ceiling(scale * (visualElement.RenderSize.Height + 1)),
-                                                           scale * 96,
-                                                           scale * 96,
-                                                            PixelFormats.Pbgra32);
-
-            visualElement.Measure(visualElement.RenderSize); //Important
-            visualElement.Arrange(new Rect(visualElement.RenderSize)); //Important
-
-            targetBitmap.Render(visualElement);
-
-            return targetBitmap;
-        }
-
         public void Draw(ErrorMatrix matrix)
         {
             if (!IsLoaded)
@@ -155,34 +95,17 @@ namespace Qualia.Controls
                 return;
             }
 
-
-               if (IsClassesChanged(matrix.Classes))
-               {
-            DrawBase(matrix);
+            if (IsClassesChanged(matrix.Classes))
+            {
+                DrawBase(matrix);
 
                 CtlBaseVisual = new DrawingVisual();
                 var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
                 using (var dc = CtlBaseVisual.RenderOpen())
                 {
-
-
-
-                //image.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-                 //   CtlBaseVisual.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-
-                    
-                    //RenderOptions.SetBitmapScalingMode(CtlBaseVisual, BitmapScalingMode.NearestNeighbor);
                     dc.DrawImage(image.Source, new Rect(0, 0, image.Source.Width, image.Source.Height));
-                }
-                //CtlBaseImage.HorizontalAlignment = HorizontalAlignment.Stretch;
-               // CtlBaseImage.VerticalAlignment = VerticalAlignment.Stretch;
-
-
-                // SaveToBmp(CtlBaseImage, "./test.bmp");
-
-
-                
-           }
+                }    
+            }
 
             Classes = matrix.Classes;
             CtlPresenter.Clear();
