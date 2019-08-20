@@ -60,7 +60,7 @@ namespace Qualia.Controls
 
         public void Update()
         {
-            UpdateLayout();
+            //UpdateLayout();
         }
 
         public void DrawRectangle(Brush brush, Pen pen, Rect rect)
@@ -125,45 +125,59 @@ namespace Qualia.Controls
             }
         }
 
-        public Image GetImage()
+
+        public Image GetImage(double width = 0, double height = 0)
         {
-            int imageWidth = (int)SystemParameters.PrimaryScreenWidth;
-            int imageHeight = (int)SystemParameters.PrimaryScreenHeight;
-            
-            RenderTargetBitmap bitmap = new RenderTargetBitmap(imageWidth, imageHeight, 96, 96, PixelFormats.Pbgra32);
-            bitmap.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+            int imageWidth = width == 0 ? (int)SystemParameters.PrimaryScreenWidth : (int)width ;
+            int imageHeight =  height == 0 ? (int)SystemParameters.PrimaryScreenHeight : (int)height ;
+
+           // var visual = new DrawingVisual();
+
+           //g (var dc = visual.RenderOpen())
+          //  {
+            //    dc.DrawRectangle(new VisualBrush(this), null, rect);
+//}
+
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)width + 1, (int)height, 96, 96, PixelFormats.Pbgra32);
+            //bitmap.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+
+            // this.Measure(this.RenderSize); //Important
+            // this.Arrange(new Rect(this.RenderSize)); //Important
+
+   
 
 
-            //foreach (var visual in Visuals)
+            //RenderOptions.SetBitmapScalingMode(bitmap, (BitmapScalingMode)4);
+            foreach (var visual in Visuals)
             {
-                bitmap.Render(this);
+               
+                bitmap.Render(visual);
             }
+            bitmap.Freeze();
 
-            var image = new Image();
-            image.Width = 100;// imageWidth;
-            image.Height = 100;// imageHeight;
-
-            //image.SnapsToDevicePixels = true;
-            //image.UseLayoutRounding = true;
-            //image.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
             /*
-            BitmapImage bmp = new BitmapImage() { CacheOption = BitmapCacheOption.OnLoad };
-            MemoryStream outStream = new MemoryStream();
-            encoder.Save(outStream);
-            outStream.Seek(0, SeekOrigin.Begin);
-            bmp.BeginInit();
-            bmp.StreamSource = outStream;
-            bmp.EndInit();
-            currentImage.Source = bmp;
+            PngBitmapEncoder png = new PngBitmapEncoder();
+            png.Frames.Add(BitmapFrame.Create(bitmap));
+            MemoryStream stream = new MemoryStream();
+            png.Save(stream);
+            Image image = Image.FromStream(stream);
             */
 
-            //image.Width = bitmap.PixelWidth;
-            //image.Height = bitmap.PixelHeight;
-           
-            image.Source = bitmap;
 
-            //image.HorizontalAlignment = HorizontalAlignment.Stretch;
-            //image.VerticalAlignment = VerticalAlignment.Stretch;
+
+            var image = new Image();
+
+
+           
+            /*
+            image.Measure(new Size(width,
+            height));
+            Size sizeImage = image.DesiredSize;
+            image.Arrange(new Rect(new Point(0, 0), sizeImage));
+            
+            image.Stretch = Stretch.UniformToFill;
+            */
+            image.Source = bitmap;
 
             return image;
         }

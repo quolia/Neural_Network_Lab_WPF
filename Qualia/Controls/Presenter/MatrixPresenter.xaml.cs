@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Qualia.Controls
     public partial class MatrixPresenter : UserControl
     {
         Typeface Font;
+        DrawingVisual CtlBaseVisual;
 
         public MatrixPresenter()
         {
@@ -26,16 +28,171 @@ namespace Qualia.Controls
             Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         }
 
-        public void Draw(ErrorMatrix matrix)
+        List<string> Classes;
+
+        bool IsClassesChanged(List<string> classes)
+        {
+            if (Classes == null || Classes.Count != classes.Count)
+            {
+                return true;
+            }
+
+            for (int c = 0; c < classes.Count; ++c)
+            {
+                if (classes[c] != Classes[c])
+                {
+                    return true; ;
+                }
+            }
+
+            return false;
+        }
+
+        public void DrawBase(ErrorMatrix matrix)
         {
             int size = 9;
 
             CtlPresenter.Clear();
 
+            long axisOffset = 12;
+
+            for (int y = 0; y < matrix.Output.Length; ++y)
+            {
+                for (int x = 0; x < matrix.Input.Length; ++x)
+                {
+                    //var brush = Tools.Draw.GetBrush(Colors.Silver);
+                    var pen = Tools.Draw.GetPen(Colors.Silver);
+                    CtlPresenter.DrawRectangle(null, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
+                }
+            }
+
+            for (int x = 0; x < matrix.Output.Length; ++x)
+            {
+                var clText = new FormattedText(matrix.Classes[x], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
+                CtlPresenter.DrawText(clText, new Point(axisOffset + x * size + (size - clText.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
+            }
+
+            for (int y = 0; y < matrix.Input.Length; ++y)
+            {
+                var clText = new FormattedText(matrix.Classes[y], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
+                CtlPresenter.DrawText(clText, new Point(1 + axisOffset + matrix.Output.Length * size + (size - clText.Width) / 2, axisOffset + y * size));
+            }
+
+            var text = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
+            CtlPresenter.DrawText(text, new Point(axisOffset + (matrix.Output.Length * size - text.Width) / 2, axisOffset - text.Height - 1));
+            text = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
+            CtlPresenter.DrawText(text, new Point(-axisOffset - (matrix.Input.Length * size - text.Width) / 1, axisOffset - text.Height - 1), -90);
+
+            CtlPresenter.Update();
+        }
+
+        public BitmapSource SnapShotPNG(UIElement source)
+        {
+            double actualWidth = source.RenderSize.Width;
+            double actualHeight = source.RenderSize.Height;
+
+            RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)actualWidth, (int)actualHeight, 96, 96, PixelFormats.Pbgra32);
+
+
+            DrawingVisual visual = new DrawingVisual();
+
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                VisualBrush sourceBrush = new VisualBrush(source);
+                context.DrawRectangle(sourceBrush, null, new Rect(new Point(0, 0), new Point(actualWidth, actualHeight)));
+            }
+            source.Measure(source.RenderSize); //Important
+            source.Arrange(new Rect(source.RenderSize)); //Important
+
+            renderTarget.Render(visual);
+
+            try
+            {
+                return new CroppedBitmap(renderTarget, new Int32Rect(0, 0, (int)actualWidth, (int)actualHeight));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public BitmapSource CaptureScreen(UIElement visualElement, int? desiredLongestEdge = null)
+        {
+            double scale = 1;
+            if (desiredLongestEdge.HasValue)
+            {
+                if (visualElement.RenderSize.Width > visualElement.RenderSize.Height)
+                {
+                    scale = desiredLongestEdge.Value / visualElement.RenderSize.Width;
+                }
+                else
+                {
+                    scale = desiredLongestEdge.Value / visualElement.RenderSize.Height;
+                }
+            }
+
+            var targetBitmap =
+                         new RenderTargetBitmap(
+                            (int)Math.Ceiling(scale * (visualElement.RenderSize.Width + 1)),
+                             (int)Math.Ceiling(scale * (visualElement.RenderSize.Height + 1)),
+                                                           scale * 96,
+                                                           scale * 96,
+                                                            PixelFormats.Pbgra32);
+
+            visualElement.Measure(visualElement.RenderSize); //Important
+            visualElement.Arrange(new Rect(visualElement.RenderSize)); //Important
+
+            targetBitmap.Render(visualElement);
+
+            return targetBitmap;
+        }
+
+        public void Draw(ErrorMatrix matrix)
+        {
+            if (!IsLoaded)
+            {
+                return;
+            }
+
+
+               if (IsClassesChanged(matrix.Classes))
+               {
+            DrawBase(matrix);
+
+                CtlBaseVisual = new DrawingVisual();
+                var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
+                using (var dc = CtlBaseVisual.RenderOpen())
+                {
+
+
+
+                //image.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+                 //   CtlBaseVisual.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+
+                    
+                    //RenderOptions.SetBitmapScalingMode(CtlBaseVisual, BitmapScalingMode.NearestNeighbor);
+                    dc.DrawImage(image.Source, new Rect(0, 0, image.Source.Width, image.Source.Height));
+                }
+                //CtlBaseImage.HorizontalAlignment = HorizontalAlignment.Stretch;
+               // CtlBaseImage.VerticalAlignment = VerticalAlignment.Stretch;
+
+
+                // SaveToBmp(CtlBaseImage, "./test.bmp");
+
+
+                
+           }
+
+            Classes = matrix.Classes;
+            CtlPresenter.Clear();
+            CtlPresenter.AddVisual(CtlBaseVisual);
+
+            int size = 9;
             long goodMax = 1;
             long badMax = 1;
             long axisOffset = 12;
-            long bound = 60;
+            long bound = 30;
 
             for (int y = 0; y < matrix.Output.Length; ++y)
             {
@@ -56,11 +213,14 @@ namespace Qualia.Controls
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    var value = (double)matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
-                    var color = Tools.Draw.GetColorDradient(Colors.LightGray, x == y ? Colors.Green : Colors.Red, 255, value);
-                    var brush = Tools.Draw.GetBrush(color);
-                    var pen = Tools.Draw.GetPen(Colors.Silver);
-                    CtlPresenter.DrawRectangle(brush, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
+                    if (matrix.Matrix[y, x] > 0)
+                    {
+                        var value = (double)matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
+                        var color = Tools.Draw.GetColorDradient(Colors.LightGray, x == y ? Colors.Green : Colors.Red, 255, value);
+                        var brush = Tools.Draw.GetBrush(color);
+                        var pen = Tools.Draw.GetPen(Colors.Silver);
+                        CtlPresenter.DrawRectangle(brush, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
+                    }
                 }
             }
         
@@ -72,10 +232,6 @@ namespace Qualia.Controls
                 var pen = Tools.Draw.GetPen(Colors.Silver);
 
                 CtlPresenter.DrawRectangle(brush, pen, new Rect(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
-
-                var clText = new FormattedText(matrix.Classes[x], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
-                CtlPresenter.DrawText(clText, new Point(axisOffset + x * size + (size - clText.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
-
             }
 
             long inputMax = Math.Max(matrix.Input.Max(), 1);
@@ -85,18 +241,57 @@ namespace Qualia.Controls
                 var brush = Tools.Draw.GetBrush(color);
                 var pen = Tools.Draw.GetPen(Colors.Silver);
                 CtlPresenter.DrawRectangle(brush, pen, new Rect(11 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
-
-                var clText = new FormattedText(matrix.Classes[y], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
-                CtlPresenter.DrawText(clText, new Point(1 + axisOffset + matrix.Output.Length * size + (size - clText.Width) / 2, axisOffset + y * size));
-
             }
-
-            var text = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
-            CtlPresenter.DrawText(text, new Point(axisOffset + (matrix.Output.Length * size - text.Width) / 2, axisOffset - text.Height - 1));
-            text = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
-            CtlPresenter.DrawText(text, new Point(-axisOffset - (matrix.Input.Length * size - text.Width) / 1, axisOffset - text.Height - 1), -90);
 
             CtlPresenter.Update();
         }
     }
+
+    public class ErrorMatrix
+    {
+        public long[] Input;
+        public long[] Output;
+        public long[,] Matrix;
+
+        public List<string> Classes ;
+
+        public ErrorMatrix(List<string> classes)
+        {
+            Classes = classes;
+
+            Input = new long[Classes.Count];
+            Output = new long[Classes.Count];
+            Matrix = new long[Classes.Count, Classes.Count];
+        }
+
+        public long Count
+        {
+            get;
+            private set;
+        }
+
+        public void AddData(int input, int output)
+        {
+            ++Input[input];
+            ++Output[output];
+            ++Matrix[input, output];
+            ++Count;
+        }
+
+        public void ClearData()
+        {
+            Array.Clear(Input, 0, Input.Length);
+            Array.Clear(Output, 0, Output.Length);
+            for (int y = 0; y < Input.Length; ++y)
+            {
+                for (int x = 0; x < Output.Length; ++x)
+                {
+                    Matrix[x, y] = 0;
+                }
+            }
+            Count = 0;
+        }
+    }
+
+
 }

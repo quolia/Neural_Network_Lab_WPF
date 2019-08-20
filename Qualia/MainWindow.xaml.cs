@@ -305,6 +305,8 @@ namespace Qualia
             {
                 Thread.Sleep(0);
 
+                bool IsErrorMatrixRendering = false;
+
                 lock (ApplyChangesLocker)
                 {
                     NetworksManager.PrepareModelsForRound();
@@ -358,7 +360,7 @@ namespace Qualia
                     ++Round;
                 }
 
-                if (Round % Settings.SkipRoundsToDrawErrorMatrix == 0)
+                if (Round % Settings.SkipRoundsToDrawErrorMatrix == 0 && !IsErrorMatrixRendering)
                 {
                     //using (var ev = new AutoResetEvent(false))
                     {
@@ -366,10 +368,12 @@ namespace Qualia
                         {
                             lock (ApplyChangesLocker)
                             {
+                                IsErrorMatrixRendering = true;
                                 var errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
                                 NetworksManager.ResetErrorMatrix();
                                 CtlMatrixPresenter.Draw(errorMatrix);
-                                
+                                IsErrorMatrixRendering = false;
+
                                 //ev.Set();
                             }
                         }));
