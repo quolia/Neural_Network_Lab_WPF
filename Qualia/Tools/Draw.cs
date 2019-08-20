@@ -29,9 +29,7 @@ namespace Tools
         public static double PixelsPerDip { get; private set; }
 
         static public double SnapToPixels(double value)
-        {
-            return PixelSize;
-
+        { 
             value += HalfPixelSize;
             var div = (value * 1000) / (PixelSize * 1000);
             return (int)div * PixelSize;
@@ -122,19 +120,22 @@ namespace Tools
             return new SolidColorBrush(c);
         }
 
-        public static Pen GetPen(double v, float width = 1, byte alpha = 255)
+        public static Pen GetPen(double v, double width = 1, byte alpha = 255)
         {
+            width *= Render.PixelSize;
+
             if (width == 0)
             {
-                width = Math.Abs(v) <= 1 ? 1 : (float)Math.Abs(v);
+                width = Math.Abs(v) <= 1 ? 1 : (double)Math.Abs(v);
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
             return new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
         }
 
-        public static Pen GetPen(Color c, float width = 1)
+        public static Pen GetPen(Color c, double width = 1)
         {
+            width *= Render.PixelSize;
             return new Pen(GetBrush(c), Render.ScaleThickness(width));
         }
 

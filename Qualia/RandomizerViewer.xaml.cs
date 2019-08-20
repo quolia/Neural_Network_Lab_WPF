@@ -60,7 +60,7 @@ namespace Qualia
             byte alpha = 100;
             int mult = (int)(Height / 12);
 
-            var zeroColor =  new Pen(Color.FromArgb(alpha, Color.Gray));
+            var zeroColor = new Pen(Color.FromArgb(alpha, Color.Gray));
 
             for (int layer = 0; layer < Model.Layers.Count - 1; ++layer)
             {

@@ -26,9 +26,17 @@ namespace Qualia.Controls
         const int BIAS_SIZE = 14;
         const double BIAS_RADIUS = BIAS_SIZE / 2;
 
+        Dictionary<NeuronDataModel, Point> Coordinator = new Dictionary<NeuronDataModel, Point>();
+
         public NetworkPresenter()
         {
             InitializeComponent();
+            SizeChanged += NetworkPresenter_SizeChanged;
+        }
+
+        private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Coordinator.Clear();
         }
 
         public int LayerDistance(NetworkDataModel model)
@@ -70,9 +78,17 @@ namespace Qualia.Controls
                         {
                             var pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
 
-                            CtlPresenter.DrawLine(pen,
-                                                  new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)),
-                                                  new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                            if (!Coordinator.ContainsKey(neuron1))
+                            {
+                                Coordinator.Add(neuron1, new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
+                            }
+
+                            if (!Coordinator.ContainsKey(neuron2))
+                            {
+                                Coordinator.Add(neuron2, new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                            }
+
+                            CtlPresenter.DrawLine(pen, Coordinator[neuron1], Coordinator[neuron2]);
                         }
                     }
                 }
@@ -94,15 +110,23 @@ namespace Qualia.Controls
 
                     if (neuron.IsBias)
                     {
+                        if (!Coordinator.ContainsKey(neuron))
+                        {
+                            Coordinator.Add(neuron, new Point(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                        }
+
                         CtlPresenter.DrawEllipse(Brushes.Orange, biasColor,
-                                                 new Point(LayerX(model, layer),
-                                                 VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
+                                                 Coordinator[neuron],
                                                  BIAS_RADIUS, BIAS_RADIUS);
                     }
 
+                    if (!Coordinator.ContainsKey(neuron))
+                    {
+                        Coordinator.Add(neuron, new Point(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                    }
+
                     CtlPresenter.DrawEllipse(brush, pen,
-                                             new Point(LayerX(model, layer),
-                                             VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)),
+                                             Coordinator[neuron],
                                              NEURON_RADIUS, NEURON_RADIUS);  
                 }
             }
