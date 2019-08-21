@@ -91,6 +91,8 @@ namespace Qualia.Controls
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
+
+            RefreshOrdinalNumbers();
         }
 
         public override bool IsValid()

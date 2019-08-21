@@ -135,7 +135,8 @@ namespace Qualia.Controls
 
         private void DeleteNeuron()
         {
-            if (this.GetParentOfType<LayerBase>().NeuronsCount < 2)
+            var layerBase = this.GetParentOfType<LayerBase>();
+            if (layerBase.NeuronsCount < 2)
             {
                 MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
                 return;
@@ -143,11 +144,11 @@ namespace Qualia.Controls
 
             var color = Background;
             Background = Brushes.Tomato;
-
             if (MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 (Parent as Panel).Children.Remove(this);
                 VanishConfig();
+                layerBase.RefreshOrdinalNumbers();
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
             else

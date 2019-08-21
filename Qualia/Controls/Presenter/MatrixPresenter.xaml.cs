@@ -55,8 +55,6 @@ namespace Qualia.Controls
         {
             int size = 9;
 
-            CtlPresenter.Clear();
-
             long axisOffset = 12;
 
             for (int y = 0; y < matrix.Output.Length; ++y)
@@ -95,21 +93,24 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (IsClassesChanged(matrix.Classes))
+            //if (IsClassesChanged(matrix.Classes))
             {
-                DrawBase(matrix);
+                CtlPresenter.Clear();
 
+                DrawBase(matrix);
+                /*
                 CtlBaseVisual = new DrawingVisual();
                 var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
                 using (var dc = CtlBaseVisual.RenderOpen())
                 {
                     dc.DrawImage(image.Source, new Rect(0, 0, image.Source.Width, image.Source.Height));
-                }    
+                } 
+                */
             }
 
             Classes = matrix.Classes;
-            CtlPresenter.Clear();
-            CtlPresenter.AddVisual(CtlBaseVisual);
+            //CtlPresenter.Clear();
+            //CtlPresenter.AddVisual(CtlBaseVisual);
 
             int size = 9;
             long goodMax = 1;

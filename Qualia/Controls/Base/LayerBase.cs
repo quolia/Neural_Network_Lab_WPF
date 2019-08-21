@@ -19,13 +19,12 @@ namespace Qualia.Controls
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
-            LayoutUpdated += LayerBase_LayoutUpdated;
 
             Id = UniqId.GetId(id);
             Config = config.Extend(Id);
         }
 
-        private void LayerBase_LayoutUpdated(object sender, EventArgs e)
+        public void RefreshOrdinalNumbers()
         {
             int ordinalNumber = 0;
             GetNeuronsControls().ForEach(c => c.OrdinalNumberChanged(++ordinalNumber));
