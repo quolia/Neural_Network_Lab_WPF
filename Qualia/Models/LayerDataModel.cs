@@ -13,10 +13,11 @@ namespace Qualia
     {
         public int Id;
         public long VisualId;
-        public ListX<NeuronDataModel> Neurons = new ListX<NeuronDataModel>();
+        public ListX<NeuronDataModel> Neurons;
 
         public LayerDataModel(int id, int neuronsCount, int weightsCount)
         {
+            Neurons = new ListX<NeuronDataModel>(neuronsCount);
             Id = id;
             Range.For(neuronsCount, n => Neurons.Add(new NeuronDataModel(n, weightsCount)));
         }

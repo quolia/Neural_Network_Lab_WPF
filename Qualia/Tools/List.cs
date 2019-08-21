@@ -8,6 +8,12 @@ namespace Tools
 {
     public class ListX<T> : List<T> where T : class
     {
+        public ListX(int capacity)
+            : base(capacity)
+        {
+            //
+        }
+
         T[] Array;
 
         public new T this[int index]

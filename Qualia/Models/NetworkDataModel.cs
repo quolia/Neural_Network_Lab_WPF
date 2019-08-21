@@ -14,7 +14,7 @@ namespace Qualia
     public class NetworkDataModel
     {
         public long VisualId;
-        public ListX<LayerDataModel> Layers = new ListX<LayerDataModel>();
+        public ListX<LayerDataModel> Layers;
         public double[] TargetValues;
         public int TargetOutput;
         public List<string> Classes;
@@ -38,6 +38,7 @@ namespace Qualia
         public NetworkDataModel(long visualId, int[] layersSize)
         {
             VisualId = visualId;
+            Layers = new ListX<LayerDataModel>(layersSize.Length);
             Range.For(layersSize.Length, n =>
                 CreateLayer(layersSize[n], n < layersSize.Length - 1 ? layersSize[n + 1] : 0));
 

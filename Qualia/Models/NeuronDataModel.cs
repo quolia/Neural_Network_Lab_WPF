@@ -28,10 +28,11 @@ namespace Qualia
         public IActivationFunction ActivationFunction;
         public double? ActivationFuncParamA;
 
-        public ListX<WeightDataModel> Weights = new ListX<WeightDataModel>();
+        public ListX<WeightDataModel> Weights;
 
         public NeuronDataModel(int id, int weightsCount)
         {
+            Weights = new ListX<WeightDataModel>(weightsCount);
             Id = id;
             Range.For(weightsCount, n => Weights.Add(new WeightDataModel(n)));
         }
