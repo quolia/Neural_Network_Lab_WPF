@@ -143,7 +143,6 @@
     <Compile Include="Tools\RandomizeMode.cs" />
     <Compile Include="Tools\Range.cs" />
     <Compile Include="Tools\Task.cs" />
-    <Compile Include="Tools\Threads.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Page Include="Controls\Base\Razor\RazorPainterWPFCtl.xaml">
       <SubType>Designer</SubType>

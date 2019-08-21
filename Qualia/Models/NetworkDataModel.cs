@@ -1,6 +1,11 @@
-﻿using Qualia.Controls;
+﻿using ILGPU;
+using ILGPU.Runtime;
+using Qualia.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using Tools;
 
@@ -105,26 +110,20 @@ namespace Qualia
                     break;
                 }
 
-                //var counter = new SafeCounter(layer.Next.Neurons.Count);
-                //NeuronThread.IsFinished.Reset();
-
                 foreach (var nextNeuron in layer.Next.Neurons)
                 {
                     if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
                     {
                         nextNeuron.Activation = nextNeuron.ActivationFunction.Do(layer.Neurons.Sum(bias => bias.IsBias ? bias.AxW(nextNeuron) : 0), nextNeuron.ActivationFuncParamA);
-                        //NeuronThread.GetThread().Run(counter, layer.Neurons, nextNeuron, forBias: true);
                     }
 
                     if (!nextNeuron.IsBias)
                     {
                         nextNeuron.Activation = nextNeuron.ActivationFunction.Do(layer.Neurons.Sum(neuron => neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
-                        ///NeuronThread.GetThread().Run(counter, layer.Neurons, nextNeuron, forBias: false);
                     }
 
                     // not connected bias doesn't change it's activation
                 }
-                //NeuronThread.IsFinished.WaitOne();
             }
         }
 
