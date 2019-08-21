@@ -2,6 +2,7 @@
 using Qualia.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -36,6 +37,9 @@ namespace Qualia
 
         public Main()
         {
+            // spread app among processors
+            //Process.GetCurrentProcess().ProcessorAffinity = (IntPtr)Threads.GetAffinityMaksForProcessors(Threads.GetAllProcessorsList());
+
             InitializeComponent();
          
             Loaded += Main_Load;
@@ -531,6 +535,7 @@ namespace Qualia
             if (MessageBox.Show("Would you like to stop the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 StopRunning();
+                NeuronThread.Exit();
                 return true;
             }
 
