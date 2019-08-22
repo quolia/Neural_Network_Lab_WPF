@@ -285,14 +285,14 @@ namespace Qualia
                 NetworksManager.PrepareModelsForRun();
 
                 NetworksManager.PrepareModelsForRound();
-                CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.SelectedNetworkModel);//(NetworksManager.Models.First());
+                CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.SelectedNetworkModel);
                 //CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
                 NetworksManager.FeedForward(); // initialize state
 
                 Round = 0;
                 StartTime = DateTime.Now;
 
-                DrawModels(NetworksManager.Models);
+                DrawModels(NetworksManager.SelectedNetworkModel);
 
                 WorkThread = new Thread(new ThreadStart(RunNetwork));
                 WorkThread.Priority = ThreadPriority.Highest;
@@ -371,27 +371,26 @@ namespace Qualia
 
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        var errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
+                        ErrorMatrix errorMatrix;
                         lock (ApplyChangesLocker)
                         {
+                            errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
                             NetworksManager.ResetErrorMatrix();
-                        }
+                        }           
                         CtlMatrixPresenter.Draw(errorMatrix);
                         IsErrorMatrixRendering = false;
                     }));
                 }
 
-                if (Round % Settings.SkipRoundsToDrawNetworks == 0)// || DateTime.Now.Subtract(startTime).TotalSeconds >= 10)
+                if (Round % Settings.SkipRoundsToDrawNetworks == 0)
                 {
-                    Thread.Sleep(0);
-
                     using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
                         {      
                             lock (ApplyChangesLocker)
                             {
-                                DrawModels(NetworksManager.Models);
+                                DrawModels(NetworksManager.SelectedNetworkModel);
                             }
                             ev.Set();
                         }));
@@ -401,8 +400,6 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawStatistic == 0)
                 {
-                    Thread.Sleep(0);
-
                     using (var ev = new AutoResetEvent(false))
                     {
                         Dispatcher.BeginInvoke((Action)(() =>
@@ -437,12 +434,10 @@ namespace Qualia
             }
         }
 
-        private void DrawModels(List<NetworkDataModel> models)
+        private void DrawModels(NetworkDataModel model)
         {
-            var renderStart = DateTime.Now;
-
-            CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel);
-            CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
+            CtlNetworkPresenter.RenderRunning(model);
+            CtlInputDataPresenter.SetInputDataAndDraw(model);
         }
 
         private void DrawStatistic(List<NetworkDataModel> models)
@@ -654,6 +649,11 @@ namespace Qualia
             {
                 WorkThread.Join();
                 WorkThread = null;
+            }
+            if (TimeThread != null)
+            {
+                TimeThread.Join();
+                TimeThread = null;
             }
 
             CtlMenuStart.IsEnabled = true;

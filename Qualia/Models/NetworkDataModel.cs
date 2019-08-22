@@ -114,12 +114,26 @@ namespace Qualia
                 {
                     if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
                     {
-                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(layer.Neurons.Sum(bias => bias.IsBias ? bias.AxW(nextNeuron) : 0), nextNeuron.ActivationFuncParamA);
+                        nextNeuron.Activation = 0;
+
+                        foreach (var neuron in layer.Neurons)
+                        {
+                            nextNeuron.Activation += neuron.IsBias ? neuron.AxW(nextNeuron) : 0;
+                        }
+
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParamA);
                     }
 
                     if (!nextNeuron.IsBias)
                     {
-                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(layer.Neurons.Sum(neuron => neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron)), nextNeuron.ActivationFuncParamA);
+                        nextNeuron.Activation = 0;
+
+                        foreach (var neuron in layer.Neurons)
+                        {
+                            nextNeuron.Activation += neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron);
+                        }
+
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParamA);
                     }
 
                     // not connected bias doesn't change it's activation
@@ -131,7 +145,7 @@ namespace Qualia
         {
             // backpropogation
 
-            ClearErrors();
+            //ClearErrors();
             foreach (var neuron in Layers.Last().Neurons)
             {
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
@@ -143,24 +157,20 @@ namespace Qualia
             {
                 foreach (var neuronPrev in layer.Previous.Neurons)
                 {
-                    neuronPrev.Error = layer.Neurons.Sum(neuron =>
+                    neuronPrev.Error = 0;
+
+                    foreach (var neuron in layer.Neurons)
                     {
-                        if (neuronPrev.IsBias)
-                        {
-                            if (neuron.IsBiasConnected)
-                            {
-                                return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-                            }
-                            else
-                            {
-                                return 0;// neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-                            }
-                        }
-                        else
-                        {
-                            return neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-                        }
-                    });
+                        neuronPrev.Error +=
+                        
+                            neuronPrev.IsBias
+                            ?
+                                neuron.IsBiasConnected
+                                ? (neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA))
+                                : 0 // neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                            
+                            : neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                    }
                 }
 
                 layer = layer.Previous;
