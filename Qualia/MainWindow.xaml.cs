@@ -190,7 +190,6 @@ namespace Qualia
             Config.Main.FlushToDrive();
             NetworksManager.Config.FlushToDrive();
 
-
             return true;
         }
 
@@ -288,7 +287,6 @@ namespace Qualia
 
                 NetworksManager.PrepareModelsForRound();
                 CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.SelectedNetworkModel);
-                //CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
                 NetworksManager.FeedForward(); // initialize state
 
                 Round = 0;
@@ -300,9 +298,9 @@ namespace Qualia
                 WorkThread.Priority = ThreadPriority.Highest;
                 WorkThread.Start();
 
-                WorkThread = new Thread(new ThreadStart(RunTimer));
-                WorkThread.Priority = ThreadPriority.BelowNormal;
-                WorkThread.Start();
+                TimeThread = new Thread(new ThreadStart(RunTimer));
+                TimeThread.Priority = ThreadPriority.BelowNormal;
+                TimeThread.Start();
             }
         }
 
@@ -407,12 +405,38 @@ namespace Qualia
                     {
                         lock (ApplyChangesLocker)
                         {
-                            DrawStatistic(NetworksManager.Models);
+                            DrawPlotter(NetworksManager.Models);
                         }
                         UIEvent.Set();
 
                     }), System.Windows.Threading.DispatcherPriority.Send);
                     UIEvent.WaitOne();
+
+
+                    Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        NetworkDataModel selectedModel;
+                        Statistic statistic;
+                        double learningRate;
+
+                        lock (ApplyChangesLocker)
+                        {
+                            selectedModel = NetworksManager.SelectedNetworkModel;
+                            statistic = selectedModel == null ? null : selectedModel.Statistic.Copy();
+                            learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
+                        }
+
+                        Dispatcher.BeginInvoke((Action)(() =>
+                        {
+                            var lastStat = DrawStatistic(statistic, learningRate);
+                            if (selectedModel != null)
+                            {
+                                selectedModel.LastStatistic = lastStat;
+                            }
+
+                        }), System.Windows.Threading.DispatcherPriority.Send);
+
+                    }), System.Windows.Threading.DispatcherPriority.Send);
                 }
             }
         }
@@ -441,17 +465,18 @@ namespace Qualia
             CtlInputDataPresenter.SetInputDataAndDraw(model);
         }
 
-        private void DrawStatistic(List<NetworkDataModel> models)
+        private void DrawPlotter(List<NetworkDataModel> models)
         {
             models.ForEach(m => m.DynamicStatistic.Add(m.Statistic.Percent, m.Statistic.AverageCost));
-
             CtlPlotPresenter.Draw(models, NetworksManager.SelectedNetworkModel);
+        }
 
-            var selected = NetworksManager.SelectedNetworkModel;
-
-            if (selected == null)
+        private Dictionary<string, string> DrawStatistic(Statistic statistic, double learningRate)
+        {
+            if (statistic == null)
             {
                 CtlStatisticsPresenter.Draw(null);
+                return null;
             }
             else
             {
@@ -459,9 +484,9 @@ namespace Qualia
                 var span = DateTime.Now.Subtract(StartTime);
                 stat.Add("Time", new DateTime(span.Ticks).ToString(@"HH\:mm\:ss"));
 
-                if (selected.Statistic.Percent > 0)
+                if (statistic.Percent > 0)
                 {
-                    var remains = new DateTime((long)(span.Ticks * 100 / selected.Statistic.Percent) - span.Ticks);
+                    var remains = new DateTime((long)(span.Ticks * 100 / statistic.Percent) - span.Ticks);
                     stat.Add("Time remaining", new DateTime(remains.Ticks).ToString(@"HH\:mm\:ss"));
                 }
                 else
@@ -469,10 +494,10 @@ namespace Qualia
                     stat.Add("Time remaining", "N/A");
                 }
 
-                if (selected.Statistic.LastGoodOutput != null)
+                if (statistic.LastGoodOutput != null)
                 {
-                    stat.Add("Last good output", $"{selected.Statistic.LastGoodInput}={selected.Statistic.LastGoodOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastGoodOutputActivation, "N6")}%)");
-                    stat.Add("Last good cost", Converter.DoubleToText(selected.Statistic.LastGoodCost, "N6"));
+                    stat.Add("Last good output", $"{statistic.LastGoodInput}={statistic.LastGoodOutput} ({Converter.DoubleToText(100 * statistic.LastGoodOutputActivation, "N6")}%)");
+                    stat.Add("Last good cost", Converter.DoubleToText(statistic.LastGoodCost, "N6"));
 
                 }
                 else
@@ -481,10 +506,10 @@ namespace Qualia
                     stat.Add("Last good cost", "none");
                 }
 
-                if (selected.Statistic.LastBadOutput != null)
+                if (statistic.LastBadOutput != null)
                 {
-                    stat.Add("Last bad output", $"{selected.Statistic.LastBadInput}={selected.Statistic.LastBadOutput} ({Converter.DoubleToText(100 * selected.Statistic.LastBadOutputActivation, "N6")}%)");
-                    stat.Add("Last bad cost", Converter.DoubleToText(selected.Statistic.LastBadCost, "N6"));
+                    stat.Add("Last bad output", $"{statistic.LastBadInput}={statistic.LastBadOutput} ({Converter.DoubleToText(100 * statistic.LastBadOutputActivation, "N6")}%)");
+                    stat.Add("Last bad cost", Converter.DoubleToText(statistic.LastBadCost, "N6"));
                 }
                 else
                 {
@@ -492,9 +517,9 @@ namespace Qualia
                     stat.Add("Last bad cost", "none");
                 }
 
-                stat.Add("Average cost", Converter.DoubleToText(selected.Statistic.AverageCost, "N6"));
-                stat.Add("Percent", Converter.DoubleToText(selected.Statistic.Percent, "N6") + " %");
-                stat.Add("Learning rate", Converter.DoubleToText(selected.LearningRate));
+                stat.Add("Average cost", Converter.DoubleToText(statistic.AverageCost, "N6"));
+                stat.Add("Percent", Converter.DoubleToText(statistic.Percent, "N6") + " %");
+                stat.Add("Learning rate", Converter.DoubleToText(learningRate));
                 stat.Add("Rounds", Round.ToString());
                 stat.Add("Rounds/sec", ((int)((double)Round / DateTime.Now.Subtract(StartTime).TotalSeconds)).ToString());
 
@@ -502,10 +527,8 @@ namespace Qualia
 
                 //stat.Add("Render time, msec", ((int)(renderStop.Subtract(renderStart).TotalMilliseconds)).ToString());
                 CtlStatisticsPresenter.Draw(stat);
-                selected.LastStatistic = stat;
+                return stat;
             }
-
-            NetworksManager.ResetModelsStatistic();
         }
 
         private void CtlMenuNew_Click(object sender, EventArgs e)

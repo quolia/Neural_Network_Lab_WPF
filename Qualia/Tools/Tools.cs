@@ -180,6 +180,11 @@ namespace Tools
             LastGoodInput = null;
             LastGoodCost = 0;
         }
+
+        public Statistic Copy()
+        {
+            return (Statistic)MemberwiseClone();
+        }
     }
 
     public class DynamicStatistic

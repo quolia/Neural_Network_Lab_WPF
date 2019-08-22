@@ -37,15 +37,9 @@ namespace Qualia
             Range.For(weightsCount, n => Weights.Add(new WeightDataModel(n)));
         }
 
-        public double AxW(NeuronDataModel neuron)
-        {
-            return Activation * WeightTo(neuron).Weight;
-        }
+        public double AxW(NeuronDataModel neuron) => Activation * WeightTo(neuron).Weight;
 
-        public WeightDataModel WeightTo(NeuronDataModel neuron)
-        {
-            return Weights[neuron.Id];
-        }
+        public WeightDataModel WeightTo(NeuronDataModel neuron) => Weights[neuron.Id];
     }
 
     public class WeightDataModel : ListNode<WeightDataModel>
@@ -58,9 +52,6 @@ namespace Qualia
             Id = id;
         }
 
-        public void Add(double w)
-        {
-            Weight += w;
-        }
+        public void Add(double w) => Weight += w;
     }
 }

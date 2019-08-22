@@ -48,10 +48,5 @@ namespace Qualia
 
         public int Height => Neurons.Count;
         public int BiasCount => Neurons.Count(n => n.IsBias);
-
-        public void ClearErrors()
-        {
-            Neurons.ForEach(n => n.Error = 0);
-        }
     }
 }

@@ -52,11 +52,6 @@ namespace Qualia
 
         public double InputThreshold => (InputInitial0 + InputInitial1) / 2;
 
-        public void ClearErrors()
-        {
-            Layers.ForEach(l => l.ClearErrors());
-        }
-
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
             var neurons = Layers.Last().Neurons;
