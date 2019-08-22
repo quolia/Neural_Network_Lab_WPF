@@ -2,6 +2,7 @@
 using Qualia.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,6 +25,9 @@ namespace Qualia
 {
     public partial class Main : WindowResizeControl, INetworkTaskChanged
     {
+        [DllImport("kernel32")]
+        static extern int GetCurrentThreadId();
+
         Thread WorkThread;
         CancellationToken CancellationToken;
         CancellationTokenSource CancellationTokenSource;
@@ -36,8 +40,16 @@ namespace Qualia
 
         public Main()
         {
+            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
+            {
+                int utid = GetCurrentThreadId();
+                if (utid == pt.Id)
+                {
+                    pt.ProcessorAffinity = (IntPtr)1;
+                }
+            }
+
             InitializeComponent();
-         
             Loaded += Main_Load;
         }
 
@@ -299,9 +311,17 @@ namespace Qualia
 
         private void RunNetwork()
         {
+            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
+            {
+                int utid = GetCurrentThreadId();
+                if (utid == pt.Id)
+                {
+                    pt.ProcessorAffinity = (IntPtr)4;
+                }
+            }
+
             DateTime prevTime = DateTime.Now;
             bool IsErrorMatrixRendering = false;
-
 
             while (!CancellationToken.IsCancellationRequested)
             {

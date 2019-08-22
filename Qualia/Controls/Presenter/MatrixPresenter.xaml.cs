@@ -20,7 +20,7 @@ namespace Qualia.Controls
     public partial class MatrixPresenter : UserControl
     {
         Typeface Font;
-        DrawingVisual CtlBaseVisual;
+        QPresenter CtlBaseVisual;
 
         public MatrixPresenter()
         {
@@ -53,6 +53,8 @@ namespace Qualia.Controls
 
         public void DrawBase(ErrorMatrix matrix)
         {
+            CtlBaseVisual = new QPresenter();
+
             int size = 9;
 
             long axisOffset = 12;
@@ -62,28 +64,28 @@ namespace Qualia.Controls
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
                     var pen = Tools.Draw.GetPen(Colors.Silver);
-                    CtlPresenter.DrawRectangle(null, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
+                    CtlBaseVisual.DrawRectangle(null, pen, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
                 }
             }
 
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
                 var clText = new FormattedText(matrix.Classes[x], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
-                CtlPresenter.DrawText(clText, new Point(axisOffset + x * size + (size - clText.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
+                CtlBaseVisual.DrawText(clText, new Point(axisOffset + x * size + (size - clText.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
             }
 
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
                 var clText = new FormattedText(matrix.Classes[y], Culture.Current, FlowDirection.LeftToRight, Font, 7, Brushes.Black, Render.PixelsPerDip);
-                CtlPresenter.DrawText(clText, new Point(1 + axisOffset + matrix.Output.Length * size + (size - clText.Width) / 2, axisOffset + y * size));
+                CtlBaseVisual.DrawText(clText, new Point(1 + axisOffset + matrix.Output.Length * size + (size - clText.Width) / 2, axisOffset + y * size));
             }
 
             var text = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
-            CtlPresenter.DrawText(text, new Point(axisOffset + (matrix.Output.Length * size - text.Width) / 2, axisOffset - text.Height - 1));
+            CtlBaseVisual.DrawText(text, new Point(axisOffset + (matrix.Output.Length * size - text.Width) / 2, axisOffset - text.Height - 1));
             text = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
-            CtlPresenter.DrawText(text, new Point(-axisOffset - (matrix.Input.Length * size - text.Width) / 1, axisOffset - text.Height - 1), -90);
+            CtlBaseVisual.DrawText(text, new Point(-axisOffset - (matrix.Input.Length * size - text.Width) / 1, axisOffset - text.Height - 1), -90);
 
-            CtlPresenter.Update();
+            CtlBaseVisual.Update();
         }
 
         public void Draw(ErrorMatrix matrix)
@@ -94,8 +96,9 @@ namespace Qualia.Controls
             }
 
             //if (IsClassesChanged(matrix.Classes))
+            if (CtlBaseVisual == null || IsClassesChanged(matrix.Classes))
             {
-                CtlPresenter.Clear();
+                
 
                 DrawBase(matrix);
                 /*
@@ -109,9 +112,9 @@ namespace Qualia.Controls
             }
 
             Classes = matrix.Classes;
-            //CtlPresenter.Clear();
-            //CtlPresenter.AddVisual(CtlBaseVisual);
-
+            CtlPresenter.Clear();
+            CtlPresenter.AddVisual(CtlBaseVisual);
+            
             int size = 9;
             long goodMax = 1;
             long badMax = 1;
