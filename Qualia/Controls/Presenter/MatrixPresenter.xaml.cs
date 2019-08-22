@@ -95,20 +95,9 @@ namespace Qualia.Controls
                 return;
             }
 
-            //if (IsClassesChanged(matrix.Classes))
             if (CtlBaseVisual == null || IsClassesChanged(matrix.Classes))
             {
-                
-
                 DrawBase(matrix);
-                /*
-                CtlBaseVisual = new DrawingVisual();
-                var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
-                using (var dc = CtlBaseVisual.RenderOpen())
-                {
-                    dc.DrawImage(image.Source, new Rect(0, 0, image.Source.Width, image.Source.Height));
-                } 
-                */
             }
 
             Classes = matrix.Classes;

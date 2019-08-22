@@ -21,8 +21,8 @@ namespace Qualia.Controls
     public partial class PlotterPresenter : UserControl
     {
         int AxisOffset = 6;
-        DrawingVisual CtlBaseVisual;
-        bool IsBaseRedrawNeeded = true;
+        bool IsBaseRedrawNeeded;
+        QPresenter CtlBaseVisual;
 
         public PlotterPresenter()
         {
@@ -41,24 +41,13 @@ namespace Qualia.Controls
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
 
-            //if (IsBaseRedrawNeeded)
+            if (CtlBaseVisual == null || IsBaseRedrawNeeded)
             {
-                CtlPresenter.Clear();
-
                 DrawPlotter();
-                /*
-                CtlBaseVisual = new DrawingVisual();
-                var image = CtlPresenter.GetImage(CtlPresenter.ActualWidth, CtlPresenter.ActualHeight);
-                using (var dc = CtlBaseVisual.RenderOpen())
-                {
-                    dc.DrawImage(image.Source, new Rect(0, 0, image.Source.Width / Render.PixelSize, image.Source.Height / Render.PixelSize));
-                }
-
-                IsBaseRedrawNeeded = false;
-                */
+                IsBaseRedrawNeeded = true;
             }
 
-            //CtlPresenter.Clear();
+            CtlPresenter.Clear();
             CtlPresenter.AddVisual(CtlBaseVisual);
 
             foreach (var model in models)
@@ -85,6 +74,8 @@ namespace Qualia.Controls
 
         private void DrawPlotter()
         {
+            CtlBaseVisual = new QPresenter();
+
             var penBlack = Tools.Draw.GetPen(Colors.Black);
             var penLightGray = Tools.Draw.GetPen(Colors.LightGray);
 
@@ -93,20 +84,20 @@ namespace Qualia.Controls
             double x = 0;
             for (x = 0; x < 11; ++x)
             {
-                CtlPresenter.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
-                CtlPresenter.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
+                CtlBaseVisual.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
+                CtlBaseVisual.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
             }
 
             step = ((double)ActualHeight - AxisOffset) / 10;
             x = AxisOffset / 2;
             for (y = 0; y < 11; ++y)
             {
-                CtlPresenter.DrawLine(penLightGray, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
-                CtlPresenter.DrawLine(penBlack, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
+                CtlBaseVisual.DrawLine(penLightGray, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
+                CtlBaseVisual.DrawLine(penBlack, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
             }
 
-            CtlPresenter.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, ActualHeight));
-            CtlPresenter.DrawLine(penBlack, new Point(0, ActualHeight - AxisOffset), new Point(ActualWidth, ActualHeight - AxisOffset));
+            CtlBaseVisual.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, ActualHeight));
+            CtlBaseVisual.DrawLine(penBlack, new Point(0, ActualHeight - AxisOffset), new Point(ActualWidth, ActualHeight - AxisOffset));
         }
 
         private void DrawData(DynamicStatistic.PlotPoints data, Color color, PointFunc func, bool isRect)

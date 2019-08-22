@@ -36,6 +36,8 @@ namespace Qualia
         DateTime StartTime;
         long Round;
 
+        AutoResetEvent UIEvent = new AutoResetEvent(false);
+
         public Main()
         {
             Threads.SetProcessorAffinity(Threads.Processor.Proc0);
@@ -379,39 +381,38 @@ namespace Qualia
                         }           
                         CtlMatrixPresenter.Draw(errorMatrix);
                         IsErrorMatrixRendering = false;
-                    }));
+
+                    }), System.Windows.Threading.DispatcherPriority.Send);
                 }
 
                 if (Round % Settings.SkipRoundsToDrawNetworks == 0)
                 {
-                    using (var ev = new AutoResetEvent(false))
-                    {
-                        Dispatcher.BeginInvoke((Action)(() =>
-                        {      
-                            lock (ApplyChangesLocker)
-                            {
-                                DrawModels(NetworksManager.SelectedNetworkModel);
-                            }
-                            ev.Set();
-                        }));
-                        ev.WaitOne();
-                    };
+                    UIEvent.Reset();    
+                    Dispatcher.BeginInvoke((Action)(() =>
+                    {      
+                        lock (ApplyChangesLocker)
+                        {
+                            DrawModels(NetworksManager.SelectedNetworkModel);
+                        }
+                        UIEvent.Set();
+
+                    }), System.Windows.Threading.DispatcherPriority.Send);
+                    UIEvent.WaitOne();
                 }
 
                 if (Round % Settings.SkipRoundsToDrawStatistic == 0)
                 {
-                    using (var ev = new AutoResetEvent(false))
+                    UIEvent.Reset();                 
+                    Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        lock (ApplyChangesLocker)
                         {
-                            lock (ApplyChangesLocker)
-                            {
-                                DrawStatistic(NetworksManager.Models);
-                            }
-                            ev.Set();
-                        }));
-                        ev.WaitOne();
-                    };
+                            DrawStatistic(NetworksManager.Models);
+                        }
+                        UIEvent.Set();
+
+                    }), System.Windows.Threading.DispatcherPriority.Send);
+                    UIEvent.WaitOne();
                 }
             }
         }
