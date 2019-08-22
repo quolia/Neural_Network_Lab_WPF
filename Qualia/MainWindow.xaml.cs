@@ -25,10 +25,8 @@ namespace Qualia
 {
     public partial class Main : WindowResizeControl, INetworkTaskChanged
     {
-        [DllImport("kernel32")]
-        static extern int GetCurrentThreadId();
-
         Thread WorkThread;
+        Thread TimeThread;
         CancellationToken CancellationToken;
         CancellationTokenSource CancellationTokenSource;
         public static object ApplyChangesLocker = new object();
@@ -40,14 +38,7 @@ namespace Qualia
 
         public Main()
         {
-            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
-            {
-                int utid = GetCurrentThreadId();
-                if (utid == pt.Id)
-                {
-                    pt.ProcessorAffinity = (IntPtr)1;
-                }
-            }
+            Threads.SetProcessorAffinity(Threads.Processor.Proc0);
 
             InitializeComponent();
             Loaded += Main_Load;
@@ -306,21 +297,17 @@ namespace Qualia
                 WorkThread = new Thread(new ThreadStart(RunNetwork));
                 WorkThread.Priority = ThreadPriority.Highest;
                 WorkThread.Start();
+
+                WorkThread = new Thread(new ThreadStart(RunTimer));
+                WorkThread.Priority = ThreadPriority.BelowNormal;
+                WorkThread.Start();
             }
         }
 
         private void RunNetwork()
         {
-            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
-            {
-                int utid = GetCurrentThreadId();
-                if (utid == pt.Id)
-                {
-                    pt.ProcessorAffinity = (IntPtr)4;
-                }
-            }
+            Threads.SetProcessorAffinity(Threads.Processor.Proc2);
 
-            DateTime prevTime = DateTime.Now;
             bool IsErrorMatrixRendering = false;
 
             while (!CancellationToken.IsCancellationRequested)
@@ -378,27 +365,20 @@ namespace Qualia
                     ++Round;
                 }
 
-                if (Round % Settings.SkipRoundsToDrawErrorMatrix == 0 && !IsErrorMatrixRendering)
+                if (!IsErrorMatrixRendering && Round % Settings.SkipRoundsToDrawErrorMatrix == 0)
                 {
-                    Thread.Sleep(0);
+                    IsErrorMatrixRendering = true;
 
-                    //using (var ev = new AutoResetEvent(false))
+                    Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        var errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
+                        lock (ApplyChangesLocker)
                         {
-                            lock (ApplyChangesLocker)
-                            {
-                                IsErrorMatrixRendering = true;
-                                var errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
-                                NetworksManager.ResetErrorMatrix();
-                                CtlMatrixPresenter.Draw(errorMatrix);
-                                IsErrorMatrixRendering = false;
-
-                                //ev.Set();
-                            }
-                        }));
-                        //ev.WaitOne();
-                    }
+                            NetworksManager.ResetErrorMatrix();
+                        }
+                        CtlMatrixPresenter.Draw(errorMatrix);
+                        IsErrorMatrixRendering = false;
+                    }));
                 }
 
                 if (Round % Settings.SkipRoundsToDrawNetworks == 0)// || DateTime.Now.Subtract(startTime).TotalSeconds >= 10)
@@ -436,12 +416,24 @@ namespace Qualia
                         ev.WaitOne();
                     };
                 }
+            }
+        }
 
-                if (Round % 50 == 0 && (long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
+        private void RunTimer()
+        {
+            Threads.SetProcessorAffinity(Threads.Processor.Proc0);
+
+            DateTime prevTime = DateTime.Now;
+
+            while (!CancellationToken.IsCancellationRequested)
+            {
+                if ((long)DateTime.Now.Subtract(prevTime).TotalSeconds >= 1)
                 {
                     prevTime = DateTime.Now;
                     Dispatcher.BeginInvoke((Action)(() => CtlTime.Content = "Time: " + DateTime.Now.Subtract(StartTime).ToString(@"hh\:mm\:ss")));
                 }
+
+                Thread.Sleep(100);
             }
         }
 
