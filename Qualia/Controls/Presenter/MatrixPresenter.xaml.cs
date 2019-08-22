@@ -19,8 +19,6 @@ namespace Qualia.Controls
 {
     public partial class MatrixPresenter : UserControl
     {
-        QPresenter CtlBase;
-
         static Typeface Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         FormattedText FmtOutput = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
         FormattedText FmtInput = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
@@ -68,7 +66,7 @@ namespace Qualia.Controls
 
         public void DrawBase(ErrorMatrix matrix)
         {
-            CtlBase = new QPresenter();
+            CtlBase.Clear();
 
             int size = 9;
 
@@ -116,7 +114,6 @@ namespace Qualia.Controls
 
             Classes = matrix.Classes;
             CtlPresenter.Clear();
-            CtlPresenter.AddVisual(CtlBase);
             
             int size = 9;
             long goodMax = 1;

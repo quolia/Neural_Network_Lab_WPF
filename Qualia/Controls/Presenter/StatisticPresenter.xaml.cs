@@ -18,12 +18,11 @@ namespace Qualia.Controls
 {
     public partial class StatisticPresenter : UserControl
     {
-        Typeface Font;
+        Typeface Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
         public StatisticPresenter()
         {
             InitializeComponent();
-            Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         }
 
         public void Draw(Dictionary<string, string> stat)

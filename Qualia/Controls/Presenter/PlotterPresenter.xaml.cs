@@ -22,12 +22,13 @@ namespace Qualia.Controls
     {
         int AxisOffset = 6;
         bool IsBaseRedrawNeeded;
-        QPresenter CtlBaseVisual;
+
+        Typeface Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
         public PlotterPresenter()
         {
             InitializeComponent();
-                        SnapsToDevicePixels = true;
+            SnapsToDevicePixels = true;
             UseLayoutRounding = true;
             SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
             CtlPresenter.SizeChanged += PlotterPresenter_SizeChanged;
@@ -40,15 +41,13 @@ namespace Qualia.Controls
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
-
-            if (CtlBaseVisual == null || IsBaseRedrawNeeded)
+            if (IsBaseRedrawNeeded)
             {
                 DrawPlotter();
                 IsBaseRedrawNeeded = true;
             }
 
             CtlPresenter.Clear();
-            CtlPresenter.AddVisual(CtlBaseVisual);
 
             foreach (var model in models)
             {
@@ -74,7 +73,7 @@ namespace Qualia.Controls
 
         private void DrawPlotter()
         {
-            CtlBaseVisual = new QPresenter();
+            CtlBase.Clear();
 
             var penBlack = Tools.Draw.GetPen(Colors.Black);
             var penLightGray = Tools.Draw.GetPen(Colors.LightGray);
@@ -84,20 +83,20 @@ namespace Qualia.Controls
             double x = 0;
             for (x = 0; x < 11; ++x)
             {
-                CtlBaseVisual.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
-                CtlBaseVisual.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
+                CtlBase.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
+                CtlBase.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
             }
 
             step = ((double)ActualHeight - AxisOffset) / 10;
             x = AxisOffset / 2;
             for (y = 0; y < 11; ++y)
             {
-                CtlBaseVisual.DrawLine(penLightGray, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
-                CtlBaseVisual.DrawLine(penBlack, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
+                CtlBase.DrawLine(penLightGray, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
+                CtlBase.DrawLine(penBlack, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
             }
 
-            CtlBaseVisual.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, ActualHeight));
-            CtlBaseVisual.DrawLine(penBlack, new Point(0, ActualHeight - AxisOffset), new Point(ActualWidth, ActualHeight - AxisOffset));
+            CtlBase.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, ActualHeight));
+            CtlBase.DrawLine(penBlack, new Point(0, ActualHeight - AxisOffset), new Point(ActualWidth, ActualHeight - AxisOffset));
         }
 
         private void DrawData(DynamicStatistic.PlotPoints data, Color color, PointFunc func, bool isRect)
@@ -135,9 +134,8 @@ namespace Qualia.Controls
         }
 
         private void DrawLabel(DynamicStatistic.PlotPoints data, Color color)
-        {
-            var font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
+        {     
+            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
             CtlPresenter.DrawText(text, new Point((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 

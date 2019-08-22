@@ -106,7 +106,7 @@ namespace Qualia.Controls
                 if (fullState || (neuron.IsBias || neuron.Activation > threshold))
                 {                   
                     var pen = Tools.Draw.GetPen(neuron.Activation);
-                    var brush = pen.Brush; // Tools.Draw.GetBrush(neuron.Activation);
+                    var brush = pen.Brush;
 
                     if (neuron.IsBias)
                     {
@@ -115,9 +115,7 @@ namespace Qualia.Controls
                             Coordinator.Add(neuron, new Point(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                         }
 
-                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor,
-                                                 Coordinator[neuron],
-                                                 BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, Coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
                     }
 
                     if (!Coordinator.ContainsKey(neuron))
@@ -125,9 +123,7 @@ namespace Qualia.Controls
                         Coordinator.Add(neuron, new Point(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                     }
 
-                    CtlPresenter.DrawEllipse(brush, pen,
-                                             Coordinator[neuron],
-                                             NEURON_RADIUS, NEURON_RADIUS);  
+                    CtlPresenter.DrawEllipse(brush, pen, Coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  
                 }
             }
         }
