@@ -39,8 +39,7 @@ namespace Qualia
         {
             VisualId = visualId;
             Layers = new ListX<LayerDataModel>(layersSize.Length);
-            Range.For(layersSize.Length, n =>
-                CreateLayer(layersSize[n], n < layersSize.Length - 1 ? layersSize[n + 1] : 0));
+            Range.For(layersSize.Length, n => CreateLayer(layersSize[n], n < layersSize.Length - 1 ? layersSize[n + 1] : 0));
 
             TargetValues = new double[Layers.Last().Height];
         }

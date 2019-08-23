@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for PresenterControlHost.xaml
-    /// </summary>
     public partial class PresenterControlHost : WindowsFormsHost
     {
         public PresenterControlHost()

@@ -69,7 +69,6 @@ namespace Qualia.Controls
             CtlBase.Clear();
 
             int size = 9;
-
             long axisOffset = 12;
 
             var penSilver = Tools.Draw.GetPen(Colors.Silver);
