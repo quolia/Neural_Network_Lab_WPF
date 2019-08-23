@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    using PointFunc = Func<DynamicStatistics.PlotPoints, DynamicStatistics.PlotPoint, long, Point>;
+    using PointFunc = Func<DynamicStatistic.PlotPoints, DynamicStatistic.PlotPoint, long, Point>;
 
     public partial class PlotterPresenter : UserControl
     {
@@ -42,8 +41,6 @@ namespace Qualia.Controls
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
-            var sw = Stopwatch.StartNew();
-
             if (IsBaseRedrawNeeded)
             {
                 DrawPlotter();
@@ -59,22 +56,19 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                Vanish(model.DynamicStatistics.PercentData, GetPointPercentData);
-                Vanish(model.DynamicStatistics.CostData, GetPointCostData);
+                Vanish(model.DynamicStatistic.PercentData, GetPointPercentData);
+                Vanish(model.DynamicStatistic.CostData, GetPointCostData);
 
-                DrawData(model.DynamicStatistics.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
-                DrawData(model.DynamicStatistics.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
+                DrawData(model.DynamicStatistic.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
+                DrawData(model.DynamicStatistic.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
             }
 
-            if (selectedModel != null && selectedModel.DynamicStatistics.PercentData.Count > 0)
+            if (selectedModel != null && selectedModel.DynamicStatistic.PercentData.Count > 0)
             {
-                DrawLabel(selectedModel.DynamicStatistics.PercentData, selectedModel.Color);
+                DrawLabel(selectedModel.DynamicStatistic.PercentData, selectedModel.Color);
             }
 
             CtlPresenter.Update();
-
-            sw.Stop();
-            RenderTime.Instance.Plotter = sw.ElapsedMilliseconds;
         }
 
         private void DrawPlotter()
@@ -105,7 +99,7 @@ namespace Qualia.Controls
             CtlBase.DrawLine(penBlack, Points.Get(0, ActualHeight - AxisOffset), Points.Get(ActualWidth, ActualHeight - AxisOffset));
         }
 
-        private void DrawData(DynamicStatistics.PlotPoints data, Color color, PointFunc func, bool isRect)
+        private void DrawData(DynamicStatistic.PlotPoints data, Color color, PointFunc func, bool isRect)
         {
             if (data == null || data.FirstOrDefault() == null)
             {
@@ -139,13 +133,13 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
+        private void DrawLabel(DynamicStatistic.PlotPoints data, Color color)
         {     
             var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
-        private Point GetPointPercentData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long d)
+        private Point GetPointPercentData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
         {
             var p0 = data.First();
             var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
@@ -154,7 +148,7 @@ namespace Qualia.Controls
             return Points.Get((int)px, (int)py);
         }
 
-        private Point GetPointCostData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long d)
+        private Point GetPointCostData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
         {
             var p0 = data.First();
             var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
@@ -163,13 +157,13 @@ namespace Qualia.Controls
             return Points.Get((int)px, (int)py);
         }
 
-        private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
+        private void Vanish(DynamicStatistic.PlotPoints data, PointFunc func)
         {
             int vanishArea = 16;
 
             if (data.Count > 10)
             {
-                var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+                var pointsToRemove = new List<DynamicStatistic.PlotPoint>();
                 var time = data.Last().Item2.Subtract(data.First().Item2);
 
                 for (int i = 0; i < data.Count * 0.8; ++i)

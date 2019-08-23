@@ -147,7 +147,7 @@ namespace Tools
         }
     }
 
-    public class Statistics
+    public class Statistic
     {
         public long Rounds;
         public long CorrectRounds;
@@ -164,7 +164,7 @@ namespace Tools
         public string LastGoodInput;
         public double LastGoodCost;
 
-        public Statistics()
+        public Statistic()
         {
             Rounds = 0;
             CorrectRounds = 0;
@@ -181,13 +181,13 @@ namespace Tools
             LastGoodCost = 0;
         }
 
-        public Statistics Copy()
+        public Statistic Copy()
         {
-            return (Statistics)MemberwiseClone();
+            return (Statistic)MemberwiseClone();
         }
     }
 
-    public class DynamicStatistics
+    public class DynamicStatistic
     {
         public PlotPoints PercentData = new PlotPoints();
         public PlotPoints CostData = new PlotPoints();
@@ -212,16 +212,6 @@ namespace Tools
         {
             //
         }
-    }
-
-    public class RenderTime
-    {
-        public static RenderTime Instance = new RenderTime();
-        public long Network;
-        public long ErrorMatrix;
-        public long Statistics;
-        public long Plotter;
-        public long Data;
     }
 
     public class InvalidValueException : Exception

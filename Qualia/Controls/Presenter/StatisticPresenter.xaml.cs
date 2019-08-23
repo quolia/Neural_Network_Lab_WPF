@@ -16,11 +16,11 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class StatisticsPresenter : UserControl
+    public partial class StatisticPresenter : UserControl
     {
         Typeface Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
-        public StatisticsPresenter()
+        public StatisticPresenter()
         {
             InitializeComponent();
         }
@@ -37,14 +37,7 @@ namespace Qualia.Controls
             string text = "";
             foreach (var pair in stat)
             {
-                if (pair.Key.Length == 0)
-                {
-                    text += "\r\n";
-                }
-                else
-                {
-                    text += pair.Key + ": " + pair.Value + "\r\n";
-                }
+                text += pair.Key + ": " + pair.Value + "\r\n";
             }
 
             var formattedText = new FormattedText(text, Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);

@@ -34,7 +34,7 @@
                         <ColumnDefinition Width="200" />
                     </Grid.ColumnDefinitions>
                     <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
-                    <local:StatisticsPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
+                    <local:StatisticPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
                     <local:MatrixPresenter Grid.Column="2" x:Name="CtlMatrixPresenter" />
                     <local:QLabel Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
                 </Grid>

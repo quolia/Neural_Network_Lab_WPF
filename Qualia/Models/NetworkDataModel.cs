@@ -30,10 +30,10 @@ namespace Qualia
 
         public ICostFunction CostFunction;
 
-        public Statistics Statistics;
-        public DynamicStatistics DynamicStatistics;
+        public Statistic Statistic;
+        public DynamicStatistic DynamicStatistic;
         public ErrorMatrix ErrorMatrix;
-        public Dictionary<string, string> LastStatistics;
+        public Dictionary<string, string> LastStatistic;
         
         public NetworkDataModel(long visualId, int[] layersSize)
         {
@@ -190,8 +190,8 @@ namespace Qualia
 
         public NetworkDataModel Merge(NetworkDataModel newModel)
         {
-            newModel.Statistics = Statistics;
-            newModel.DynamicStatistics = DynamicStatistics;
+            newModel.Statistic = Statistic;
+            newModel.DynamicStatistic = DynamicStatistic;
             //newModel.ErrorMatrix = ErrorMatrix;
 
             foreach (var newLayer in newModel.Layers)

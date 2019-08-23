@@ -81,7 +81,7 @@ namespace Qualia.Controls
             var settings = new Settings();
             settings.SkipRoundsToDrawErrorMatrix = CtlSkipRoundsToDrawErrorMatrix.Value;
             settings.SkipRoundsToDrawNetworks = CtlSkipRoundsToDrawNetworks.Value;
-            settings.SkipRoundsToDrawStatistics = CtlSkipRoundsToDrawStatistics.Value;
+            settings.SkipRoundsToDrawStatistic = CtlSkipRoundsToDrawStatistic.Value;
             Settings = settings;
 
             Changed();
@@ -97,6 +97,6 @@ namespace Qualia.Controls
     {
         public int SkipRoundsToDrawErrorMatrix;
         public int SkipRoundsToDrawNetworks;
-        public int SkipRoundsToDrawStatistics;
+        public int SkipRoundsToDrawStatistic;
     }
 }

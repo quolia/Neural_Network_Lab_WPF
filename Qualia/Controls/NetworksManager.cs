@@ -233,8 +233,8 @@ namespace Qualia.Controls
         public void PrepareModelsForRun()
         {
             Models.ForEach(m => m.InitState());
-            ResetModelsDynamicStatistics();
-            ResetModelsStatistics();
+            ResetModelsDynamicStatistic();
+            ResetModelsStatistic();
             ResetErrorMatrix();
         }
 
@@ -275,14 +275,14 @@ namespace Qualia.Controls
             Models.ForEach(m => m.FeedForward());
         }
 
-        public void ResetModelsStatistics()
+        public void ResetModelsStatistic()
         {
-            Models.ForEach(m => m.Statistics = new Statistics());
+            Models.ForEach(m => m.Statistic = new Statistic());
         }
 
-        private void ResetModelsDynamicStatistics()
+        private void ResetModelsDynamicStatistic()
         {
-            Models.ForEach(m => m.DynamicStatistics = new DynamicStatistics());
+            Models.ForEach(m => m.DynamicStatistic = new DynamicStatistic());
         }
 
         public void ResetErrorMatrix()
