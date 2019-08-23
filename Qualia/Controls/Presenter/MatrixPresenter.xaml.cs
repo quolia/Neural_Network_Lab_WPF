@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -105,7 +106,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            long renderStart = DateTime.UtcNow.Ticks;
+            var sw = Stopwatch.StartNew();
 
             if (IsClassesChanged(matrix.Classes))
             {
@@ -169,7 +170,8 @@ namespace Qualia.Controls
 
             CtlPresenter.Update();
 
-            RenderTime.ErrorMatrix = DateTime.UtcNow.Ticks - renderStart;
+            sw.Stop();
+            RenderTime.ErrorMatrix = sw.Elapsed.Ticks;
         }
     }
 

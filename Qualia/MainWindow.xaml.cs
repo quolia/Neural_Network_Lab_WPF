@@ -482,7 +482,7 @@ namespace Qualia
             }
             else
             {
-                var renderStart = DateTime.UtcNow.Ticks;
+                var sw = Stopwatch.StartNew();
 
                 var stat = new Dictionary<string, string>();
                 var span = DateTime.UtcNow.Subtract(StartTime);
@@ -537,7 +537,8 @@ namespace Qualia
 
                 CtlStatisticsPresenter.Draw(stat);
 
-                RenderTime.Statistics = DateTime.UtcNow.Ticks - renderStart;
+                sw.Stop();
+                RenderTime.Statistics = sw.Elapsed.Ticks;
                 return stat;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace Qualia.Controls
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
-            var renderStart = DateTime.UtcNow.Ticks;
+            var sw = Stopwatch.StartNew();
 
             if (IsBaseRedrawNeeded)
             {
@@ -72,7 +73,8 @@ namespace Qualia.Controls
 
             CtlPresenter.Update();
 
-            RenderTime.Plotter = DateTime.UtcNow.Ticks - renderStart;
+            sw.Stop();
+            RenderTime.Plotter = sw.Elapsed.Ticks;
         }
 
         private void DrawPlotter()

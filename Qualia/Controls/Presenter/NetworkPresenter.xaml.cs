@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -130,14 +131,15 @@ namespace Qualia.Controls
 
         private void Draw(bool fullState, NetworkDataModel model)
         {
-            var renderStart = DateTime.UtcNow.Ticks;
-
-            CtlPresenter.Clear();
-
             if (model == null)
-            {               
+            {
+                CtlPresenter.Clear();
                 return;
             }
+
+            var sw = Stopwatch.StartNew();
+
+            CtlPresenter.Clear();
 
             lock (Main.ApplyChangesLocker)
             {
@@ -158,7 +160,8 @@ namespace Qualia.Controls
 
             CtlPresenter.Update();
 
-            RenderTime.Network = DateTime.UtcNow.Ticks - renderStart;
+            sw.Stop();
+            RenderTime.Network = sw.Elapsed.Ticks;
         }
 
         public void RenderStanding(NetworkDataModel model)

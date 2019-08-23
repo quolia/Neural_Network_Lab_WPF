@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,7 +120,7 @@ namespace Qualia.Controls
 
         private void Rearrange(int pointsCount)
         {
-            var renderStart = DateTime.UtcNow.Ticks;
+            var sw = Stopwatch.StartNew();
 
             CtlPresenter.Clear();
 
@@ -148,7 +149,8 @@ namespace Qualia.Controls
 
             CtlPresenter.Update();
 
-            RenderTime.Data = DateTime.UtcNow.Ticks - renderStart;
+            sw.Stop();
+            RenderTime.Data = sw.Elapsed.Ticks;
         }
 
         private Tuple<int, int> GetPointPosition(int pointNumber)
