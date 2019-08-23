@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -130,6 +131,8 @@ namespace Qualia.Controls
 
         private void Draw(bool fullState, NetworkDataModel model)
         {
+            var sw = Stopwatch.StartNew();
+
             CtlPresenter.Clear();
 
             if (model == null)
@@ -155,6 +158,9 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
+
+            sw.Stop();
+            RenderTime.Instance.Network = sw.ElapsedMilliseconds;
         }
 
         public void RenderStanding(NetworkDataModel model)
