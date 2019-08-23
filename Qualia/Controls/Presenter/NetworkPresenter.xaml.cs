@@ -130,6 +130,8 @@ namespace Qualia.Controls
 
         private void Draw(bool fullState, NetworkDataModel model)
         {
+            var renderStart = DateTime.UtcNow.Ticks;
+
             CtlPresenter.Clear();
 
             if (model == null)
@@ -155,6 +157,8 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
+
+            RenderTime.Network = DateTime.UtcNow.Ticks - renderStart;
         }
 
         public void RenderStanding(NetworkDataModel model)

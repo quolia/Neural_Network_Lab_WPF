@@ -137,7 +137,7 @@ namespace Tools
             long id;
             do
             {
-                id = DateTime.Now.Ticks;
+                id = DateTime.UtcNow.Ticks;
                 Thread.Sleep(0);
             }
             while (id <= _prevId);
@@ -147,7 +147,7 @@ namespace Tools
         }
     }
 
-    public class Statistic
+    public class Statistics
     {
         public long Rounds;
         public long CorrectRounds;
@@ -164,7 +164,7 @@ namespace Tools
         public string LastGoodInput;
         public double LastGoodCost;
 
-        public Statistic()
+        public Statistics()
         {
             Rounds = 0;
             CorrectRounds = 0;
@@ -181,20 +181,20 @@ namespace Tools
             LastGoodCost = 0;
         }
 
-        public Statistic Copy()
+        public Statistics Copy()
         {
-            return (Statistic)MemberwiseClone();
+            return (Statistics)MemberwiseClone();
         }
     }
 
-    public class DynamicStatistic
+    public class DynamicStatistics
     {
         public PlotPoints PercentData = new PlotPoints();
         public PlotPoints CostData = new PlotPoints();
 
         public void Add(double percent, double cost)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             PercentData.Add(new PlotPoint(percent, now));
             CostData.Add(new PlotPoint(cost, now));
         }
@@ -212,6 +212,15 @@ namespace Tools
         {
             //
         }
+    }
+
+    public static class RenderTime
+    {
+        public static long Network;
+        public static long Plotter;
+        public static long Statistics;
+        public static long Data;
+        public static long ErrorMatrix;
     }
 
     public class InvalidValueException : Exception

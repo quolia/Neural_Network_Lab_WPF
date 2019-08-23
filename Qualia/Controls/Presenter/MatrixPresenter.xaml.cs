@@ -105,6 +105,8 @@ namespace Qualia.Controls
                 return;
             }
 
+            long renderStart = DateTime.UtcNow.Ticks;
+
             if (IsClassesChanged(matrix.Classes))
             {
                 InitClassesFmtText(matrix.Classes);
@@ -166,6 +168,8 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
+
+            RenderTime.ErrorMatrix = DateTime.UtcNow.Ticks - renderStart;
         }
     }
 

@@ -8,7 +8,7 @@ namespace Tools
 {
     public static class Rand
     {
-        public static Random Flat = new Random((int)(DateTime.Now.Ticks % int.MaxValue));
+        public static Random Flat = new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
         public static GaussianRandom GaussianRand = new GaussianRandom(Flat);
 
         public static double GetFlatRandom(double upperBound = 1)
@@ -38,7 +38,7 @@ namespace Tools
 
         public GaussianRandom(Random random = null)
         {
-            Random = random ?? new Random((int)(DateTime.Now.Ticks % int.MaxValue));
+            Random = random ?? new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
         }
 
         /// <summary>
