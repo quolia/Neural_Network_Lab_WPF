@@ -133,7 +133,7 @@ namespace Qualia.Controls
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)w, (int)h, Render.Dpi, Render.Dpi, PixelFormats.Pbgra32);
 
            Measure(RenderSize);
-           Arrange(new Rect(RenderSize)); 
+           Arrange(Rects.Get(RenderSize)); 
 
             foreach (var visual in Visuals)
             {               

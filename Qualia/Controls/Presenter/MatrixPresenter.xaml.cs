@@ -77,24 +77,24 @@ namespace Qualia.Controls
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    CtlBase.DrawRectangle(null, penSilver, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
+                    CtlBase.DrawRectangle(null, penSilver, Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
                 }
             }
 
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
                 var text = ClassesFmtText[matrix.Classes[x]];
-                CtlBase.DrawText(text, new Point(axisOffset + x * size + (size - text.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
+                CtlBase.DrawText(text, Points.Get(axisOffset + x * size + (size - text.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
             }
 
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
                 var text = ClassesFmtText[matrix.Classes[y]];
-                CtlBase.DrawText(text, new Point(1 + axisOffset + matrix.Output.Length * size + (size - text.Width) / 2, axisOffset + y * size));
+                CtlBase.DrawText(text, Points.Get(1 + axisOffset + matrix.Output.Length * size + (size - text.Width) / 2, axisOffset + y * size));
             }
         
-            CtlBase.DrawText(FmtOutput, new Point(axisOffset + (matrix.Output.Length * size - FmtOutput.Width) / 2, axisOffset - FmtOutput.Height - 1));            
-            CtlBase.DrawText(FmtInput, new Point(-axisOffset - (matrix.Input.Length * size - FmtInput.Width) / 1, axisOffset - FmtInput.Height - 1), -90);
+            CtlBase.DrawText(FmtOutput, Points.Get(axisOffset + (matrix.Output.Length * size - FmtOutput.Width) / 2, axisOffset - FmtOutput.Height - 1));            
+            CtlBase.DrawText(FmtInput, Points.Get(-axisOffset - (matrix.Input.Length * size - FmtInput.Width) / 1, axisOffset - FmtInput.Height - 1), -90);
 
             CtlBase.Update();
         }
@@ -145,7 +145,7 @@ namespace Qualia.Controls
                         var value = (double)matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
                         var color = Tools.Draw.GetColorDradient(Colors.LightGray, x == y ? Colors.Green : Colors.Red, 255, value);
                         var brush = Tools.Draw.GetBrush(color);
-                        CtlPresenter.DrawRectangle(brush, PenSilver, new Rect(axisOffset + x * size, axisOffset + y * size, size, size));
+                        CtlPresenter.DrawRectangle(brush, PenSilver, Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
                     }
                 }
             }
@@ -155,7 +155,7 @@ namespace Qualia.Controls
             {
                 var color = Tools.Draw.GetColorDradient(Colors.White, matrix.Output[x] > matrix.Input[x] ? Colors.Red : matrix.Output[x] < matrix.Input[x] ? Colors.Blue : Colors.Green, 100, (double)matrix.Output[x] / (double)outputMax);
                 var brush = Tools.Draw.GetBrush(color);
-                CtlPresenter.DrawRectangle(brush, PenSilver, new Rect(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
+                CtlPresenter.DrawRectangle(brush, PenSilver, Rects.Get(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
             }
 
             long inputMax = Math.Max(matrix.Input.Max(), 1);
@@ -163,7 +163,7 @@ namespace Qualia.Controls
             {
                 var color = Tools.Draw.GetColorDradient(Colors.White, Colors.Green, 100, (double)matrix.Input[y] / (double)inputMax);
                 var brush = Tools.Draw.GetBrush(color);
-                CtlPresenter.DrawRectangle(brush, PenSilver, new Rect(11 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
+                CtlPresenter.DrawRectangle(brush, PenSilver, Rects.Get(11 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
             }
 
             CtlPresenter.Update();

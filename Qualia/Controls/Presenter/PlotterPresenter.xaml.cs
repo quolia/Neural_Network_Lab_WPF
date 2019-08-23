@@ -83,20 +83,20 @@ namespace Qualia.Controls
             double x = 0;
             for (x = 0; x < 11; ++x)
             {
-                CtlBase.DrawLine(penLightGray, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), 0));
-                CtlBase.DrawLine(penBlack, new Point((float)(AxisOffset + step * x), (float)y), new Point((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
+                CtlBase.DrawLine(penLightGray, Points.Get((float)(AxisOffset + step * x), (float)y), Points.Get((float)(AxisOffset + step * x), 0));
+                CtlBase.DrawLine(penBlack, Points.Get((float)(AxisOffset + step * x), (float)y), Points.Get((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
             }
 
             step = ((double)ActualHeight - AxisOffset) / 10;
             x = AxisOffset / 2;
             for (y = 0; y < 11; ++y)
             {
-                CtlBase.DrawLine(penLightGray, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
-                CtlBase.DrawLine(penBlack, new Point((float)x, (float)(ActualHeight - AxisOffset - step * y)), new Point((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
+                CtlBase.DrawLine(penLightGray, Points.Get((float)x, (float)(ActualHeight - AxisOffset - step * y)), Points.Get(ActualWidth, (float)(ActualHeight - AxisOffset - step * y)));
+                CtlBase.DrawLine(penBlack, Points.Get((float)x, (float)(ActualHeight - AxisOffset - step * y)), Points.Get((float)(x + AxisOffset), (float)(ActualHeight - AxisOffset - step * y)));
             }
 
-            CtlBase.DrawLine(penBlack, new Point(AxisOffset, 0), new Point(AxisOffset, ActualHeight));
-            CtlBase.DrawLine(penBlack, new Point(0, ActualHeight - AxisOffset), new Point(ActualWidth, ActualHeight - AxisOffset));
+            CtlBase.DrawLine(penBlack, Points.Get(AxisOffset, 0), Points.Get(AxisOffset, ActualHeight));
+            CtlBase.DrawLine(penBlack, Points.Get(0, ActualHeight - AxisOffset), Points.Get(ActualWidth, ActualHeight - AxisOffset));
         }
 
         private void DrawData(DynamicStatistic.PlotPoints data, Color color, PointFunc func, bool isRect)
@@ -122,11 +122,11 @@ namespace Qualia.Controls
 
                 if (isRect)
                 {
-                    CtlPresenter.DrawRectangle(brush, pen, new Rect(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
+                    CtlPresenter.DrawRectangle(brush, pen, Rects.Get(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
                 }
                 else
                 {
-                    CtlPresenter.DrawEllipse(brush, pen, new Point(pp.X, pp.Y), 7 / 2, 7 / 2);
+                    CtlPresenter.DrawEllipse(brush, pen, Points.Get(pp.X, pp.Y), 7 / 2, 7 / 2);
                 }
 
                 prev = p;
@@ -136,7 +136,7 @@ namespace Qualia.Controls
         private void DrawLabel(DynamicStatistic.PlotPoints data, Color color)
         {     
             var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
-            CtlPresenter.DrawText(text, new Point((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
+            CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
         private Point GetPointPercentData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
@@ -145,7 +145,7 @@ namespace Qualia.Controls
             var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
             var py = (ActualHeight - AxisOffset) * (1 - (point.Item1 / 100));
 
-            return new Point((int)px, (int)py);
+            return Points.Get((int)px, (int)py);
         }
 
         private Point GetPointCostData(DynamicStatistic.PlotPoints data, DynamicStatistic.PlotPoint point, long d)
@@ -154,7 +154,7 @@ namespace Qualia.Controls
             var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
             var py = (ActualHeight - AxisOffset) * (1 - Math.Min(1, point.Item1));
 
-            return new Point((int)px, (int)py);
+            return Points.Get((int)px, (int)py);
         }
 
         private void Vanish(DynamicStatistic.PlotPoints data, PointFunc func)

@@ -9,6 +9,83 @@ using System.Windows.Media;
 
 namespace Tools
 {
+    public static class Rects
+    {
+        static int SIZE = 50;
+        static int pointer = 0;
+        static Dictionary<int, Rect> Pool = new Dictionary<int, Rect>(SIZE);
+
+        static Rects()
+        {
+            for (int i = 0; i < SIZE; ++i)
+            {
+                Pool[i] = new Rect();
+            }
+        }
+
+        public static Rect Get(Size size)
+        {
+            var rect = Pool[pointer];
+
+            rect.Size = size;
+
+            if (++pointer == SIZE)
+            {
+                pointer = 0;
+            }
+
+            return rect;
+        }
+
+        public static Rect Get(double x, double y, double width, double height)
+        {
+            var rect = Pool[pointer];
+
+            rect.X = x;
+            rect.Y = y;
+            rect.Width = width;
+            rect.Height = height;
+
+            if (++pointer == SIZE)
+            {
+                pointer = 0;
+            }
+
+            return rect;
+        }
+    }
+
+    public static class Points
+    {
+        static int SIZE = 50;
+        static int pointer = 0;
+        static Dictionary<int, Point> Pool = new Dictionary<int, Point>(SIZE);
+
+        static Points()
+        {
+            for (int i = 0; i < SIZE; ++i)
+            {
+                Pool[i] = new Point();
+            }
+        }
+
+        public static Point Get(double x, double y)
+        {
+            var point = Pool[pointer];
+
+            point.X = x;
+            point.Y = y;
+
+            if (++pointer == SIZE)
+            {
+                pointer = 0;
+            }
+
+            return point;
+        }
+    }
+
+
     public static class Render
     {
         static Render()

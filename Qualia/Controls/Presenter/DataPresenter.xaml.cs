@@ -95,7 +95,7 @@ namespace Qualia.Controls
             var brush = value == 0 ? Brushes.White : Draw.GetBrush(value);
             var pen = Draw.GetPen(Colors.Black);
 
-            CtlPresenter.DrawRectangle(brush, pen, new Rect(x * PointSize, y * PointSize, PointSize, PointSize));
+            CtlPresenter.DrawRectangle(brush, pen, Rects.Get(x * PointSize, y * PointSize, PointSize, PointSize));
         }
 
         private void TogglePoint(int c, double value)

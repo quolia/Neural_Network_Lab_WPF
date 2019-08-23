@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using Tools;
 
 namespace Qualia.Controls
 {
@@ -55,7 +56,7 @@ namespace Qualia.Controls
         {
             Win32Point w32Mouse = new Win32Point();
             GetCursorPos(ref w32Mouse);
-            return new Point(w32Mouse.X, w32Mouse.Y);
+            return Points.Get(w32Mouse.X, w32Mouse.Y);
         }
 
 

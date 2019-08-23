@@ -80,12 +80,12 @@ namespace Qualia.Controls
 
                             if (!Coordinator.ContainsKey(neuron1))
                             {
-                                Coordinator.Add(neuron1, new Point(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
+                                Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
                             }
 
                             if (!Coordinator.ContainsKey(neuron2))
                             {
-                                Coordinator.Add(neuron2, new Point(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                                Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
                             }
 
                             CtlPresenter.DrawLine(pen, Coordinator[neuron1], Coordinator[neuron2]);
@@ -112,7 +112,7 @@ namespace Qualia.Controls
                     {
                         if (!Coordinator.ContainsKey(neuron))
                         {
-                            Coordinator.Add(neuron, new Point(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                            Coordinator.Add(neuron, Points.Get(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                         }
 
                         CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, Coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
@@ -120,7 +120,7 @@ namespace Qualia.Controls
 
                     if (!Coordinator.ContainsKey(neuron))
                     {
-                        Coordinator.Add(neuron, new Point(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                        Coordinator.Add(neuron, Points.Get(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                     }
 
                     CtlPresenter.DrawEllipse(brush, pen, Coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  

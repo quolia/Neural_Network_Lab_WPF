@@ -41,7 +41,7 @@ namespace Qualia.Controls
             }
 
             var formattedText = new FormattedText(text, Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
-            CtlPresenter.DrawText(formattedText, new Point(10, 0));
+            CtlPresenter.DrawText(formattedText, Points.Get(10, 0));
 
             Width = Math.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
 
