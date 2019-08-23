@@ -27,12 +27,12 @@ namespace Tools
 
     public static class NetworkTask
     {
-        public class CountDotsAsymmetric : INetworkTask
+        public class CountDots : INetworkTask
         {
-            public static INetworkTask Instance = new CountDotsAsymmetric();
+            public static INetworkTask Instance = new CountDots();
             static CountDotsControl Control = new CountDotsControl();
 
-            bool IsSymmetric;
+            bool IsGaussianDistribution;
             int MinNumber;
             int MaxNumber;
 
@@ -48,7 +48,7 @@ namespace Tools
 
             public void ApplyChanges()
             {
-                IsSymmetric = Control.IsSymmetric;
+                IsGaussianDistribution = Control.IsGaussianDistribution;
                 MinNumber = Control.MinNumber;
                 MaxNumber = Control.MaxNumber;
             }
@@ -81,11 +81,19 @@ namespace Tools
 
             public void Do(NetworkDataModel model)
             {
-                if (IsSymmetric)
+                if (IsGaussianDistribution)
                 {
                     var shuffled = model.Layers.First().Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
-                    var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
-                    
+                    var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(((double)MinNumber + (double)MaxNumber) / 2, ((double)MinNumber + (double)MaxNumber) / 4));
+                    if (number < MinNumber)
+                    {
+                        number = MinNumber;
+                    }
+                    if (number > MaxNumber)
+                    {
+                        number = MaxNumber;
+                    }
+
                     for (int i = 0; i < shuffled.Count; ++i)
                     {
                         shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
@@ -100,21 +108,14 @@ namespace Tools
                 }
                 else
                 {
-                    foreach (var neuron in model.Layers.First().Neurons)
-                    {
-                        if (!neuron.IsBias)
-                        {
-                            neuron.Activation = model.InputInitial0;
-                        }
-                    }
-
+                    var shuffled = model.Layers.First().Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
-                    for (int i = 0; i < number; ++i)
+
+                    for (int i = 0; i < shuffled.Count; ++i)
                     {
-                        model.Layers.First().Neurons.RandomElementTrimEnd(model.Layers.First().BiasCount).Activation = model.InputInitial1;
+                        shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
                     }
 
-                    number = model.GetNumberOfFirstLayerActiveNeurons();
                     for (int i = 0; i < model.TargetValues.Length; ++i)
                     {
                         model.TargetValues[i] = (i == number - MinNumber) ? 1 : 0;

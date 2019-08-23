@@ -289,9 +289,6 @@ namespace Qualia
                 CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.SelectedNetworkModel);
                 NetworksManager.FeedForward(); // initialize state
 
-                Round = 0;
-                StartTime = DateTime.Now;
-
                 DrawModels(NetworksManager.SelectedNetworkModel);
 
                 WorkThread = new Thread(new ThreadStart(RunNetwork));
@@ -308,6 +305,9 @@ namespace Qualia
         {
             Threads.SetProcessorAffinity(Threads.Processor.Proc2);
 
+            Round = 0;
+            StartTime = DateTime.Now;
+            var speedTime = DateTime.Now;
             bool IsErrorMatrixRendering = false;
 
             while (!CancellationToken.IsCancellationRequested)
@@ -428,11 +428,13 @@ namespace Qualia
 
                         Dispatcher.BeginInvoke((Action)(() =>
                         {
-                            var lastStat = DrawStatistic(statistic, learningRate);
+                            var lastStat = DrawStatistic(statistic, learningRate, speedTime);
                             if (selectedModel != null)
                             {
                                 selectedModel.LastStatistic = lastStat;
                             }
+
+                            speedTime = DateTime.Now;
 
                         }), System.Windows.Threading.DispatcherPriority.Send);
 
@@ -471,7 +473,7 @@ namespace Qualia
             CtlPlotPresenter.Draw(models, NetworksManager.SelectedNetworkModel);
         }
 
-        private Dictionary<string, string> DrawStatistic(Statistic statistic, double learningRate)
+        private Dictionary<string, string> DrawStatistic(Statistic statistic, double learningRate, DateTime speedTime)
         {
             if (statistic == null)
             {
@@ -521,7 +523,8 @@ namespace Qualia
                 stat.Add("Percent", Converter.DoubleToText(statistic.Percent, "N6") + " %");
                 stat.Add("Learning rate", Converter.DoubleToText(learningRate));
                 stat.Add("Rounds", Round.ToString());
-                stat.Add("Rounds/sec", ((int)((double)Round / DateTime.Now.Subtract(StartTime).TotalSeconds)).ToString());
+                //stat.Add("Rounds/sec", ((int)((double)Round / DateTime.Now.Subtract(StartTime).TotalSeconds)).ToString());
+                stat.Add("Rounds/sec", ((int)((double)Settings.SkipRoundsToDrawStatistic / DateTime.Now.Subtract(speedTime).TotalSeconds)).ToString());
 
                 var renderStop = DateTime.Now;
 

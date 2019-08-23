@@ -27,15 +27,18 @@ namespace Tools
         }
     }
 
+    //
+    // Taken from Stackoverflow
+    //
     public sealed class GaussianRandom
     {
-        private bool _hasDeviate;
-        private double _storedDeviate;
-        private readonly Random _random;
+        private bool HasDeviate;
+        private double StoredDeviate;
+        private readonly Random Random;
 
         public GaussianRandom(Random random = null)
         {
-            _random = random ?? new Random((int)(DateTime.Now.Ticks % int.MaxValue));
+            Random = random ?? new Random((int)(DateTime.Now.Ticks % int.MaxValue));
         }
 
         /// <summary>
@@ -52,27 +55,27 @@ namespace Tools
             if (sigma <= 0)
                 throw new ArgumentOutOfRangeException("sigma", "Must be greater than zero.");
 
-            if (_hasDeviate)
+            if (HasDeviate)
             {
-                _hasDeviate = false;
-                return _storedDeviate * sigma + mu;
+                HasDeviate = false;
+                return StoredDeviate * sigma + mu;
             }
 
-            double v1, v2, rSquared;
+            double v1, v2, squared;
             do
             {
                 // two random values between -1.0 and 1.0
-                v1 = 2 * _random.NextDouble() - 1;
-                v2 = 2 * _random.NextDouble() - 1;
-                rSquared = v1 * v1 + v2 * v2;
+                v1 = 2 * Random.NextDouble() - 1;
+                v2 = 2 * Random.NextDouble() - 1;
+                squared = v1 * v1 + v2 * v2;
                 // ensure within the unit circle
-            } while (rSquared >= 1 || rSquared == 0);
+            } while (squared >= 1 || squared == 0);
 
             // calculate polar tranformation for each deviate
-            var polar = Math.Sqrt(-2 * Math.Log(rSquared) / rSquared);
+            var polar = Math.Sqrt(-2 * Math.Log(squared) / squared);
             // store first deviate
-            _storedDeviate = v2 * polar;
-            _hasDeviate = true;
+            StoredDeviate = v2 * polar;
+            HasDeviate = true;
             // return second deviate
             return v1 * polar * sigma + mu;
         }

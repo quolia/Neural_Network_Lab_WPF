@@ -23,6 +23,6 @@
         <local:QInt Grid.Row="1" Grid.Column="1" x:Name="CtlTaskMinNumber" IsNullAllowed="False" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
         <local:QLabel Grid.Row="2" Content="Max number:" />
         <local:QInt Grid.Row="2" Grid.Column="1" x:Name="CtlTaskMaxNumber" IsNullAllowed="False" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
-        <local:QCheckBox Grid.Row="3" Grid.ColumnSpan="2" x:Name="CtlIsSymmetric" Content="Symmetric distribution" />
+        <local:QCheckBox Grid.Row="3" Grid.ColumnSpan="2" x:Name="CtlIsGaussianDistribution" Content="Gaussian distribution" />
     </Grid>
 </UserControl>

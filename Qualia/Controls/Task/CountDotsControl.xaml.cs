@@ -26,7 +26,7 @@ namespace Qualia.Controls
         }
 
         public int InputCount => CtlTaskInputCount.Value;
-        public bool IsSymmetric => CtlIsSymmetric.IsOn;
+        public bool IsGaussianDistribution => CtlIsGaussianDistribution.IsOn;
         public int MaxNumber => CtlTaskMaxNumber.Value;
         public int MinNumber => CtlTaskMinNumber.Value;
 
