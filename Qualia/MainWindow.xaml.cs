@@ -153,7 +153,7 @@ namespace Qualia
             else
             {
                 MessageBox.Show($"Network '{name}' is not found!", "Error", MessageBoxButton.OK);
-                Config.Main.Set(Const.Param.NetworksManagerName, "");
+                Config.Main.Set(Const.Param.NetworksManagerName, string.Empty);
             }
         }
 
@@ -500,8 +500,8 @@ namespace Qualia
 
                 if (statistics.LastGoodOutput != null)
                 {
-                    stat.Add("Last good output", $"{statistics.LastGoodInput}={statistics.LastGoodOutput} ({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N6")}%)");
-                    stat.Add("Last good cost", Converter.DoubleToText(statistics.LastGoodCost, "N6"));
+                    stat.Add("Last good output", $"{statistics.LastGoodInput}={statistics.LastGoodOutput} ({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N4")} %)");
+                    stat.Add("Last good cost", Converter.DoubleToText(statistics.LastGoodCost, "N4"));
 
                 }
                 else
@@ -512,8 +512,8 @@ namespace Qualia
 
                 if (statistics.LastBadOutput != null)
                 {
-                    stat.Add("Last bad output", $"{statistics.LastBadInput}={statistics.LastBadOutput} ({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N6")}%)");
-                    stat.Add("Last bad cost", Converter.DoubleToText(statistics.LastBadCost, "N6"));
+                    stat.Add("Last bad output", $"{statistics.LastBadInput}={statistics.LastBadOutput} ({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N4")} %)");
+                    stat.Add("Last bad cost", Converter.DoubleToText(statistics.LastBadCost, "N4"));
                 }
                 else
                 {
@@ -521,19 +521,19 @@ namespace Qualia
                     stat.Add("Last bad cost", "none");
                 }
 
-                stat.Add("Average cost", Converter.DoubleToText(statistics.AverageCost, "N6"));
-                stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N6") + " %");
+                stat.Add("Average cost", Converter.DoubleToText(statistics.AverageCost, "N4"));
+                stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N4") + " %");
                 stat.Add("Learning rate", Converter.DoubleToText(learningRate));
                 stat.Add("Rounds", Round.ToString());
                 stat.Add("Rounds/sec", ((int)((double)Settings.SkipRoundsToDrawStatistics / DateTime.UtcNow.Subtract(speedTime).TotalSeconds)).ToString());
 
-                stat.Add("", "");
-                stat.Add("Render time, ms", "");
-                stat.Add("Network", ((int)TimeSpan.FromTicks(RenderTime.Network).TotalMilliseconds).ToString());
-                stat.Add("Error matrix", ((int)TimeSpan.FromTicks(RenderTime.ErrorMatrix).TotalMilliseconds).ToString());
-                stat.Add("Plotter", ((int)TimeSpan.FromTicks(RenderTime.Plotter).TotalMilliseconds).ToString());
-                stat.Add("Statistics", ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMilliseconds).ToString());
-                stat.Add("Data", ((int)TimeSpan.FromTicks(RenderTime.Data).TotalMilliseconds).ToString());
+                stat.Add(string.Empty, string.Empty);
+                stat.Add("Render time, mcs", string.Empty);
+                stat.Add("Network", ((int)TimeSpan.FromTicks(RenderTime.Network).TotalMicroseconds()).ToString());
+                stat.Add("Error matrix", ((int)TimeSpan.FromTicks(RenderTime.ErrorMatrix).TotalMicroseconds()).ToString());
+                stat.Add("Plotter", ((int)TimeSpan.FromTicks(RenderTime.Plotter).TotalMicroseconds()).ToString());
+                stat.Add("Statistics", ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
+                stat.Add("Data", ((int)TimeSpan.FromTicks(RenderTime.Data).TotalMicroseconds()).ToString());
 
                 CtlStatisticsPresenter.Draw(stat);
 
@@ -725,7 +725,6 @@ namespace Qualia
                 if (MessageBox.Show("Would you like network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     ApplyChangesToStandingNetworks();
-                    ////////LoadConfig(); 
                 }
             }
         }

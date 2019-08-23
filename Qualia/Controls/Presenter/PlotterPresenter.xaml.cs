@@ -116,13 +116,13 @@ namespace Qualia.Controls
             var f = data.First();
             var l = data.Last();
 
-            var d = l.Item2.Subtract(f.Item2).Ticks;
+            var ticks = l.Item2 - f.Item2;
 
             var prev = f;
             foreach (var p in data)
             {
-                var pp = func(data, p, d);
-                CtlPresenter.DrawLine(pen, func(data, prev, d), pp);
+                var pp = func(data, p, ticks);
+                CtlPresenter.DrawLine(pen, func(data, prev, ticks), pp);
 
                 if (isRect)
                 {
@@ -139,23 +139,23 @@ namespace Qualia.Controls
 
         private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
         {     
-            var text = new FormattedText(new DateTime(data.Last().Item2.Subtract(data.First().Item2).Ticks).ToString("HH:mm:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
+            var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data.First().Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
-        private Point GetPointPercentData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long d)
+        private Point GetPointPercentData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long ticks)
         {
             var p0 = data.First();
-            var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
+            var px = ticks == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * (point.Item2 - p0.Item2) / ticks;
             var py = (ActualHeight - AxisOffset) * (1 - (point.Item1 / 100));
 
             return Points.Get((int)px, (int)py);
         }
 
-        private Point GetPointCostData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long d)
+        private Point GetPointCostData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long ticks)
         {
             var p0 = data.First();
-            var px = d == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * point.Item2.Subtract(p0.Item2).Ticks / d;
+            var px = ticks == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * (point.Item2 - p0.Item2) / ticks;
             var py = (ActualHeight - AxisOffset) * (1 - Math.Min(1, point.Item1));
 
             return Points.Get((int)px, (int)py);
@@ -168,14 +168,14 @@ namespace Qualia.Controls
             if (data.Count > 10)
             {
                 var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
-                var time = data.Last().Item2.Subtract(data.First().Item2);
+                var totolTicks = data.Last().Item2 - data.First().Item2;
 
                 for (int i = 0; i < data.Count * 0.8; ++i)
                 {
-                    var d = data.Last().Item2.Subtract(data.First().Item2).Ticks;
-                    var p0 = func(data, data[i], d);
-                    var p1 = func(data, data[i + 1], d);
-                    var p2 = func(data, data[i + 2], d);
+                    var ticks = data.Last().Item2 - data.First().Item2;
+                    var p0 = func(data, data[i], ticks);
+                    var p1 = func(data, data[i + 1], ticks);
+                    var p2 = func(data, data[i + 2], ticks);
 
                     if ((Math.Abs(p0.X - p2.X) < vanishArea && Math.Abs(p0.Y - p2.Y) < vanishArea) &&
                         (Math.Abs(p0.X - p1.X) < vanishArea && Math.Abs(p0.Y - p1.Y) < vanishArea) &&

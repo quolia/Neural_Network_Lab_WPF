@@ -34,7 +34,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            string text = "";
+            string text = string.Empty;
             foreach (var pair in stat)
             {
                 if (pair.Key.Length == 0)

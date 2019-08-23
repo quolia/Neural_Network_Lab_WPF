@@ -104,6 +104,11 @@ namespace Tools
                 return null;
             }
         }
+
+        public static long TotalMicroseconds(this TimeSpan span)
+        {
+            return (long)(span.TotalMilliseconds * 1000);
+        }
     }
 
     public static class Culture
@@ -194,14 +199,14 @@ namespace Tools
 
         public void Add(double percent, double cost)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow.Ticks;
             PercentData.Add(new PlotPoint(percent, now));
             CostData.Add(new PlotPoint(cost, now));
         }
 
-        public class PlotPoint : Tuple<double, DateTime>
+        public class PlotPoint : Tuple<double, long>
         {
-            public PlotPoint(double v, DateTime t)
+            public PlotPoint(double v, long t)
                 : base(v, t)
             {
                 //
@@ -277,6 +282,10 @@ namespace Tools
 
     public static class Converter
     {
+        public static long TicksToMicroseconds(long ticks)
+        {
+            return (long)(TimeSpan.FromTicks(ticks).TotalMilliseconds * 1000);
+        }
         public static int? TextToInt(string text, int? defaultValue = null)
         {
             return String.IsNullOrEmpty(text) ? defaultValue : int.TryParse(text, out int a) ? a : defaultValue;

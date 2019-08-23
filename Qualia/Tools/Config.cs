@@ -104,7 +104,7 @@ namespace Tools
         {
             if (defaultValue == null)
             {
-                defaultValue = "";
+                defaultValue = string.Empty;
             }
 
             string value = GetValue(name, defaultValue);
@@ -115,7 +115,7 @@ namespace Tools
         {
             if (defaultValue == null)
             {
-                defaultValue = "";
+                defaultValue = string.Empty;
             }
 
             string value = GetValue(name, defaultValue);
