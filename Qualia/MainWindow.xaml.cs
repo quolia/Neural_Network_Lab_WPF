@@ -501,7 +501,7 @@ namespace Qualia
                 if (statistics.LastGoodOutput != null)
                 {
                     stat.Add("Last good output", $"{statistics.LastGoodInput}={statistics.LastGoodOutput} ({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N4")} %)");
-                    stat.Add("Last good cost", Converter.DoubleToText(statistics.LastGoodCost, "N4"));
+                    stat.Add("Last good cost", Converter.DoubleToText(statistics.LastGoodCost, "N6"));
 
                 }
                 else
@@ -513,7 +513,7 @@ namespace Qualia
                 if (statistics.LastBadOutput != null)
                 {
                     stat.Add("Last bad output", $"{statistics.LastBadInput}={statistics.LastBadOutput} ({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N4")} %)");
-                    stat.Add("Last bad cost", Converter.DoubleToText(statistics.LastBadCost, "N4"));
+                    stat.Add("Last bad cost", Converter.DoubleToText(statistics.LastBadCost, "N6"));
                 }
                 else
                 {
@@ -521,7 +521,7 @@ namespace Qualia
                     stat.Add("Last bad cost", "none");
                 }
 
-                stat.Add("Average cost", Converter.DoubleToText(statistics.AverageCost, "N4"));
+                stat.Add("Average cost", Converter.DoubleToText(statistics.AverageCost, "N6"));
                 stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N4") + " %");
                 stat.Add("Learning rate", Converter.DoubleToText(learningRate));
                 stat.Add("Rounds", Round.ToString());
