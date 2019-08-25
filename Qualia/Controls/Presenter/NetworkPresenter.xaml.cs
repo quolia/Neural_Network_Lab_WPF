@@ -141,7 +141,7 @@ namespace Qualia.Controls
 
             CtlPresenter.Clear();
 
-            lock (Main.ApplyChangesLocker)
+            using (Main.ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
             {
                 if (model.Layers.Count > 0)
                 {

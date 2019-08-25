@@ -29,7 +29,7 @@ namespace Qualia
         Thread TimeThread;
         CancellationToken CancellationToken;
         CancellationTokenSource CancellationTokenSource;
-        public static object ApplyChangesLocker = new object();
+        public static SharedLock ApplyChangesLocker = new SharedLock();
 
         NetworksManager NetworksManager;
 
@@ -243,7 +243,7 @@ namespace Qualia
 
         private void ApplyChangesToRunningNetworks()
         {
-            lock (ApplyChangesLocker)
+            using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
             {
                 CtlInputDataPresenter.Task.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
@@ -256,7 +256,7 @@ namespace Qualia
 
         private void ApplyChangesToStandingNetworks()
         {
-            lock (ApplyChangesLocker)
+            using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
             {
                 CtlInputDataPresenter.Task.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
@@ -303,7 +303,9 @@ namespace Qualia
 
         private void RunNetwork()
         {
-            Threads.SetProcessorAffinity(Threads.Processor.Proc2);
+            var processor = Threads.Processor.Proc1;
+
+            Threads.SetProcessorAffinity(processor);
 
             Round = 0;
             StartTime = DateTime.UtcNow;
@@ -312,9 +314,15 @@ namespace Qualia
 
             while (!CancellationToken.IsCancellationRequested)
             {
-                lock (ApplyChangesLocker)
+                using (ApplyChangesLocker.GetLocker(processor))
                 {
-                    NetworksManager.PrepareModelsForRound();
+                    using (var locker = ApplyChangesLocker.GetLocker(processor, Threads.Processor.Proc1))
+                    {
+                        if (locker.IsActionAllowed)
+                        {
+                            NetworksManager.PrepareModelsForRound();
+                        }
+                    }
 
                     foreach (var model in NetworksManager.Models)
                     {
@@ -325,7 +333,7 @@ namespace Qualia
 
                         //GPU.Instance.FeedForward(model);
                         model.FeedForward();
-                        
+
                         var output = model.GetMaxActivatedOutputNeuron();
                         var input = model.TargetOutput;
                         var cost = model.CostFunction.Do(model);
@@ -372,11 +380,11 @@ namespace Qualia
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
                         ErrorMatrix errorMatrix;
-                        lock (ApplyChangesLocker)
+                        using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
                         {
                             errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
                             NetworksManager.ResetErrorMatrix();
-                        }           
+                        }
                         CtlMatrixPresenter.Draw(errorMatrix);
                         IsErrorMatrixRendering = false;
 
@@ -385,10 +393,10 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawNetworks == 0)
                 {
-                    UIEvent.Reset();    
+                    UIEvent.Reset();
                     Dispatcher.BeginInvoke((Action)(() =>
-                    {      
-                        lock (ApplyChangesLocker)
+                    {
+                        using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
                         {
                             DrawNetwork(NetworksManager.SelectedNetworkModel);
                         }
@@ -400,10 +408,10 @@ namespace Qualia
 
                 if (Round % Settings.SkipRoundsToDrawStatistics == 0)
                 {
-                    UIEvent.Reset();                 
+                    UIEvent.Reset();
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        lock (ApplyChangesLocker)
+                        using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
                         {
                             DrawPlotter(NetworksManager.Models);
                         }
@@ -419,7 +427,7 @@ namespace Qualia
                         Statistics statistics;
                         double learningRate;
 
-                        lock (ApplyChangesLocker)
+                        using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
                         {
                             selectedModel = NetworksManager.SelectedNetworkModel;
                             statistics = selectedModel == null ? null : selectedModel.Statistics.Copy();
@@ -738,7 +746,7 @@ namespace Qualia
             {
                 if (IsRunning)
                 {
-                    lock (ApplyChangesLocker)
+                    using (ApplyChangesLocker.GetLocker(Threads.Processor.GUI))
                     {
                         CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
                         CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel);

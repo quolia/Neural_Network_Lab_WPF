@@ -105,6 +105,7 @@ namespace Qualia
                 }
 
                 foreach (var nextNeuron in layer.Next.Neurons)
+                //Parallel.ForEach(layer.Next.Neurons, nextNeuron =>
                 {
                     if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
                     {
@@ -131,7 +132,7 @@ namespace Qualia
                     }
 
                     // not connected bias doesn't change it's activation
-                }
+                }//);
             }
         }
 
@@ -150,22 +151,23 @@ namespace Qualia
             while (layer != Layers.First())
             {
                 foreach (var neuronPrev in layer.Previous.Neurons)
+                //Parallel.ForEach(layer.Previous.Neurons, neuronPrev =>
                 {
                     neuronPrev.Error = 0;
 
                     foreach (var neuron in layer.Neurons)
                     {
                         neuronPrev.Error +=
-                        
+
                             neuronPrev.IsBias
                             ?
                                 neuron.IsBiasConnected
                                 ? (neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA))
                                 : 0 // neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-                            
+
                             : neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                     }
-                }
+                }//);
 
                 layer = layer.Previous;
             }
