@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Tools;
@@ -34,6 +35,9 @@ namespace Qualia
         public DynamicStatistics DynamicStatistics;
         public ErrorMatrix ErrorMatrix;
         public Dictionary<string, string> LastStatistics;
+
+        public AutoResetEvent BackpropogationNeeded = new AutoResetEvent(false);
+        public AutoResetEvent FeedForwardNeeded = new AutoResetEvent(true);
         
         public NetworkDataModel(long visualId, int[] layersSize)
         {
@@ -105,7 +109,6 @@ namespace Qualia
                 }
 
                 foreach (var nextNeuron in layer.Next.Neurons)
-                //Parallel.ForEach(layer.Next.Neurons, nextNeuron =>
                 {
                     if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
                     {
@@ -130,10 +133,10 @@ namespace Qualia
 
                         nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParamA);
                     }
+                }
 
-                    // not connected bias doesn't change it's activation
-                }//);
-            }
+                // not connected bias doesn't change it's activation
+            }//);
         }
 
         public void BackPropagation()
@@ -151,7 +154,6 @@ namespace Qualia
             while (layer != Layers.First())
             {
                 foreach (var neuronPrev in layer.Previous.Neurons)
-                //Parallel.ForEach(layer.Previous.Neurons, neuronPrev =>
                 {
                     neuronPrev.Error = 0;
 
