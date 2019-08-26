@@ -43,5 +43,18 @@ namespace Tools
                 }
             }
         }
+
+        public static void SetThreadPriority(ThreadPriorityLevel priority)
+        {
+            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
+            {
+                int utid = GetCurrentThreadId();
+                if (utid == pt.Id)
+                {
+                    pt.PriorityLevel = priority;
+                    pt.PriorityBoostEnabled = true;
+                }
+            }
+        }
     }
 }

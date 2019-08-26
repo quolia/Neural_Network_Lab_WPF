@@ -39,7 +39,8 @@ namespace Qualia
 
         public Main()
         {
-            SetProcessorAffinity(Threads.Processor.Proc0);
+            SetProcessorAffinity(Processor.Proc2);
+            SetThreadPriority(ThreadPriorityLevel.Highest);
 
             InitializeComponent();
             Loaded += Main_Load;
@@ -309,6 +310,7 @@ namespace Qualia
         private void RunNetwork()
         {
             SetProcessorAffinity(Processor.Proc1);
+            SetThreadPriority(ThreadPriorityLevel.Highest);
 
             Round = 0;
             StartTime = DateTime.UtcNow;

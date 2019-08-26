@@ -2,17 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 
 namespace Qualia.Controls
@@ -71,6 +63,11 @@ namespace Qualia.Controls
 
             foreach (var neuron1 in layer1.Neurons)
             {
+                if (!Coordinator.ContainsKey(neuron1))
+                {
+                    Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
+                }
+
                 foreach (var neuron2 in layer2.Neurons)
                 {
                     if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
@@ -78,12 +75,7 @@ namespace Qualia.Controls
                         if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
                         {
                             var pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
-
-                            if (!Coordinator.ContainsKey(neuron1))
-                            {
-                                Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
-                            }
-
+   
                             if (!Coordinator.ContainsKey(neuron2))
                             {
                                 Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));

@@ -15,18 +15,6 @@ namespace Tools
             //
         }
 
-        T[] Array;
-
-        public new T this[int index]
-        {
-            get => Array[index];
-        }
-
-        public T RandomElementTrimEnd(int count = 0)
-        {
-            return this[Rand.Flat.Next(Count - count)];
-        }
-
         public new void Add(T obj)
         {
             if (Count == 0)
@@ -43,17 +31,6 @@ namespace Tools
             else
             {
                 (this as List<T>).Add(obj);
-            }
-
-            RefreshArray();
-        }
-
-        private void RefreshArray()
-        {
-            Array = new T[Count];
-            for (int i = 0; i < Count; ++i)
-            {
-                Array[i] = base[i];
             }
         }
     }
