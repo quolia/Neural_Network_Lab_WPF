@@ -290,14 +290,18 @@ namespace Qualia
 
                 DrawNetwork(NetworksManager.SelectedNetworkModel);
 
-                RunNetworkThread = new Thread(new ThreadStart(RunNetwork));
-                RunNetworkThread.Name = "RunNetwork";
-                RunNetworkThread.Priority = ThreadPriority.Highest;
+                RunNetworkThread = new Thread(new ThreadStart(RunNetwork))
+                {
+                    Name = "RunNetwork",
+                    Priority = ThreadPriority.Highest
+                };
                 RunNetworkThread.Start();
 
-                TimeThread = new Thread(new ThreadStart(RunTimer));
-                TimeThread.Name = "Timer";
-                TimeThread.Priority = ThreadPriority.BelowNormal;
+                TimeThread = new Thread(new ThreadStart(RunTimer))
+                {
+                    Name = "Timer",
+                    Priority = ThreadPriority.BelowNormal
+                };
                 TimeThread.Start();
             }
         }
@@ -324,7 +328,6 @@ namespace Qualia
                             continue;
                         }
 
-                        //GPU.Instance.FeedForward(model);
                         model.FeedForward();
 
                         var output = model.GetMaxActivatedOutputNeuron();
@@ -405,10 +408,10 @@ namespace Qualia
                             DrawPlotter(NetworksManager.Models);
                         }
 
-                    }), System.Windows.Threading.DispatcherPriority.Send);
+                    //}), System.Windows.Threading.DispatcherPriority.Send);
 
-                    Dispatcher.BeginInvoke((Action)(() =>
-                    {
+                    //Dispatcher.BeginInvoke((Action)(() =>
+                    //{
                         NetworkDataModel selectedModel;
                         Statistics statistics;
                         double learningRate;
@@ -416,7 +419,7 @@ namespace Qualia
                         lock (ApplyChangesLocker)
                         {
                             selectedModel = NetworksManager.SelectedNetworkModel;
-                            statistics = selectedModel == null ? null : selectedModel.Statistics.Copy();
+                            statistics = selectedModel?.Statistics.Copy();
                             learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
                         }
 

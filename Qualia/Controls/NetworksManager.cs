@@ -108,7 +108,6 @@ namespace Qualia.Controls
             RefreshNetworksDataModels();
         }
 
-
         public void RebuildNetworksForTask(INetworkTask task)
         {
             Task = task;
