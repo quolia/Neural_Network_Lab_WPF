@@ -217,7 +217,7 @@ namespace Qualia.Controls
             }
         }
 
-        public NetworkDataModel CreateNetworkDataModel(INetworkTask task)
+        public NetworkDataModel CreateNetworkDataModel(INetworkTask task, bool isCopy)
         {
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
@@ -281,13 +281,12 @@ namespace Qualia.Controls
                 }
             }
 
-            return model;
-        }
+            if (!isCopy)
+            {
+                model.Copy = CreateNetworkDataModel(task, true);
+            }
 
-        private void CtlRandomViewerButton_Click(object sender, EventArgs e)
-        {
-// RandomViewer(Randomizer, RandomizerParamA);
-          //  viewer.Show();
+            return model;
         }
 
         private void CtlColor_Click(object sender, MouseButtonEventArgs e)

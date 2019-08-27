@@ -14,7 +14,7 @@ namespace Qualia.Controls
     public class NetworksManager
     {
         public readonly Config Config;
-        public List<NetworkDataModel> Models;
+        public ListX<NetworkDataModel> Models;
 
         Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
@@ -197,10 +197,10 @@ namespace Qualia.Controls
             }
         }
 
-        public List<NetworkDataModel> CreateNetworksDataModels()
+        public ListX<NetworkDataModel> CreateNetworksDataModels()
         {
-            var result = new List<NetworkDataModel>();
-            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(Task)));
+            var result = new ListX<NetworkDataModel>(Networks.Count);
+            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(Task, false)));
             return result;
         }
 
@@ -209,9 +209,9 @@ namespace Qualia.Controls
             Models = CreateNetworksDataModels();
         }
 
-        public void MergeModels(List<NetworkDataModel> models)
+        public void MergeModels(ListX<NetworkDataModel> models)
         {
-            var newModels = new List<NetworkDataModel>();
+            var newModels = new ListX<NetworkDataModel>(models.Count);
 
             foreach (var newModel in models)
             {

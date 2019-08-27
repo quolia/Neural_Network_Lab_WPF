@@ -5,20 +5,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 using static Tools.Threads;
 
@@ -322,8 +312,9 @@ namespace Qualia
                 lock (ApplyChangesLocker)
                 { 
                     NetworksManager.PrepareModelsForRound();
-                   
-                    foreach (var model in NetworksManager.Models)
+
+                    var model = NetworksManager.Models.First();
+                    while (model != null)
                     {
                         if (!model.IsEnabled)
                         {
@@ -366,6 +357,8 @@ namespace Qualia
                         }
 
                          model.BackPropagation();
+
+                        model = model.Next;
                     }
 
                     ++Round;
@@ -393,10 +386,12 @@ namespace Qualia
                 {
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
+                        NetworkDataModel modelCopy;
                         lock (ApplyChangesLocker)
                         {
-                            DrawNetwork(NetworksManager.SelectedNetworkModel);
+                            modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
                         }
+                        DrawNetwork(modelCopy);
 
                     }), System.Windows.Threading.DispatcherPriority.Send);
                 }
@@ -410,10 +405,6 @@ namespace Qualia
                             DrawPlotter(NetworksManager.Models);
                         }
 
-                    //}), System.Windows.Threading.DispatcherPriority.Send);
-
-                    //Dispatcher.BeginInvoke((Action)(() =>
-                    //{
                         NetworkDataModel selectedModel;
                         Statistics statistics;
                         double learningRate;
@@ -425,17 +416,13 @@ namespace Qualia
                             learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
                         }
 
-                        //Dispatcher.BeginInvoke((Action)(() =>
-                        //{
-                            var lastStats = DrawStatistics(statistics, learningRate, speedTime);
-                            if (selectedModel != null)
-                            {
-                                selectedModel.LastStatistics = lastStats;
-                            }
+                        var lastStats = DrawStatistics(statistics, learningRate, speedTime);
+                        if (selectedModel != null)
+                        {
+                            selectedModel.LastStatistics = lastStats;
+                        }
 
-                            speedTime = DateTime.UtcNow;
-
-                        //}), System.Windows.Threading.DispatcherPriority.Send);
+                        speedTime = DateTime.UtcNow;
 
                     }), System.Windows.Threading.DispatcherPriority.Send);
                 }

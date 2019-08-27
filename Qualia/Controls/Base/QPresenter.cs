@@ -85,8 +85,10 @@ namespace Qualia.Controls
 
                 if (angle != 0)
                 {
-                    RotateTransform rt = new RotateTransform();
-                    rt.Angle = angle;
+                    RotateTransform rt = new RotateTransform
+                    {
+                        Angle = angle
+                    };
                     g.PushTransform(rt);
                 }
 
@@ -132,8 +134,8 @@ namespace Qualia.Controls
 
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)w, (int)h, Render.Dpi, Render.Dpi, PixelFormats.Pbgra32);
 
-           Measure(RenderSize);
-           Arrange(Rects.Get(RenderSize)); 
+            Measure(RenderSize);
+            Arrange(Rects.Get(RenderSize)); 
 
             foreach (var visual in Visuals)
             {               
@@ -141,8 +143,10 @@ namespace Qualia.Controls
             }
             bitmap.Freeze();
 
-            var image = new Image();
-            image.Source = bitmap;
+            var image = new Image
+            {
+                Source = bitmap
+            };
             return image;
         }
     }
