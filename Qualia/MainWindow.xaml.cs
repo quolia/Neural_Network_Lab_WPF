@@ -29,7 +29,7 @@ namespace Qualia
 
         public Main()
         {
-            SetProcessorAffinity(Processor.Proc2);
+            SetProcessorAffinity(Processor.Proc7);
             SetThreadPriority(ThreadPriorityLevel.Highest);
 
             InitializeComponent();
@@ -45,6 +45,8 @@ namespace Qualia
             CtlNetworkPresenter.SizeChanged += NetworkPresenter_SizeChanged;
 
             LoadConfig();
+
+            CtlMenuRun.IsEnabled = NetworksManager != null && NetworksManager.Models != null && NetworksManager.Models.Any();
         }
 
         private void NetworkPresenter_SizeChanged(object sender, EventArgs e)
@@ -178,7 +180,10 @@ namespace Qualia
             }
 
             Config.Main.FlushToDrive();
-            NetworksManager.Config.FlushToDrive();
+            if (NetworksManager != null)
+            {
+                NetworksManager.Config.FlushToDrive();
+            }
 
             return true;
         }

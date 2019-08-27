@@ -1,0 +1,14 @@
+NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\bin\x64\Debug\Networks\1.txt
+ScreenWidth:1306.4
+ScreenHeight:735.2
+ScreenTop:48
+ScreenLeft:188.8
+OnTop:0
+DataWidth:153
+NetworkHeight:253
+SkipRoundsToDrawErrorMatrix:1000
+SkipRoundsToDrawNetworks:10000
+SkipRoundsToDrawStatistic:10000
+PointSize:7
+PointsArrangeSnap:10
+SkipRoundsToDrawStatistics:10000
