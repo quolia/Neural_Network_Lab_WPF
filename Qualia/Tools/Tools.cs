@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -350,7 +348,7 @@ namespace Tools
         static char[] _0 = new[] { '0' };
         static char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
 
-        public static string DoubleToText(double? d, string format = "F99")
+        public static string DoubleToText(double? d, string format = "F20")
         {
             if (!d.HasValue)
             {

@@ -13,18 +13,22 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <local:QLabel Content="Color:" />
-                <local:QLabel x:Name="CtlColor" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
-                <Grid>
+                
+                
+                <StackPanel Orientation="Horizontal">
                     <local:QCheckBox x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
-                </Grid>
+                    <local:QLabel Content="Color:" Margin="20,0,0,0" />
+                    <local:QLabel x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:QLabel Content="Weights randomizer:" />
                 <local:QComboBox x:Name="CtlRandomizeMode" />
                 <local:QLabel Content="a:" />
                 <local:QDouble x:Name="CtlRandomizeModeParamA" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
-                <Button Name="CtlRandomizerButton" Content="View" Margin="10,0,0,0" Padding="3" Click="CtlRandomizerButton_Click" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="CtlRandomizerButton_Click" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:QLabel Content="Learning rate:" />

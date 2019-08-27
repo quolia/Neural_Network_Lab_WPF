@@ -57,7 +57,7 @@ namespace Qualia.Controls
             return (MaxHeight(model) - layer.Height * VerticalDistance(layer.Height)) / 2;
         }
 
-        private void DrawLayersLinks(bool fullState, NetworkDataModel model, LayerDataModel layer1, LayerDataModel layer2)
+        private void DrawLayersLinks(bool fullState, NetworkDataModel model, LayerDataModel layer1, LayerDataModel layer2, bool isOnlyWeights)
         {
             double threshold = model.Layers.First() == layer1 ? model.InputThreshold : 0;
 
@@ -74,7 +74,7 @@ namespace Qualia.Controls
                     {
                         if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
                         {
-                            var pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                            var pen = isOnlyWeights ? Tools.Draw.GetPen(neuron1.WeightTo(neuron2).Weight, 1) : Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
    
                             if (!Coordinator.ContainsKey(neuron2))
                             {
@@ -121,7 +121,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void Draw(bool fullState, NetworkDataModel model)
+        private void Draw(bool fullState, NetworkDataModel model, bool isOnlyWeights)
         {
             if (model == null)
             {
@@ -144,7 +144,7 @@ namespace Qualia.Controls
                             break;
                         }
 
-                        DrawLayersLinks(fullState, model, layer, layer.Next);
+                        DrawLayersLinks(fullState, model, layer, layer.Next, isOnlyWeights);
                     }
                 }
                 model.Layers.ForEach(l => DrawLayerNeurons(fullState, model, l));
@@ -156,14 +156,14 @@ namespace Qualia.Controls
             RenderTime.Network = sw.Elapsed.Ticks;
         }
 
-        public void RenderStanding(NetworkDataModel model)
+        public void RenderStanding(NetworkDataModel model, bool isOnlyWeights)
         {
-            Draw(true, model);
+            Draw(true, model, isOnlyWeights);
         }
 
-        public void RenderRunning(NetworkDataModel model)
+        public void RenderRunning(NetworkDataModel model, bool isOnlyWeights)
         {
-            Draw(false, model);
+            Draw(false, model, isOnlyWeights);
         }
     }
 }
