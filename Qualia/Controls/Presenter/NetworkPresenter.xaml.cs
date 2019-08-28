@@ -60,7 +60,7 @@ namespace Qualia.Controls
 
         private void DrawLayersLinks(bool fullState, NetworkDataModel model, LayerDataModel layer1, LayerDataModel layer2, bool isOnlyWeights, bool isOnlyChangedWeights, bool isHighlightChangedWeights)
         {
-            double threshold = model.Layers.First() == layer1 ? model.InputThreshold : 0;
+            double threshold = model.Layers[0] == layer1 ? model.InputThreshold : 0;
 
             foreach (var neuron1 in layer1.Neurons)
             {
@@ -139,7 +139,7 @@ namespace Qualia.Controls
         }
         private void DrawLayerNeurons(bool fullState, NetworkDataModel model, LayerDataModel layer)
         {
-            double threshold = model.Layers.First() == layer ? model.InputThreshold : 0;
+            double threshold = model.Layers[0] == layer ? model.InputThreshold : 0;
 
             var biasColor = Tools.Draw.GetPen(Colors.Orange);
 

@@ -115,7 +115,7 @@ namespace Qualia.Controls
             var pen = Tools.Draw.GetPen(color);
             var brush = Tools.Draw.GetBrush(color);
             
-            var f = data.First();
+            var f = data[0];
             var l = data.Last();
 
             var ticks = l.Item2 - f.Item2;
@@ -141,13 +141,13 @@ namespace Qualia.Controls
 
         private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
         {     
-            var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data.First().Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
+            var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data[0].Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
         private Point GetPointPercentData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long ticks)
         {
-            var p0 = data.First();
+            var p0 = data[0];
             var px = ticks == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * (point.Item2 - p0.Item2) / ticks;
             var py = (ActualHeight - AxisOffset) * (1 - (point.Item1 / 100));
 
@@ -156,7 +156,7 @@ namespace Qualia.Controls
 
         private Point GetPointCostData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long ticks)
         {
-            var p0 = data.First();
+            var p0 = data[0];
             var px = ticks == 0 ? AxisOffset : AxisOffset + (ActualWidth - AxisOffset) * (point.Item2 - p0.Item2) / ticks;
             var py = (ActualHeight - AxisOffset) * (1 - Math.Min(1, point.Item1));
 
@@ -170,11 +170,11 @@ namespace Qualia.Controls
             if (data.Count > 10)
             {
                 var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
-                var totolTicks = data.Last().Item2 - data.First().Item2;
+                var totolTicks = data.Last().Item2 - data[0].Item2;
 
                 for (int i = 0; i < data.Count * 0.8; ++i)
                 {
-                    var ticks = data.Last().Item2 - data.First().Item2;
+                    var ticks = data.Last().Item2 - data[0].Item2;
                     var p0 = func(data, data[i], ticks);
                     var p1 = func(data, data[i + 1], ticks);
                     var p2 = func(data, data[i + 2], ticks);

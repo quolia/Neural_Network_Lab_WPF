@@ -60,7 +60,7 @@ namespace Qualia
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
             var neurons = Layers.Last().Neurons;
-            var max = neurons.First();
+            var max = neurons[0];
             var neuron = max;
             while (neuron != null)
             {
@@ -77,7 +77,7 @@ namespace Qualia
 
         public void InitState()
         {
-            Layers.First().Neurons.ForEach(n => n.Activation = InputInitial1);
+            Layers[0].Neurons.ForEach(n => n.Activation = InputInitial1);
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
@@ -89,7 +89,7 @@ namespace Qualia
 
         public int GetNumberOfFirstLayerActiveNeurons()
         {
-            return Layers.First().Neurons.Count(n => !n.IsBias && n.Activation > InputThreshold);
+            return Layers[0].Neurons.Count(n => !n.IsBias && n.Activation > InputThreshold);
         }
 
         public int GetTarget()
@@ -106,17 +106,17 @@ namespace Qualia
 
         public void FeedForward()
         {
-            var layer = Layers.First();
+            var layer = Layers[0];
             while (layer != Layers.Last())
             {
-                var nextNeuron = layer.Next.Neurons.First();
+                var nextNeuron = layer.Next.Neurons[0];
                 while (nextNeuron != null)
                 {
                     if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
                     {
                         nextNeuron.Activation = 0;
 
-                        var neuron = layer.Neurons.First();
+                        var neuron = layer.Neurons[0];
                         while (neuron != null)
                         {
                             nextNeuron.Activation += neuron.IsBias ? neuron.AxW(nextNeuron) : 0;
@@ -130,7 +130,7 @@ namespace Qualia
                     {
                         nextNeuron.Activation = 0;
 
-                        var neuron = layer.Neurons.First();
+                        var neuron = layer.Neurons[0];
                         while (neuron != null)
                         {
                             nextNeuron.Activation += neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron);
@@ -151,7 +151,7 @@ namespace Qualia
 
         public void BackPropagation()
         {
-            var neuron = Layers.Last().Neurons.First();
+            var neuron = Layers.Last().Neurons[0];
             while (neuron != null)
             {
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
@@ -160,14 +160,14 @@ namespace Qualia
 
             var layer = Layers.Last();
 
-            while (layer != Layers.First())
+            while (layer != Layers[0])
             {
-                var neuronPrev = layer.Previous.Neurons.First();
+                var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)
                 {
                     neuronPrev.Error = 0;
 
-                    neuron = layer.Neurons.First();
+                    neuron = layer.Neurons[0];
                     while (neuron != null)
                     {
                         neuronPrev.Error +=
@@ -193,12 +193,12 @@ namespace Qualia
 
             layer = Layers.Last();
 
-            while (layer != Layers.First())
+            while (layer != Layers[0])
             {
-                var neuronPrev = layer.Previous.Neurons.First();
+                var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)
                 {
-                    neuron = layer.Neurons.First();
+                    neuron = layer.Neurons[0];
                     while (neuron != null)
                     {
                         neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate);
@@ -258,20 +258,20 @@ namespace Qualia
 
         public NetworkDataModel GetCopy()
         {
-            var layer = Layers.First();
-            var layer2 = Copy.Layers.First();
+            var layer = Layers[0];
+            var layer2 = Copy.Layers[0];
             while (layer != null)
             {
-                var neuron = layer.Neurons.First();
-                var neuron2 = layer2.Neurons.First();
+                var neuron = layer.Neurons[0];
+                var neuron2 = layer2.Neurons[0];
                 while (neuron != null)
                 {
                     neuron2.Activation = neuron.Activation;
 
                     if (neuron.Activation != 0 && layer != Layers.Last())
                     {
-                        var weight = neuron.Weights.First();
-                        var weight2 = neuron2.Weights.First();
+                        var weight = neuron.Weights[0];
+                        var weight2 = neuron2.Weights[0];
                         while (weight != null)
                         {
                             weight2.Weight = weight.Weight;

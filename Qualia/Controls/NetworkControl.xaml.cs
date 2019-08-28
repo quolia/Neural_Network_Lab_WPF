@@ -186,7 +186,7 @@ namespace Qualia.Controls
 
             foreach (var layer in layers)
             {
-                if (layer != layers.First() && layer != layers.Last())
+                if (layer != layers[0] && layer != layers.Last())
                     AddLayer(layer);
             }
 

@@ -23,9 +23,9 @@ namespace Tools
             }
             else if (obj is ListNode<T>)
             {
-                var last = this.Last() as ListNode<T>;
+                var last = Last() as ListNode<T>;
                 last.Next = obj;
-                (obj as ListNode<T>).Previous = this.Last();
+                (obj as ListNode<T>).Previous = Last();
                 (this as List<T>).Add(obj);
             }
             else
@@ -33,6 +33,8 @@ namespace Tools
                 (this as List<T>).Add(obj);
             }
         }
+
+        public T Last() => this[Count - 1];
     }
 
     public class ListNode<T>

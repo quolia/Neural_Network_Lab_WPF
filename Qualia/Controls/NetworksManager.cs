@@ -239,17 +239,17 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            Task.Do(Models.First());
+            Task.Do(Models[0]);
     
             // copy first layer state to other networks
 
             foreach (var model in Models)
             {
-                var neuronFirstModel = Models.First().Layers.First().Neurons.First();
+                var neuronFirstModel = Models[0].Layers[0].Neurons[0];
 
-                if (model != Models.First())
+                if (model != Models[0])
                 {
-                    var neuron = model.Layers.First().Neurons.First();
+                    var neuron = model.Layers[0].Neurons[0];
 
                     while (neuron != null)
                     {
@@ -262,9 +262,9 @@ namespace Qualia.Controls
                         neuronFirstModel = neuronFirstModel.Next;
                     }
 
-                    Array.Copy(Models.First().TargetValues, model.TargetValues, model.TargetValues.Length);
+                    Array.Copy(Models[0].TargetValues, model.TargetValues, model.TargetValues.Length);
 
-                    model.TargetOutput = Models.First().TargetOutput;
+                    model.TargetOutput = Models[0].TargetOutput;
                 }
             }
         }

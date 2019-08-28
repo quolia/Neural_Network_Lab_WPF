@@ -323,9 +323,9 @@ namespace Qualia
                 lock (ApplyChangesLocker)
                 { 
                     NetworksManager.PrepareModelsForRound();
-                    CtlInputDataPresenter.SetInputStat(NetworksManager.Models.First());
+                    CtlInputDataPresenter.SetInputStat(NetworksManager.Models[0]);
 
-                    var model = NetworksManager.Models.First();
+                    var model = NetworksManager.Models[0];
                     while (model != null)
                     {
                         if (!model.IsEnabled)
@@ -740,7 +740,7 @@ namespace Qualia
                 {
                     lock (ApplyChangesLocker)
                     {
-                        CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
+                        CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models[0]);
                         CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
                         CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
                         CtlStatisticsPresenter.Draw(NetworksManager.SelectedNetworkModel.LastStatistics);

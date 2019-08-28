@@ -192,7 +192,7 @@ namespace Tools
             }
             else
             {
-                buffer = list.First();
+                buffer = list[0];
                 list.RemoveAt(0);
             }
             
