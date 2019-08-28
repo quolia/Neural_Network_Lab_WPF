@@ -38,9 +38,9 @@ namespace Qualia.Controls
 
         public virtual int NeuronsCount => GetNeuronsControls().Count;
 
-        public List<NeuronBase> GetNeuronsControls()
+        public ListX<NeuronBase> GetNeuronsControls()
         {
-            return NeuronsHolder.Children.OfType<NeuronBase>().ToList();
+            return new ListX<NeuronBase>(NeuronsHolder.Children.OfType<NeuronBase>());
         }
 
         public void AddNeuron()

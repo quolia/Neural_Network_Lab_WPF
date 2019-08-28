@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 
 namespace Qualia.Controls
@@ -145,9 +137,9 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.Layers);
         }
 
-        public List<LayerBase> GetLayersControls()
+        public ListX<LayerBase> GetLayersControls()
         {
-            var result = new List<LayerBase>();
+            var result = new ListX<LayerBase>(CtlTabsLayers.Items.Count);
             for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
                 result.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
@@ -230,7 +222,8 @@ namespace Qualia.Controls
                 LearningRate = LearningRate,
                 InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
                 InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA),
-                CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString())
+                CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
+                IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
             model.Activate();
@@ -251,19 +244,33 @@ namespace Qualia.Controls
                     neuronModel.ActivationFunction = ActivationFunction.Helper.GetInstance(neurons[nn].ActivationFunc);
                     neuronModel.ActivationFuncParamA = neurons[nn].ActivationFuncParamA;
 
-                    neuronModel.WeightsInitializer = neurons[nn].WeightsInitializer;
-                    neuronModel.WeightsInitializerParamA = neurons[nn].WeightsInitializerParamA;
-                    double initValue = InitializeMode.Helper.Invoke(neurons[nn].WeightsInitializer, neurons[nn].WeightsInitializerParamA);
-                    if (!InitializeMode.Helper.IsSkipValue(initValue))
+
+                    if (ln == 0 && !neuronModel.IsBias)
                     {
-                        neuronModel.Weights.ForEach(w => w.Weight = InitializeMode.Helper.Invoke(neurons[nn].WeightsInitializer, neurons[nn].WeightsInitializerParamA));
+                        neuronModel.WeightsInitializer = InputLayer.WeightsInitializer;
+                        neuronModel.WeightsInitializerParamA = InputLayer.WeightsInitializerParamA;
+                        double initValue = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParamA);
+                        if (!InitializeMode.Helper.IsSkipValue(initValue))
+                        {
+                            neuronModel.Weights.ForEach(w => w.Weight = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParamA));
+                        }
+                    }
+                    else
+                    {
+                        neuronModel.WeightsInitializer = neurons[nn].WeightsInitializer;
+                        neuronModel.WeightsInitializerParamA = neurons[nn].WeightsInitializerParamA;
+                        double initValue = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParamA);
+                        if (!InitializeMode.Helper.IsSkipValue(initValue))
+                        {
+                            neuronModel.Weights.ForEach(w => w.Weight = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParamA));
+                        }
                     }
 
                     if (neuronModel.IsBias)
                     {
                         neuronModel.ActivationInitializer = neurons[nn].ActivationInitializer;
                         neuronModel.ActivationInitializerParamA = neurons[nn].ActivationInitializerParamA;
-                        initValue = InitializeMode.Helper.Invoke(neurons[nn].ActivationInitializer, neurons[nn].ActivationInitializerParamA);
+                        double initValue = InitializeMode.Helper.Invoke(neurons[nn].ActivationInitializer, neurons[nn].ActivationInitializerParamA);
                         if (!InitializeMode.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Activation = initValue;

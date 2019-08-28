@@ -28,6 +28,7 @@ namespace Qualia
         public double? RandomizerParamA;
         public double InputInitial0;
         public double InputInitial1;
+        public bool IsAdjustFirstLayerWeights;
 
         public ICostFunction CostFunction;
 
@@ -79,6 +80,7 @@ namespace Qualia
         {
             Layers[0].Neurons.ForEach(n => n.Activation = InputInitial1);
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
+            
         }
 
         public void Activate()
@@ -160,7 +162,7 @@ namespace Qualia
 
             var layer = Layers.Last();
 
-            while (layer != Layers[0])
+            while (layer != Layers[IsAdjustFirstLayerWeights ? 0 : 1])
             {
                 var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)
@@ -193,7 +195,7 @@ namespace Qualia
 
             layer = Layers.Last();
 
-            while (layer != Layers[0])
+            while (layer != Layers[IsAdjustFirstLayerWeights ? 0 : 1])
             {
                 var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)

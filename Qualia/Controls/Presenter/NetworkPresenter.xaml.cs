@@ -96,14 +96,15 @@ namespace Qualia.Controls
                             }
 
                             double fraction = Math.Min(1, Math.Abs((prevWeight - weight.Weight) / prevWeight));
-                            if (fraction <= 1D / 255D)
+                            if (fraction <= 1D / 300D)
                             {
                                 isWeightChanged = false;
                             }
 
                             if (isWeightChanged && isHighlightChangedWeights)
-                            {  
-                                penChange = Tools.Draw.GetPen(Tools.Draw.GetColor((byte)(100 + 100 * fraction), Colors.Lime));
+                            {
+                                //penChange = Tools.Draw.GetPen(Tools.Draw.GetColor((byte)(55 + 200 * fraction), Colors.Lime));
+                                penChange = Tools.Draw.GetPen(Colors.Lime);
                             }
 
                             if (isOnlyWeights)
@@ -116,6 +117,12 @@ namespace Qualia.Controls
                             else
                             {
                                 pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                            }
+
+                            if (!isOnlyChangedWeights && isHighlightChangedWeights && isWeightChanged)
+                            {
+                                pen = penChange;
+                                penChange = null;
                             }
 
                             if (pen != null)

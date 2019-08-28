@@ -15,6 +15,12 @@ namespace Tools
             //
         }
 
+        public ListX(IEnumerable<T> collection)
+            : base(collection)
+        {
+            //
+        }
+
         public new void Add(T obj)
         {
             if (Count == 0)

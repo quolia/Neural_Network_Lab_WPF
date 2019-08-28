@@ -29,6 +29,9 @@ namespace Qualia.Controls
             CtlInputInitial1.SetChangeEvent(ParameterChanged);
             CtlActivationFunc.SetChangeEvent(ParameterChanged);
             CtlActivationFuncParamA.SetChangeEvent(ParameterChanged);
+            CtlAdjustFirstLayerWeights.SetChangeEvent(ParameterChanged);
+            CtlWeightsInitializer.SetChangeEvent(ParameterChanged);
+            CtlWeightsInitializerParamA.SetChangeEvent(ParameterChanged);
         }
 
         private void ParameterChanged()
@@ -44,6 +47,9 @@ namespace Qualia.Controls
         public double Initial1 => CtlInputInitial1.Value;
         public string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
         public double? ActivationFuncParamA => CtlActivationFuncParamA.ValueOrNull;
+        public string WeightsInitializer => CtlWeightsInitializer.SelectedItem.ToString();
+        public double? WeightsInitializerParamA => CtlWeightsInitializerParamA.ValueOrNull;
+        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
 
         public void OnTaskChanged(INetworkTask task)
         {
@@ -58,9 +64,12 @@ namespace Qualia.Controls
         private void LoadConfig()
         {
             ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.None));
+            InitializeMode.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeMode.None));
             CtlInputInitial0.Load(Config);
             CtlInputInitial1.Load(Config);
             CtlActivationFuncParamA.Load(Config);
+            CtlAdjustFirstLayerWeights.Load(Config);
+            CtlWeightsInitializerParamA.Load(Config);
 
             var neurons = Config.GetArray(Const.Param.Neurons);
             foreach (var bias in neurons)
@@ -100,6 +109,7 @@ namespace Qualia.Controls
             return CtlInputInitial0.IsValid() &&
                    CtlInputInitial1.IsValid() &&
                    CtlActivationFuncParamA.IsValid() &&
+                   CtlWeightsInitializerParamA.IsValid() &&
                    GetNeuronsControls().All(n => n.IsValid());
         }
 
@@ -109,6 +119,9 @@ namespace Qualia.Controls
             CtlInputInitial0.Save(Config);
             CtlInputInitial1.Save(Config);
             CtlActivationFuncParamA.Save(Config);
+            CtlAdjustFirstLayerWeights.Save(Config);
+            CtlWeightsInitializer.Save(Config);
+            CtlWeightsInitializerParamA.Save(Config);
 
             var neurons = GetNeuronsControls().Where(n => n.IsBias);
             Config.Set(Const.Param.Neurons, neurons.Select(n => n.Id));
@@ -125,6 +138,10 @@ namespace Qualia.Controls
             CtlInputInitial1.Vanish(Config);
             CtlActivationFunc.Vanish(Config);
             CtlActivationFuncParamA.Vanish(Config);
+            CtlAdjustFirstLayerWeights.Vanish(Config);
+            CtlWeightsInitializer.Vanish(Config);
+            CtlWeightsInitializerParamA.Vanish(Config);
+
             foreach (var neuron in GetNeuronsControls())
             {
                 neuron.VanishConfig();

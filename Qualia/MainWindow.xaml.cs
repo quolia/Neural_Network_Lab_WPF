@@ -318,6 +318,8 @@ namespace Qualia
             var speedTime = DateTime.UtcNow;
             bool IsErrorMatrixRendering = false;
 
+            var sw = new Stopwatch();
+
             while (!CancellationToken.IsCancellationRequested)
             {
                 lock (ApplyChangesLocker)
@@ -383,11 +385,14 @@ namespace Qualia
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
                         ErrorMatrix errorMatrix;
+
+                        sw.Start();
                         lock (ApplyChangesLocker)
                         {
                             errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
                             NetworksManager.ResetErrorMatrix();
                         }
+                        sw.Stop();
                         CtlMatrixPresenter.Draw(errorMatrix);
                         IsErrorMatrixRendering = false;
 
@@ -399,10 +404,13 @@ namespace Qualia
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
                         NetworkDataModel modelCopy;
+
+                        sw.Start();
                         lock (ApplyChangesLocker)
                         {
                             modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
                         }
+                        sw.Stop();
                         DrawNetwork(modelCopy, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
 
                     }), System.Windows.Threading.DispatcherPriority.Send);
@@ -412,23 +420,29 @@ namespace Qualia
                 {
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
+                        sw.Start();
                         lock (ApplyChangesLocker)
                         {
                             DrawPlotter(NetworksManager.Models);
                         }
+                        sw.Stop();
 
                         NetworkDataModel selectedModel;
                         Statistics statistics;
                         double learningRate;
 
+                        sw.Start();
                         lock (ApplyChangesLocker)
                         {
                             selectedModel = NetworksManager.SelectedNetworkModel;
                             statistics = selectedModel?.Statistics.Copy();
                             learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
                         }
+                        sw.Stop();
+                        var lockTicks = sw.Elapsed.Ticks;
+                        sw.Reset();
 
-                        var lastStats = DrawStatistics(statistics, learningRate, speedTime);
+                        var lastStats = DrawStatistics(statistics, learningRate, speedTime, lockTicks);
                         if (selectedModel != null)
                         {
                             selectedModel.LastStatistics = lastStats;
@@ -471,7 +485,7 @@ namespace Qualia
             CtlPlotPresenter.Draw(models, NetworksManager.SelectedNetworkModel);
         }
 
-        private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate, DateTime speedTime)
+        private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate, DateTime speedTime, long lockTicks)
         {
             if (statistics == null)
             {
@@ -532,6 +546,8 @@ namespace Qualia
                 stat.Add("Plotter", ((int)TimeSpan.FromTicks(RenderTime.Plotter).TotalMicroseconds()).ToString());
                 stat.Add("Statistics", ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
                 stat.Add("Data", ((int)TimeSpan.FromTicks(RenderTime.Data).TotalMicroseconds()).ToString());
+                var lostRounds = (int)((double)lockTicks * Settings.SkipRoundsToDrawStatistics / DateTime.UtcNow.Subtract(speedTime).Ticks);
+                stat.Add("Rounds lost", lostRounds.ToString());
 
                 CtlStatisticsPresenter.Draw(stat);
 
