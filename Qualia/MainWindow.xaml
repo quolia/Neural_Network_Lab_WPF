@@ -25,7 +25,11 @@
                 </Grid.RowDefinitions>
                      
                 <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
-                <local:QCheckBox x:Name="CtlOnlyWeights" Content="Only weights" VerticalAlignment="Bottom" Margin="3,0,0,10" />
+                <StackPanel Orientation="Horizontal">
+                    <local:QCheckBox x:Name="CtlOnlyWeights" Content="Only weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlOnlyChangedWeights" Content="Only changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                </StackPanel>
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
 
                 <Grid Grid.Row="1">

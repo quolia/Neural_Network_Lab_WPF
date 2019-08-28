@@ -58,9 +58,9 @@ namespace Qualia
                 CtlNetworkPresenter.Dispatch(() =>
                 {
                     if (IsRunning)
-                        CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                        CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
                     else
-                        CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                        CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
                 });
             }
         }
@@ -74,6 +74,9 @@ namespace Qualia
             Topmost = Config.Main.GetBool(Const.Param.OnTop, false);
             DataWidth.Width = new GridLength(Config.Main.GetDouble(Const.Param.DataWidth, 100).Value);
             NetworkHeight.Height = new GridLength(Config.Main.GetDouble(Const.Param.NetworkHeight, 200).Value);
+            CtlOnlyWeights.Load(Config.Main);
+            CtlOnlyChangedWeights.Load(Config.Main);
+            CtlHighlightChangedWeights.Load(Config.Main);
 
             var name = Config.Main.GetString(Const.Param.NetworksManagerName, null);
             LoadNetworksManager(name);
@@ -158,6 +161,9 @@ namespace Qualia
             Config.Main.Set(Const.Param.OnTop, Topmost);
             Config.Main.Set(Const.Param.DataWidth, DataWidth.ActualWidth);
             Config.Main.Set(Const.Param.NetworkHeight, NetworkHeight.ActualHeight);
+            CtlOnlyWeights.Save(Config.Main);
+            CtlOnlyChangedWeights.Save(Config.Main);
+            CtlHighlightChangedWeights.Save(Config.Main);
 
             if (!SaveSettings())
             {
@@ -244,7 +250,7 @@ namespace Qualia
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
                 var newModels = NetworksManager.CreateNetworksDataModels();
                 NetworksManager.MergeModels(newModels);
-                CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
                 ToggleApplyChanges(Const.Toggle.Off);
             }
         }
@@ -256,7 +262,7 @@ namespace Qualia
                 CtlInputDataPresenter.Task.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
                 NetworksManager.RefreshNetworksDataModels();
-                CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
                 ToggleApplyChanges(Const.Toggle.Off);
                 CtlMenuStart.IsEnabled = true;
             }
@@ -284,7 +290,7 @@ namespace Qualia
                 CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.SelectedNetworkModel);
                 NetworksManager.FeedForward(); // initialize state
 
-                DrawNetwork(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                DrawNetwork(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
 
                 RunNetworkThread = new Thread(new ThreadStart(RunNetwork))
                 {
@@ -317,6 +323,7 @@ namespace Qualia
                 lock (ApplyChangesLocker)
                 { 
                     NetworksManager.PrepareModelsForRound();
+                    CtlInputDataPresenter.SetInputStat(NetworksManager.Models.First());
 
                     var model = NetworksManager.Models.First();
                     while (model != null)
@@ -396,7 +403,7 @@ namespace Qualia
                         {
                             modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
                         }
-                        DrawNetwork(modelCopy, CtlOnlyWeights.IsOn);
+                        DrawNetwork(modelCopy, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
 
                     }), System.Windows.Threading.DispatcherPriority.Send);
                 }
@@ -452,9 +459,9 @@ namespace Qualia
             }
         }
 
-        private void DrawNetwork(NetworkDataModel model, bool isOnlyWeights)
+        private void DrawNetwork(NetworkDataModel model, bool isOnlyWeights, bool isOnlyChangedWeights, bool isHighlightChangedWeights)
         {
-            CtlNetworkPresenter.RenderRunning(model, isOnlyWeights);
+            CtlNetworkPresenter.RenderRunning(model, isOnlyWeights, isOnlyChangedWeights, isHighlightChangedWeights);
             CtlInputDataPresenter.SetInputDataAndDraw(model);
         }
 
@@ -734,14 +741,14 @@ namespace Qualia
                     lock (ApplyChangesLocker)
                     {
                         CtlInputDataPresenter.SetInputDataAndDraw(NetworksManager.Models.First());
-                        CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                        CtlNetworkPresenter.RenderRunning(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
                         CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
                         CtlStatisticsPresenter.Draw(NetworksManager.SelectedNetworkModel.LastStatistics);
                     }
                 }
                 else
                 {
-                    CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+                    CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
                 }
             }
         }
@@ -855,7 +862,7 @@ namespace Qualia
         {
             NetworksManager.RebuildNetworksForTask(CtlInputDataPresenter.Task);
             NetworksManager.ResetLayersTabsNames();
-            CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn);
+            CtlNetworkPresenter.RenderStanding(NetworksManager.SelectedNetworkModel);
         }
     }
 }

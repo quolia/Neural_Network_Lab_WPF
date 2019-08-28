@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 
 namespace Qualia.Controls
@@ -26,6 +16,7 @@ namespace Qualia.Controls
         int PointsCount;
         double Threshold;
         double[] Data;
+        long[] Stat;
 
         INetworkTaskChanged TaskChanged;
 
@@ -91,28 +82,42 @@ namespace Qualia.Controls
             config.FlushToDrive();
         }
 
-        private void DrawPoint(int x, int y, double value)
+        private void DrawPoint(int x, int y, double value, bool isData)
         {
-            var brush = value == 0 ? Brushes.White : Draw.GetBrush(value);
+            var brush = value == 0 ? Brushes.White : (isData ? Draw.GetBrush(value) : Draw.GetBrush(Draw.GetColor((byte)(255 * value), Colors.LightGray)));
             var pen = Draw.GetPen(Colors.Black);
 
             CtlPresenter.DrawRectangle(brush, pen, Rects.Get(x * PointSize, y * PointSize, PointSize, PointSize));
         }
-
-        private void TogglePoint(int c, double value)
-        {
-            var pos = GetPointPosition(c);
-            DrawPoint(pos.Item1, pos.Item2, value);
-        }
-
         public void SetInputDataAndDraw(NetworkDataModel model)
         {
             Threshold = model.InputThreshold;
-            Data = new double[model.Layers.First().Neurons.Where(n => !n.IsBias).Count()];
-            Range.ForEach(model.Layers.First().Neurons.Where(n => !n.IsBias), neuron => Data[neuron.Id] = neuron.Activation);
-            Rearrange(PointsCount);
-        }
+            var count = model.Layers.First().Neurons.Count(n => !n.IsBias);
+            if (Data == null || Data.Length != count)
+            {
+                Data = new double[count];
+            }
+            else
+            {
+                Array.Clear(Data, 0, Data.Length);
+            }
 
+            var neuron = model.Layers.First().Neurons.First();
+            while (neuron != null)
+            {
+                if (!neuron.IsBias)
+                {
+                    Data[neuron.Id] = neuron.Activation;
+                }
+                neuron = neuron.Next;
+            }
+
+            Rearrange(PointsCount);
+            if (Stat == null || Stat.Length != Data.Length)
+            {
+                Stat = new long[Data.Length];
+            }
+        }
         public void RearrangeWithNewPointsCount()
         {
             Rearrange(Task.GetInputCount());
@@ -136,15 +141,33 @@ namespace Qualia.Controls
             int width = (int)Math.Max(ActualWidth, PointsRearrangeSnap * PointSize);
             int snaps = width / (PointsRearrangeSnap * PointSize);
 
-            Range.For(PointsCount, p =>
+            long maxStat = 0;
+            if (Stat != null)
+            {
+                var minBase = Stat.Min();
+                Range.For(Stat.Length, i => Stat[i] -= minBase);
+                maxStat = Stat.Max();
+            }
+
+            for (int p = 0; p < PointsCount; ++p)
             {
                 var pos = GetPointPosition(p);
-                DrawPoint(pos.Item1, pos.Item2, 0);
-            });
 
-            if (Data != null)
-            {
-                Range.For(Data.Length, y => TogglePoint(y, Data[y] > Threshold ? Data[y] : 0));
+                if (Data == null)
+                {
+                    DrawPoint(pos.Item1, pos.Item2, 0, true);
+                }
+                else
+                {
+                    if (Data[p] > Threshold)
+                    {
+                        DrawPoint(pos.Item1, pos.Item2, Data[p], true);
+                    }
+                    else
+                    {
+                        DrawPoint(pos.Item1, pos.Item2, maxStat > 0 ? Stat[p] / maxStat : 0, false);
+                    }
+                }
             }
 
             CtlPresenter.Update();
@@ -162,6 +185,25 @@ namespace Qualia.Controls
             int x = pointNumber - (y * snaps * PointsRearrangeSnap);
 
             return new Tuple<int, int>(x, y);
+        }
+
+        public void SetInputStat(NetworkDataModel model)
+        {
+            if (Stat != null)
+            {
+                var neuron = model.Layers.First().Neurons.First();
+                while (neuron != null)
+                {
+                    if (!neuron.IsBias)
+                    {
+                        for (int i = 0; i < Stat.Length; ++i)
+                        {
+                            Stat[i] += neuron.Activation > Threshold ? 1 : 0;
+                        }
+                    }
+                    neuron = neuron.Next;
+                }
+            }
         }
     }
 }
