@@ -159,6 +159,7 @@ namespace Tools
         Dictionary<int, List<MemoryBuffer<double>>> Buffers;
 
         Action<Index, ArrayView2D<double>, ArrayView2D<double>> KernelProduct;
+        Action<Index, double[], double[], VariableView<double>> KernelProduct2;
 
         public GPU()
         {
@@ -169,6 +170,7 @@ namespace Tools
             Accelerator = Accelerator.Create(Context, acceleratorId);
 
             KernelProduct = Accelerator.LoadAutoGroupedStreamKernel<Index, ArrayView2D<double>, ArrayView2D<double>>(Product);
+            //KernelProduct2 = Accelerator.LoadAutoGroupedStreamKernel<Index, double[], double[], VariableView<double>>(KernelProduct2);
         }
 
         public NetworkGPU GetNetworkGPU(NetworkDataModel model)
@@ -243,6 +245,11 @@ namespace Tools
 
                 layerNext[0, n] = sum;
             }
+        }
+
+        private static void Product2(Index index, double[] a, double[] w, VariableView<double> result)
+        {
+
         }
 
         public void FeedForward(NetworkDataModel model)

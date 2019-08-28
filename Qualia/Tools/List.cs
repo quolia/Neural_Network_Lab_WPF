@@ -41,6 +41,20 @@ namespace Tools
         }
 
         public T Last() => this[Count - 1];
+
+        // Fisher-Yates shuffle.
+        public void Shuffle()
+        {
+            int n = Count;
+            while (n > 1)
+            {
+                n--;
+                int k = Rand.Flat.Next(n + 1);
+                T value = this[k];
+                this[k] = this[n];
+                this[n] = value;
+            }
+        }
     }
 
     public class ListNode<T>

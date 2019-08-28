@@ -83,8 +83,12 @@ namespace Tools
             {
                 if (IsGaussianDistribution)
                 {
-                    var shuffled = model.Layers[0].Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
-                    var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(((double)MinNumber + (double)MaxNumber) / 2, ((double)MinNumber + (double)MaxNumber) / 4));
+                    var shuffled = model.Layers[0].ShuffledNeurons; //.Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
+                    shuffled.Shuffle();
+
+                    double median = ((double)MinNumber + MaxNumber) / 2;
+
+                    var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
                     if (number < MinNumber)
                     {
                         number = MinNumber;
@@ -108,7 +112,10 @@ namespace Tools
                 }
                 else
                 {
-                    var shuffled = model.Layers[0].Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
+                    //var shuffled = model.Layers[0].Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
+                    var shuffled = model.Layers[0].ShuffledNeurons; //.Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
+                    shuffled.Shuffle();
+
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
 
                     for (int i = 0; i < shuffled.Count; ++i)

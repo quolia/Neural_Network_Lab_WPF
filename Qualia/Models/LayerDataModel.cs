@@ -14,12 +14,14 @@ namespace Qualia
         public int Id;
         public long VisualId;
         public ListX<NeuronDataModel> Neurons;
+        public ListX<NeuronDataModel> ShuffledNeurons;
 
         public LayerDataModel(int id, int neuronsCount, int weightsCount)
         {
             Neurons = new ListX<NeuronDataModel>(neuronsCount);
             Id = id;
             Range.For(neuronsCount, n => Neurons.Add(new NeuronDataModel(n, weightsCount)));
+            ShuffledNeurons = new ListX<NeuronDataModel>(Neurons.Where(n => !n.IsBias));
         }
 
         MemoryBuffer2D<double> _neurons;
@@ -47,6 +49,5 @@ namespace Qualia
         }
 
         public int Height => Neurons.Count;
-        public int BiasCount => Neurons.Count(n => n.IsBias);
     }
 }

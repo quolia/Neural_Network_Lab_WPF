@@ -18,49 +18,22 @@ namespace Tools
     {
         public delegate void ActivationFunctionDelegate(double x, double? a);
 
-        public static double None1(double x, double? a)
-        {
-            return x;
-        }
-
         public class None : IActivationFunction
         {
             public static IActivationFunction Instance = new None();
 
-            public double Do(double x, double? a)
-            {
-                return x;
-            }
+            public double Do(double x, double? a) => x;
 
-            public static void Do(Index index, double x, double a, VariableView<double> result)
-            {
-                result.Value = x;
-            }
-
-            public double Derivative(double x, double? a)
-            {
-                return x;
-            }
-
-            public static double DerivativeStatic(double x, double? a)
-            {
-                return x;
-            }
+            public double Derivative(double x, double? a) => x;
         }
 
         public class LogisticSigmoid : IActivationFunction
         {
             public static IActivationFunction Instance = new LogisticSigmoid();
 
-            public double Do(double x, double? a)
-            {
-                return 1 / (1 + Math.Exp(-x));           //2/​(1+​exp(​(‑x)*​4))-​1
-            }
+            public double Do(double x, double? a) => 1 / (1 + Math.Exp(-x));           //2/​(1+​exp(​(‑x)*​4))-​1
 
-            public double Derivative(double x, double? a)
-            {
-                return x * (1 - x);
-            }
+            public double Derivative(double x, double? a) => x * (1 - x);
         }
 
         public static class Helper

@@ -88,23 +88,6 @@ namespace Qualia
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
-        public int GetNumberOfFirstLayerActiveNeurons()
-        {
-            return Layers[0].Neurons.Count(n => !n.IsBias && n.Activation > InputThreshold);
-        }
-
-        public int GetTarget()
-        {
-            for (int i = 0; i < TargetValues.Length; ++i)
-            {
-                if (TargetValues[i] == 1)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         public void FeedForward()
         {
             var layer = Layers[0];
@@ -120,7 +103,10 @@ namespace Qualia
                         var neuron = layer.Neurons[0];
                         while (neuron != null)
                         {
-                            nextNeuron.Activation += neuron.IsBias ? neuron.AxW(nextNeuron) : 0;
+                            if (neuron.IsBias)
+                            {
+                                nextNeuron.Activation += neuron.AxW(nextNeuron);
+                            }
                             neuron = neuron.Next;
                         }
 
@@ -134,7 +120,17 @@ namespace Qualia
                         var neuron = layer.Neurons[0];
                         while (neuron != null)
                         {
-                            nextNeuron.Activation += neuron.Activation == 0 ? 0 : neuron.AxW(nextNeuron);
+                            if (neuron.Activation != 0)
+                            {
+                                if (neuron.Activation == 1)
+                                {
+                                    nextNeuron.Activation += neuron.WeightTo(nextNeuron).Weight;
+                                }
+                                else
+                                {
+                                    nextNeuron.Activation += neuron.AxW(nextNeuron);
+                                }
+                            }
                             neuron = neuron.Next;
                         }
 
@@ -160,8 +156,8 @@ namespace Qualia
             }
 
             var layer = Layers.Last();
-
-            while (layer != Layers[IsAdjustFirstLayerWeights ? 0 : 1])
+            var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
+            while (layer != finalLayer)
             {
                 var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)
@@ -171,6 +167,18 @@ namespace Qualia
                     neuron = layer.Neurons[0];
                     while (neuron != null)
                     {
+                        if (neuronPrev.IsBias)
+                        {
+                            if (neuron.IsBiasConnected)
+                            {
+                                neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                            }
+                        }
+                        else
+                        {
+                            neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                        }
+                        /*
                         neuronPrev.Error +=
 
                             neuronPrev.IsBias
@@ -180,7 +188,7 @@ namespace Qualia
                                 : 0 // neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
 
                             : neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-
+                        */
                         neuron = neuron.Next;
                     }
 
@@ -193,8 +201,8 @@ namespace Qualia
             // update weights
 
             layer = Layers.Last();
-
-            while (layer != Layers[IsAdjustFirstLayerWeights ? 0 : 1])
+            finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
+            while (layer != finalLayer)
             {
                 var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)
@@ -202,7 +210,18 @@ namespace Qualia
                     neuron = layer.Neurons[0];
                     while (neuron != null)
                     {
-                        neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate);
+                        if (neuronPrev.Activation != 0)
+                        {
+                            if (neuronPrev.Activation == 1)
+                            {
+                                neuronPrev.WeightTo(neuron).Add(neuron.Error * LearningRate);
+                            }
+                            else
+                            {
+                                neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate);
+                            }
+                        }
+                        
                         neuron = neuron.Next;
                     }
 
