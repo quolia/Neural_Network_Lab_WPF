@@ -163,6 +163,7 @@ namespace Qualia.Controls
             return Points.Get((int)px, (int)py);
         }
 
+        /*
         private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
         {
             int vanishArea = 16;
@@ -196,6 +197,74 @@ namespace Qualia.Controls
 
                 pointsToRemove.ForEach(p => data.Remove(p));
             }
+        }
+        */
+
+        private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
+        {
+            int vanishArea = 16;
+
+            while (true)
+            {
+                if (data.Count <= 10)
+                {
+                    return;
+                }
+
+                var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+
+                for (int i = 0; i < data.Count * 0.8; ++i)
+                {
+                    var ticks = data.Last().Item2 - data[0].Item2;
+                    var p0 = func(data, data[i], ticks);
+                    var p1 = func(data, data[i + 1], ticks);
+                    var p2 = func(data, data[i + 2], ticks);
+
+                    if (Math.Abs(Angle(p0, p1) - Angle(p1, p2)) < Math.PI / 90D)
+                    {
+                        pointsToRemove.Add(data[i + 1]);
+                    }
+                    else
+                    {
+                        if (//Math.Abs(p0.X - p2.X) < vanishArea && Math.Abs(p0.Y - p2.Y) < vanishArea &&
+                            Math.Abs(p0.X - p1.X) < vanishArea && Math.Abs(p0.Y - p1.Y) < vanishArea)// &&
+                            //Math.Abs(p1.X - p2.X) < vanishArea && Math.Abs(p1.Y - p2.Y) < vanishArea)
+                        {
+                            pointsToRemove.Add(data[i + 1]);
+                        }
+                        else
+                        {
+                            if ((p0.X == p1.X && p1.X == p2.X && Math.Abs(p0.Y - p1.Y) < vanishArea) || (p0.Y == p1.Y && p1.Y == p2.Y && Math.Abs(p0.X - p1.X) < vanishArea))
+                            {
+                                pointsToRemove.Add(data[i + 1]);
+                            }
+                        }
+                    }
+                }
+
+                if (!pointsToRemove.Any())
+                {
+                    return;
+                }
+
+
+                pointsToRemove.ForEach(p =>
+                {
+                    if (data.Count > 10)
+                    {
+                        data.Remove(p);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                });
+            }
+        }
+
+        private double Angle(Point p1, Point p2)
+        {
+            return Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
         }
     }
 }
