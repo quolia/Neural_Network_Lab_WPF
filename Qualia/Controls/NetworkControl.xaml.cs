@@ -226,7 +226,7 @@ namespace Qualia.Controls
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
-            model.Activate();
+            model.ActivateNetwork();
 
             var layers = GetLayersControls();
             for (int ln = 0; ln < layers.Count; ++ln)

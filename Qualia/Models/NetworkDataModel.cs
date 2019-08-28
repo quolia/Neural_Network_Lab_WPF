@@ -76,14 +76,13 @@ namespace Qualia
             return max;
         }
 
-        public void InitState()
+        public void ActivateFirstLayer()
         {
             Layers[0].Neurons.ForEach(n => n.Activation = InputInitial1);
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
-            
         }
 
-        public void Activate()
+        public void ActivateNetwork()
         {
             Layers.ForEach(layer => layer.Neurons.ForEach(n => n.Activation = InputInitial1));
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);

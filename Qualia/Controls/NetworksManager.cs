@@ -231,7 +231,7 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRun()
         {
-            Models.ForEach(m => m.InitState());
+            Models.ForEach(m => m.ActivateFirstLayer());
             ResetModelsDynamicStatistics();
             ResetModelsStatistics();
             ResetErrorMatrix();
