@@ -9,6 +9,25 @@ using System.Windows.Media;
 
 namespace Tools
 {
+    public unsafe class Ref : ListNode<Ref>
+    {
+        readonly double* V;
+
+        public double Value
+        {
+            get => *V;
+            set => *V = value;
+        }
+        
+        public Ref(ref double val)
+        {
+            fixed (double* p = &val)
+            {
+                V = p;
+            }
+        }
+    }
+
     public static class Extension
     {
         public static void Dispatch(this UIElement c, Action action)
