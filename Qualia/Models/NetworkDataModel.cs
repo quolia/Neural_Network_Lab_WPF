@@ -37,9 +37,6 @@ namespace Qualia
         public ErrorMatrix ErrorMatrix;
         public Dictionary<string, string> LastStatistics;
 
-        public AutoResetEvent BackpropogationNeeded = new AutoResetEvent(false);
-        public AutoResetEvent FeedForwardNeeded = new AutoResetEvent(true);
-
         public NetworkDataModel Copy { private get; set; }
 
         public NetworkDataModel(long visualId, int[] layersSize)

@@ -53,8 +53,12 @@ namespace Qualia.Controls
 
         public void OnTaskChanged(INetworkTask task)
         {
-            var controls = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
-            controls.ForEach(c => NeuronsHolder.Children.Remove(c));
+            var controls = NeuronsHolder.Children.OfType<InputNeuronControl>();
+            foreach (var c in controls)
+            {
+                NeuronsHolder.Children.Remove(c);
+            }
+
             if (task != null)
             {
                 Range.For(task.GetInputCount(), n => NeuronsHolder.Children.Insert(0, AddNeuron()));

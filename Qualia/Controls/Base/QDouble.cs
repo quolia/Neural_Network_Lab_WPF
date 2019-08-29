@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Tools;
@@ -13,7 +9,7 @@ namespace Qualia.Controls
     {
         event Action OnChanged = delegate { };
 
-        public Double? DefaultValue
+        public double? DefaultValue
         {
             get;
             set;
@@ -74,10 +70,7 @@ namespace Qualia.Controls
 
         public double Value
         {
-            get
-            {
-                return IsValid() ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(Name, Text);
-            }
+            get => IsValid() ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(Name, Text);
 
             set
             {
@@ -88,10 +81,7 @@ namespace Qualia.Controls
 
         public double? ValueOrNull
         {
-            get
-            {
-                return IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
-            }
+            get => IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
 
             set
             {

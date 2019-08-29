@@ -42,6 +42,8 @@ namespace Tools
 
         public T Last() => this[Count - 1];
 
+        public bool Any() => Count > 0;
+
         // Fisher-Yates shuffle.
         public void Shuffle()
         {

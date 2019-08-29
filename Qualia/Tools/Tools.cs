@@ -258,10 +258,10 @@ namespace Tools
             {
                 cb.Items.Add(i);
             }
-            var item = config.GetString(param, !String.IsNullOrEmpty(defaultValue) ? defaultValue : items.Any() ? items[0] : null);
-            if (items.Any())
+            var item = config.GetString(param, !String.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
+            if (items.Length > 0)
             {
-                if (!items.Any(r => r == item))
+                if (!items.Contains(item))
                 {
                     item = items[0];
                 }

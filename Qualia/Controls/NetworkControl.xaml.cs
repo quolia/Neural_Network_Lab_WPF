@@ -190,7 +190,7 @@ namespace Qualia.Controls
             return GetLayersControls().Select(l => l.NeuronsCount).ToArray();
         }
 
-        public int InputNeuronsCount => InputLayer.GetNeuronsControls().Where(c => !c.IsBias).Count();
+        public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(c => !c.IsBias);
         private string RandomizeMode => CtlRandomizeMode.SelectedItem.ToString();
         private double? RandomizerParamA => CtlRandomizeModeParamA.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
