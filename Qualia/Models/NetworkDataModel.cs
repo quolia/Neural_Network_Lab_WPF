@@ -85,7 +85,8 @@ namespace Qualia
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
-        public void FeedForward()
+        
+        public void FeedForward2()
         {
             var layer = Layers[0];
             while (layer != Layers.Last())
@@ -142,7 +143,31 @@ namespace Qualia
                 layer = layer.Next;
             }
         }
+        
 
+        public void FeedForward()
+        {
+            var layer = Layers[0];
+            while (layer != Layers.Last())
+            {
+                var nextNeuron = layer.Next.Neurons[0];
+                while (nextNeuron != null)
+                {
+                    double sum = 0;
+                    var AxW = nextNeuron.ForwardHelper[0];
+                    while (AxW != null)
+                    {
+                        sum += AxW.AxW;
+                        AxW = AxW.Next;
+                    }
+
+                    nextNeuron.Activation = nextNeuron.ActivationFunction.Do(sum, nextNeuron.ActivationFuncParamA);
+                    nextNeuron = nextNeuron.Next;
+                }
+
+                layer = layer.Next;
+            }
+        }
         public void BackPropagation()
         {
             var neuron = Layers.Last().Neurons[0];
@@ -175,6 +200,7 @@ namespace Qualia
                         {
                             neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                         }
+
                         /*
                         neuronPrev.Error +=
 
@@ -218,7 +244,7 @@ namespace Qualia
                                 neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate);
                             }
                         }
-                        
+
                         neuron = neuron.Next;
                     }
 

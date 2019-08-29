@@ -228,12 +228,20 @@ namespace Qualia.Controls
 
             model.ActivateNetwork();
 
+            LayerDataModel prevLayer = null;
+
             var layers = GetLayersControls();
             for (int ln = 0; ln < layers.Count; ++ln)
             {
+                if (ln > 0)
+                {
+                    prevLayer = model.Layers[ln - 1];
+                }
+
                 model.Layers[ln].VisualId = layers[ln].Id;
 
                 var neurons = layers[ln].GetNeuronsControls();
+
                 for (int nn = 0; nn < neurons.Count; ++nn)
                 {
                     var neuronModel = model.Layers[ln].Neurons[nn];
@@ -274,6 +282,22 @@ namespace Qualia.Controls
                         if (!InitializeMode.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Activation = initValue;
+                        }
+                    }
+                    
+                    if (!isCopy && prevLayer != null && prevLayer.Height > 0)
+                    {
+                        neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayer.Height);
+
+                        var prevNeuron = prevLayer.Neurons[0];
+                        while (prevNeuron != null)
+                        {
+                            if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuron.IsBias))
+                            {
+                                neuronModel.ForwardHelper.Add(new ForwardNeuron(prevNeuron, prevNeuron.WeightTo(neuronModel)));
+                            }
+
+                            prevNeuron = prevNeuron.Next;
                         }
                     }
                 }

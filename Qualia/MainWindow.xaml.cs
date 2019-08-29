@@ -370,7 +370,7 @@ namespace Qualia
                             model.Statistics.AverageCost = (model.Statistics.AverageCost * (model.Statistics.Rounds - 1) + cost) / model.Statistics.Rounds;
                         }
 
-                         model.BackPropagation();
+                        model.BackPropagation();
 
                         model = model.Next;
                     }

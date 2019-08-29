@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Qualia;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,23 +11,67 @@ using System.Windows.Media;
 
 namespace Tools
 {
+    unsafe public static class UnsafeTools
+    {
+        public static IntPtr AddressOf<T>(ref T t)
+        {
+            TypedReference tr = __makeref(t);
+            return *(IntPtr*)&tr;
+        }
+    }
+    public unsafe struct Pointer<T>
+    {
+        private void* m_value;
+
+        public Pointer(void* v)
+        {
+            m_value = v;
+        }
+
+        public T Value
+        {
+            get => Unsafe.Read<T>(m_value);
+            set => Unsafe.Write(m_value, value);
+        }
+
+        public static implicit operator Pointer<T>(void* v)
+        {
+            return new Pointer<T>(v);
+        }
+
+        public static implicit operator Pointer<T>(IntPtr p)
+        {
+            return new Pointer<T>(p.ToPointer());
+        }
+    }
+
     public unsafe class Ref : ListNode<Ref>
     {
-        readonly double* V;
-
-        public double Value
-        {
-            get => *V;
-            set => *V = value;
-        }
+        readonly Pointer<double> Ptr;
         
         public Ref(ref double val)
         {
-            fixed (double* p = &val)
-            {
-                V = p;
-            }
+            Ptr = UnsafeTools.AddressOf(ref val);
         }
+
+        public double Value
+        {
+            get => Ptr.Value;
+        }
+    }
+
+    public class ForwardNeuron : ListNode<ForwardNeuron>
+    {
+        readonly NeuronDataModel Neuron;
+        readonly WeightDataModel Weight;
+
+        public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
+        {
+            Neuron = neuron;
+            Weight = weight;
+        }
+
+        public double AxW => Neuron.Activation * Weight.Weight;
     }
 
     public static class Extension

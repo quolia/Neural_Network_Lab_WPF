@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Tools;
@@ -13,7 +14,7 @@ namespace Qualia
         public int Id;
         public long VisualId;
 
-        public double Activation;
+        unsafe public double Activation = 0;
         public double Error;
 
         public bool IsBias;
@@ -30,6 +31,8 @@ namespace Qualia
 
         public ListX<WeightDataModel> Weights;
 
+        public ListX<ForwardNeuron> ForwardHelper;
+
         public NeuronDataModel(int id, int weightsCount)
         {
             Weights = new ListX<WeightDataModel>(weightsCount);
@@ -39,19 +42,21 @@ namespace Qualia
 
         public double AxW(NeuronDataModel neuron) => Activation * WeightTo(neuron).Weight;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WeightDataModel WeightTo(NeuronDataModel neuron) => Weights[neuron.Id];
     }
 
     public class WeightDataModel : ListNode<WeightDataModel>
     {
         public int Id;
-        public double Weight;
+        public double Weight = 0;
 
         public WeightDataModel(int id)
         {
             Id = id;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(double w) => Weight += w;
     }
 }

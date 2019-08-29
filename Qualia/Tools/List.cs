@@ -59,7 +59,7 @@ namespace Tools
         }
     }
 
-    public class ListNode<T>
+    unsafe public class ListNode<T>
     {
         public T Next;
         public T Previous;
