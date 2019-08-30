@@ -14,4 +14,4 @@ PointsArrangeSnap:10
 SkipRoundsToDrawStatistics:10000
 OnlyWeights:1
 OnlyChangedWeights:1
-HighlightChangedWeights:1
+HighlightChangedWeights:0

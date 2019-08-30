@@ -96,7 +96,7 @@ namespace Qualia.Controls
                             }
 
                             double fraction = Math.Min(1, Math.Abs((prevWeight - weight.Weight) / prevWeight));
-                            if (fraction <= 1D / 300D)
+                            if (fraction <= 0.001)
                             {
                                 isWeightChanged = false;
                             }

@@ -308,15 +308,19 @@ namespace Qualia
             }
         }
 
-        private void RunNetwork()
+        unsafe private void RunNetwork()
         {
             SetProcessorAffinity(Processor.Proc1);
             SetThreadPriority(ThreadPriorityLevel.Highest);
 
             Round = 0;
             StartTime = DateTime.UtcNow;
+
             var speedTime = DateTime.UtcNow;
             bool IsErrorMatrixRendering = false;
+
+            double averageRoundsPerSecond = 0;
+            double maxRoundsPerSecond = 0;
 
             var sw = new Stopwatch();
 
@@ -442,7 +446,7 @@ namespace Qualia
                         var lockTicks = sw.Elapsed.Ticks;
                         sw.Reset();
 
-                        var lastStats = DrawStatistics(statistics, learningRate, speedTime, lockTicks);
+                        var lastStats = DrawStatistics(statistics, learningRate, speedTime, lockTicks, ref averageRoundsPerSecond, ref maxRoundsPerSecond);
                         if (selectedModel != null)
                         {
                             selectedModel.LastStatistics = lastStats;
@@ -485,7 +489,7 @@ namespace Qualia
             CtlPlotPresenter.Draw(models, NetworksManager.SelectedNetworkModel);
         }
 
-        private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate, DateTime speedTime, long lockTicks)
+        private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate, DateTime speedTime, long lockTicks, ref double averageRoundsPerSecond, ref double maxRoundsPerSecond)
         {
             if (statistics == null)
             {
@@ -534,10 +538,29 @@ namespace Qualia
                 }
 
                 stat.Add("Average cost", Converter.DoubleToText(statistics.AverageCost, "N6"));
-                stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N4") + " %");
+                stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N6") + " %");
                 stat.Add("Learning rate", Converter.DoubleToText(learningRate));
                 stat.Add("Rounds", Round.ToString());
-                stat.Add("Rounds/sec", ((int)((double)Settings.SkipRoundsToDrawStatistics / DateTime.UtcNow.Subtract(speedTime).TotalSeconds)).ToString());
+                
+                double roundsPerSec = Settings.SkipRoundsToDrawStatistics / DateTime.UtcNow.Subtract(speedTime).TotalSeconds;
+                int batch = (int)(statistics.Rounds / Settings.SkipRoundsToDrawStatistics);
+
+                if (batch == 1)
+                {
+                    averageRoundsPerSecond = roundsPerSec;
+                }
+                else
+                {
+                    averageRoundsPerSecond = (averageRoundsPerSecond * (batch - 1) + roundsPerSec) / batch;
+                }
+
+                if (roundsPerSec > maxRoundsPerSecond)
+                {
+                    maxRoundsPerSecond = roundsPerSec;
+                }
+
+                stat.Add("Avg rounds/sec", ((int)averageRoundsPerSecond).ToString());
+                stat.Add("Max rounds/sec", ((int)maxRoundsPerSecond).ToString());
 
                 stat.Add(string.Empty, string.Empty);
                 stat.Add("Render time, mcs", string.Empty);

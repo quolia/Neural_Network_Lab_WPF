@@ -145,7 +145,7 @@ namespace Qualia
         }
         
 
-        public void FeedForward()
+        unsafe public void FeedForward()
         {
             var layer = Layers[0];
             while (layer != Layers.Last())
@@ -168,7 +168,66 @@ namespace Qualia
                 layer = layer.Next;
             }
         }
-        public void BackPropagation()
+
+        unsafe public void BackPropagation2()
+        {
+            var neuron = Layers.Last().Neurons[0];
+            while (neuron != null)
+            {
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron = neuron.Next;
+            }
+
+            var layer = Layers.Last();
+            var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
+            while (layer != finalLayer)
+            {
+                var neuronPrev = layer.Previous.Neurons[0];
+                while (neuronPrev != null)
+                {
+                    neuronPrev.Error = 0;
+                    neuronPrev = neuronPrev.Next;
+                }
+
+                neuron = layer.Neurons[0];
+                while (neuron != null)
+                {
+                    var AxW = neuron.ForwardHelper[0];
+                    while (AxW != null)
+                    {
+                        AxW.AddError(neuron.Error);
+                        AxW = AxW.Next;
+                    }
+
+                    neuron = neuron.Next;
+                }
+
+                layer = layer.Previous;
+            }
+
+            // update weights
+
+            layer = Layers.Last();
+            while (layer != finalLayer)
+            {
+                neuron = layer.Neurons[0];
+                while (neuron != null)
+                {
+                    var AxW = neuron.ForwardHelper[0];
+                    while (AxW != null)
+                    {
+                        AxW.UpdateWeights(neuron.Error, LearningRate);
+                        AxW = AxW.Next;
+                    }
+
+                    neuron = neuron.Next;
+                }
+
+                layer = layer.Previous;
+            }
+        }
+
+        unsafe public void BackPropagation()
         {
             var neuron = Layers.Last().Neurons[0];
             while (neuron != null)
@@ -201,17 +260,6 @@ namespace Qualia
                             neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
                         }
 
-                        /*
-                        neuronPrev.Error +=
-
-                            neuronPrev.IsBias
-                            ?
-                                neuron.IsBiasConnected
-                                ? (neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA))
-                                : 0 // neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-
-                            : neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
-                        */
                         neuron = neuron.Next;
                     }
 
@@ -224,7 +272,6 @@ namespace Qualia
             // update weights
 
             layer = Layers.Last();
-            finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
             while (layer != finalLayer)
             {
                 var neuronPrev = layer.Previous.Neurons[0];

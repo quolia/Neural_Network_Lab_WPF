@@ -141,7 +141,7 @@ namespace Qualia.Controls
 
         private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
         {     
-            var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data[0].Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N4") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
+            var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data[0].Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N6") + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
