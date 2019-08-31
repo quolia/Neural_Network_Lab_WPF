@@ -171,14 +171,15 @@ namespace Qualia
 
         unsafe public void BackPropagation2()
         {
-            var neuron = Layers.Last().Neurons[0];
+            var lastLayer = Layers.Last();
+            var neuron = lastLayer.Neurons[0];
             while (neuron != null)
             {
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
 
-            var layer = Layers.Last();
+            var layer = lastLayer;
             var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
             while (layer != finalLayer)
             {
@@ -209,7 +210,7 @@ namespace Qualia
 
             // update weights
 
-            layer = Layers.Last();
+            layer = lastLayer;
             while (layer != finalLayer)
             {
                 neuron = layer.Neurons[0];
@@ -243,14 +244,15 @@ namespace Qualia
 
         unsafe public void BackPropagation()
         {
-            var neuron = Layers.Last().Neurons[0];
+            var lastLayer = Layers.Last();
+            var neuron = lastLayer.Neurons[0];
             while (neuron != null)
             {
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
 
-            var layer = Layers.Last();
+            var layer = lastLayer;
             var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
             while (layer != finalLayer)
             {
@@ -285,7 +287,7 @@ namespace Qualia
 
             // update weights
 
-            layer = Layers.Last();
+            layer = lastLayer;
             while (layer != finalLayer)
             {
                 var neuronPrev = layer.Previous.Neurons[0];

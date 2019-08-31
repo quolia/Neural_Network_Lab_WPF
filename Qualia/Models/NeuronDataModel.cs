@@ -14,7 +14,7 @@ namespace Qualia
         public int Id;
         public long VisualId;
 
-        unsafe public double Activation = 0;
+        public double Activation;
         public double Error;
 
         public bool IsBias;
@@ -49,7 +49,7 @@ namespace Qualia
     public class WeightDataModel : ListNode<WeightDataModel>
     {
         public int Id;
-        public double Weight = 0;
+        public double Weight;
 
         public WeightDataModel(int id)
         {

@@ -84,7 +84,7 @@ namespace Qualia.Controls
             var penBlack = Tools.Draw.GetPen(Colors.Black);
             var penLightGray = Tools.Draw.GetPen(Colors.LightGray);
 
-            double step = ((double)ActualWidth - AxisOffset) / 10;
+            double step = (ActualWidth - AxisOffset) / 10;
             double y = ActualHeight - AxisOffset - AxisOffset / 2;
             double x = 0;
             for (x = 0; x < 11; ++x)
@@ -93,7 +93,7 @@ namespace Qualia.Controls
                 CtlBase.DrawLine(penBlack, Points.Get((float)(AxisOffset + step * x), (float)y), Points.Get((float)(AxisOffset + step * x), (float)(y + AxisOffset)));
             }
 
-            step = ((double)ActualHeight - AxisOffset) / 10;
+            step = (ActualHeight - AxisOffset) / 10;
             x = AxisOffset / 2;
             for (y = 0; y < 11; ++y)
             {
@@ -202,7 +202,7 @@ namespace Qualia.Controls
 
         private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
         {
-            int vanishArea = 16;
+            const int vanishArea = 14;
 
             while (true)
             {
@@ -213,14 +213,14 @@ namespace Qualia.Controls
 
                 var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
 
-                for (int i = 0; i < data.Count * 0.8; ++i)
+                for (int i = 0; i < data.Count - 10; ++i)
                 {
                     var ticks = data.Last().Item2 - data[0].Item2;
                     var p0 = func(data, data[i], ticks);
                     var p1 = func(data, data[i + 1], ticks);
                     var p2 = func(data, data[i + 2], ticks);
 
-                    if (Math.Abs(Angle(p0, p1) - Angle(p1, p2)) < Math.PI / 90D)
+                    if (Math.Abs(Angle(p0, p1) - Angle(p1, p2)) < Math.PI / 720D) // 90
                     {
                         pointsToRemove.Add(data[i + 1]);
                     }
@@ -246,7 +246,6 @@ namespace Qualia.Controls
                 {
                     return;
                 }
-
 
                 pointsToRemove.ForEach(p =>
                 {
