@@ -182,13 +182,14 @@ namespace Qualia
             var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
             while (layer != finalLayer)
             {
+                /*
                 var neuronPrev = layer.Previous.Neurons[0];
                 while (neuronPrev != null)
                 {
                     neuronPrev.Error = 0;
                     neuronPrev = neuronPrev.Next;
                 }
-
+                */
                 neuron = layer.Neurons[0];
                 while (neuron != null)
                 {
@@ -220,6 +221,7 @@ namespace Qualia
                         AxW = AxW.Next;
                     }
 
+                    neuron.Error = 0;
                     neuron = neuron.Next;
                 }
 

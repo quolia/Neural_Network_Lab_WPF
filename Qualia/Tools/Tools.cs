@@ -252,7 +252,7 @@ namespace Tools
         public long Rounds;
         public long CorrectRounds;
         public double Percent => Rounds == 0 ? 0 : 100 * (double)CorrectRounds / (double)Rounds;
-        public double AverageCost;
+        public double CostSum;
 
         public string LastBadOutput;
         public double LastBadOutputActivation;
@@ -268,7 +268,7 @@ namespace Tools
         {
             Rounds = 0;
             CorrectRounds = 0;
-            AverageCost = 1;
+            CostSum = 0;
 
             LastBadOutput = null;
             LastBadOutputActivation = 0;

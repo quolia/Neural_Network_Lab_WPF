@@ -340,6 +340,14 @@ namespace Qualia
 
             var sw = new Stopwatch();
 
+            // Experiment. Activate CPU
+            for (long i = 0; i < 100000000; ++i)
+            {
+                var r = Rand.Flat.Next((int)(i % int.MaxValue));
+                var s = r * r;
+            }
+            //
+
             while (!CancellationToken.IsCancellationRequested)
             {
                 lock (ApplyChangesLocker)
@@ -383,6 +391,9 @@ namespace Qualia
 
                             ++model.Statistics.Rounds;
 
+                            model.Statistics.CostSum += cost;
+
+                            /*
                             if (model.Statistics.Rounds == 1)
                             {
                                 model.Statistics.AverageCost = cost;
@@ -391,7 +402,7 @@ namespace Qualia
                             {
                                 model.Statistics.AverageCost = (model.Statistics.AverageCost * (model.Statistics.Rounds - 1) + cost) / model.Statistics.Rounds;
                             }
-
+                            */
                             model.BackPropagation();
 
                             model = model.Next;
@@ -400,13 +411,14 @@ namespace Qualia
                         ++Round;
                     }
 
-                    for (int i = 1; i < forLimit.Count; ++i)
-                    {
-                        forLimit[i].Current -= currentForLimit.Current;
-                    }
-                    currentForLimit.Current = currentForLimit.Original;
                     if (forLimit.Count > 1)
                     {
+                        for (int i = 1; i < forLimit.Count; ++i)
+                        {
+                            forLimit[i].Current -= currentForLimit.Current;
+                        }
+                        currentForLimit.Current = currentForLimit.Original;
+
                         forLimit.RemoveAll(fl => fl.Current == 0);
                         forLimit = forLimit.OrderBy(fl => fl.Current).ToList();
                         currentForLimit = forLimit[0];
@@ -516,7 +528,7 @@ namespace Qualia
 
         private void DrawPlotter(List<NetworkDataModel> models)
         {
-            models.ForEach(m => m.DynamicStatistics.Add(m.Statistics.Percent, m.Statistics.AverageCost));
+            models.ForEach(m => m.DynamicStatistics.Add(m.Statistics.Percent, m.Statistics.CostSum / m.Statistics.Rounds));
             CtlPlotPresenter.Draw(models, NetworksManager.SelectedNetworkModel);
         }
 
@@ -568,7 +580,7 @@ namespace Qualia
                     stat.Add("Last bad cost", "none");
                 }
 
-                stat.Add("Average cost", Converter.DoubleToText(statistics.AverageCost, "N6"));
+                stat.Add("Average cost", Converter.DoubleToText(statistics.CostSum / statistics.Rounds, "N6"));
                 stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N6") + " %");
                 stat.Add("Learning rate", Converter.DoubleToText(learningRate));
                 stat.Add("Rounds", Round.ToString());
