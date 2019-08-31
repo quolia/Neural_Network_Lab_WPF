@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Runtime;
 using Tools;
 using static Tools.Threads;
 
@@ -292,6 +293,10 @@ namespace Qualia
 
                 DrawNetwork(NetworksManager.SelectedNetworkModel, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
 
+                GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+                GC.Collect();
+                GC.WaitForFullGCComplete();
+
                 RunNetworkThread = new Thread(new ThreadStart(RunNetwork))
                 {
                     Name = "RunNetwork",
@@ -313,6 +318,15 @@ namespace Qualia
             SetProcessorAffinity(Processor.Proc1);
             SetThreadPriority(ThreadPriorityLevel.Highest);
 
+            var forLimit = new List<ForLimit>
+            {
+                new ForLimit(Settings.SkipRoundsToDrawErrorMatrix),
+                new ForLimit(Settings.SkipRoundsToDrawNetworks),
+                new ForLimit(Settings.SkipRoundsToDrawStatistics)
+            };
+
+            forLimit = forLimit.OrderBy(fl => fl.Current).ToList();
+
             Round = 0;
             StartTime = DateTime.UtcNow;
 
@@ -322,64 +336,81 @@ namespace Qualia
             double averageRoundsPerSecond = 0;
             double maxRoundsPerSecond = 0;
 
+            var currentForLimit = forLimit[0];
+
             var sw = new Stopwatch();
 
             while (!CancellationToken.IsCancellationRequested)
             {
                 lock (ApplyChangesLocker)
-                { 
-                    NetworksManager.PrepareModelsForRound();
-                    CtlInputDataPresenter.SetInputStat(NetworksManager.Models[0]);
-
-                    var model = NetworksManager.Models[0];
-                    while (model != null)
+                {
+                    for (int i = 0; i < currentForLimit.Current; ++i)
                     {
-                        if (!model.IsEnabled)
+                        NetworksManager.PrepareModelsForRound();
+                        CtlInputDataPresenter.SetInputStat(NetworksManager.Models[0]);
+
+                        var model = NetworksManager.Models[0];
+                        while (model != null)
                         {
-                            continue;
+                            if (!model.IsEnabled)
+                            {
+                                continue;
+                            }
+
+                            model.FeedForward();
+
+                            var output = model.GetMaxActivatedOutputNeuron();
+                            var input = model.TargetOutput;
+                            var cost = model.CostFunction.Do(model);
+                            if (input == output.Id)
+                            {
+                                ++model.Statistics.CorrectRounds;
+
+                                model.Statistics.LastGoodInput = model.Classes[input];
+                                model.Statistics.LastGoodOutput = model.Classes[output.Id];
+                                model.Statistics.LastGoodOutputActivation = output.Activation;
+                                model.Statistics.LastGoodCost = cost;
+                            }
+                            else
+                            {
+                                model.Statistics.LastBadInput = model.Classes[input];
+                                model.Statistics.LastBadOutput = model.Classes[output.Id];
+                                model.Statistics.LastBadOutputActivation = output.Activation;
+                                model.Statistics.LastBadCost = cost;
+                            }
+
+                            model.ErrorMatrix.AddData(input, output.Id);
+
+                            ++model.Statistics.Rounds;
+
+                            if (model.Statistics.Rounds == 1)
+                            {
+                                model.Statistics.AverageCost = cost;
+                            }
+                            else
+                            {
+                                model.Statistics.AverageCost = (model.Statistics.AverageCost * (model.Statistics.Rounds - 1) + cost) / model.Statistics.Rounds;
+                            }
+
+                            model.BackPropagation();
+
+                            model = model.Next;
                         }
 
-                        model.FeedForward();
-
-                        var output = model.GetMaxActivatedOutputNeuron();
-                        var input = model.TargetOutput;
-                        var cost = model.CostFunction.Do(model);
-                        if (input == output.Id)
-                        {
-                            ++model.Statistics.CorrectRounds;
-
-                            model.Statistics.LastGoodInput = model.Classes[input];
-                            model.Statistics.LastGoodOutput = model.Classes[output.Id];
-                            model.Statistics.LastGoodOutputActivation = output.Activation;
-                            model.Statistics.LastGoodCost = cost;
-                        }
-                        else
-                        {
-                            model.Statistics.LastBadInput = model.Classes[input];
-                            model.Statistics.LastBadOutput = model.Classes[output.Id];
-                            model.Statistics.LastBadOutputActivation = output.Activation;
-                            model.Statistics.LastBadCost = cost;
-                        }
-
-                        model.ErrorMatrix.AddData(input, output.Id);
-
-                        ++model.Statistics.Rounds;
-
-                        if (model.Statistics.Rounds == 1)
-                        {
-                            model.Statistics.AverageCost = cost;
-                        }
-                        else
-                        {
-                            model.Statistics.AverageCost = (model.Statistics.AverageCost * (model.Statistics.Rounds - 1) + cost) / model.Statistics.Rounds;
-                        }
-
-                        model.BackPropagation();
-
-                        model = model.Next;
+                        ++Round;
                     }
 
-                    ++Round;
+                    for (int i = 1; i < forLimit.Count; ++i)
+                    {
+                        forLimit[i].Current -= currentForLimit.Current;
+                    }
+                    currentForLimit.Current = currentForLimit.Original;
+                    if (forLimit.Count > 1)
+                    {
+                        forLimit.RemoveAll(fl => fl.Current == 0);
+                        forLimit = forLimit.OrderBy(fl => fl.Current).ToList();
+                        currentForLimit = forLimit[0];
+                    }
                 }
 
                 if (!IsErrorMatrixRendering && Round % Settings.SkipRoundsToDrawErrorMatrix == 0)

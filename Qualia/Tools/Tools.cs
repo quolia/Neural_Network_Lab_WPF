@@ -11,6 +11,17 @@ using System.Windows.Media;
 
 namespace Tools
 {
+    public class ForLimit
+    {
+        public int Current;
+        public int Original;
+
+        public ForLimit(int limit)
+        {
+            Current = limit;
+            Original = limit;
+        }
+    }
     unsafe public static class UnsafeTools
     {
         public static IntPtr AddressOf<T>(ref T t)
