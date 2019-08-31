@@ -196,7 +196,8 @@ namespace Qualia
                     var AxW = neuron.ForwardHelper[0];
                     while (AxW != null)
                     {
-                        AxW.AddError(neuron.Error);
+                        var prevNeuron = AxW.Neuron;
+                        prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
                         AxW = AxW.Next;
                     }
 
@@ -217,7 +218,18 @@ namespace Qualia
                     var AxW = neuron.ForwardHelper[0];
                     while (AxW != null)
                     {
-                        AxW.UpdateWeights(neuron.Error, LearningRate);
+                        if (AxW.Neuron.Activation == 1)
+                        {
+                            AxW.Weight.Weight += neuron.Error * LearningRate;
+                        }
+                        else if (AxW.Neuron.Activation == 0)
+                        {
+                            // nothing
+                        }
+                        else
+                        {
+                            AxW.Weight.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
+                        }
                         AxW = AxW.Next;
                     }
 

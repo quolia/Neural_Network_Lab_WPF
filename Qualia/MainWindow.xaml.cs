@@ -341,11 +341,13 @@ namespace Qualia
             var sw = new Stopwatch();
 
             // Experiment. Activate CPU
+            /*
             for (long i = 0; i < 100000000; ++i)
             {
                 var r = Rand.Flat.Next((int)(i % int.MaxValue));
                 var s = r * r;
             }
+            */
             //
 
             while (!CancellationToken.IsCancellationRequested)
@@ -368,26 +370,27 @@ namespace Qualia
                             model.FeedForward();
 
                             var output = model.GetMaxActivatedOutputNeuron();
+                            var outputId = output.Id;
                             var input = model.TargetOutput;
                             var cost = model.CostFunction.Do(model);
-                            if (input == output.Id)
+                            if (input == outputId)
                             {
                                 ++model.Statistics.CorrectRounds;
 
                                 model.Statistics.LastGoodInput = model.Classes[input];
-                                model.Statistics.LastGoodOutput = model.Classes[output.Id];
+                                model.Statistics.LastGoodOutput = model.Classes[outputId];
                                 model.Statistics.LastGoodOutputActivation = output.Activation;
                                 model.Statistics.LastGoodCost = cost;
                             }
                             else
                             {
                                 model.Statistics.LastBadInput = model.Classes[input];
-                                model.Statistics.LastBadOutput = model.Classes[output.Id];
+                                model.Statistics.LastBadOutput = model.Classes[outputId];
                                 model.Statistics.LastBadOutputActivation = output.Activation;
                                 model.Statistics.LastBadCost = cost;
                             }
 
-                            model.ErrorMatrix.AddData(input, output.Id);
+                            model.ErrorMatrix.AddData(input, outputId);
 
                             ++model.Statistics.Rounds;
 

@@ -73,8 +73,8 @@ namespace Tools
 
     public class ForwardNeuron : ListNode<ForwardNeuron>
     {
-        readonly NeuronDataModel Neuron;
-        readonly WeightDataModel Weight;
+        public readonly NeuronDataModel Neuron;
+        public readonly WeightDataModel Weight;
 
         public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
         {
@@ -83,27 +83,6 @@ namespace Tools
         }
 
         public double AxW => Neuron.Activation * Weight.Weight;
-
-        public void AddError(double error)
-        {
-            Neuron.Error += error * Weight.Weight * Neuron.ActivationFunction.Derivative(Neuron.Activation, Neuron.ActivationFuncParamA);
-        }
-
-        public void UpdateWeights(double error, double learningRate)
-        {
-            if (Neuron.Activation == 1)
-            {
-                Weight.Weight += error * learningRate;
-            }
-            else if (Neuron.Activation == 0)
-            {
-                // nothing
-            }
-            else
-            {
-                Weight.Weight += error * Neuron.Activation * learningRate;
-            }
-        }
     }
 
     public static class Extension
