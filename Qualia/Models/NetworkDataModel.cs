@@ -169,7 +169,7 @@ namespace Qualia
             }
         }
 
-        unsafe public void BackPropagation2()
+        unsafe public void BackPropagation()
         {
             var lastLayer = Layers.Last();
             var neuron = lastLayer.Neurons[0];
@@ -183,14 +183,6 @@ namespace Qualia
             var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
             while (layer != finalLayer)
             {
-                /*
-                var neuronPrev = layer.Previous.Neurons[0];
-                while (neuronPrev != null)
-                {
-                    neuronPrev.Error = 0;
-                    neuronPrev = neuronPrev.Next;
-                }
-                */
                 neuron = layer.Neurons[0];
                 while (neuron != null)
                 {
@@ -242,7 +234,7 @@ namespace Qualia
             }
         }
 
-        unsafe public void BackPropagation()
+        unsafe public void BackPropagation2()
         {
             var lastLayer = Layers.Last();
             var neuron = lastLayer.Neurons[0];
