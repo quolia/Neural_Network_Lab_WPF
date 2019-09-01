@@ -336,13 +336,13 @@ namespace Qualia
 
             var currentForLimit = forLimit[0];
 
-            var swCurrentSpeed = new Stopwatch();
+            var swPureSpeed = new Stopwatch();
 
             while (!CancellationToken.IsCancellationRequested)
             { 
                 lock (ApplyChangesLocker)
                 {
-                    swCurrentSpeed.Start();
+                    swPureSpeed.Start();
                     for (int i = 0; i < currentForLimit.Current; ++i)
                     {
                         NetworksManager.PrepareModelsForRound();
@@ -388,13 +388,13 @@ namespace Qualia
                             model = model.Next;
                         }
                     }
-                    swCurrentSpeed.Stop();
+                    swPureSpeed.Stop();
 
                     Round += currentForLimit.Current;
                                        
                     if (Round % Settings.SkipRoundsToDrawStatistics == 0)
                     {
-                        var currentElapsedSeconds = swCurrentSpeed.Elapsed.Duration().TotalSeconds;
+                        var pureSpeedElapsedSeconds = swPureSpeed.Elapsed.Duration().TotalSeconds;
 
                         var m = NetworksManager.Models[0];
                         while (m != null)
@@ -402,7 +402,7 @@ namespace Qualia
                             m.Statistics.Rounds = Round;
                             m.Statistics.CostSumTotal += m.Statistics.CostSum;
 
-                            m.Statistics.PureRoundsPerSecond = Round / currentElapsedSeconds;
+                            m.Statistics.PureRoundsPerSecond = Round / pureSpeedElapsedSeconds;
 
                             var percent = 100 * (double)m.Statistics.CorrectRounds / Settings.SkipRoundsToDrawStatistics;
                             var percentTotal = 100 * (double)m.Statistics.CorrectRoundsTotal / Round;
@@ -436,72 +436,81 @@ namespace Qualia
 
                 }
 
-                if (!IsErrorMatrixRendering && Round % Settings.SkipRoundsToDrawErrorMatrix == 0)
+                var matrixNeeded = !IsErrorMatrixRendering && Round % Settings.SkipRoundsToDrawErrorMatrix == 0;
+                var networkNeeded = !IsNetworkRendering && Round % Settings.SkipRoundsToDrawNetworks == 0;
+                var statisticsNeeded = !IsStatisticsRendering && Round % Settings.SkipRoundsToDrawStatistics == 0;
+                var anyNeeded = matrixNeeded || networkNeeded || statisticsNeeded;
+
+                if (anyNeeded)
                 {
-                    IsErrorMatrixRendering = true;
+                    if (matrixNeeded)
+                    {
+                        IsErrorMatrixRendering = true;
+                    }
+
+                    if (networkNeeded)
+                    {
+                        IsNetworkRendering = true;
+                    }
+
+                    if (statisticsNeeded)
+                    {
+                        IsStatisticsRendering = true;
+                    }
 
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        ErrorMatrix errorMatrix;
-
-                        lock (ApplyChangesLocker)
+                        if (matrixNeeded)
                         {
-                            errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
-                            NetworksManager.ResetErrorMatrix();
+                            ErrorMatrix errorMatrix;
+
+                            lock (ApplyChangesLocker)
+                            {
+                                errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
+                                NetworksManager.ResetErrorMatrix();
+                            }
+
+                            CtlMatrixPresenter.Draw(errorMatrix);
+                            IsErrorMatrixRendering = false;
                         }
 
-                        CtlMatrixPresenter.Draw(errorMatrix);
-                        IsErrorMatrixRendering = false;
-
-                    }), System.Windows.Threading.DispatcherPriority.Send);
-                }
-
-                if (!IsNetworkRendering && Round % Settings.SkipRoundsToDrawNetworks == 0)
-                {
-                    IsNetworkRendering = true;
-
-                    Dispatcher.BeginInvoke((Action)(() =>
-                    {
-                        NetworkDataModel modelCopy;
-
-                        lock (ApplyChangesLocker)
+                        if (networkNeeded)
                         {
-                            modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
+                            NetworkDataModel modelCopy;
+
+                            lock (ApplyChangesLocker)
+                            {
+                                modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
+                            }
+
+                            DrawNetwork(modelCopy, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
+
+                            IsNetworkRendering = false;
                         }
 
-                        DrawNetwork(modelCopy, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
-
-                        IsNetworkRendering = false;
-
-                    }), System.Windows.Threading.DispatcherPriority.Send);
-                }
-
-                if (!IsStatisticsRendering && Round % Settings.SkipRoundsToDrawStatistics == 0)
-                {
-                    IsStatisticsRendering = true;
-                    
-                    Dispatcher.BeginInvoke((Action)(() =>
-                    {
-                        NetworkDataModel selectedModel;
-                        Statistics statistics;
-                        double learningRate;
-
-                        lock (ApplyChangesLocker)
+                        if (statisticsNeeded)
                         {
-                            CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
+                            NetworkDataModel selectedModel;
+                            Statistics statistics;
+                            double learningRate;
 
-                            selectedModel = NetworksManager.SelectedNetworkModel;
-                            statistics = selectedModel?.Statistics.Copy();
-                            learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
-                        }
+                            lock (ApplyChangesLocker)
+                            {
+                                CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
 
-                        var lastStats = DrawStatistics(statistics, learningRate);
-                        if (selectedModel != null)
-                        {
-                            selectedModel.LastStatistics = lastStats;
+                                selectedModel = NetworksManager.SelectedNetworkModel;
+                                statistics = selectedModel?.Statistics.Copy();
+                                learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
+                            }
+
+                            var lastStats = DrawStatistics(statistics, learningRate);
+                            if (selectedModel != null)
+                            {
+                                selectedModel.LastStatistics = lastStats;
+                            }
+
+                            IsStatisticsRendering = false;
                         }
-      
-                        IsStatisticsRendering = false;
 
                     }), System.Windows.Threading.DispatcherPriority.Send);
                 }
