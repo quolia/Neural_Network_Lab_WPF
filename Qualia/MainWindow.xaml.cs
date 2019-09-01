@@ -25,7 +25,7 @@ namespace Qualia
 
         NetworksManager NetworksManager;
 
-        DateTime StartTime;
+        Stopwatch StartTime;
         long Round;
 
         public Main()
@@ -297,6 +297,9 @@ namespace Qualia
                 GC.Collect();
                 GC.WaitForFullGCComplete();
 
+                Round = 0;
+                StartTime = Stopwatch.StartNew();
+
                 RunNetworkThread = new Thread(new ThreadStart(RunNetwork))
                 {
                     Name = "RunNetwork",
@@ -327,22 +330,19 @@ namespace Qualia
 
             forLimit = forLimit.OrderBy(fl => fl.Current).ToList();
 
-            Round = 0;
-            StartTime = DateTime.UtcNow;
-
-            var speedTime = DateTime.UtcNow;
             bool IsErrorMatrixRendering = false;
             bool IsNetworkRendering = false;
             bool IsStatisticsRendering = false;
 
             var currentForLimit = forLimit[0];
 
-            var swLockLost = new Stopwatch();
+            var swCurrentSpeed = new Stopwatch();
 
             while (!CancellationToken.IsCancellationRequested)
-            {
+            { 
                 lock (ApplyChangesLocker)
                 {
+                    swCurrentSpeed.Start();
                     for (int i = 0; i < currentForLimit.Current; ++i)
                     {
                         NetworksManager.PrepareModelsForRound();
@@ -364,6 +364,7 @@ namespace Qualia
                             var cost = model.CostFunction.Do(model);
                             if (input == outputId)
                             {
+                                ++model.Statistics.CorrectRoundsTotal;
                                 ++model.Statistics.CorrectRounds;
 
                                 model.Statistics.LastGoodInput = model.Classes[input];
@@ -379,18 +380,45 @@ namespace Qualia
                                 model.Statistics.LastBadCost = cost;
                             }
 
-                            model.ErrorMatrix.AddData(input, outputId);
-
-                            ++model.Statistics.Rounds;
-                            ++model.Statistics.StatRound;
                             model.Statistics.CostSum += cost;
+                            model.ErrorMatrix.AddData(input, outputId);                          
 
                             model.BackPropagation();
 
                             model = model.Next;
                         }
+                    }
+                    swCurrentSpeed.Stop();
 
-                        ++Round;
+                    Round += currentForLimit.Current;
+                                       
+                    if (Round % Settings.SkipRoundsToDrawStatistics == 0)
+                    {
+                        var currentElapsedSeconds = swCurrentSpeed.Elapsed.Duration().TotalSeconds;
+
+                        var m = NetworksManager.Models[0];
+                        while (m != null)
+                        {
+                            m.Statistics.Rounds = Round;
+                            m.Statistics.CostSumTotal += m.Statistics.CostSum;
+
+                            m.Statistics.PureRoundsPerSecond = Round / currentElapsedSeconds;
+
+                            var percent = 100 * (double)m.Statistics.CorrectRounds / Settings.SkipRoundsToDrawStatistics;
+                            var percentTotal = 100 * (double)m.Statistics.CorrectRoundsTotal / Round;
+                            m.Statistics.Percent = (percent + percentTotal) / 2;
+
+                            var costAvg = m.Statistics.CostSum / Settings.SkipRoundsToDrawStatistics;
+                            var costAvgTotal = m.Statistics.CostSumTotal / Round;
+                            m.Statistics.CostAvg = (costAvg + costAvgTotal) / 2;
+
+                            m.DynamicStatistics.Add(m.Statistics.Percent, m.Statistics.CostAvg);
+
+                            m.Statistics.CostSum = 0;
+                            m.Statistics.CorrectRounds = 0;
+                            
+                            m = m.Next;
+                        }
                     }
 
                     if (forLimit.Count > 1)
@@ -405,6 +433,7 @@ namespace Qualia
                         forLimit = forLimit.OrderBy(fl => fl.Current).ToList();
                         currentForLimit = forLimit[0];
                     }
+
                 }
 
                 if (!IsErrorMatrixRendering && Round % Settings.SkipRoundsToDrawErrorMatrix == 0)
@@ -415,13 +444,12 @@ namespace Qualia
                     {
                         ErrorMatrix errorMatrix;
 
-                        swLockLost.Start();
                         lock (ApplyChangesLocker)
                         {
                             errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
                             NetworksManager.ResetErrorMatrix();
                         }
-                        swLockLost.Stop();
+
                         CtlMatrixPresenter.Draw(errorMatrix);
                         IsErrorMatrixRendering = false;
 
@@ -436,12 +464,11 @@ namespace Qualia
                     {
                         NetworkDataModel modelCopy;
 
-                        swLockLost.Start();
                         lock (ApplyChangesLocker)
                         {
                             modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
                         }
-                        swLockLost.Stop();
+
                         DrawNetwork(modelCopy, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
 
                         IsNetworkRendering = false;
@@ -452,57 +479,23 @@ namespace Qualia
                 if (!IsStatisticsRendering && Round % Settings.SkipRoundsToDrawStatistics == 0)
                 {
                     IsStatisticsRendering = true;
-                    double roundsPerSec = Settings.SkipRoundsToDrawStatistics / DateTime.UtcNow.Subtract(speedTime).TotalSeconds;
-
+                    
                     Dispatcher.BeginInvoke((Action)(() =>
                     {
                         NetworkDataModel selectedModel;
                         Statistics statistics;
                         double learningRate;
 
-                        swLockLost.Start();
                         lock (ApplyChangesLocker)
                         {
-                            NetworksManager.Models.ForEach(m =>
-                            {
-                                ++m.Statistics.StatCount;
-
-                                m.Statistics.Percent = 100 * (double)m.Statistics.CorrectRounds / m.Statistics.StatRound;
-                                m.Statistics.CostAvg = m.Statistics.CostSum / m.Statistics.StatRound;
-                                m.DynamicStatistics.Add(m.Statistics.Percent, m.Statistics.CostAvg);
-
-                                if (m.Statistics.StatCount == 1)
-                                {
-                                    m.Statistics.AverageRoundsPerSecond = roundsPerSec;
-                                }
-                                else
-                                {
-                                    m.Statistics.AverageRoundsPerSecond = (m.Statistics.AverageRoundsPerSecond * (m.Statistics.StatCount - 1) + roundsPerSec) / m.Statistics.StatCount;
-                                }
-
-                                if (roundsPerSec > m.Statistics.MaxRoundsPerSecond)
-                                {
-                                    m.Statistics.MaxRoundsPerSecond = roundsPerSec;
-                                }
-
-                                m.Statistics.CostSum = 0;
-                                m.Statistics.StatRound = 0;
-                                m.Statistics.CorrectRounds = 0;
-                            });
-
                             CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
 
                             selectedModel = NetworksManager.SelectedNetworkModel;
                             statistics = selectedModel?.Statistics.Copy();
                             learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
-
-                            speedTime = DateTime.UtcNow;
                         }
-                        swLockLost.Stop();
-                        var lockTicks = swLockLost.Elapsed.Ticks;
-                        swLockLost.Reset();
 
-                        var lastStats = DrawStatistics(statistics, learningRate, lockTicks);
+                        var lastStats = DrawStatistics(statistics, learningRate);
                         if (selectedModel != null)
                         {
                             selectedModel.LastStatistics = lastStats;
@@ -513,20 +506,23 @@ namespace Qualia
                     }), System.Windows.Threading.DispatcherPriority.Send);
                 }
             }
+
+            StartTime.Stop();
         }
 
         private void RunTimer()
         {
             SetProcessorAffinity(Processor.Proc0);
 
-            DateTime prevTime = DateTime.UtcNow;
+            var prevTime = StartTime.Elapsed.Duration();
 
             while (!CancellationToken.IsCancellationRequested)
             {
-                if ((long)DateTime.UtcNow.Subtract(prevTime).TotalSeconds >= 1)
+                var now = StartTime.Elapsed.Duration();
+                if (now.Subtract(prevTime).TotalSeconds >= 1)
                 {
-                    prevTime = DateTime.UtcNow;
-                    Dispatcher.BeginInvoke((Action)(() => CtlTime.Content = "Time: " + DateTime.UtcNow.Subtract(StartTime).ToString(@"hh\:mm\:ss")));
+                    prevTime = now;
+                    Dispatcher.BeginInvoke((Action)(() => CtlTime.Content = "Time: " + StartTime.Elapsed.Duration().ToString(@"hh\:mm\:ss")));
                 }
 
                 Thread.Sleep(100);
@@ -539,7 +535,7 @@ namespace Qualia
             CtlInputDataPresenter.SetInputDataAndDraw(model);
         }
 
-        private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate, long lockTicks)
+        private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate)
         {
             if (statistics == null)
             {
@@ -551,13 +547,13 @@ namespace Qualia
                 var sw = Stopwatch.StartNew();
 
                 var stat = new Dictionary<string, string>(20);
-                var span = DateTime.UtcNow.Subtract(StartTime);
-                stat.Add("Time", new DateTime(span.Ticks).ToString(@"HH\:mm\:ss"));
+                var span = StartTime.Elapsed.Duration(); 
+                stat.Add("Time", span.ToString(@"hh\:mm\:ss"));
 
                 if (statistics.Percent > 0)
                 {
-                    var remains = new DateTime((long)(span.Ticks * 100 / statistics.Percent) - span.Ticks);
-                    stat.Add("Time remaining", new DateTime(remains.Ticks).ToString(@"HH\:mm\:ss"));
+                    var linerRemains = (long)((double)span.Ticks * 100 / statistics.Percent) - span.Ticks;
+                    stat.Add("Time remaining", TimeSpan.FromTicks(linerRemains).ToString(@"hh\:mm\:ss"));
                 }
                 else
                 {
@@ -590,10 +586,11 @@ namespace Qualia
                 stat.Add("Average cost", Converter.DoubleToText(statistics.CostAvg, "N6"));
                 stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N6") + " %");
                 stat.Add("Learning rate", Converter.DoubleToText(learningRate));
-                stat.Add("Rounds", Round.ToString());
+                stat.Add("Rounds", statistics.Rounds.ToString());
 
-                stat.Add("Avg rounds/sec", ((int)statistics.AverageRoundsPerSecond).ToString());
-                stat.Add("Max rounds/sec", ((int)statistics.MaxRoundsPerSecond).ToString());
+                double totalRoundsPerSec = statistics.Rounds / StartTime.Elapsed.Duration().TotalSeconds; //DateTime.UtcNow.Subtract(StartTime).TotalSeconds;
+                stat.Add("Total rounds/sec", ((int)totalRoundsPerSec).ToString());
+                stat.Add("Total pure rounds/sec", ((int)statistics.PureRoundsPerSecond).ToString());
 
                 stat.Add(string.Empty, string.Empty);
                 stat.Add("Render time, mcs", string.Empty);
@@ -602,8 +599,8 @@ namespace Qualia
                 stat.Add("Plotter", ((int)TimeSpan.FromTicks(RenderTime.Plotter).TotalMicroseconds()).ToString());
                 stat.Add("Statistics", ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
                 stat.Add("Data", ((int)TimeSpan.FromTicks(RenderTime.Data).TotalMicroseconds()).ToString());
-                var lostRounds = (int)(statistics.AverageRoundsPerSecond * lockTicks / TimeSpan.FromSeconds(1).Ticks);
-                stat.Add("Rounds lost", lostRounds.ToString());
+                var lostRounds = (int)(statistics.PureRoundsPerSecond - totalRoundsPerSec);
+                stat.Add("Lost rounds/sec on render", lostRounds.ToString());
 
                 CtlStatisticsPresenter.Draw(stat);
 

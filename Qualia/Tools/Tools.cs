@@ -229,14 +229,14 @@ namespace Tools
     public class Statistics
     {
         public long Rounds;
+        public long CorrectRoundsTotal;
         public long CorrectRounds;
         public double Percent;
         public double CostSum;
+        public double CostSumTotal;
         public double CostAvg;
-        public int StatRound;
-        public int StatCount;
-        public double AverageRoundsPerSecond;
-        public double MaxRoundsPerSecond;
+
+        public double PureRoundsPerSecond;
 
         public string LastBadOutput;
         public double LastBadOutputActivation;
@@ -247,29 +247,6 @@ namespace Tools
         public double LastGoodOutputActivation;
         public string LastGoodInput;
         public double LastGoodCost;
-
-        public Statistics()
-        {
-            Rounds = 0;
-            CorrectRounds = 0;
-            Percent = 0;
-            CostSum = 0;
-            CostAvg = 0;
-            StatRound = 0;
-            StatCount = 0;
-            AverageRoundsPerSecond = 0;
-            MaxRoundsPerSecond = 0;
-
-            LastBadOutput = null;
-            LastBadOutputActivation = 0;
-            LastBadInput = null;
-            LastBadCost = 0;
-
-            LastGoodOutput = null;
-            LastGoodOutputActivation = 0;
-            LastGoodInput = null;
-            LastGoodCost = 0;
-        }
 
         public Statistics Copy()
         {
@@ -435,7 +412,7 @@ namespace Tools
         static char[] _0 = new[] { '0' };
         static char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
 
-        public static string DoubleToText(double? d, string format = "F20")
+        public static string DoubleToText(double? d, string format = "F20", bool trim = true)
         {
             if (!d.HasValue)
             {
@@ -444,7 +421,7 @@ namespace Tools
             else
             {
                 var result = d.Value.ToString(format, Culture.Current);
-                if (result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
+                if (trim && result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
                 {
                     result = result.TrimEnd(_0).TrimEnd(_S);
                 }

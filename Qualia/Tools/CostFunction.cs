@@ -30,12 +30,11 @@ namespace Tools
                     neuron = neuron.Next;
                 }
                 return s;
-                //return model.Layers.Last().Neurons.Sum(n => Math.Pow(model.TargetValues[n.Id] - n.Activation, 2));
             }
 
             public double Derivative(NetworkDataModel model, NeuronDataModel neuron)
             {
-                return (model.TargetValues[neuron.Id] - neuron.Activation);// / model.Layers.Last().Neurons.Count;
+                return model.TargetValues[neuron.Id] - neuron.Activation;
             }
         }
 
