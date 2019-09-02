@@ -39,6 +39,8 @@ namespace Qualia
 
         public NetworkDataModel Copy { private get; set; }
 
+        //public AutoResetEvent ExternalAction = new AutoResetEvent(false);
+
         public NetworkDataModel(long visualId, int[] layersSize)
         {
             VisualId = visualId;

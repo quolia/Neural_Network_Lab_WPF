@@ -300,12 +300,12 @@ namespace Qualia
                 Round = 0;
                 StartTime = Stopwatch.StartNew();
 
-                RunNetworkThread = new Thread(new ThreadStart(RunNetwork))
+                RunNetworkThread = new Thread(new ParameterizedThreadStart(RunNetwork))
                 {
                     Name = "RunNetwork",
                     Priority = ThreadPriority.Highest
                 };
-                RunNetworkThread.Start();
+                RunNetworkThread.Start(new object[] { Processor.Proc1 } );
 
                 TimeThread = new Thread(new ThreadStart(RunTimer))
                 {
@@ -316,9 +316,12 @@ namespace Qualia
             }
         }
 
-        unsafe private void RunNetwork()
+        unsafe private void RunNetwork(object args)
         {
-            SetProcessorAffinity(Processor.Proc1);
+            var arr = (object[])args;
+            var processor = (Processor)arr[0];
+
+            SetProcessorAffinity(processor);
             SetThreadPriority(ThreadPriorityLevel.Highest);
 
             var forLimit = new List<ForLimit>
