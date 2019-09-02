@@ -284,9 +284,7 @@ namespace Tools
     public static class RenderTime
     {
         public static long Network;
-        public static long Plotter;
         public static long Statistics;
-        public static long Data;
         public static long ErrorMatrix;
     }
 

@@ -106,8 +106,6 @@ namespace Qualia.Controls
                 return;
             }
 
-            var sw = Stopwatch.StartNew();
-
             if (IsClassesChanged(matrix.Classes))
             {
                 InitClassesFmtText(matrix.Classes);
@@ -169,13 +167,10 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
-
-            sw.Stop();
-            RenderTime.ErrorMatrix = sw.Elapsed.Ticks;
         }
     }
 
-    public class ErrorMatrix
+    public class ErrorMatrix : ListNode<ErrorMatrix>
     {
         public long[] Input;
         public long[] Output;

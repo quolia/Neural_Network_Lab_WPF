@@ -286,7 +286,11 @@ namespace Qualia.Controls
 
         public void ResetErrorMatrix()
         {
-            Models.ForEach(m => m.ErrorMatrix = new ErrorMatrix(m.Classes));
+            Models.ForEach(m =>
+            {
+                m.ErrorMatrix.ClearData();
+                m.ErrorMatrix.Next.ClearData();
+            });
         }
     }
 }

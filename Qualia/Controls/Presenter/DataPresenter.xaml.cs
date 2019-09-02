@@ -125,8 +125,6 @@ namespace Qualia.Controls
 
         private void Rearrange(int pointsCount)
         {
-            var sw = Stopwatch.StartNew();
-
             CtlPresenter.Clear();
 
             if (pointsCount == Const.CurrentValue)
@@ -171,9 +169,6 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
-
-            sw.Stop();
-            RenderTime.Data = sw.Elapsed.Ticks;
         }
 
         private Tuple<int, int> GetPointPosition(int pointNumber)

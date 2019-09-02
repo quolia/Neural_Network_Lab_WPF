@@ -337,6 +337,7 @@ namespace Qualia
             var currentForLimit = forLimit[0];
 
             var swPureSpeed = new Stopwatch();
+            var swLock = new Stopwatch();
 
             while (!CancellationToken.IsCancellationRequested)
             { 
@@ -466,11 +467,17 @@ namespace Qualia
 
                             lock (ApplyChangesLocker)
                             {
+                                swLock.Restart();
+
                                 errorMatrix = NetworksManager.SelectedNetworkModel.ErrorMatrix;
-                                NetworksManager.ResetErrorMatrix();
+                                NetworksManager.SelectedNetworkModel.ErrorMatrix = errorMatrix.Next;
+
+                                swLock.Stop();
+                                RenderTime.ErrorMatrix = swLock.Elapsed.Ticks;
                             }
 
                             CtlMatrixPresenter.Draw(errorMatrix);
+                            errorMatrix.ClearData();
                             IsErrorMatrixRendering = false;
                         }
 
@@ -480,7 +487,12 @@ namespace Qualia
 
                             lock (ApplyChangesLocker)
                             {
-                                modelCopy = NetworksManager.SelectedNetworkModel.GetCopy();
+                                swLock.Restart();
+
+                                modelCopy = NetworksManager.SelectedNetworkModel.GetCopyForRender();
+
+                                swLock.Stop();
+                                RenderTime.Network = swLock.Elapsed.Ticks;
                             }
 
                             DrawNetwork(modelCopy, CtlOnlyWeights.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn);
@@ -496,11 +508,16 @@ namespace Qualia
 
                             lock (ApplyChangesLocker)
                             {
+                                swLock.Restart();
+
                                 CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
 
                                 selectedModel = NetworksManager.SelectedNetworkModel;
                                 statistics = selectedModel?.Statistics.Copy();
                                 learningRate = selectedModel == null ? 0 : selectedModel.LearningRate;
+
+                                swLock.Stop();
+                                RenderTime.Statistics = swLock.Elapsed.Ticks;
                             }
 
                             var lastStats = DrawStatistics(statistics, learningRate);
@@ -553,8 +570,6 @@ namespace Qualia
             }
             else
             {
-                var sw = Stopwatch.StartNew();
-
                 var stat = new Dictionary<string, string>(20);
                 var span = StartTime.Elapsed.Duration(); 
                 stat.Add("Time", span.ToString(@"hh\:mm\:ss"));
@@ -562,7 +577,7 @@ namespace Qualia
                 if (statistics.Percent > 0)
                 {
                     var linerRemains = (long)((double)span.Ticks * 100 / statistics.Percent) - span.Ticks;
-                    stat.Add("Time remaining", TimeSpan.FromTicks(linerRemains).ToString(@"hh\:mm\:ss"));
+                    stat.Add("Leaner time remaining", TimeSpan.FromTicks(linerRemains).ToString(@"hh\:mm\:ss"));
                 }
                 else
                 {
@@ -602,19 +617,17 @@ namespace Qualia
                 stat.Add("Total pure rounds/sec", ((int)statistics.PureRoundsPerSecond).ToString());
 
                 stat.Add(string.Empty, string.Empty);
-                stat.Add("Render time, mcs", string.Empty);
+                stat.Add("Render lock time, mcs", string.Empty);
                 stat.Add("Network", ((int)TimeSpan.FromTicks(RenderTime.Network).TotalMicroseconds()).ToString());
                 stat.Add("Error matrix", ((int)TimeSpan.FromTicks(RenderTime.ErrorMatrix).TotalMicroseconds()).ToString());
-                stat.Add("Plotter", ((int)TimeSpan.FromTicks(RenderTime.Plotter).TotalMicroseconds()).ToString());
+                //stat.Add("Plotter", ((int)TimeSpan.FromTicks(RenderTime.Plotter).TotalMicroseconds()).ToString());
                 stat.Add("Statistics", ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
-                stat.Add("Data", ((int)TimeSpan.FromTicks(RenderTime.Data).TotalMicroseconds()).ToString());
+                //stat.Add("Data", ((int)TimeSpan.FromTicks(RenderTime.Data).TotalMicroseconds()).ToString());
                 var lostRounds = (int)(statistics.PureRoundsPerSecond - totalRoundsPerSec);
-                stat.Add("Lost rounds/sec on render", lostRounds.ToString());
+                stat.Add("Lost rounds/sec on misc code", lostRounds.ToString());
 
                 CtlStatisticsPresenter.Draw(stat);
 
-                sw.Stop();
-                RenderTime.Statistics = sw.Elapsed.Ticks;
                 return stat;
             }
         }

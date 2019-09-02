@@ -354,7 +354,7 @@ namespace Qualia
             return newModel;
         }
 
-        public NetworkDataModel GetCopy()
+        public NetworkDataModel GetCopyForRender()
         {
             var layer = Layers[0];
             var layer2 = Copy.Layers[0];

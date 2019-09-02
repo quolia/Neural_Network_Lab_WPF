@@ -42,8 +42,6 @@ namespace Qualia.Controls
 
         public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
-            var sw = Stopwatch.StartNew();
-
             if (IsBaseRedrawNeeded)
             {
                 DrawPlotter();
@@ -72,9 +70,6 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
-
-            sw.Stop();
-            RenderTime.Plotter = sw.Elapsed.Ticks;
         }
 
         private void DrawPlotter()
@@ -142,7 +137,7 @@ namespace Qualia.Controls
         private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
         {     
             var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data[0].Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N6", false) + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
-            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(200, Colors.White)), null, Rects.Get((ActualWidth - AxisOffset - text.Width) / 2 - 5, ActualHeight - AxisOffset - 20, text.Width + 10, text.Height));
+            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(100, Colors.White)), null, Rects.Get((ActualWidth - AxisOffset - text.Width) / 2 - 5, ActualHeight - AxisOffset - 20, text.Width + 10, text.Height));
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
@@ -224,7 +219,7 @@ namespace Qualia.Controls
                     if (Math.Abs(Angle(p0, p1) - Angle(p1, p2)) < Math.PI / 720D) // 90
                     {
                         pointsToRemove.Add(data[i + 1]);
-                        break;
+                        //break;
                     }
                     else
                     {
@@ -233,7 +228,8 @@ namespace Qualia.Controls
                             //Math.Abs(p1.X - p2.X) < vanishArea && Math.Abs(p1.Y - p2.Y) < vanishArea)
                         {
                             pointsToRemove.Add(data[i + 1]);
-                            break;
+                            //break;
+                            i += 2;
                         }
                         else
                         {/*

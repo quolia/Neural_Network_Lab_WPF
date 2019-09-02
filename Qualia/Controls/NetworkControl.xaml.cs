@@ -211,9 +211,18 @@ namespace Qualia.Controls
 
         public NetworkDataModel CreateNetworkDataModel(INetworkTask task, bool isCopy)
         {
+            ErrorMatrix em1 = null;
+            if (task != null)
+            {
+                em1 = new ErrorMatrix(task.GetClasses());
+                var em2 = new ErrorMatrix(task.GetClasses());
+                em1.Next = em2;
+                em2.Next = em1;
+            }
+
             var model = new NetworkDataModel(Id, GetLayersSize())
             {
-                ErrorMatrix = task == null ? null : new ErrorMatrix(task.GetClasses()),
+                ErrorMatrix = em1,
                 Classes = task?.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),

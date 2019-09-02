@@ -52,9 +52,11 @@ namespace Tools
             {
                 n--;
                 int k = Rand.Flat.Next(n + 1);
-                T value = this[k];
-                this[k] = this[n];
-                this[n] = value;
+                //T value = this[k];
+                //this[k] = this[n];
+                //this[n] = value;
+
+                (this[k], this[n]) = (this[n], this[k]);
             }
         }
     }

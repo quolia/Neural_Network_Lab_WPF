@@ -185,8 +185,6 @@ namespace Qualia.Controls
                 return;
             }
 
-            var sw = Stopwatch.StartNew();
-
             CtlPresenter.Clear();
 
             lock (Main.ApplyChangesLocker)
@@ -207,9 +205,6 @@ namespace Qualia.Controls
             }
 
             CtlPresenter.Update();
-
-            sw.Stop();
-            RenderTime.Network = sw.Elapsed.Ticks;
         }
 
         public void RenderStanding(NetworkDataModel model)
