@@ -45,13 +45,15 @@ namespace Qualia.Controls
             if (IsBaseRedrawNeeded)
             {
                 DrawPlotter();
-                IsBaseRedrawNeeded = true;
+                IsBaseRedrawNeeded = false;
             }
 
             CtlPresenter.Clear();
 
-            foreach (var model in models)
-            {
+            var model = models[0];
+
+            while (model != null)
+            { 
                 if (!model.IsEnabled)
                 {
                     continue;
@@ -62,6 +64,8 @@ namespace Qualia.Controls
 
                 DrawData(model.DynamicStatistics.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
                 DrawData(model.DynamicStatistics.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
+
+                model = model.Next;
             }
 
             if (selectedModel != null && selectedModel.DynamicStatistics.PercentData.Count > 0)
@@ -108,29 +112,33 @@ namespace Qualia.Controls
             }
 
             var pen = Tools.Draw.GetPen(color);
-            var brush = Tools.Draw.GetBrush(color);
             
-            var f = data[0];
-            var l = data.Last();
+            var firstData = data[0];
+            var lastData = data.Last();
 
-            var ticks = l.Item2 - f.Item2;
+            var ticks = lastData.Item2 - firstData.Item2;
 
-            var prev = f;
-            foreach (var p in data)
+            Point prevPoint = new Point(-1000, -1000);
+            var prevData = firstData;
+            foreach (var d in data)
             {
-                var pp = func(data, p, ticks);
-                CtlPresenter.DrawLine(pen, func(data, prev, ticks), pp);
-
-                if (isRect)
+                var point = func(data, d, ticks);
+                if ((point.X - prevPoint.X) > 10 || Math.Abs(point.Y - prevPoint.Y) > 10 || d == lastData) // opt
                 {
-                    CtlPresenter.DrawRectangle(brush, pen, Rects.Get(pp.X - 6 / 2, pp.Y - 6 / 2, 6, 6));
-                }
-                else
-                {
-                    CtlPresenter.DrawEllipse(brush, pen, Points.Get(pp.X, pp.Y), 7 / 2, 7 / 2);
-                }
+                    CtlPresenter.DrawLine(pen, func(data, prevData, ticks), point);
 
-                prev = p;
+                    if (isRect)
+                    {
+                        CtlPresenter.DrawRectangle(pen.Brush, pen, Rects.Get(point.X - 6 / 2, point.Y - 6 / 2, 6, 6));
+                    }
+                    else
+                    {
+                        CtlPresenter.DrawEllipse(pen.Brush, pen, Points.Get(point.X, point.Y), 7 / 2, 7 / 2);
+                    }
+
+                    prevData = d;
+                    prevPoint = point;
+                }
             }
         }
 
@@ -199,17 +207,18 @@ namespace Qualia.Controls
         private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
         {
             const int vanishArea = 14;
+            const int minPointsCount = 10;
 
             while (true)
             {
-                if (data.Count <= 10)
+                if (data.Count <= minPointsCount)
                 {
                     return;
                 }
 
                 var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
 
-                for (int i = 0; i < data.Count - 10; ++i)
+                for (int i = 0; i < data.Count - minPointsCount/*minPointsCount*/; ++i)
                 {
                     var ticks = data.Last().Item2 - data[0].Item2;
                     var p0 = func(data, data[i], ticks);
@@ -220,6 +229,10 @@ namespace Qualia.Controls
                     {
                         pointsToRemove.Add(data[i + 1]);
                         //break;
+                        if (data.Count - pointsToRemove.Count < minPointsCount)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -229,6 +242,11 @@ namespace Qualia.Controls
                         {
                             pointsToRemove.Add(data[i + 1]);
                             //break;
+                            if (data.Count - pointsToRemove.Count < minPointsCount)
+                            {
+                                break;
+                            }
+
                             i += 2;
                         }
                         else
@@ -247,7 +265,7 @@ namespace Qualia.Controls
                 {
                     return;
                 }
-
+                /*
                 pointsToRemove.ForEach(p =>
                 {
                     if (data.Count > 10)
@@ -259,6 +277,8 @@ namespace Qualia.Controls
                         return;
                     }
                 });
+                */
+                pointsToRemove.ForEach(p => data.Remove(p));
             }
         }
 

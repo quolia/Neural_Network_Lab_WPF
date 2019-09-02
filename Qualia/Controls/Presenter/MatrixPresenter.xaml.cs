@@ -71,13 +71,12 @@ namespace Qualia.Controls
 
             int size = 9;
             long axisOffset = 12;
-
-            var penSilver = Tools.Draw.GetPen(Colors.Silver);
+ 
             for (int y = 0; y < matrix.Output.Length; ++y)
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    CtlBase.DrawRectangle(null, penSilver, Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
+                    CtlBase.DrawRectangle(null, PenSilver, Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
                 }
             }
 
@@ -182,9 +181,11 @@ namespace Qualia.Controls
         {
             Classes = classes;
 
-            Input = new long[Classes.Count];
-            Output = new long[Classes.Count];
-            Matrix = new long[Classes.Count, Classes.Count];
+            var c = Classes.Count;
+
+            Input = new long[c];
+            Output = new long[c];
+            Matrix = new long[c, c];
         }
 
         public long Count { get; private set; }
