@@ -240,32 +240,41 @@ namespace Qualia.Controls
         public void PrepareModelsForRound()
         {
             Task.Do(Models[0]);
-    
-            // copy first layer state to other networks
 
-            foreach (var model in Models)
+            // copy first layer state and last layer targets to other networks
+
+            var model = Models.Count > 1 ? Models[1] : null;          
+
+            while (model != null)
             {
-                var neuronFirstModel = Models[0].Layers[0].Neurons[0];
+                var neuronFirstModelFirstLayer = Models[0].Layers[0].Neurons[0];
+                var neuron = model.Layers[0].Neurons[0];
 
-                if (model != Models[0])
+                while (neuron != null)
                 {
-                    var neuron = model.Layers[0].Neurons[0];
-
-                    while (neuron != null)
+                    if (!neuron.IsBias)
                     {
-                        if (!neuron.IsBias)
-                        {
-                            neuron.Activation = neuronFirstModel.Activation;
-                        }
-
-                        neuron = neuron.Next;
-                        neuronFirstModel = neuronFirstModel.Next;
+                        neuron.Activation = neuronFirstModelFirstLayer.Activation;
                     }
 
-                    Array.Copy(Models[0].TargetValues, model.TargetValues, model.TargetValues.Length);
-
-                    model.TargetOutput = Models[0].TargetOutput;
+                    neuron = neuron.Next;
+                    neuronFirstModelFirstLayer = neuronFirstModelFirstLayer.Next;
                 }
+
+                var neuronFirstModelLastLayer = Models[0].Layers.Last().Neurons[0];
+                neuron = model.Layers.Last().Neurons[0];
+
+                while (neuron != null)
+                {
+                    neuron.Target = neuronFirstModelLastLayer.Target;
+
+                    neuron = neuron.Next;
+                    neuronFirstModelLastLayer = neuronFirstModelLastLayer.Next;
+                }
+
+                model.TargetOutput = Models[0].TargetOutput;
+
+                model = model.Next;
             }
         }
 

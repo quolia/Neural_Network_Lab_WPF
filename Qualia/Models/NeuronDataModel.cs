@@ -31,6 +31,8 @@ namespace Qualia
 
         public ListX<WeightDataModel> Weights;
 
+        public double Target;
+
         public ListX<ForwardNeuron> ForwardHelper;
 
         public NeuronDataModel(int id, int weightsCount)

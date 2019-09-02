@@ -361,6 +361,7 @@ namespace Qualia
                             }
 
                             model.FeedForward();
+                            model.BackPropagation();
 
                             var output = model.GetMaxActivatedOutputNeuron();
                             var outputId = output.Id;
@@ -386,8 +387,6 @@ namespace Qualia
 
                             model.Statistics.CostSum += cost;
                             model.ErrorMatrix.AddData(input, outputId);                          
-
-                            model.BackPropagation();
 
                             model = model.Next;
                         }

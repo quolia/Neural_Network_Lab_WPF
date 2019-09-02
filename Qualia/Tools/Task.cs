@@ -83,7 +83,7 @@ namespace Tools
             {
                 if (IsGaussianDistribution)
                 {
-                    var shuffled = model.Layers[0].ShuffledNeurons; //.Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
+                    var shuffled = model.Layers[0].ShuffledNeurons;
                     shuffled.Shuffle();
 
                     double median = ((double)MinNumber + MaxNumber) / 2;
@@ -103,17 +103,18 @@ namespace Tools
                         shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
                     }
 
-                    for (int i = 0; i < model.TargetValues.Length; ++i)
+                    var neuron = model.Layers.Last().Neurons[0];
+                    while (neuron != null)
                     {
-                        model.TargetValues[i] = (i == number - MinNumber) ? 1 : 0;
+                        neuron.Target = (neuron.Id == number - MinNumber) ? 1 : 0;
+                        neuron = neuron.Next;
                     }
 
                     model.TargetOutput = number - MinNumber;
                 }
                 else
                 {
-                    //var shuffled = model.Layers[0].Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
-                    var shuffled = model.Layers[0].ShuffledNeurons; //.Neurons.Where(n => !n.IsBias).OrderBy(n => Rand.Flat.Next()).ToList();
+                    var shuffled = model.Layers[0].ShuffledNeurons;
                     shuffled.Shuffle();
 
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
@@ -123,9 +124,11 @@ namespace Tools
                         shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
                     }
 
-                    for (int i = 0; i < model.TargetValues.Length; ++i)
+                    var neuron = model.Layers.Last().Neurons[0];
+                    while (neuron != null)
                     {
-                        model.TargetValues[i] = (i == number - MinNumber) ? 1 : 0;
+                        neuron.Target = (neuron.Id == number - MinNumber) ? 1 : 0;
+                        neuron = neuron.Next;
                     }
 
                     model.TargetOutput = number - MinNumber;

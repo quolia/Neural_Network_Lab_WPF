@@ -26,7 +26,7 @@ namespace Tools
                 var neuron = model.Layers.Last().Neurons[0];
                 while (neuron != null)
                 {
-                    s += Math.Pow(model.TargetValues[neuron.Id] - neuron.Activation, 2);
+                    s += Math.Pow(neuron.Target - neuron.Activation, 2);
                     neuron = neuron.Next;
                 }
                 return s;
@@ -34,7 +34,7 @@ namespace Tools
 
             public double Derivative(NetworkDataModel model, NeuronDataModel neuron)
             {
-                return model.TargetValues[neuron.Id] - neuron.Activation;
+                return neuron.Target - neuron.Activation;
             }
         }
 

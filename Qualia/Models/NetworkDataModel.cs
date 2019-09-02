@@ -1,12 +1,5 @@
-﻿using ILGPU;
-using ILGPU.Runtime;
-using Qualia.Controls;
-using System;
+﻿using Qualia.Controls;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using Tools;
 
@@ -16,7 +9,6 @@ namespace Qualia
     {
         public long VisualId;
         public ListX<LayerDataModel> Layers;
-        public double[] TargetValues;
         public int TargetOutput;
         public List<string> Classes;
 
@@ -39,15 +31,11 @@ namespace Qualia
 
         public NetworkDataModel Copy { private get; set; }
 
-        //public AutoResetEvent ExternalAction = new AutoResetEvent(false);
-
         public NetworkDataModel(long visualId, int[] layersSize)
         {
             VisualId = visualId;
             Layers = new ListX<LayerDataModel>(layersSize.Length);
             Range.For(layersSize.Length, n => CreateLayer(layersSize[n], n < layersSize.Length - 1 ? layersSize[n + 1] : 0));
-
-            TargetValues = new double[Layers.Last().Height];
         }
 
         public void CreateLayer(int neuronCount, int weightsCount)
@@ -145,7 +133,6 @@ namespace Qualia
                 layer = layer.Next;
             }
         }
-        
 
         unsafe public void FeedForward()
         {
