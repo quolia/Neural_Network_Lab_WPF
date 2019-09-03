@@ -40,7 +40,27 @@ namespace Qualia.Controls
             IsBaseRedrawNeeded = true;
         }
 
-        public void Draw(List<NetworkDataModel> models, NetworkDataModel selectedModel)
+        public void Vanish(ListX<NetworkDataModel> models)
+        {
+            var model = models[0];
+
+            while (model != null)
+            {
+                if (!model.IsEnabled)
+                {
+                    continue;
+                }
+
+                Vanish(model.DynamicStatistics.PercentData, GetPointPercentData);
+                Vanish(model.DynamicStatistics.CostData, GetPointCostData);
+
+                model.DynamicStatistics.CopyForRender = new DynamicStatistics(model.DynamicStatistics);
+
+                model = model.Next;
+            }
+        }
+
+        public void Draw(ListX<NetworkDataModel> models, NetworkDataModel selectedModel)
         {
             if (IsBaseRedrawNeeded)
             {
@@ -59,11 +79,11 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                Vanish(model.DynamicStatistics.PercentData, GetPointPercentData);
-                Vanish(model.DynamicStatistics.CostData, GetPointCostData);
+                //Vanish(model.DynamicStatistics.PercentData, GetPointPercentData);
+                //Vanish(model.DynamicStatistics.CostData, GetPointCostData);
 
-                DrawData(model.DynamicStatistics.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
-                DrawData(model.DynamicStatistics.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
+                DrawData(model.DynamicStatistics.CopyForRender.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
+                DrawData(model.DynamicStatistics.CopyForRender.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
 
                 model = model.Next;
             }
@@ -145,7 +165,7 @@ namespace Qualia.Controls
         private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
         {     
             var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data[0].Item2).ToString(@"hh\:mm\:ss") + " / " + Converter.DoubleToText(data.Last().Item1, "N6", false) + " %", Culture.Current, FlowDirection.LeftToRight, Font, 10, Tools.Draw.GetBrush(color), Render.PixelsPerDip);
-            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(100, Colors.White)), null, Rects.Get((ActualWidth - AxisOffset - text.Width) / 2 - 5, ActualHeight - AxisOffset - 20, text.Width + 10, text.Height));
+            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, Colors.White)), null, Rects.Get((ActualWidth - AxisOffset - text.Width) / 2 - 5, ActualHeight - AxisOffset - 20, text.Width + 10, text.Height));
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - AxisOffset - text.Width) / 2, ActualHeight - AxisOffset - 20));
         }
 
@@ -233,6 +253,8 @@ namespace Qualia.Controls
                         {
                             break;
                         }
+
+                        i += 2;
                     }
                     else
                     {
@@ -285,6 +307,11 @@ namespace Qualia.Controls
         private double Angle(Point p1, Point p2)
         {
             return Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
+        }
+
+        public void Clear()
+        {
+            Draw(null, null);
         }
     }
 }

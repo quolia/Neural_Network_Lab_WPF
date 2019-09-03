@@ -342,6 +342,9 @@ namespace Qualia
             var swPureSpeed = new Stopwatch();
             var swLock = new Stopwatch();
 
+            double k1 = 0.5;
+            double k2 = 0.5;
+
             while (!CancellationToken.IsCancellationRequested)
             { 
                 lock (ApplyChangesLocker)
@@ -361,8 +364,7 @@ namespace Qualia
                             }
 
                             model.FeedForward();
-                            model.BackPropagation();
-
+                            
                             var output = model.GetMaxActivatedOutputNeuron();
                             var outputId = output.Id;
                             var input = model.TargetOutput;
@@ -383,10 +385,13 @@ namespace Qualia
                                 model.Statistics.LastBadOutput = model.Classes[outputId];
                                 model.Statistics.LastBadOutputActivation = output.Activation;
                                 model.Statistics.LastBadCost = cost;
+                                model.Statistics.LastBadTick = StartTime.Elapsed.Duration().Ticks;
                             }
 
                             model.Statistics.CostSum += cost;
-                            model.ErrorMatrix.AddData(input, outputId);                          
+                            model.ErrorMatrix.AddData(input, outputId);
+
+                            model.BackPropagation();
 
                             model = model.Next;
                         }
@@ -398,22 +403,35 @@ namespace Qualia
                     if (Round % Settings.SkipRoundsToDrawStatistics == 0)
                     {
                         var pureSpeedElapsedSeconds = swPureSpeed.Elapsed.Duration().TotalSeconds;
+                        var totalTicksElapsed = StartTime.Elapsed.Duration().Ticks;
 
                         var m = NetworksManager.Models[0];
                         while (m != null)
                         {
                             m.Statistics.Rounds = Round;
+                            m.Statistics.TotalTicksElapsed = totalTicksElapsed;
                             m.Statistics.CostSumTotal += m.Statistics.CostSum;
 
                             m.Statistics.PureRoundsPerSecond = Round / pureSpeedElapsedSeconds;
 
                             var percent = 100 * (double)m.Statistics.CorrectRounds / Settings.SkipRoundsToDrawStatistics;
                             var percentTotal = 100 * (double)m.Statistics.CorrectRoundsTotal / Round;
-                            m.Statistics.Percent = (percent + percentTotal) / 2;
+                            /*
+                            k1 = (totalTicksElapsed - m.Statistics.LastBadTick) / m.Statistics.LastBadTick;
+                            if (k1 > 1)
+                            {
+                                k1 = 1;
+                            }
+
+                            k2 = 1 - k1;
+                            */
+                            k1 = 1;
+                            k2 = 0;
+                            m.Statistics.Percent = percent * k1 + percentTotal * k2;
 
                             var costAvg = m.Statistics.CostSum / Settings.SkipRoundsToDrawStatistics;
                             var costAvgTotal = m.Statistics.CostSumTotal / Round;
-                            m.Statistics.CostAvg = (costAvg + costAvgTotal) / 2;
+                            m.Statistics.CostAvg = costAvg * k1 + costAvgTotal * k2;
 
                             m.DynamicStatistics.Add(m.Statistics.Percent, m.Statistics.CostAvg);
 
@@ -512,7 +530,7 @@ namespace Qualia
                             {
                                 swLock.Restart();
 
-                                CtlPlotPresenter.Draw(NetworksManager.Models, NetworksManager.SelectedNetworkModel);
+                                CtlPlotPresenter.Vanish(NetworksManager.Models);
 
                                 selectedModel = NetworksManager.SelectedNetworkModel;
                                 statistics = selectedModel?.Statistics.Copy();
@@ -521,6 +539,8 @@ namespace Qualia
                                 swLock.Stop();
                                 RenderTime.Statistics = swLock.Elapsed.Ticks;
                             }
+
+                            CtlPlotPresenter.Draw(NetworksManager.Models, selectedModel);
 
                             var lastStats = DrawStatistics(statistics, learningRate);
                             if (selectedModel != null)
@@ -573,12 +593,11 @@ namespace Qualia
             else
             {
                 var stat = new Dictionary<string, string>(20);
-                var span = StartTime.Elapsed.Duration(); 
-                stat.Add("Time", span.ToString(@"hh\:mm\:ss"));
+                stat.Add("Time", StartTime.Elapsed.Duration().ToString(@"hh\:mm\:ss"));
 
                 if (statistics.Percent > 0)
                 {
-                    var linerRemains = (long)((double)span.Ticks * 100 / statistics.Percent) - span.Ticks;
+                    var linerRemains = (long)((double)statistics.TotalTicksElapsed * 100 / statistics.Percent) - statistics.TotalTicksElapsed;
                     stat.Add("Leaner time remaining", TimeSpan.FromTicks(linerRemains).ToString(@"hh\:mm\:ss"));
                 }
                 else
@@ -759,6 +778,10 @@ namespace Qualia
                 CtlMainMenuSaveAs.IsEnabled = true;
                 CtlMenuNetwork.IsEnabled = true;
                 CtlNetworkContextMenu.IsEnabled = true;
+
+                CtlPlotPresenter.Clear();
+                CtlStatisticsPresenter.Clear();
+                CtlMatrixPresenter.Clear();
             }
 
             OnNetworkUIChanged(Notification.ParameterChanged.Structure);
@@ -929,7 +952,7 @@ namespace Qualia
                 CtlTabs.SelectedIndex = 1;
             }
 
-            CtlMenuStart.IsEnabled = NetworksManager.SelectedNetwork != null;
+            CtlMenuStart.IsEnabled = !IsRunning && NetworksManager.SelectedNetwork != null;
         }
 
         private void CtlMenuNetwork_SubmenuOpened(object sender, RoutedEventArgs e)

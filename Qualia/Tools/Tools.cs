@@ -236,12 +236,14 @@ namespace Tools
         public double CostSumTotal;
         public double CostAvg;
 
+        public long TotalTicksElapsed;
         public double PureRoundsPerSecond;
 
         public string LastBadOutput;
         public double LastBadOutputActivation;
         public string LastBadInput;
         public double LastBadCost;
+        public double LastBadTick;
 
         public string LastGoodOutput;
         public double LastGoodOutputActivation;
@@ -256,8 +258,22 @@ namespace Tools
 
     public class DynamicStatistics
     {
-        public PlotPoints PercentData = new PlotPoints();
-        public PlotPoints CostData = new PlotPoints();
+        public DynamicStatistics CopyForRender;
+
+        public PlotPoints PercentData;
+        public PlotPoints CostData;
+
+        public DynamicStatistics()
+        {
+            PercentData = new PlotPoints();
+            CostData = new PlotPoints();
+        }
+
+        public DynamicStatistics(DynamicStatistics from)
+        {
+            PercentData = from.PercentData.Copy();
+            CostData = from.CostData.Copy();
+        }
 
         public void Add(double percent, double cost)
         {
@@ -277,7 +293,10 @@ namespace Tools
 
         public class PlotPoints : List<PlotPoint>
         {
-            //
+            public PlotPoints Copy()
+            {
+                return (PlotPoints)MemberwiseClone();
+            }
         }
     }
 

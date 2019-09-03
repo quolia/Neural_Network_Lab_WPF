@@ -312,7 +312,7 @@ namespace Qualia
                     foreach (var newNeuron in newLayer.Neurons)
                     {
                         var neuron = layer.Neurons.Find(n => n.VisualId == newNeuron.VisualId);
-                        if (neuron != null)
+                        if (neuron == null)
                         {
                             double initValue = InitializeMode.Helper.Invoke(newNeuron.WeightsInitializer, newNeuron.WeightsInitializerParamA);
                             if (InitializeMode.Helper.IsSkipValue(initValue))
@@ -326,10 +326,21 @@ namespace Qualia
                                     }
                                 }
                             }
+                        }
+                        else
+                        {
+                            foreach (var newWeight in newNeuron.Weights)
+                            {
+                                var weight = neuron.Weights.Find(w => w.Id == newWeight.Id);
+                                if (weight != null)
+                                {
+                                    newWeight.Weight = weight.Weight;
+                                }
+                            }
 
                             if (newNeuron.IsBias)
                             {
-                                initValue = InitializeMode.Helper.Invoke(newNeuron.ActivationInitializer, newNeuron.ActivationInitializerParamA);
+                                double initValue = InitializeMode.Helper.Invoke(newNeuron.ActivationInitializer, newNeuron.ActivationInitializerParamA);
                                 if (InitializeMode.Helper.IsSkipValue(initValue))
                                 {
                                     newNeuron.Activation = neuron.Activation;

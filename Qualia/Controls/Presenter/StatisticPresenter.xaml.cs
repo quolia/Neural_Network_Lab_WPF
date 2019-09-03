@@ -45,5 +45,10 @@ namespace Qualia.Controls
 
             CtlPresenter.Update();
         }
+
+        public void Clear()
+        {
+            Draw(null);
+        }
     }
 }

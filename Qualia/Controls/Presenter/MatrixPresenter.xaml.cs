@@ -167,6 +167,11 @@ namespace Qualia.Controls
 
             CtlPresenter.Update();
         }
+
+        public void Clear()
+        {
+            CtlPresenter.Clear();
+        }
     }
 
     public class ErrorMatrix : ListNode<ErrorMatrix>

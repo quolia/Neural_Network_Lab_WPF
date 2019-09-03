@@ -1,4 +1,4 @@
-NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\bin\x64\Debug\Networks\1.txt
+NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\15x15.txt
 ScreenWidth:1392
 ScreenHeight:783.2
 ScreenTop:20.8
@@ -12,6 +12,6 @@ SkipRoundsToDrawStatistic:10000
 PointSize:7
 PointsArrangeSnap:10
 SkipRoundsToDrawStatistics:10000
-OnlyWeights:0
+OnlyWeights:1
 OnlyChangedWeights:0
 HighlightChangedWeights:0
