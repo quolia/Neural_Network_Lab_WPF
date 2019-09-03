@@ -70,6 +70,11 @@ namespace Qualia.Controls
 
             CtlPresenter.Clear();
 
+            if (models == null)
+            {
+                return;
+            }
+
             var model = models[0];
 
             while (model != null)
