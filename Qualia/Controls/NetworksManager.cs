@@ -78,7 +78,6 @@ namespace Qualia.Controls
                         File.Delete(saveDialog.FileName);
                     }
 
-                    var name = Path.GetFileNameWithoutExtension(saveDialog.FileName);
                     var config = new Config(saveDialog.FileName);
                     Config.Main.Set(Const.Param.NetworksManagerName, saveDialog.FileName);
                     return config;
