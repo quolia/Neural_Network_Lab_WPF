@@ -36,7 +36,7 @@ ActivationFunc637015441500987989:LogisticSigmoid
 ActivationFuncParamA637015441500987989:
 SelectedLayerIndex637015441499727363:0
 SelectedNetworkIndex:0
-Task:CountDots
+Task:MNIST
 TaskInputCount:10
 TaskMinNumber:0
 TaskMaxNumber:10

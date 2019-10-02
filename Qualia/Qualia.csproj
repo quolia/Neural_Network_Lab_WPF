@@ -113,6 +113,7 @@
     <Compile Include="Controls\Base\QPresenter.cs" />
     <Compile Include="Controls\Base\QCheckBox.cs" />
     <Compile Include="Controls\Base\QComboBox.cs" />
+    <Compile Include="Controls\Base\QTextBox.cs" />
     <Compile Include="Controls\Base\Razor\RazorBackendCtl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -136,7 +137,11 @@
     <Compile Include="Controls\Task\CountDotsControl.xaml.cs">
       <DependentUpon>CountDotsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Task\MNISTControl.xaml.cs">
+      <DependentUpon>MNISTControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WindowResizeControl.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RandomizerViewer.xaml.cs">
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
@@ -215,6 +220,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Task\CountDotsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Task\MNISTControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

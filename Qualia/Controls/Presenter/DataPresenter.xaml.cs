@@ -25,7 +25,6 @@ namespace Qualia.Controls
             InitializeComponent();
 
             PointSize = Config.Main.GetInt(Const.Param.PointSize, 7).Value;
-            PointsRearrangeSnap = Config.Main.GetInt(Const.Param.PointsArrangeSnap, 10).Value;
 
             SizeChanged += DataPresenter_SizeChanged;
             CtlTask.SetChangeEvent(CtlTask_SelectedIndexChanged);
@@ -36,6 +35,7 @@ namespace Qualia.Controls
             if (CtlTask.SelectedItem != null)
             {
                 Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+                PointsRearrangeSnap = Task.GetPointsRearrangeSnap();
                 Task.SetChangeEvent(TaskParameterChanged);
                 CtlHolder.Children.Clear();
                 CtlHolder.Children.Add(Task.GetVisualControl());
@@ -58,6 +58,7 @@ namespace Qualia.Controls
         {  
             NetworkTask.Helper.FillComboBox(CtlTask, config, null);
             Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+            PointsRearrangeSnap = Task.GetPointsRearrangeSnap();
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(Task.GetVisualControl());
             Task.Load(config);
@@ -123,6 +124,12 @@ namespace Qualia.Controls
             Rearrange(Task.GetInputCount());
         }
 
+        private int GetSnaps()
+        {
+            int width = (int)Math.Max(ActualWidth, PointsRearrangeSnap * PointSize);
+            return Task.IsGridSnapAdjustmentAllowed() ? width / (PointsRearrangeSnap * PointSize) : 1;
+        }
+
         private void Rearrange(int pointsCount)
         {
             CtlPresenter.Clear();
@@ -135,9 +142,6 @@ namespace Qualia.Controls
             {
                 PointsCount = pointsCount;
             }
-
-            int width = (int)Math.Max(ActualWidth, PointsRearrangeSnap * PointSize);
-            int snaps = width / (PointsRearrangeSnap * PointSize);
 
             long maxStat = 0;
             if (Stat != null)
@@ -173,9 +177,7 @@ namespace Qualia.Controls
 
         private Tuple<int, int> GetPointPosition(int pointNumber)
         {
-            int width = Math.Max((int)ActualWidth, PointsRearrangeSnap * PointSize);
-
-            int snaps = width / (PointsRearrangeSnap * PointSize);
+            int snaps = GetSnaps();
             int y = (int)Math.Ceiling((double)(pointNumber / (snaps * PointsRearrangeSnap)));
             int x = pointNumber - (y * snaps * PointsRearrangeSnap);
 

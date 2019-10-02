@@ -4,7 +4,7 @@ ScreenHeight:783.2
 ScreenTop:20.8
 ScreenLeft:82.4
 OnTop:0
-DataWidth:153
+DataWidth:244
 NetworkHeight:253
 SkipRoundsToDrawErrorMatrix:1000
 SkipRoundsToDrawNetworks:10000

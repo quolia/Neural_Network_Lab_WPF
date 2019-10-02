@@ -13,14 +13,18 @@ namespace Qualia.Controls
     {
         const int NEURON_MAX_DIST = 40;
         const int HORIZONTAL_OFFSET = 10;
-        const int VERTICAL_OFFSET = 10;
+        const int TOP_OFFSET = 10;
+        const int BOTTOM_OFFSET = 25;
         const int NEURON_SIZE = 8;
         const double NEURON_RADIUS = NEURON_SIZE / 2;
         const int BIAS_SIZE = 14;
         const double BIAS_RADIUS = BIAS_SIZE / 2;
 
-        Dictionary<NeuronDataModel, Point> Coordinator = new Dictionary<NeuronDataModel, Point>();
-        Dictionary<WeightDataModel, double> WeightsData = new Dictionary<WeightDataModel, double>();
+        long ResizeTicks = DateTime.UtcNow.Ticks;
+        long CurrentResizeTicks = DateTime.UtcNow.Ticks;
+
+        readonly Dictionary<NeuronDataModel, Point> Coordinator = new Dictionary<NeuronDataModel, Point>();
+        readonly Dictionary<WeightDataModel, double> WeightsData = new Dictionary<WeightDataModel, double>();
 
         public NetworkPresenter()
         {
@@ -30,6 +34,7 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            ResizeTicks = DateTime.UtcNow.Ticks;
             Coordinator.Clear();
         }
 
@@ -40,7 +45,7 @@ namespace Qualia.Controls
 
         private float VerticalDistance(int count)
         {
-            return Math.Min(((float)ActualHeight - VERTICAL_OFFSET * 2) / count, NEURON_MAX_DIST);
+            return Math.Min(((float)ActualHeight - TOP_OFFSET - BOTTOM_OFFSET) / count, NEURON_MAX_DIST);
         }
 
         private int LayerX(NetworkDataModel model, LayerDataModel layer)
@@ -66,11 +71,16 @@ namespace Qualia.Controls
             {
                 if (!Coordinator.ContainsKey(neuron1))
                 {
-                    Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), VERTICAL_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
+                    Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), TOP_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
                 }
 
                 foreach (var neuron2 in layer2.Neurons)
                 {
+                    if (CurrentResizeTicks != ResizeTicks)
+                    {
+                        return;
+                    }
+
                     if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
                     {
                         if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
@@ -129,7 +139,7 @@ namespace Qualia.Controls
                             {
                                 if (!Coordinator.ContainsKey(neuron2))
                                 {
-                                    Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), VERTICAL_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                                    Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), TOP_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
                                 }
 
                                 CtlPresenter.DrawLine(pen, Coordinator[neuron1], Coordinator[neuron2]);
@@ -152,6 +162,11 @@ namespace Qualia.Controls
 
             foreach (var neuron in layer.Neurons)
             {
+                if (CurrentResizeTicks != ResizeTicks)
+                {
+                    return;
+                }
+
                 if (fullState || (neuron.IsBias || neuron.Activation > threshold))
                 {                   
                     var pen = Tools.Draw.GetPen(neuron.Activation);
@@ -161,7 +176,7 @@ namespace Qualia.Controls
                     {
                         if (!Coordinator.ContainsKey(neuron))
                         {
-                            Coordinator.Add(neuron, Points.Get(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                            Coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                         }
 
                         CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, Coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
@@ -169,7 +184,7 @@ namespace Qualia.Controls
 
                     if (!Coordinator.ContainsKey(neuron))
                     {
-                        Coordinator.Add(neuron, Points.Get(LayerX(model, layer), VERTICAL_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                        Coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                     }
 
                     CtlPresenter.DrawEllipse(brush, pen, Coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  
@@ -179,6 +194,8 @@ namespace Qualia.Controls
 
         private void Draw(bool fullState, NetworkDataModel model, bool isOnlyWeights, bool isOnlyChangedWeights, bool isHighlightChangedWeights)
         {
+            CurrentResizeTicks = ResizeTicks;
+
             if (model == null)
             {
                 CtlPresenter.Clear();
@@ -193,6 +210,11 @@ namespace Qualia.Controls
                 {
                     foreach (var layer in model.Layers)
                     {
+                        if (CurrentResizeTicks != ResizeTicks)
+                        {
+                            return;
+                        }
+
                         if (layer == model.Layers.Last())
                         {
                             break;
@@ -200,8 +222,17 @@ namespace Qualia.Controls
 
                         DrawLayersLinks(fullState, model, layer, layer.Next, isOnlyWeights, isOnlyChangedWeights, isHighlightChangedWeights);
                     }
+
+                    foreach (var layer in model.Layers)
+                    {
+                        if (CurrentResizeTicks != ResizeTicks)
+                        {
+                            break;
+                        }
+
+                        DrawLayerNeurons(fullState, model, layer);
+                    }
                 }
-                model.Layers.ForEach(l => DrawLayerNeurons(fullState, model, l));
             }
 
             CtlPresenter.Update();

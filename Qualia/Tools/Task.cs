@@ -17,6 +17,7 @@ namespace Tools
         List<string> GetClasses();
         void ApplyChanges();
         bool IsGridSnapAdjustmentAllowed();
+        int GetPointsRearrangeSnap();
     }
 
     public interface INetworkTaskChanged
@@ -39,6 +40,11 @@ namespace Tools
             public Control GetVisualControl()
             {
                 return Control;
+            }
+
+            public int GetPointsRearrangeSnap()
+            {
+                return 10;
             }
 
             public bool IsGridSnapAdjustmentAllowed()
@@ -81,11 +87,11 @@ namespace Tools
 
             public void Do(NetworkDataModel model)
             {
+                var shuffled = model.Layers[0].ShuffledNeurons;
+                shuffled.Shuffle();
+
                 if (IsGaussianDistribution)
                 {
-                    var shuffled = model.Layers[0].ShuffledNeurons;
-                    shuffled.Shuffle();
-
                     double median = ((double)MinNumber + MaxNumber) / 2;
 
                     var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
@@ -114,9 +120,6 @@ namespace Tools
                 }
                 else
                 {
-                    var shuffled = model.Layers[0].ShuffledNeurons;
-                    shuffled.Shuffle();
-
                     var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
 
                     for (int i = 0; i < shuffled.Count; ++i)
@@ -156,6 +159,118 @@ namespace Tools
             }
         }
 
+        public class MNIST : INetworkTask
+        {
+            public static INetworkTask Instance = new MNIST();
+            static MNISTControl Control = new MNISTControl();
+
+            int MinNumber;
+            int MaxNumber;
+
+            public Control GetVisualControl()
+            {
+                return Control;
+            }
+
+            public int GetPointsRearrangeSnap()
+            {
+                return 28;
+            }
+
+            public bool IsGridSnapAdjustmentAllowed()
+            {
+                return false;
+            }
+
+            public void ApplyChanges()
+            {
+                MinNumber = Control.MinNumber;
+                MaxNumber = Control.MaxNumber;
+            }
+
+            public void Load(Config config)
+            {
+                Control.Load(config);
+                ApplyChanges();
+            }
+
+            public void Save(Config config)
+            {
+                Control.Save(config);
+            }
+
+            public int GetInputCount()
+            {
+                return 28 * 28;
+            }
+
+            public List<string> GetClasses()
+            {
+                var classes = new List<string>();
+                for (int i = Control.MinNumber; i <= Control.MaxNumber; ++i)
+                {
+                    classes.Add(i.ToString());
+                }
+                return classes;
+            }
+
+            public void Do(NetworkDataModel model)
+            {
+                /*
+                if (IsGaussianDistribution)
+                {
+                    var shuffled = model.Layers[0].ShuffledNeurons;
+                    shuffled.Shuffle();
+
+                    double median = ((double)MinNumber + MaxNumber) / 2;
+
+                    var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
+                    if (number < MinNumber)
+                    {
+                        number = MinNumber;
+                    }
+                    if (number > MaxNumber)
+                    {
+                        number = MaxNumber;
+                    }
+
+                    for (int i = 0; i < shuffled.Count; ++i)
+                    {
+                        shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
+                    }
+
+                    var neuron = model.Layers.Last().Neurons[0];
+                    while (neuron != null)
+                    {
+                        neuron.Target = (neuron.Id == number - MinNumber) ? 1 : 0;
+                        neuron = neuron.Next;
+                    }
+
+                    model.TargetOutput = number - MinNumber;
+                }
+                */
+            }
+
+            public void Vanish(Config config)
+            {
+                Control.Vanish(config);
+            }
+
+            public bool IsValid()
+            {
+                return Control.IsValid();
+            }
+
+            public void SetChangeEvent(Action onChanged)
+            {
+                Control.SetChangeEvent(onChanged);
+            }
+
+            public void InvalidateValue()
+            {
+                throw new NotImplementedException();
+            }
+        }
         public static class Helper
         {
             public static string[] GetItems()
