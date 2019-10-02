@@ -11,6 +11,8 @@ namespace Qualia.Controls
 {
     public partial class MNISTControl : UserControl, IConfigValue
     {
+        Config Config;
+
         event Action OnChange = delegate { };
 
         public MNISTControl()
@@ -18,8 +20,8 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public int MaxNumber => CtlTaskMaxNumber.Value;
-        public int MinNumber => CtlTaskMinNumber.Value;
+        public int MaxNumber => (int)CtlTaskMaxNumber.Value;
+        public int MinNumber => (int)CtlTaskMinNumber.Value;
 
         private void Changed()
         {
@@ -29,28 +31,30 @@ namespace Qualia.Controls
             }
         }
 
-        public void Load(Config config)
+        public void SetConfig(Config config)
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.Load(config));
+            Config = config;
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
         }
 
-        public void Save(Config config)
+        public void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.Save(config));
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
         }
 
-        public void Vanish(Config config)
+        public void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.Vanish(config));
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
+        }
+
+        public void VanishConfig()
+        {
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
         }
 
         public bool IsValid()
         {
-            if (this.FindVisualChildren<IConfigValue>().All(c => c.IsValid()))
-            {
-                return true;
-            }
-            return false;
+            return this.FindVisualChildren<IConfigValue>().All(c => c.IsValid());
         }
 
         public void SetChangeEvent(Action onChange)

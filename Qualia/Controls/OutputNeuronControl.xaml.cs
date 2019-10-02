@@ -18,15 +18,22 @@ namespace Qualia.Controls
 {
     public partial class OutputNeuronControl : NeuronBase
     {
+        List<IConfigValue> ConfigParams;
+
         public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            LoadConfig();
+            ConfigParams = new List<IConfigValue>()
+            {
+                CtlActivationFunc,
+                CtlActivationFuncParamA
+            };
 
-            CtlActivationFunc.SetChangeEvent(OnChanged);
-            CtlActivationFuncParamA.SetChangeEvent(OnChanged);
+            ConfigParams.ForEach(p => p.SetConfig(Config));
+            LoadConfig();
+            ConfigParams.ForEach(p => p.SetChangeEvent(OnChanged));
         }
 
         public override string WeightsInitializer => nameof(InitializeMode.None);
@@ -39,7 +46,7 @@ namespace Qualia.Controls
         public void LoadConfig()
         {
             ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
-            CtlActivationFuncParamA.Load(Config);
+            ConfigParams.ForEach(p => p.LoadConfig());
 
             StateChanged();
         }
@@ -61,14 +68,12 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            CtlActivationFunc.Save(Config);
-            CtlActivationFuncParamA.Save(Config);
+            ConfigParams.ForEach(p => p.SaveConfig());
         }
 
         public override void VanishConfig()
         {
-            CtlActivationFunc.Vanish(Config);
-            CtlActivationFuncParamA.Vanish(Config);
+            ConfigParams.ForEach(p => p.VanishConfig());
         }
     }
 }

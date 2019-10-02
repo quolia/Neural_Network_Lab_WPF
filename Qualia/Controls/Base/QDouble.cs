@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Tools;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Tools;
 
 namespace Qualia.Controls
 {
     public class QDouble : TextBox, IConfigValue
     {
+        Config Config;
+
         event Action OnChanged = delegate { };
 
         public double? DefaultValue
@@ -33,10 +35,12 @@ namespace Qualia.Controls
             set;
         }
 
+        public bool IsUnranged => MinimumValue == 0 && MaximumValue == 0;
+
         public QDouble()
         {
-            Width = 60;
-            Height = 18;
+            //Width = 60;
+            //Height = 18;
             TextChanged += DoubleBox_TextChanged;
         }
 
@@ -60,7 +64,10 @@ namespace Qualia.Controls
                 return true;
             }
 
-            return Converter.TryTextToDouble(Text, out double? value) && value >= MinimumValue && value <= MaximumValue;
+            var ok = Converter.TryTextToDouble(Text, out double? value);
+            ok &= value != null || IsNullAllowed;
+
+            return ok && (IsUnranged || (value >= MinimumValue && value <= MaximumValue));
         }
 
         public bool IsNull()
@@ -81,7 +88,7 @@ namespace Qualia.Controls
 
         public double? ValueOrNull
         {
-            get => IsNull() && IsNullAllowed ? (double?)null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
+            get => IsNull() && IsNullAllowed ? null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
 
             set
             {
@@ -90,22 +97,27 @@ namespace Qualia.Controls
             }
         }
 
-        public void Load(Config config)
+        public void SetConfig(Config config)
+        {
+            Config = config;
+        }
+
+        public void LoadConfig()
         {
             if (IsNullAllowed)
-                ValueOrNull = config.GetDouble(Name, DefaultValue);
+                ValueOrNull = Config.GetDouble(Name, DefaultValue);
             else
-                Value = config.GetDouble(Name, DefaultValue).Value;
+                Value = Config.GetDouble(Name, DefaultValue).Value;
         }
 
-        public void Save(Config config)
+        public void SaveConfig()
         {
-            config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
+            Config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
         }
 
-        public void Vanish(Config config)
+        public void VanishConfig()
         {
-            config.Remove(Name);
+            Config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)
@@ -120,3 +132,4 @@ namespace Qualia.Controls
         }
     }
 }
+

@@ -9,9 +9,10 @@ namespace Tools
 {
     public interface IConfigValue
     {
-        void Load(Config config);
-        void Save(Config config);
-        void Vanish(Config config);
+        void SetConfig(Config config);
+        void LoadConfig();
+        void SaveConfig();
+        void VanishConfig();
         bool IsValid();
         void SetChangeEvent(Action action);
         void InvalidateValue();
@@ -21,26 +22,30 @@ namespace Tools
     {
         public static Config Main = new Config("config.txt");
         public readonly string Name;
+        public Config ParentConfig;
         string Extender;
 
         static Dictionary<string, Dictionary<string, string>> Cache = new Dictionary<string, Dictionary<string, string>>();
 
-        public Config(string name)
+        public Config(string name, Config parentConfig = null)
         {
             Name = name;
+            ParentConfig = parentConfig;
         }
 
         private string CutName(string name)
         {
-            return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name; 
+            return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name;
         }
 
         public Config Extend(long extender)
         {
             var config = new Config(Name)
             {
-                Extender = extender.ToString()
+                ParentConfig = this,
+                Extender = "." + extender
             };
+
             return config;
         }
 
@@ -80,14 +85,30 @@ namespace Tools
             }
         }
 
-        public int? GetInt(Const.Param name, int? defaultValue = null)
+        public long? GetInt(Const.Param name, long? defaultValue = null)
         {
-            return (int?)GetDouble(name, defaultValue);
+            if (Converter.TryTextToInt(GetValue(name, Converter.IntToText(defaultValue)), out long? value))
+            {
+                return value;
+            }
+            else
+            {
+                Set(name, defaultValue);
+                return defaultValue;
+            }
         }
 
-        public int? GetInt(string name, int? defaultValue = null)
+        public long? GetInt(string name, long? defaultValue = null)
         {
-            return (int?)GetDouble(name, defaultValue);
+            if (Converter.TryTextToInt(GetValue(name, Converter.IntToText(defaultValue)), out long? value))
+            {
+                return value;
+            }
+            else
+            {
+                Set(name, defaultValue);
+                return defaultValue;
+            }
         }
 
         public bool GetBool(Const.Param name, bool defaultValue = false)
@@ -168,14 +189,14 @@ namespace Tools
             Set(name, Converter.DoubleToText(value));
         }
 
-        public void Set(Const.Param name, int value)
+        public void Set(Const.Param name, long? value)
         {
-            Set(name, value.ToString());
+            Set(name, Converter.IntToText(value));
         }
 
-        public void Set(string name, int value)
+        public void Set(string name, long? value)
         {
-            Set(name, value.ToString());
+            Set(name, Converter.IntToText(value));
         }
 
         public void Set(Const.Param name, bool value)
@@ -259,7 +280,7 @@ namespace Tools
         }
 
         private Dictionary<string, string> GetValues()
-        {            
+        {
             if (Cache.ContainsKey(Name))
             {
                 return Cache[Name];
@@ -293,7 +314,7 @@ namespace Tools
 
         public void Clear()
         {
-            File.WriteAllLines(Name, new string[] { });
+            File.WriteAllLines(Name, Array.Empty<string>());
             Cache.Clear();
         }
     }

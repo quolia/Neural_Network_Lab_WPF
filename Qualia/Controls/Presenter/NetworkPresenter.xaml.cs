@@ -20,8 +20,7 @@ namespace Qualia.Controls
         const int BIAS_SIZE = 14;
         const double BIAS_RADIUS = BIAS_SIZE / 2;
 
-        long ResizeTicks = DateTime.UtcNow.Ticks;
-        long CurrentResizeTicks = DateTime.UtcNow.Ticks;
+        public long ResizeTicks;
 
         readonly Dictionary<NeuronDataModel, Point> Coordinator = new Dictionary<NeuronDataModel, Point>();
         readonly Dictionary<WeightDataModel, double> WeightsData = new Dictionary<WeightDataModel, double>();
@@ -34,7 +33,6 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ResizeTicks = DateTime.UtcNow.Ticks;
             Coordinator.Clear();
         }
 
@@ -76,9 +74,9 @@ namespace Qualia.Controls
 
                 foreach (var neuron2 in layer2.Neurons)
                 {
-                    if (CurrentResizeTicks != ResizeTicks)
+                    //if (CurrentResizeTicks != ResizeTicks)
                     {
-                        return;
+                      //  return;
                     }
 
                     if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
@@ -162,9 +160,9 @@ namespace Qualia.Controls
 
             foreach (var neuron in layer.Neurons)
             {
-                if (CurrentResizeTicks != ResizeTicks)
+                //if (CurrentResizeTicks != ResizeTicks)
                 {
-                    return;
+                 //   return;
                 }
 
                 if (fullState || (neuron.IsBias || neuron.Activation > threshold))
@@ -194,8 +192,6 @@ namespace Qualia.Controls
 
         private void Draw(bool fullState, NetworkDataModel model, bool isOnlyWeights, bool isOnlyChangedWeights, bool isHighlightChangedWeights)
         {
-            CurrentResizeTicks = ResizeTicks;
-
             if (model == null)
             {
                 CtlPresenter.Clear();
@@ -210,9 +206,9 @@ namespace Qualia.Controls
                 {
                     foreach (var layer in model.Layers)
                     {
-                        if (CurrentResizeTicks != ResizeTicks)
+                       // if (CurrentResizeTicks != ResizeTicks)
                         {
-                            return;
+                       //     return;
                         }
 
                         if (layer == model.Layers.Last())
@@ -225,9 +221,9 @@ namespace Qualia.Controls
 
                     foreach (var layer in model.Layers)
                     {
-                        if (CurrentResizeTicks != ResizeTicks)
+                        //if (CurrentResizeTicks != ResizeTicks)
                         {
-                            break;
+                         //   break;
                         }
 
                         DrawLayerNeurons(fullState, model, layer);

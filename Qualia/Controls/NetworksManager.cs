@@ -103,7 +103,7 @@ namespace Qualia.Controls
                 networks = new long[] { Const.UnknownId };
             }
             Range.For(networks.Length, i => AddNetwork(networks[i]));
-            CtlTabs.SelectedIndex = Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
+            CtlTabs.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
             RefreshNetworksDataModels();
         }
 

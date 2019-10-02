@@ -18,6 +18,8 @@ namespace Qualia.Controls
 {
     public partial class SettingsControl : UserControl, IConfigValue
     {
+        Config Config;
+
         event Action Changed = delegate { };
 
         object Locker = new object();
@@ -46,23 +48,29 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public void Load(Config config)
+        public void SetConfig(Config config)
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Load(config));
+            Config = config;
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
+        }
+
+        public void LoadConfig()
+        {
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(OnChanged));
             OnChanged();
         }
 
-        public void Save(Config config)
+        public void SaveConfig()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Save(config));
-            config.FlushToDrive();
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
+            Config.FlushToDrive();
         }
 
-        public void Vanish(Config config)
+        public void VanishConfig()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.Vanish(config));
-            config.FlushToDrive();
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
+            Config.FlushToDrive();
         }
 
         public bool IsValid()
@@ -78,10 +86,12 @@ namespace Qualia.Controls
 
         private void OnChanged()
         {
-            var settings = new Settings();
-            settings.SkipRoundsToDrawErrorMatrix = CtlSkipRoundsToDrawErrorMatrix.Value;
-            settings.SkipRoundsToDrawNetworks = CtlSkipRoundsToDrawNetworks.Value;
-            settings.SkipRoundsToDrawStatistics = CtlSkipRoundsToDrawStatistics.Value;
+            var settings = new Settings
+            {
+                SkipRoundsToDrawErrorMatrix = (int)CtlSkipRoundsToDrawErrorMatrix.Value,
+                SkipRoundsToDrawNetworks = (int)CtlSkipRoundsToDrawNetworks.Value,
+                SkipRoundsToDrawStatistics = (int)CtlSkipRoundsToDrawStatistics.Value
+            };
             Settings = settings;
 
             Changed();

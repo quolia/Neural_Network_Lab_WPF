@@ -4,14 +4,14 @@ ScreenHeight:783.2
 ScreenTop:20.8
 ScreenLeft:82.4
 OnTop:0
-DataWidth:244
-NetworkHeight:253
+DataWidth:222
+NetworkHeight:352
 SkipRoundsToDrawErrorMatrix:1000
 SkipRoundsToDrawNetworks:10000
 SkipRoundsToDrawStatistic:10000
 PointSize:7
 PointsArrangeSnap:10
 SkipRoundsToDrawStatistics:10000
-OnlyWeights:1
+OnlyWeights:0
 OnlyChangedWeights:0
 HighlightChangedWeights:0

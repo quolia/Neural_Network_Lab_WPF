@@ -18,21 +18,28 @@ namespace Qualia.Controls
 {
     public partial class NeuronControl : NeuronBase
     {
+        List<IConfigValue> ConfigParams;
+
         public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            LoadConfig();
+            ConfigParams = new List<IConfigValue>()
+            {
+                CtlActivationInitializerParamA,
+                CtlActivationInitializer,
+                CtlWeightsInitializerParamA,
+                CtlWeightsInitializer,
+                CtlIsBias,
+                CtlIsBiasConnected,
+                CtlActivationFunc,
+                CtlActivationFuncParamA
+            };
 
-            CtlActivationInitializerParamA.SetChangeEvent(OnChanged);
-            CtlActivationInitializer.SetChangeEvent(OnChanged);
-            CtlWeightsInitializerParamA.SetChangeEvent(OnChanged);
-            CtlWeightsInitializer.SetChangeEvent(OnChanged);
-            CtlIsBias.SetChangeEvent(CtlIsBias_CheckedChanged);
-            CtlIsBiasConnected.SetChangeEvent(OnChanged);
-            CtlActivationFunc.SetChangeEvent(OnChanged);
-            CtlActivationFuncParamA.SetChangeEvent(OnChanged);
+            ConfigParams.ForEach(p => p.SetConfig(Config));
+            LoadConfig();
+            ConfigParams.ForEach(p => p.SetChangeEvent(OnChanged));
         }
 
         private void OnChanged()
@@ -64,20 +71,15 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            CtlIsBias.Load(Config);
-            CtlIsBiasConnected.Load(Config);
+            InitializeMode.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeMode.None));
+            InitializeMode.Helper.FillComboBox(CtlActivationInitializer, Config, nameof(InitializeMode.Constant));
+            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
+
+            ConfigParams.ForEach(p => p.LoadConfig());
+
             CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
             CtlIsBiasConnected.IsOn &= CtlIsBias.IsOn;
             CtlActivation.Height = CtlIsBias.IsOn ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
-
-            InitializeMode.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeMode.None));
-            CtlWeightsInitializerParamA.Load(Config);
-
-            InitializeMode.Helper.FillComboBox(CtlActivationInitializer, Config, nameof(InitializeMode.Constant));
-            CtlActivationInitializerParamA.Load(Config);
-
-            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
-            CtlActivationFuncParamA.Load(Config);
 
             StateChanged();
         }
@@ -94,37 +96,18 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            if (CtlIsBias.IsOn)
+            ConfigParams.ForEach(p => p.SaveConfig());
+
+            if (!CtlIsBias.IsOn)
             {
-                CtlActivationInitializer.Save(Config);
-                CtlActivationInitializerParamA.Save(Config);
+                CtlActivationInitializer.VanishConfig();
+                CtlActivationInitializerParamA.VanishConfig();
             }
-            else
-            {
-                CtlActivationInitializer.Vanish(Config);
-                CtlActivationInitializerParamA.Vanish(Config);
-            }
-
-            CtlWeightsInitializer.Save(Config);
-            CtlWeightsInitializerParamA.Save(Config);
-
-            CtlActivationFunc.Save(Config);
-            CtlActivationFuncParamA.Save(Config);
-
-            CtlIsBias.Save(Config);
-            CtlIsBiasConnected.Save(Config);
         }
 
         public override void VanishConfig()
         {
-            CtlActivationInitializer.Vanish(Config);
-            CtlWeightsInitializer.Vanish(Config);
-            CtlActivationFunc.Vanish(Config);
-            CtlWeightsInitializerParamA.Vanish(Config);
-            CtlActivationInitializerParamA.Vanish(Config);
-            CtlActivationFuncParamA.Vanish(Config);
-            CtlIsBias.Vanish(Config);
-            CtlIsBiasConnected.Vanish(Config);
+            ConfigParams.ForEach(p => p.VanishConfig());
         }
     }
 }

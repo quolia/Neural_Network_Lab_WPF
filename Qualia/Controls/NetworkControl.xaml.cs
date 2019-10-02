@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,8 @@ namespace Qualia.Controls
         public readonly long Id;
         public Config Config;
         Action<Notification.ParameterChanged> OnNetworkUIChanged;
+
+        List<IConfigValue> ConfigParams;
 
         public InputLayerControl InputLayer
         {
@@ -32,13 +35,18 @@ namespace Qualia.Controls
             Id = UniqId.GetId(id);
             Config = config.Extend(Id);
 
-            LoadConfig();
+            ConfigParams = new List<IConfigValue>()
+            {
+                CtlRandomizeModeParamA,
+                CtlRandomizeMode,
+                CtlLearningRate,
+                CtlIsNetworkEnabled,
+                CtlCostFunction
+            };
 
-            CtlRandomizeModeParamA.SetChangeEvent(OnChanged);
-            CtlRandomizeMode.SetChangeEvent(OnChanged);
-            CtlLearningRate.SetChangeEvent(OnChanged);
-            CtlIsNetworkEnabled.SetChangeEvent(OnChanged);
-            CtlCostFunction.SetChangeEvent(OnChanged);
+            ConfigParams.ForEach(p => p.SetConfig(Config));
+            LoadConfig();
+            ConfigParams.ForEach(p => p.SetChangeEvent(OnChanged));
         }
 
         private void OnChanged()
@@ -91,21 +99,14 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            return CtlRandomizeModeParamA.IsValid() &&
-                   CtlLearningRate.IsValid() &&
-                   GetLayersControls().All(c => c.IsValid());
+            return ConfigParams.All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
         }
 
         public void SaveConfig()
         {
             Config.Set(Const.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
             Config.Set(Const.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
-
-            CtlRandomizeMode.Save(Config);
-            CtlIsNetworkEnabled.Save(Config);
-            CtlRandomizeModeParamA.Save(Config);
-            CtlLearningRate.Save(Config);
-            CtlCostFunction.Save(Config);
+            ConfigParams.ForEach(p => p.SaveConfig());
 
             var layers = GetLayersControls();
             layers.ForEach(l => l.SaveConfig());
@@ -127,11 +128,7 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.SelectedLayerIndex);
             Config.Remove(Const.Param.Color);
 
-            CtlRandomizeMode.Vanish(Config);
-            CtlIsNetworkEnabled.Vanish(Config);
-            CtlRandomizeModeParamA.Vanish(Config);
-            CtlLearningRate.Vanish(Config);
-            CtlCostFunction.Vanish(Config);
+            ConfigParams.ForEach(p => p.VanishConfig());
 
             GetLayersControls().ForEach(l => l.VanishConfig());
             Config.Remove(Const.Param.Layers);
@@ -151,9 +148,9 @@ namespace Qualia.Controls
         {
             Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.Random));
             Tools.CostFunction.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunction.MSE));
-            CtlRandomizeModeParamA.Load(Config);
-            CtlLearningRate.Load(Config);
-            CtlIsNetworkEnabled.Load(Config);
+
+            ConfigParams.ForEach(p => p.LoadConfig());
+
             var color = Config.GetArray(Const.Param.Color, "255,100,100,100");
             CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0], (byte)color[1], (byte)color[2], (byte)color[3]));
 
@@ -182,7 +179,7 @@ namespace Qualia.Controls
                     AddLayer(layer);
             }
 
-            CtlTabsLayers.SelectedIndex = Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
+            CtlTabsLayers.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
         }
 
         public int[] GetLayersSize()

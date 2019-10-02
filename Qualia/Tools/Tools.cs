@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Tools
 {
@@ -87,9 +88,9 @@ namespace Tools
 
     public static class Extension
     {
-        public static void Dispatch(this UIElement c, Action action)
+        public static DispatcherOperation Dispatch(this UIElement c, Action action, DispatcherPriority priority)
         {
-            c.Dispatcher.BeginInvoke(action);
+            return c.Dispatcher.BeginInvoke(action, priority);
         }
 
         public static void Visible(this UIElement e, bool visible)
@@ -365,17 +366,17 @@ namespace Tools
         {
             return (long)(TimeSpan.FromTicks(ticks).TotalMilliseconds * 1000);
         }
-        public static int? TextToInt(string text, int? defaultValue = null)
+        public static long? TextToInt(string text, long? defaultValue = null)
         {
-            return String.IsNullOrEmpty(text) ? defaultValue : int.TryParse(text, out int a) ? a : defaultValue;
+            return String.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
         }
 
-        public static int TextToInt(string text, int defaultValue)
+        public static long TextToInt(string text, long defaultValue)
         {
-            return String.IsNullOrEmpty(text) ? defaultValue : int.TryParse(text, out int a) ? a : defaultValue;
+            return String.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
         }
 
-        public static bool TryTextToInt(string text, out int? result, int? defaultValue = null)
+        public static bool TryTextToInt(string text, out long? result, long? defaultValue = null)
         {
             if (String.IsNullOrEmpty(text))
             {
@@ -383,7 +384,7 @@ namespace Tools
                 return true;
             }
 
-            if (int.TryParse(text, out int d))
+            if (long.TryParse(text, out long d))
             {
                 result = d;
                 return true;
@@ -393,7 +394,7 @@ namespace Tools
             return false;
         }
 
-        public static string IntToText(int? d)
+        public static string IntToText(long? d)
         {
             return d.HasValue ? d.Value.ToString() : null;
         }

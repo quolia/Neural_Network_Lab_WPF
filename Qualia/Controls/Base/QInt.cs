@@ -1,31 +1,33 @@
-﻿using System;
+﻿using Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Tools;
 
 namespace Qualia.Controls
 {
     public class QInt : TextBox, IConfigValue
     {
+        Config Config;
+
         event Action OnChanged = delegate { };
 
-        public int? DefaultValue
+        public long? DefaultValue
         {
             get;
             set;
         }
 
-        public int MinimumValue
+        public long MinimumValue
         {
             get;
             set;
         }
 
-        public int MaximumValue
+        public long MaximumValue
         {
             get;
             set;
@@ -37,10 +39,12 @@ namespace Qualia.Controls
             set;
         }
 
+        public bool IsUnranged => MinimumValue == 0 && MaximumValue == 0;
+
         public QInt()
         {
-            Width = 60;
-            Height = 18;
+            //Width = 60;
+            //Height = 18;
             TextChanged += IntBox_TextChanged;
         }
 
@@ -64,7 +68,10 @@ namespace Qualia.Controls
                 return true;
             }
 
-            return Converter.TryTextToInt(Text, out int? value) && value >= MinimumValue && value <= MaximumValue;
+            var ok = Converter.TryTextToInt(Text, out long? value);
+            ok &= value != null || IsNullAllowed;
+
+            return ok && (IsUnranged || (value >= MinimumValue && value <= MaximumValue));
         }
 
         public bool IsNull()
@@ -72,7 +79,7 @@ namespace Qualia.Controls
             return String.IsNullOrEmpty(Text);
         }
 
-        public int Value
+        public long Value
         {
             get
             {
@@ -86,11 +93,11 @@ namespace Qualia.Controls
             }
         }
 
-        public int? ValueOrNull
+        public long? ValueOrNull
         {
             get
             {
-                return IsNull() && IsNullAllowed ? (int?)null : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(Name, Text);
+                return IsNull() && IsNullAllowed ? null : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(Name, Text);
             }
 
             set
@@ -100,22 +107,27 @@ namespace Qualia.Controls
             }
         }
 
-        public void Load(Config config)
+        public void SetConfig(Config config)
+        {
+            Config = config;
+        }
+
+        public void LoadConfig()
         {
             if (IsNullAllowed)
-                ValueOrNull = config.GetInt(Name, DefaultValue);
+                ValueOrNull = Config.GetInt(Name, DefaultValue);
             else
-                Value = config.GetInt(Name, DefaultValue).Value;
+                Value = Config.GetInt(Name, DefaultValue).Value;
         }
 
-        public void Save(Config config)
+        public void SaveConfig()
         {
-            config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
+            Config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
         }
 
-        public void Vanish(Config config)
+        public void VanishConfig()
         {
-            config.Remove(Name);
+            Config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)

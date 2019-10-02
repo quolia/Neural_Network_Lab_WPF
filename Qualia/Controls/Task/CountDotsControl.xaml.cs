@@ -7,6 +7,8 @@ namespace Qualia.Controls
 {
     public partial class CountDotsControl : UserControl, IConfigValue
     {
+        Config Config;
+
         event Action OnChange = delegate { };
 
         public CountDotsControl()
@@ -14,10 +16,10 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public int InputCount => CtlTaskInputCount.Value;
+        public int InputCount => (int)CtlTaskInputCount.Value;
         public bool IsGaussianDistribution => CtlIsGaussianDistribution.IsOn;
-        public int MaxNumber => CtlTaskMaxNumber.Value;
-        public int MinNumber => CtlTaskMinNumber.Value;
+        public int MaxNumber => (int)CtlTaskMaxNumber.Value;
+        public int MinNumber => (int)CtlTaskMinNumber.Value;
 
         private void Changed()
         {
@@ -27,19 +29,25 @@ namespace Qualia.Controls
             }
         }
 
-        public void Load(Config config)
+        public void SetConfig(Config config)
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.Load(config));
+            Config = config;
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
         }
 
-        public void Save(Config config)
+        public void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.Save(config));
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
         }
 
-        public void Vanish(Config config)
+        public void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.Vanish(config));
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
+        }
+
+        public void VanishConfig()
+        {
+            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
         }
 
         public bool IsValid()

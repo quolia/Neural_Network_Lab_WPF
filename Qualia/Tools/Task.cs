@@ -30,6 +30,8 @@ namespace Tools
     {
         public class CountDots : INetworkTask
         {
+            Config Config;
+
             public static INetworkTask Instance = new CountDots();
             static CountDotsControl Control = new CountDotsControl();
 
@@ -59,15 +61,21 @@ namespace Tools
                 MaxNumber = Control.MaxNumber;
             }
 
-            public void Load(Config config)
+            public void SetConfig(Config config)
             {
-                Control.Load(config);
+                Config = config;
+                Control.SetConfig(config);
+            }
+
+            public void LoadConfig()
+            {
+                Control.LoadConfig();
                 ApplyChanges();
             }
 
-            public void Save(Config config)
+            public void SaveConfig()
             {
-                Control.Save(config);
+                Control.SaveConfig();
             }
 
             public int GetInputCount()
@@ -138,9 +146,9 @@ namespace Tools
                 }
             }
 
-            public void Vanish(Config config)
+            public void VanishConfig()
             {
-                Control.Vanish(config);
+                Control.VanishConfig();
             }
 
             public bool IsValid()
@@ -161,6 +169,8 @@ namespace Tools
 
         public class MNIST : INetworkTask
         {
+            Config Config;
+
             public static INetworkTask Instance = new MNIST();
             static MNISTControl Control = new MNISTControl();
 
@@ -188,15 +198,21 @@ namespace Tools
                 MaxNumber = Control.MaxNumber;
             }
 
-            public void Load(Config config)
+            public void SetConfig(Config config)
             {
-                Control.Load(config);
+                Config = config;
+                Control.SetConfig(config);
+            }
+
+            public void LoadConfig()
+            {
+                Control.LoadConfig();
                 ApplyChanges();
             }
 
-            public void Save(Config config)
+            public void SaveConfig()
             {
-                Control.Save(config);
+                Control.SaveConfig();
             }
 
             public int GetInputCount()
@@ -251,9 +267,9 @@ namespace Tools
                 */
             }
 
-            public void Vanish(Config config)
+            public void VanishConfig()
             {
-                Control.Vanish(config);
+                Control.VanishConfig();
             }
 
             public bool IsValid()

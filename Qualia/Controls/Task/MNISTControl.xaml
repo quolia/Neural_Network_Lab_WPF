@@ -29,7 +29,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Name="CtlMNISTImagesPath" />
+            <local:QTextBox x:Name="CtlMNISTImagesPath" IsNullAllowed="True" />
             <Button Name="CtlBrowseImagesPath" Grid.Column="1" Content="Browse" Click="CtlBrowseImagesPath_Click" />
         </Grid>
         <local:QLabel Grid.Row="4" Grid.ColumnSpan="2" Content="Path to labels (*.gz):" />
@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Name="CtlMNISTLabelsPath" />
+            <local:QTextBox x:Name="CtlMNISTLabelsPath" IsNullAllowed="True" />
             <Button Name="CtlBrowseLabelsPath" Grid.Column="1" Content="Browse" Click="CtlBrowseLabelsPath_Click" />
         </Grid>
     </Grid>

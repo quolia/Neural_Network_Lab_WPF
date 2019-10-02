@@ -24,7 +24,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            PointSize = Config.Main.GetInt(Const.Param.PointSize, 7).Value;
+            PointSize = (int)Config.Main.GetInt(Const.Param.PointSize, 7).Value;
 
             SizeChanged += DataPresenter_SizeChanged;
             CtlTask.SetChangeEvent(CtlTask_SelectedIndexChanged);
@@ -61,7 +61,8 @@ namespace Qualia.Controls
             PointsRearrangeSnap = Task.GetPointsRearrangeSnap();
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(Task.GetVisualControl());
-            Task.Load(config);
+            Task.SetConfig(config);
+            Task.LoadConfig();
             Task.SetChangeEvent(TaskParameterChanged);
             TaskChanged = taskChanged;
             TaskParameterChanged();
@@ -78,8 +79,12 @@ namespace Qualia.Controls
 
         public void SaveConfig(Config config)
         {
-            CtlTask.Save(config);
-            Task.Save(config);
+            CtlTask.SetConfig(config);
+            Task.SetConfig(config);
+
+            CtlTask.SaveConfig();
+            Task.SaveConfig();
+
             config.FlushToDrive();
         }
 
@@ -147,7 +152,10 @@ namespace Qualia.Controls
             if (Stat != null)
             {
                 var minBase = Stat.Min();
-                Range.For(Stat.Length, i => Stat[i] -= minBase);
+                if (minBase > 0)
+                {
+                    Range.For(Stat.Length, i => Stat[i] -= minBase);
+                }
                 maxStat = Stat.Max();
             }
 
