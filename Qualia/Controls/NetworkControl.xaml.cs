@@ -146,7 +146,7 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.Random));
+            Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.FlatRandom));
             Tools.CostFunction.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunction.MSE));
 
             ConfigParams.ForEach(p => p.LoadConfig());

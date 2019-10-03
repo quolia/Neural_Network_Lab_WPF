@@ -84,9 +84,6 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                //Vanish(model.DynamicStatistics.PercentData, GetPointPercentData);
-                //Vanish(model.DynamicStatistics.CostData, GetPointCostData);
-
                 DrawData(model.DynamicStatistics.CopyForRender.PercentData, Tools.Draw.GetColor(220, model.Color), GetPointPercentData, false);
                 DrawData(model.DynamicStatistics.CopyForRender.CostData, Tools.Draw.GetColor(150, model.Color), GetPointCostData, true);
 
@@ -192,43 +189,6 @@ namespace Qualia.Controls
             return Points.Get((int)px, (int)py);
         }
 
-        /*
-        private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
-        {
-            int vanishArea = 16;
-
-            if (data.Count > 10)
-            {
-                var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
-                var totolTicks = data.Last().Item2 - data[0].Item2;
-
-                for (int i = 0; i < data.Count * 0.8; ++i)
-                {
-                    var ticks = data.Last().Item2 - data[0].Item2;
-                    var p0 = func(data, data[i], ticks);
-                    var p1 = func(data, data[i + 1], ticks);
-                    var p2 = func(data, data[i + 2], ticks);
-
-                    if ((Math.Abs(p0.X - p2.X) < vanishArea && Math.Abs(p0.Y - p2.Y) < vanishArea) &&
-                        (Math.Abs(p0.X - p1.X) < vanishArea && Math.Abs(p0.Y - p1.Y) < vanishArea) &&
-                        (Math.Abs(p1.X - p2.X) < vanishArea && Math.Abs(p1.Y - p2.Y) < vanishArea))
-                    {
-                        pointsToRemove.Add(data[i + 1]);
-                    }
-                    else
-                    {
-                        if ((p0.X == p1.X && p1.X == p2.X && Math.Abs(p0.Y - p1.Y) < vanishArea) || (p0.Y == p1.Y && p1.Y == p2.Y && Math.Abs(p0.X - p1.X) < vanishArea))
-                        {
-                            pointsToRemove.Add(data[i + 1]);
-                        }
-                    }
-                }
-
-                pointsToRemove.ForEach(p => data.Remove(p));
-            }
-        }
-        */
-
         private void Vanish(DynamicStatistics.PlotPoints data, PointFunc func)
         {
             const int vanishArea = 14;
@@ -253,7 +213,7 @@ namespace Qualia.Controls
                     if (Math.Abs(Angle(p0, p1) - Angle(p1, p2)) < Math.PI / 720D) // 90
                     {
                         pointsToRemove.Add(data[i + 1]);
-                        //break;
+
                         if (data.Count - pointsToRemove.Count < minPointsCount)
                         {
                             break;
@@ -263,27 +223,16 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        if (//Math.Abs(p0.X - p2.X) < vanishArea && Math.Abs(p0.Y - p2.Y) < vanishArea &&
-                            Math.Abs(p0.X - p1.X) < vanishArea && Math.Abs(p0.Y - p1.Y) < vanishArea)// &&
-                            //Math.Abs(p1.X - p2.X) < vanishArea && Math.Abs(p1.Y - p2.Y) < vanishArea)
+                        if (Math.Abs(p0.X - p1.X) < vanishArea && Math.Abs(p0.Y - p1.Y) < vanishArea)
                         {
                             pointsToRemove.Add(data[i + 1]);
-                            //break;
+
                             if (data.Count - pointsToRemove.Count < minPointsCount)
                             {
                                 break;
                             }
 
                             i += 2;
-                        }
-                        else
-                        {/*
-                            if ((p0.X == p1.X && p1.X == p2.X && Math.Abs(p0.Y - p1.Y) < vanishArea) || (p0.Y == p1.Y && p1.Y == p2.Y && Math.Abs(p0.X - p1.X) < vanishArea))
-                            {
-                                pointsToRemove.Add(data[i + 1]);
-                                break;
-                            }
-                            */
                         }
                     }
                 }
@@ -292,19 +241,7 @@ namespace Qualia.Controls
                 {
                     return;
                 }
-                /*
-                pointsToRemove.ForEach(p =>
-                {
-                    if (data.Count > 10)
-                    {
-                        data.Remove(p);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                });
-                */
+
                 pointsToRemove.ForEach(p => data.Remove(p));
             }
         }

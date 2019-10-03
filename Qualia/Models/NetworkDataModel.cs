@@ -315,15 +315,11 @@ namespace Qualia
                         if (neuron == null)
                         {
                             double initValue = InitializeMode.Helper.Invoke(newNeuron.WeightsInitializer, newNeuron.WeightsInitializerParamA);
-                            if (InitializeMode.Helper.IsSkipValue(initValue))
+                            if (!InitializeMode.Helper.IsSkipValue(initValue))
                             {
                                 foreach (var newWeight in newNeuron.Weights)
                                 {
-                                    var weight = neuron.Weights.Find(w => w.Id == newWeight.Id);
-                                    if (weight != null)
-                                    {
-                                        newWeight.Weight = weight.Weight;
-                                    }
+                                    newWeight.Weight = initValue;
                                 }
                             }
                         }

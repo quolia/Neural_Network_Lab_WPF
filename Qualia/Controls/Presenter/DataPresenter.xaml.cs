@@ -102,6 +102,7 @@ namespace Qualia.Controls
             if (Data == null || Data.Length != count)
             {
                 Data = new double[count];
+                Stat = new double[Data.Length];
             }
             else
             {
@@ -119,10 +120,12 @@ namespace Qualia.Controls
             }
 
             Rearrange(PointsCount);
+            /*
             if (Stat == null || Stat.Length != Data.Length)
             {
                 Stat = new double[Data.Length];
             }
+            */
         }
         public void RearrangeWithNewPointsCount()
         {
@@ -147,6 +150,7 @@ namespace Qualia.Controls
             if (Data == null || Data.Length != PointsCount)
             {
                 Data = new double[PointsCount];
+                Stat = new double[PointsCount];
             }
 
             double maxStat = Stat == null ? 0 : Stat.Max();

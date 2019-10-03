@@ -1,8 +1,8 @@
 NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\17.txt
-ScreenWidth:1337.6
-ScreenHeight:752.8
-ScreenTop:28
-ScreenLeft:96.8
+ScreenWidth:1336.8
+ScreenHeight:752
+ScreenTop:48
+ScreenLeft:110.4
 OnTop:0
 DataWidth:222
 NetworkHeight:308
