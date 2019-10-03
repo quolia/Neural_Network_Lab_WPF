@@ -104,10 +104,28 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
+            var value = Config.GetDouble(Name, DefaultValue);
+            if (!IsUnranged && value.HasValue)
+            {
+                if (value.Value < MinimumValue)
+                {
+                    value = MinimumValue;
+                }
+
+                if (value.Value > MaximumValue)
+                {
+                    value = MaximumValue;
+                }
+            }
+
             if (IsNullAllowed)
+            {
                 ValueOrNull = Config.GetDouble(Name, DefaultValue);
+            }
             else
+            {
                 Value = Config.GetDouble(Name, DefaultValue).Value;
+            }
         }
 
         public void SaveConfig()

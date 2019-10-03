@@ -16,7 +16,7 @@ namespace Qualia.Controls
         int PointsCount;
         double Threshold;
         double[] Data;
-        long[] Stat;
+        double[] Stat;
 
         INetworkTaskChanged TaskChanged;
 
@@ -90,7 +90,7 @@ namespace Qualia.Controls
 
         private void DrawPoint(int x, int y, double value, bool isData)
         {
-            var brush = value == 0 ? Brushes.White : (isData ? Draw.GetBrush(value) : Draw.GetBrush(Draw.GetColor((byte)(255 * value), Colors.LightGray)));
+            var brush = value == 0 ? Brushes.White : (isData ? Draw.GetBrush(value) : Draw.GetBrush(Draw.GetColor((byte)(255 * value), Colors.Green)));
             var pen = Draw.GetPen(Colors.Black);
 
             CtlPresenter.DrawRectangle(brush, pen, Rects.Get(x * PointSize, y * PointSize, PointSize, PointSize));
@@ -121,7 +121,7 @@ namespace Qualia.Controls
             Rearrange(PointsCount);
             if (Stat == null || Stat.Length != Data.Length)
             {
-                Stat = new long[Data.Length];
+                Stat = new double[Data.Length];
             }
         }
         public void RearrangeWithNewPointsCount()
@@ -139,44 +139,29 @@ namespace Qualia.Controls
         {
             CtlPresenter.Clear();
 
-            if (pointsCount == Const.CurrentValue)
-            {
-                pointsCount = PointsCount;
-            }
-            else
+            if (pointsCount != Const.CurrentValue)
             {
                 PointsCount = pointsCount;
             }
 
-            long maxStat = 0;
-            if (Stat != null)
+            if (Data == null || Data.Length != PointsCount)
             {
-                var minBase = Stat.Min();
-                if (minBase > 0)
-                {
-                    Range.For(Stat.Length, i => Stat[i] -= minBase);
-                }
-                maxStat = Stat.Max();
+                Data = new double[PointsCount];
             }
+
+            double maxStat = Stat == null ? 0 : Stat.Max();
 
             for (int p = 0; p < PointsCount; ++p)
             {
                 var pos = GetPointPosition(p);
 
-                if (Data == null)
+                if (Data[p] > Threshold)
                 {
-                    DrawPoint(pos.Item1, pos.Item2, 0, true);
+                    DrawPoint(pos.Item1, pos.Item2, Data[p], true);
                 }
                 else
                 {
-                    if (Data[p] > Threshold)
-                    {
-                        DrawPoint(pos.Item1, pos.Item2, Data[p], true);
-                    }
-                    else
-                    {
-                        DrawPoint(pos.Item1, pos.Item2, maxStat > 0 ? Stat[p] / maxStat : 0, false);
-                    }
+                    DrawPoint(pos.Item1, pos.Item2, maxStat > 0 ? Stat[p] / maxStat : 0, false);
                 }
             }
 
@@ -196,16 +181,15 @@ namespace Qualia.Controls
         {
             if (Stat != null)
             {
+                int i = 0;
                 var neuron = model.Layers[0].Neurons[0];
                 while (neuron != null)
                 {
                     if (!neuron.IsBias)
                     {
-                        for (int i = 0; i < Stat.Length; ++i)
-                        {
-                            Stat[i] += neuron.Activation > Threshold ? 1 : 0;
-                        }
+                        Stat[i] += neuron.Activation > Threshold ? neuron.Activation : 0;
                     }
+                    ++i;
                     neuron = neuron.Next;
                 }
             }

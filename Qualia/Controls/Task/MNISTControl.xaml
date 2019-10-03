@@ -20,9 +20,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:QLabel Grid.Row="0" Content="Min number:" />
-        <local:QInt Grid.Row="0" Grid.Column="1" x:Name="CtlTaskMinNumber" IsNullAllowed="False" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
+        <local:QInt Grid.Row="0" Grid.Column="1" x:Name="CtlMNISTMinNumber" IsNullAllowed="False" MinimumValue="0" MaximumValue="8" DefaultValue="0" />
         <local:QLabel Grid.Row="1" Content="Max number:" />
-        <local:QInt Grid.Row="1" Grid.Column="1" x:Name="CtlTaskMaxNumber" IsNullAllowed="False" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:QInt Grid.Row="1" Grid.Column="1" x:Name="CtlMNISTMaxNumber" IsNullAllowed="False" MinimumValue="1" MaximumValue="9" DefaultValue="9" />
         <local:QLabel Grid.Row="2" Grid.ColumnSpan="2" Content="Path to train images (*.gz):" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

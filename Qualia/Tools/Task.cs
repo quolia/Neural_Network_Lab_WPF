@@ -232,39 +232,21 @@ namespace Tools
 
             public void Do(NetworkDataModel model)
             {
-                /*
-                if (IsGaussianDistribution)
+                var image = Control.Images[Rand.Flat.Next(Control.Images.Count)];
+
+                for (int i = 0; i < model.Layers[0].Neurons.Count; ++i)
                 {
-                    var shuffled = model.Layers[0].ShuffledNeurons;
-                    shuffled.Shuffle();
-
-                    double median = ((double)MinNumber + MaxNumber) / 2;
-
-                    var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
-                    if (number < MinNumber)
-                    {
-                        number = MinNumber;
-                    }
-                    if (number > MaxNumber)
-                    {
-                        number = MaxNumber;
-                    }
-
-                    for (int i = 0; i < shuffled.Count; ++i)
-                    {
-                        shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
-                    }
-
-                    var neuron = model.Layers.Last().Neurons[0];
-                    while (neuron != null)
-                    {
-                        neuron.Target = (neuron.Id == number - MinNumber) ? 1 : 0;
-                        neuron = neuron.Next;
-                    }
-
-                    model.TargetOutput = number - MinNumber;
+                    model.Layers[0].Neurons[i].Activation = model.InputInitial1 * image.Image[i];
                 }
-                */
+
+                var neuron = model.Layers.Last().Neurons[0];
+                while (neuron != null)
+                {
+                    neuron.Target = (neuron.Id == image.Label) ? 1 : 0;
+                    neuron = neuron.Next;
+                }
+
+                model.TargetOutput = image.Label;
             }
 
             public void VanishConfig()

@@ -570,7 +570,7 @@ namespace Qualia
                             IsStatisticsRendering = false;
                         }
 
-                    }), System.Windows.Threading.DispatcherPriority.Send);
+                    }), DispatcherPriority.Render);//  .Send);
                 }
             }
 

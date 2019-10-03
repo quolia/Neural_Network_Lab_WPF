@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Qualia.Controls
 {
     public partial class MNISTControl : UserControl, IConfigValue
     {
+        public List<MNISTImage> Images = new List<MNISTImage>();
+
         Config Config;
 
         event Action OnChange = delegate { };
@@ -20,8 +23,8 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public int MaxNumber => (int)CtlTaskMaxNumber.Value;
-        public int MinNumber => (int)CtlTaskMinNumber.Value;
+        public int MaxNumber => (int)CtlMNISTMaxNumber.Value;
+        public int MinNumber => (int)CtlMNISTMinNumber.Value;
 
         private void Changed()
         {
@@ -40,6 +43,194 @@ namespace Qualia.Controls
         public void LoadConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
+
+            if (!File.Exists(CtlMNISTImagesPath.Text) || !File.Exists(CtlMNISTLabelsPath.Text))
+            {
+                CtlMNISTImagesPath.Text = string.Empty;
+                CtlMNISTLabelsPath.Text = string.Empty;
+            }
+
+            if (!String.IsNullOrEmpty(CtlMNISTImagesPath.Text))
+            {
+                var fileName = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
+                if (!File.Exists(fileName))
+                {
+                    try
+                    {
+                        Decompress(CtlMNISTImagesPath.Text, Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin");
+                    }
+                    catch (Exception ex)
+                    {
+                        CtlMNISTImagesPath.Text = string.Empty;
+                        MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
+                    }
+                }
+
+                LoadImages(fileName);
+/*
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Cannot load MNIST images with the following message:\r\n\r\n" + ex.Message);
+                }
+                */
+
+                if (!String.IsNullOrEmpty(CtlMNISTLabelsPath.Text))
+                {
+                    fileName = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
+                    if (!File.Exists(fileName))
+                    {
+                        try
+                        {
+                            Decompress(CtlMNISTLabelsPath.Text, Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin");
+                        }
+                        catch (Exception ex)
+                        {
+                            CtlMNISTLabelsPath.Text = string.Empty;
+                            MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
+                        }
+                    }
+
+                    LoadLabels(fileName);
+                }
+            }
+        }
+
+        private void LoadImages(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                return;
+            }
+            else
+            {
+                var buf = new byte[4];
+                using (var f = File.OpenRead(fileName))
+                {
+                    if (f.Read(buf, 0, buf.Length) != buf.Length)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+                    
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        buf = buf.Reverse().ToArray();
+                    }
+
+                    int magicNumber = BitConverter.ToInt32(buf, 0);
+                    if (magicNumber != 2051)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+
+                    if (f.Read(buf, 0, buf.Length) != buf.Length)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        buf = buf.Reverse().ToArray();
+                    }
+
+                    int numberOfImages = BitConverter.ToInt32(buf, 0);
+
+                    if (f.Read(buf, 0, buf.Length) != buf.Length)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        buf = buf.Reverse().ToArray();
+                    }
+
+                    int numberOfRows = BitConverter.ToInt32(buf, 0);
+                    if (numberOfRows != 28)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+
+                    if (f.Read(buf, 0, buf.Length) != buf.Length)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        buf = buf.Reverse().ToArray();
+                    }
+
+                    int numberOfColumns = BitConverter.ToInt32(buf, 0);
+                    if (numberOfColumns != 28)
+                    {
+                        throw new Exception("Invalid MNIST images file format.");
+                    }
+
+                    for (int i = 0; i < numberOfImages; ++i)
+                    {
+                        var image = new MNISTImage();
+                        if (f.Read(image.Image, 0, image.Image.Length) != image.Image.Length)
+                        {
+                            Images.Clear();
+                            throw new Exception("Invalid MNIST images file format.");
+                        }
+
+                        Images.Add(image);
+                    }
+                }
+            }
+        }
+
+        private void LoadLabels(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                return;
+            }
+            else
+            {
+                var buf = new byte[4];
+                using (var f = File.OpenRead(fileName))
+                {
+                    if (f.Read(buf, 0, buf.Length) != buf.Length)
+                    {
+                        throw new Exception("Invalid MNIST labels file format.");
+                    }
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        buf = buf.Reverse().ToArray();
+                    }
+
+                    int magicNumber = BitConverter.ToInt32(buf, 0);
+                    if (magicNumber != 2049)
+                    {
+                        throw new Exception("Invalid MNIST labels file format.");
+                    }
+
+                    if (f.Read(buf, 0, buf.Length) != buf.Length)
+                    {
+                        throw new Exception("Invalid MNIST labels file format.");
+                    }
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        buf = buf.Reverse().ToArray();
+                    }
+
+                    int numberOfImages = BitConverter.ToInt32(buf, 0);
+                    if (numberOfImages != Images.Count)
+                    {
+                        throw new Exception("Invalid MNIST labels file format.");
+                    }
+
+                    for (int i = 0; i < numberOfImages; ++i)
+                    {
+                        var image = Images[i];
+                        image.Label = (byte)f.ReadByte();
+                    }
+                }
+            }
         }
 
         public void SaveConfig()
@@ -91,6 +282,7 @@ namespace Qualia.Controls
                 }
                 catch (Exception ex)
                 {
+                    control.Text = string.Empty;
                     MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
                 }
             }
@@ -127,5 +319,11 @@ namespace Qualia.Controls
                 }
             }
         }
+    }
+
+    public class MNISTImage
+    {
+        public byte[] Image = new byte[28 * 28];
+        public byte Label;
     }
 }
