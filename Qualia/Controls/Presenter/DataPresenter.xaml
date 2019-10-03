@@ -21,6 +21,6 @@
             <Grid Name="CtlHolder">
             </Grid>
         </StackPanel>
-        <local:QPresenter Grid.Row="1" x:Name="CtlPresenter" />
+        <local:QPresenter Margin="0,10,0,0" Grid.Row="1" x:Name="CtlPresenter" />
     </Grid>
 </UserControl>

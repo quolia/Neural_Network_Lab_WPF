@@ -21,18 +21,24 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            Disposed += DrawBox_Disposed;
             SizeChanged += DrawBox_SizeChanged;
             BackColor = Color.White;
 
-            Disposed += PresenterControl_Disposed;
+            Disposed += OnDisposed;
         }
 
-        private void PresenterControl_Disposed(object sender, EventArgs e)
+        private void OnDisposed(object sender, EventArgs e)
         {
             if (DrawArea != null)
             {
                 DrawArea.Dispose();
+                DrawArea = null;
+            }
+
+            if (G != null)
+            {
+                G.Dispose();
+                G = null;
             }
         }
 
@@ -62,14 +68,6 @@ namespace Qualia.Controls
         public void Clear()
         {
             G.Clear(BackColor);
-        }
-
-        private void DrawBox_Disposed(object sender, EventArgs e)
-        {
-            if (G != null)
-            {
-                G.Dispose();
-            }
         }
     }
 }

@@ -6,10 +6,12 @@
         xmlns:local="clr-namespace:Qualia.Controls"
         mc:Ignorable="d"
         Background="White"
-        Title="Randomizer" Height="450" Width="800">
+        Title="Randomizer Viewer" Height="450" Width="800">
 
-    <Canvas Name="CtlCanvas">
-        <local:PresenterControlHost x:Name="CtlPresenter" />
-    </Canvas>
-
+    <Grid>
+        <TextBlock Margin="3" Name="CtlName" Text="..." HorizontalAlignment="Right" />
+        <Canvas Name="CtlCanvas">
+            <local:PresenterControlHost x:Name="CtlPresenter" />
+        </Canvas>
+    </Grid>
 </local:WindowResizeControl>

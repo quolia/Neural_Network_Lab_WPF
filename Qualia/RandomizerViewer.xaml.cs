@@ -24,7 +24,7 @@ namespace Qualia
         {
             InitializeComponent();
             Font = new Font("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
-            Title = "Randomizer Viewer | " + randomizer;
+            CtlName.Text = randomizer;
 
             Randomizer = randomizer;
             A = a;
@@ -35,7 +35,6 @@ namespace Qualia
             CtlPresenter.Height = SystemParameters.PrimaryScreenHeight;
             RandomizerViewer_SizeChanged(null, null);
             SizeChanged += RandomizerViewer_SizeChanged;
-
             Loaded += RandomizerViewer_Loaded;
         }
 
@@ -77,19 +76,20 @@ namespace Qualia
                 layer = layer.Next;
             }
 
-            return (int)Math.Ceiling(max);
+            return (int)Math.Ceiling(Math.Max(1, max));
         }
 
         private void Render()
         {
             CtlPresenter.CtlPresenter.StartRender();
 
-            int left = 3 + (CtlPresenter.CtlPresenter.Width / 2) - ((Model.Layers.Count - 1) * 125) / 2;
-            int top = (CtlPresenter.CtlPresenter.Height / 2) - Model.Layers[0].Height / 2 - 30;
+            const int layersDistance = 200;
+
+            int left = CtlPresenter.CtlPresenter.Width / 2 - (Model.Layers.Count - 1) * (layersDistance - 100 / 2) / 2;
+            int top = CtlPresenter.CtlPresenter.Height / 2 - Model.Layers[0].Height / 2;
 
             byte alpha = 100;
-            //int mult = (int)(Height / 12);
-            int mult = (int)(CtlPresenter.CtlPresenter.Height / 2 / GetModelWeightsMaxValue() - 60);
+            int heightOf1 = (int)((CtlPresenter.CtlPresenter.Height - 250) / 2 / GetModelWeightsMaxValue());
 
             var zeroColor = new Pen(Color.FromArgb(alpha, Color.Gray));
 
@@ -98,7 +98,7 @@ namespace Qualia
                 var neuronsCount = Model.Layers[layer].Neurons.Count;
                 for (int neuron = 0; neuron < neuronsCount; ++neuron)
                 {
-                    CtlPresenter.CtlPresenter.G.DrawLine(zeroColor, left - neuron + layer * 150, top + neuron, 100 + left - neuron + layer * 150, top + neuron);
+                    CtlPresenter.CtlPresenter.G.DrawLine(zeroColor, left - neuron + layer * layersDistance, top + neuron, 100 + left - neuron + layer * layersDistance, top + neuron);
 
                     for (int weight = 0; weight < Model.Layers[layer].Neurons[neuron].Weights.Count; ++weight)
                     {
@@ -109,14 +109,14 @@ namespace Qualia
                         using (var pen = new Pen(Draw.MediaColorToSystemColor(p.Brush.GetColor())))
                         {
                             CtlPresenter.CtlPresenter.G.DrawLine(pen,
-                                                    left - neuron + layer * 150 + weight,
+                                                    left - neuron + layer * layersDistance + weight,
                                                     top + neuron - hover,
-                                                    left - neuron + layer * 150 + weight,
-                                                    top + neuron - hover - (float)(mult * value));
+                                                    left - neuron + layer * layersDistance + weight,
+                                                    top + neuron - hover - (float)(heightOf1 * value));
 
                             CtlPresenter.CtlPresenter.G.FillEllipse(Brushes.Orange,
-                                                       left - neuron + layer * 150 + weight - 1,
-                                                       top + neuron - hover - (float)(mult * value),
+                                                       left - neuron + layer * layersDistance + weight - 1,
+                                                       top + neuron - hover - (float)(heightOf1 * value),
                                                        2,
                                                        2);
                         }
@@ -128,7 +128,7 @@ namespace Qualia
                                         left - 105,
                                         top + 100 - 30,
                                         left - 105,
-                                        top + 100 - 30 - mult);
+                                        top + 100 - 30 - heightOf1);
 
                 // 1 text
                 CtlPresenter.CtlPresenter.G.DrawString("1", Font, Brushes.Black,

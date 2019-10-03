@@ -13,8 +13,6 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                
-                
                 <StackPanel Orientation="Horizontal">
                     <local:QCheckBox x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
                     <local:QLabel Content="Color:" Margin="20,0,0,0" />
