@@ -1,4 +1,4 @@
-NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\17.txt
+NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\15x15.txt
 ScreenWidth:1336.8
 ScreenHeight:752
 ScreenTop:48

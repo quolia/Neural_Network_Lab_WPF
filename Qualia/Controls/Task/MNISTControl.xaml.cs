@@ -97,6 +97,8 @@ namespace Qualia.Controls
 
         private void LoadImages(string fileName)
         {
+            Images.Clear();
+
             if (!File.Exists(fileName))
             {
                 return;
