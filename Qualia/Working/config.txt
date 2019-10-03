@@ -1,6 +1,6 @@
-NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\15x15CountDots.txt
-ScreenWidth:1390.4
-ScreenHeight:782.4
+NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\17.txt
+ScreenWidth:1392.8
+ScreenHeight:783.2
 ScreenTop:20
 ScreenLeft:37.6
 OnTop:0

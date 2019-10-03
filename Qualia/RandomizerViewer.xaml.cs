@@ -8,8 +8,8 @@ namespace Qualia
 {
     public partial class RandomizerViewer : WindowResizeControl
     {
-        string Randomizer;
-        double? A;
+        readonly string Randomizer;
+        readonly double? A;
 
         Font Font;
 
@@ -50,6 +50,36 @@ namespace Qualia
             CtlPresenter.SetValue(System.Windows.Controls.Canvas.TopProperty, (CtlCanvas.ActualHeight - CtlPresenter.ActualHeight) / 2);
         }
 
+        private int GetModelWeightsMaxValue()
+        {
+            double max = 0;
+
+            var layer = Model.Layers[0];
+            while (layer != Model.Layers.Last())
+            {
+                var neuron = layer.Neurons[0];
+                while (neuron != null)
+                {
+                    var weight = neuron.Weights[0];
+                    while (weight != null)
+                    {
+                        if (Math.Abs(weight.Weight) > max)
+                        {
+                            max = Math.Abs(weight.Weight);
+                        }
+
+                        weight = weight.Next;
+                    }
+
+                    neuron = neuron.Next;
+                }
+
+                layer = layer.Next;
+            }
+
+            return (int)Math.Ceiling(max);
+        }
+
         private void Render()
         {
             CtlPresenter.CtlPresenter.StartRender();
@@ -58,7 +88,8 @@ namespace Qualia
             int top = (CtlPresenter.CtlPresenter.Height / 2) - Model.Layers[0].Height / 2 - 30;
 
             byte alpha = 100;
-            int mult = (int)(Height / 12);
+            //int mult = (int)(Height / 12);
+            int mult = (int)(CtlPresenter.CtlPresenter.Height / 2 / GetModelWeightsMaxValue() - 60);
 
             var zeroColor = new Pen(Color.FromArgb(alpha, Color.Gray));
 
@@ -92,12 +123,14 @@ namespace Qualia
                     }
                 }
 
+                // 1 line
                 CtlPresenter.CtlPresenter.G.DrawLine(Pens.Black,
                                         left - 105,
                                         top + 100 - 30,
                                         left - 105,
                                         top + 100 - 30 - mult);
 
+                // 1 text
                 CtlPresenter.CtlPresenter.G.DrawString("1", Font, Brushes.Black,
                                           left - 115,
                                           top + 100 - Font.Height - 30);

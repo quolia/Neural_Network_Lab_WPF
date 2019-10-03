@@ -59,6 +59,10 @@ namespace Qualia.Controls
             return Points.Get(w32Mouse.X, w32Mouse.Y);
         }
 
+        public virtual void OnResizeEnd()
+        {
+            //
+        }
 
         private void Window_SourceInitialized(object sender, EventArgs ea)
         {
@@ -105,6 +109,7 @@ namespace Qualia.Controls
 
                 case WM.EXITSIZEMOVE:
                     _adjustingHeight = null;
+                    OnResizeEnd();
                     break;
             }
 
