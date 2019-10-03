@@ -22,7 +22,10 @@ namespace Qualia.Controls
 
         public QComboBox()
         {
-            //Padding = new System.Windows.Thickness(3, 2, 3, 2);
+            Padding = new System.Windows.Thickness(2);
+            Margin = new System.Windows.Thickness(1);
+            MinWidth = 60;
+
             SelectionChanged += SelectBox_SelectionChanged;
         }
 

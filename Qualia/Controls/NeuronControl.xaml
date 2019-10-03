@@ -8,6 +8,7 @@
              BorderThickness="0,1,0,0"
              BorderBrush="Gray"
              Padding="3"
+             Margin="0,0,2,0"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -32,16 +33,16 @@
         <local:QLabel Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
         <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializer" />
         <local:QLabel Grid.Row="1" Grid.Column="2" Content="a:" />
-        <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializerParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializerParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
 
         <local:QLabel Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
         <local:QComboBox Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializer" />
         <local:QLabel Grid.Row="2" Grid.Column="2" Content="a:" />
-        <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializerParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializerParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
 
         <local:QLabel Grid.Row="3" Grid.Column="0" Content="Activation func:" />
         <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunc" />
         <local:QLabel Grid.Row="3" Grid.Column="2" Content="a:" />
-        <local:QDouble Margin="0,0,5,0" Width="Auto" Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
     </Grid>
 </local:NeuronBase>

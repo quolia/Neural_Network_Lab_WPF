@@ -39,8 +39,10 @@ namespace Qualia.Controls
 
         public QDouble()
         {
-            //Width = 60;
-            //Height = 18;
+            Padding = new System.Windows.Thickness(0);
+            Margin = new System.Windows.Thickness(3);
+            MinWidth = 60;
+
             TextChanged += DoubleBox_TextChanged;
         }
 
@@ -120,11 +122,11 @@ namespace Qualia.Controls
 
             if (IsNullAllowed)
             {
-                ValueOrNull = Config.GetDouble(Name, DefaultValue);
+                ValueOrNull = value;
             }
             else
             {
-                Value = Config.GetDouble(Name, DefaultValue).Value;
+                Value = value.Value;
             }
         }
 

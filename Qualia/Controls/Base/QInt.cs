@@ -43,8 +43,10 @@ namespace Qualia.Controls
 
         public QInt()
         {
-            //Width = 60;
-            //Height = 18;
+            Padding = new System.Windows.Thickness(0);
+            Margin = new System.Windows.Thickness(3);
+            MinWidth = 60;
+
             TextChanged += IntBox_TextChanged;
         }
 

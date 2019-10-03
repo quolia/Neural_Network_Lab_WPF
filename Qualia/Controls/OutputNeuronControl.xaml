@@ -7,7 +7,9 @@
              mc:Ignorable="d" 
              BorderThickness="0,1,0,0"
              BorderBrush="Gray"
-             Padding="3" d:DesignWidth="800" Height="31.6">
+             Padding="3"
+             Margin="0,0,2,0"
+             d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -20,7 +22,7 @@
         <local:QLabel Content="Activation func:" />
         <local:QComboBox Grid.Column="1" x:Name="CtlActivationFunc" />
         <Label Grid.Column="2" Content="a:" />
-        <local:QDouble Width="Auto" Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Column="3" x:Name="CtlActivationFuncParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
         <local:QLabel  Grid.Column="4" x:Name="CtlNumber" Content="1" />
 
     </Grid>
