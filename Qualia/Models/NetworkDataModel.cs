@@ -179,7 +179,11 @@ namespace Qualia
                     while (AxW != null)
                     {
                         var prevNeuron = AxW.Neuron;
-                        prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
+                        if (prevNeuron.Activation != 0)
+                        {
+                            prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
+                        }
+                        
                         AxW = AxW.Next;
                     }
 
