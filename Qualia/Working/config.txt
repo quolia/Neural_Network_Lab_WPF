@@ -1,10 +1,10 @@
-NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\17.txt
+NetworksManagerName:D:\Projects\Qualia\WPF\Qualia\Qualia\Working\Networks\15x15.txt
 ScreenWidth:1336.8
 ScreenHeight:752
-ScreenTop:28.8
-ScreenLeft:101.6
+ScreenTop:48
+ScreenLeft:106.4
 OnTop:0
-DataWidth:222
+DataWidth:219
 NetworkHeight:308
 SkipRoundsToDrawErrorMatrix:1000
 SkipRoundsToDrawNetworks:10000

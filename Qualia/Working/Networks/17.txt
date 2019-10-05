@@ -37,7 +37,7 @@ ActivationFuncParamA637015441500987989:
 SelectedLayerIndex637015441499727363:0
 SelectedNetworkIndex:0
 Task:CountDots
-TaskInputCount:10
+TaskInputCount:784
 TaskMinNumber:0
 TaskMaxNumber:10
 IsSymmetric:1

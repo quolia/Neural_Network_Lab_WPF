@@ -120,15 +120,10 @@ namespace Qualia.Controls
             }
 
             Rearrange(PointsCount);
-            /*
-            if (Stat == null || Stat.Length != Data.Length)
-            {
-                Stat = new double[Data.Length];
-            }
-            */
         }
         public void RearrangeWithNewPointsCount()
         {
+            Data = null;
             Rearrange(Task.GetInputCount());
         }
 

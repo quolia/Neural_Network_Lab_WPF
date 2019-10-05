@@ -372,7 +372,6 @@ namespace Qualia
                     for (int i = 0; i < currentForLimit.Current; ++i)
                     {
                         NetworksManager.PrepareModelsForRound();
-                        CtlInputDataPresenter.SetInputStat(NetworksManager.Models[0]);
 
                         var model = NetworksManager.Models[0];
                         while (model != null)
@@ -529,6 +528,7 @@ namespace Qualia
                                 swLock.Restart();
 
                                 modelCopy = NetworksManager.SelectedNetworkModel.GetCopyForRender();
+                                CtlInputDataPresenter.SetInputStat(NetworksManager.Models[0]);
 
                                 swLock.Stop();
                                 RenderTime.Network = swLock.Elapsed.Ticks;

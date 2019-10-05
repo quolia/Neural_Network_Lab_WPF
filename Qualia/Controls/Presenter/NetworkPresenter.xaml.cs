@@ -65,6 +65,7 @@ namespace Qualia.Controls
         {
             double threshold = model.Layers[0] == layer1 ? model.InputThreshold : 0;
 
+            NeuronDataModel prevNeuron = null;
             foreach (var neuron1 in layer1.Neurons)
             {
                 if (!Coordinator.ContainsKey(neuron1))
@@ -72,74 +73,88 @@ namespace Qualia.Controls
                     Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), TOP_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
                 }
 
-                foreach (var neuron2 in layer2.Neurons)
+                // Skip intersected neurons on first layer to improove performance.
+                if (!fullState && !neuron1.IsBias && model.Layers[0] == layer1 && prevNeuron != null)
                 {
-                    if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
+                    if (Coordinator[neuron1].Y - Coordinator[prevNeuron].Y < NEURON_SIZE)
                     {
-                        if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
+                        continue;
+                    }
+                }
+
+                if (fullState || neuron1.IsBias || neuron1.Activation > threshold)
+                {
+                    foreach (var neuron2 in layer2.Neurons)
+                    {
+                        if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
                         {
-                            Pen pen = null;
-                            Pen penChange = null;
-                            bool isWeightChanged = false;
-                            var weight = neuron1.WeightTo(neuron2);
-
-                            if (WeightsData.TryGetValue(weight, out double prevWeight))
+                            if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
                             {
-                                if (prevWeight != weight.Weight)
+                                Pen pen = null;
+                                Pen penChange = null;
+                                bool isWeightChanged = false;
+                                var weight = neuron1.WeightTo(neuron2);
+
+                                if (WeightsData.TryGetValue(weight, out double prevWeight))
                                 {
+                                    if (prevWeight != weight.Weight)
+                                    {
+                                        isWeightChanged = true;
+                                        WeightsData[weight] = weight.Weight;
+                                    }
+                                }
+                                else
+                                {
+                                    prevWeight = 0;
                                     isWeightChanged = true;
-                                    WeightsData[weight] = weight.Weight;
+                                    WeightsData.Add(weight, weight.Weight);
                                 }
-                            }
-                            else
-                            {
-                                prevWeight = 0;
-                                isWeightChanged = true;
-                                WeightsData.Add(weight, weight.Weight);
-                            }
 
-                            double fraction = Math.Min(1, Math.Abs((prevWeight - weight.Weight) / prevWeight));
-                            if (fraction <= 0.001)
-                            {
-                                isWeightChanged = false;
-                            }
-
-                            if (isWeightChanged && isHighlightChangedWeights)
-                            {
-                                penChange = Tools.Draw.GetPen(Colors.Lime);
-                            }
-
-                            if (isOnlyWeights)
-                            {
-                                if ((isWeightChanged && isOnlyChangedWeights) || !isOnlyChangedWeights)
+                                double fraction = Math.Min(1, Math.Abs((prevWeight - weight.Weight) / prevWeight));
+                                if (fraction <= 0.001)
                                 {
-                                    pen = Tools.Draw.GetPen(weight.Weight, 1);
+                                    isWeightChanged = false;
                                 }
-                            }
-                            else
-                            {
-                                pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
-                            }
 
-                            if (!isOnlyChangedWeights && isHighlightChangedWeights && isWeightChanged)
-                            {
-                                pen = penChange;
-                                penChange = null;
-                            }
-
-                            if (pen != null)
-                            {
-                                if (!Coordinator.ContainsKey(neuron2))
+                                if (isWeightChanged && isHighlightChangedWeights)
                                 {
-                                    Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), TOP_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                                    penChange = Tools.Draw.GetPen(Colors.Lime);
                                 }
 
-                                CtlPresenter.DrawLine(pen, Coordinator[neuron1], Coordinator[neuron2]);
-                            }
+                                if (isOnlyWeights)
+                                {
+                                    if ((isWeightChanged && isOnlyChangedWeights) || !isOnlyChangedWeights)
+                                    {
+                                        pen = Tools.Draw.GetPen(weight.Weight, 1);
+                                    }
+                                }
+                                else
+                                {
+                                    pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                                }
 
-                            if (penChange != null)
-                            {
-                                CtlPresenter.DrawLine(penChange, Coordinator[neuron1], Coordinator[neuron2]);
+                                if (!isOnlyChangedWeights && isHighlightChangedWeights && isWeightChanged)
+                                {
+                                    pen = penChange;
+                                    penChange = null;
+                                }
+
+                                if (pen != null)
+                                {
+                                    if (!Coordinator.ContainsKey(neuron2))
+                                    {
+                                        Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), TOP_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                                    }
+
+                                    CtlPresenter.DrawLine(pen, Coordinator[neuron1], Coordinator[neuron2]);
+                                    prevNeuron = neuron1;
+                                }
+
+                                if (penChange != null)
+                                {
+                                    CtlPresenter.DrawLine(penChange, Coordinator[neuron1], Coordinator[neuron2]);
+                                    prevNeuron = neuron1;
+                                }
                             }
                         }
                     }
@@ -152,26 +167,32 @@ namespace Qualia.Controls
 
             var biasColor = Tools.Draw.GetPen(Colors.Orange);
 
+            NeuronDataModel prevNeuron = null;
             foreach (var neuron in layer.Neurons)
             {
                 if (fullState || neuron.IsBias || neuron.Activation > threshold || layer.Id > 0)
                 {                   
+                    if (!Coordinator.ContainsKey(neuron))
+                    {
+                        Coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                    }
+
+                    // Skip intersected neurons on first layer to improove performance.
+                    if (!fullState && !neuron.IsBias && model.Layers[0] == layer && prevNeuron != null)
+                    {
+                        if (Coordinator[neuron].Y - Coordinator[prevNeuron].Y < NEURON_SIZE)
+                        {
+                            continue;
+                        }
+                    }
+                    prevNeuron = neuron;
+
                     var pen = Tools.Draw.GetPen(neuron.Activation);
                     var brush = pen.Brush;
 
                     if (neuron.IsBias)
                     {
-                        if (!Coordinator.ContainsKey(neuron))
-                        {
-                            Coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
-                        }
-
                         CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, Coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
-                    }
-
-                    if (!Coordinator.ContainsKey(neuron))
-                    {
-                        Coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                     }
 
                     CtlPresenter.DrawEllipse(brush, pen, Coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  
