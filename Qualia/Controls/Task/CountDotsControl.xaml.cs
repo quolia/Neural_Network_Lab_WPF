@@ -7,9 +7,9 @@ namespace Qualia.Controls
 {
     public partial class CountDotsControl : UserControl, IConfigValue
     {
-        Config Config;
+        private Config _config;
 
-        event Action OnChange = delegate { };
+        private event Action OnChange = delegate { };
 
         public CountDotsControl()
         {
@@ -31,7 +31,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
         }
 

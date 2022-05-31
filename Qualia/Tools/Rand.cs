@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tools
 {
@@ -32,13 +28,13 @@ namespace Tools
     //
     public sealed class GaussianRandom
     {
-        private bool HasDeviate;
-        private double StoredDeviate;
-        private readonly Random Random;
+        private bool _hasDeviate;
+        private double _storedDeviate;
+        private readonly Random _random;
 
         public GaussianRandom(Random random = null)
         {
-            Random = random ?? new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
+            _random = random ?? new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
         }
 
         /// <summary>
@@ -53,20 +49,22 @@ namespace Tools
         public double NextGaussian(double mu = 0, double sigma = 1)
         {
             if (sigma <= 0)
-                throw new ArgumentOutOfRangeException("sigma", "Must be greater than zero.");
-
-            if (HasDeviate)
             {
-                HasDeviate = false;
-                return StoredDeviate * sigma + mu;
+                throw new ArgumentOutOfRangeException("sigma", "Must be greater than zero.");
+            }
+
+            if (_hasDeviate)
+            {
+                _hasDeviate = false;
+                return _storedDeviate * sigma + mu;
             }
 
             double v1, v2, squared;
             do
             {
                 // two random values between -1.0 and 1.0
-                v1 = 2 * Random.NextDouble() - 1;
-                v2 = 2 * Random.NextDouble() - 1;
+                v1 = 2 * _random.NextDouble() - 1;
+                v2 = 2 * _random.NextDouble() - 1;
                 squared = v1 * v1 + v2 * v2;
                 // ensure within the unit circle
             } while (squared >= 1 || squared == 0);
@@ -74,8 +72,9 @@ namespace Tools
             // calculate polar tranformation for each deviate
             var polar = Math.Sqrt(-2 * Math.Log(squared) / squared);
             // store first deviate
-            StoredDeviate = v2 * polar;
-            HasDeviate = true;
+            _storedDeviate = v2 * polar;
+            _hasDeviate = true;
+
             // return second deviate
             return v1 * polar * sigma + mu;
         }

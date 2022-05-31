@@ -1,12 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using Tools;
 
 namespace Qualia.Controls
@@ -16,15 +14,16 @@ namespace Qualia.Controls
         public readonly Config Config;
         public ListX<NetworkDataModel> Models;
 
-        Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        private Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
-        TabControl CtlTabs;
-        INetworkTask Task;
+        private readonly TabControl _ctlTabs;
+        private INetworkTask _task;
+        private NetworkDataModel _prevSelectedNetworkModel;
 
         public NetworksManager(TabControl tabs, string name, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
-            CtlTabs = tabs;
+            _ctlTabs = tabs;
 
             Config = String.IsNullOrEmpty(name) ? CreateNewManager() : new Config(name);
             if (Config != null)
@@ -34,9 +33,8 @@ namespace Qualia.Controls
             }
         }
 
-        NetworkDataModel _prevSelectedNetworkModel;
+        public NetworkControl SelectedNetwork => _ctlTabs.SelectedContent as NetworkControl;
 
-        public NetworkControl SelectedNetwork => CtlTabs.SelectedContent as NetworkControl;
         public NetworkDataModel SelectedNetworkModel
         {
             get
@@ -47,15 +45,16 @@ namespace Qualia.Controls
             }
         }
 
-        List<NetworkControl> Networks
+        private List<NetworkControl> Networks
         {
             get
             {
                 var result = new List<NetworkControl>();
-                for (int i = 1; i < CtlTabs.Items.Count; ++i)
+                for (int i = 1; i < _ctlTabs.Items.Count; ++i)
                 {
-                    result.Add(CtlTabs.Tab(i).Content as NetworkControl);
+                    result.Add(_ctlTabs.Tab(i).Content as NetworkControl);
                 }
+
                 return result;
             }
         }
@@ -80,6 +79,7 @@ namespace Qualia.Controls
 
                     var config = new Config(saveDialog.FileName);
                     Config.Main.Set(Const.Param.NetworksManagerName, saveDialog.FileName);
+
                     return config;
                 }
             }
@@ -89,9 +89,9 @@ namespace Qualia.Controls
 
         private void ClearNetworks()
         {
-            while (CtlTabs.Items.Count > 1)
+            while (_ctlTabs.Items.Count > 1)
             {
-                CtlTabs.Items.RemoveAt(1);
+                _ctlTabs.Items.RemoveAt(1);
             }
         }
 
@@ -102,14 +102,16 @@ namespace Qualia.Controls
             {
                 networks = new long[] { Const.UnknownId };
             }
+
             Range.For(networks.Length, i => AddNetwork(networks[i]));
-            CtlTabs.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
+            _ctlTabs.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
+
             RefreshNetworksDataModels();
         }
 
         public void RebuildNetworksForTask(INetworkTask task)
         {
-            Task = task;
+            _task = task;
             Networks.ForEach(n => n.OnTaskChanged(task));
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
@@ -123,26 +125,28 @@ namespace Qualia.Controls
         {
             var network = new NetworkControl(id, Config, OnNetworkUIChanged);
             var tab = new TabItem();
-            tab.Header = $"Network {CtlTabs.Items.Count}";
+            tab.Header = $"Network {_ctlTabs.Items.Count}";
             tab.Content = network;
-            CtlTabs.Items.Add(tab);
-            CtlTabs.SelectedItem = tab;
+            _ctlTabs.Items.Add(tab);
+            _ctlTabs.SelectedItem = tab;
 
             if (id == Const.UnknownId)
             {
-                network.InputLayer.OnTaskChanged(Task);
+                network.InputLayer.OnTaskChanged(_task);
                 network.ResetLayersTabsNames();
             }
         }
 
         public void DeleteNetwork()
         {
-            if (MessageBox.Show($"Would you really like to delete Network {CtlTabs.SelectedIndex}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show($"Would you really like to delete Network {_ctlTabs.SelectedIndex}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 SelectedNetwork.VanishConfig();
-                var index = CtlTabs.Items.IndexOf(CtlTabs.SelectedTab());
-                CtlTabs.Items.Remove(CtlTabs.SelectedTab());
-                CtlTabs.SelectedIndex = index - 1;
+
+                var index = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
+                _ctlTabs.Items.Remove(_ctlTabs.SelectedTab());
+                _ctlTabs.SelectedIndex = index - 1;
+
                 ResetNetworksTabsNames();
                 OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
@@ -150,9 +154,9 @@ namespace Qualia.Controls
 
         private void ResetNetworksTabsNames()
         {
-            for (int i = 1; i < CtlTabs.Items.Count; ++i)
+            for (int i = 1; i < _ctlTabs.Items.Count; ++i)
             {
-                CtlTabs.Tab(i).Header = $"Network {i}";
+                _ctlTabs.Tab(i).Header = $"Network {i}";
             }
         }
 
@@ -164,7 +168,7 @@ namespace Qualia.Controls
         public void SaveConfig()
         {
             Config.Set(Const.Param.Networks, Networks.Select(l => l.Id));
-            Config.Set(Const.Param.SelectedNetworkIndex, CtlTabs.SelectedIndex - 1);
+            Config.Set(Const.Param.SelectedNetworkIndex, _ctlTabs.SelectedIndex - 1);
             Networks.ForEach(n => n.SaveConfig());
         }
 
@@ -199,7 +203,8 @@ namespace Qualia.Controls
         public ListX<NetworkDataModel> CreateNetworksDataModels()
         {
             var result = new ListX<NetworkDataModel>(Networks.Count);
-            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(Task, false)));
+            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(_task, false)));
+
             return result;
         }
 
@@ -211,7 +216,6 @@ namespace Qualia.Controls
         public void MergeModels(ListX<NetworkDataModel> models)
         {
             var newModels = new ListX<NetworkDataModel>(models.Count);
-
             foreach (var newModel in models)
             {
                 var model = Models.Find(m => m.VisualId == newModel.VisualId);
@@ -238,12 +242,11 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            Task.Do(Models[0]);
+            _task.Do(Models[0]);
 
             // copy first layer state and last layer targets to other networks
 
             var model = Models.Count > 1 ? Models[1] : null;          
-
             while (model != null)
             {
                 var neuronFirstModelFirstLayer = Models[0].Layers[0].Neurons[0];

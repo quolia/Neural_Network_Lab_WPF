@@ -1,24 +1,16 @@
-﻿using Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Controls;
+using Tools;
 
 namespace Qualia.Controls
 {
     public class QComboBox : ComboBox, IConfigValue
     {
-        Config Config;
+        private Config _config;
 
-        event Action OnChanged = delegate { };
+        private event Action OnChanged = delegate { };
 
-        string DefaultValue
-        {
-            get;
-            set;
-        }
+        string DefaultValue { get; set; }
 
         public QComboBox()
         {
@@ -36,7 +28,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
         }
 
         public void LoadConfig()
@@ -46,12 +38,12 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Config.Set(Name, SelectedItem.ToString());
+            _config.Set(Name, SelectedItem.ToString());
         }
 
         public void VanishConfig()
         {
-            Config.Remove(Name);
+            _config.Remove(Name);
         }
 
         public bool IsValid()

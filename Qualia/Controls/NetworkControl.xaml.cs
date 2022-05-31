@@ -14,17 +14,13 @@ namespace Qualia.Controls
     {
         public readonly long Id;
         public Config Config;
-        Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        
+        private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        private readonly List<IConfigValue> _configParams;
+        private OutputLayerControl _outputLayer;
 
-        List<IConfigValue> ConfigParams;
+        public InputLayerControl InputLayer { get; private set; }
 
-        public InputLayerControl InputLayer
-        {
-            get;
-            private set;
-        }
-
-        OutputLayerControl OutputLayer;
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.IsOn;
 
         public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
@@ -35,7 +31,7 @@ namespace Qualia.Controls
             Id = UniqId.GetId(id);
             Config = config.Extend(Id);
 
-            ConfigParams = new List<IConfigValue>()
+            _configParams = new List<IConfigValue>()
             {
                 CtlRandomizeModeParamA,
                 CtlRandomizeMode,
@@ -44,9 +40,9 @@ namespace Qualia.Controls
                 CtlCostFunction
             };
 
-            ConfigParams.ForEach(p => p.SetConfig(Config));
+            _configParams.ForEach(p => p.SetConfig(Config));
             LoadConfig();
-            ConfigParams.ForEach(p => p.SetChangeEvent(OnChanged));
+            _configParams.ForEach(p => p.SetChangeEvent(OnChanged));
         }
 
         private void OnChanged()
@@ -95,18 +91,25 @@ namespace Qualia.Controls
                     CtlTabsLayers.Tab(i).Header = $"L{i} ({layers[i].NeuronsCount})";
                 }
             }
+
+            // The code below is needed to refresh Tabcontrol.
+            // Without it newly added neuron control is not visible for hit test (some WPF issue).
+
+            int selectedIndex = CtlTabsLayers.SelectedIndex;
+            CtlTabsLayers.SelectedIndex = 0;
+            CtlTabsLayers.SelectedIndex = selectedIndex;
         }
 
         public bool IsValid()
         {
-            return ConfigParams.All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
+            return _configParams.All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
         }
 
         public void SaveConfig()
         {
             Config.Set(Const.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
             Config.Set(Const.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
-            ConfigParams.ForEach(p => p.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
 
             var layers = GetLayersControls();
             layers.ForEach(l => l.SaveConfig());
@@ -120,7 +123,7 @@ namespace Qualia.Controls
         public void OnTaskChanged(INetworkTask task)
         {
             InputLayer.OnTaskChanged(task);
-            OutputLayer.OnTaskChanged(task);
+            _outputLayer.OnTaskChanged(task);
         }
 
         public void VanishConfig()
@@ -128,7 +131,7 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.SelectedLayerIndex);
             Config.Remove(Const.Param.Color);
 
-            ConfigParams.ForEach(p => p.VanishConfig());
+            _configParams.ForEach(p => p.VanishConfig());
 
             GetLayersControls().ForEach(l => l.VanishConfig());
             Config.Remove(Const.Param.Layers);
@@ -141,6 +144,7 @@ namespace Qualia.Controls
             {
                 result.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
             }
+
             return result;
         }
 
@@ -149,7 +153,7 @@ namespace Qualia.Controls
             Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.FlatRandom));
             Tools.CostFunction.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunction.MSE));
 
-            ConfigParams.ForEach(p => p.LoadConfig());
+            _configParams.ForEach(p => p.LoadConfig());
 
             var color = Config.GetArray(Const.Param.Color, "255,100,100,100");
             CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0], (byte)color[1], (byte)color[2], (byte)color[3]));
@@ -157,7 +161,6 @@ namespace Qualia.Controls
             //
 
             var layers = Config.GetArray(Const.Param.Layers);
-
             var inputLayerId = layers.Length > 0 ? layers[0] : Const.UnknownId;
             var outputLayerId = layers.Length > 0 ? layers[layers.Length - 1] : Const.UnknownId;
 
@@ -167,11 +170,11 @@ namespace Qualia.Controls
             CtlTabInput.Content = sv;
             sv.ScrollChanged += InputLayer.OnScrollChanged;
 
-            OutputLayer = new OutputLayerControl(outputLayerId, Config, OnNetworkUIChanged);
+            _outputLayer = new OutputLayerControl(outputLayerId, Config, OnNetworkUIChanged);
             sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
-            sv.Content = OutputLayer;
+            sv.Content = _outputLayer;
             CtlTabOutput.Content = sv;
-            sv.ScrollChanged += OutputLayer.OnScrollChanged;
+            sv.ScrollChanged += _outputLayer.OnScrollChanged;
 
             foreach (var layer in layers)
             {
@@ -188,12 +191,16 @@ namespace Qualia.Controls
         }
 
         public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(c => !c.IsBias);
+
+        public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
+
+        public Type SelectedLayerType => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First().GetType();
+
+        public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
+
         private string RandomizeMode => CtlRandomizeMode.SelectedItem.ToString();
         private double? RandomizerParamA => CtlRandomizeModeParamA.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
-        public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
-        public Type SelectedLayerType => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First().GetType();
-        public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
         public void DeleteLayer()
         {
@@ -311,7 +318,7 @@ namespace Qualia.Controls
 
             model.Layers.Last().VisualId = Const.OutputLayerId;
             {
-                var neurons = OutputLayer.GetNeuronsControls();
+                var neurons = _outputLayer.GetNeuronsControls();
                 for (int i = 0; i < neurons.Count; ++i)
                 {
                     model.Layers.Last().Neurons[i].VisualId = neurons[i].Id;

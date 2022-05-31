@@ -1,39 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 
 namespace Qualia.Controls
 {
     public partial class OutputNeuronControl : NeuronBase
     {
-        List<IConfigValue> ConfigParams;
+        private readonly List<IConfigValue> _configParams;
 
         public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            ConfigParams = new List<IConfigValue>()
+            _configParams = new List<IConfigValue>()
             {
                 CtlActivationFunc,
                 CtlActivationFuncParamA
             };
 
-            ConfigParams.ForEach(p => p.SetConfig(Config));
+            _configParams.ForEach(p => p.SetConfig(Config));
             LoadConfig();
-            ConfigParams.ForEach(p => p.SetChangeEvent(OnChanged));
+            _configParams.ForEach(p => p.SetChangeEvent(OnChanged));
         }
 
         public override string WeightsInitializer => nameof(InitializeMode.None);
@@ -46,7 +34,7 @@ namespace Qualia.Controls
         public void LoadConfig()
         {
             ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
-            ConfigParams.ForEach(p => p.LoadConfig());
+            _configParams.ForEach(p => p.LoadConfig());
 
             StateChanged();
         }
@@ -68,12 +56,12 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            ConfigParams.ForEach(p => p.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
         }
 
         public override void VanishConfig()
         {
-            ConfigParams.ForEach(p => p.VanishConfig());
+            _configParams.ForEach(p => p.VanishConfig());
         }
     }
 }

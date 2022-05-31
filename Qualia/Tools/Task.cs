@@ -1,11 +1,9 @@
-﻿using Qualia;
-using Qualia.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using Qualia;
+using Qualia.Controls;
 
 namespace Tools
 {
@@ -30,18 +28,18 @@ namespace Tools
     {
         public class CountDots : INetworkTask
         {
-            Config Config;
+            private Config _config;
 
             public static INetworkTask Instance = new CountDots();
-            static CountDotsControl Control = new CountDotsControl();
+            static readonly CountDotsControl s_control = new CountDotsControl();
 
-            bool IsGaussianDistribution;
-            int MinNumber;
-            int MaxNumber;
+            private bool _isGaussianDistribution;
+            private int _minNumber;
+            private int _maxNumber;
 
             public Control GetVisualControl()
             {
-                return Control;
+                return s_control;
             }
 
             public int GetPointsRearrangeSnap()
@@ -56,37 +54,37 @@ namespace Tools
 
             public void ApplyChanges()
             {
-                IsGaussianDistribution = Control.IsGaussianDistribution;
-                MinNumber = Control.MinNumber;
-                MaxNumber = Control.MaxNumber;
+                _isGaussianDistribution = s_control.IsGaussianDistribution;
+                _minNumber = s_control.MinNumber;
+                _maxNumber = s_control.MaxNumber;
             }
 
             public void SetConfig(Config config)
             {
-                Config = config;
-                Control.SetConfig(config);
+                _config = config;
+                s_control.SetConfig(config);
             }
 
             public void LoadConfig()
             {
-                Control.LoadConfig();
+                s_control.LoadConfig();
                 ApplyChanges();
             }
 
             public void SaveConfig()
             {
-                Control.SaveConfig();
+                s_control.SaveConfig();
             }
 
             public int GetInputCount()
             {
-                return Control.InputCount;
+                return s_control.InputCount;
             }
 
             public List<string> GetClasses()
             {
                 var classes = new List<string>();
-                for (int i = Control.MinNumber; i <= Control.MaxNumber; ++i)
+                for (int i = s_control.MinNumber; i <= s_control.MaxNumber; ++i)
                 {
                     classes.Add(i.ToString());
                 }
@@ -98,18 +96,18 @@ namespace Tools
                 var shuffled = model.Layers[0].ShuffledNeurons;
                 shuffled.Shuffle();
 
-                if (IsGaussianDistribution)
+                if (_isGaussianDistribution)
                 {
-                    double median = ((double)MinNumber + MaxNumber) / 2;
+                    double median = ((double)_minNumber + _maxNumber) / 2;
 
                     var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
-                    if (number < MinNumber)
+                    if (number < _minNumber)
                     {
-                        number = MinNumber;
+                        number = _minNumber;
                     }
-                    if (number > MaxNumber)
+                    if (number > _maxNumber)
                     {
-                        number = MaxNumber;
+                        number = _maxNumber;
                     }
 
                     for (int i = 0; i < shuffled.Count; ++i)
@@ -120,15 +118,15 @@ namespace Tools
                     var neuron = model.Layers.Last().Neurons[0];
                     while (neuron != null)
                     {
-                        neuron.Target = (neuron.Id == number - MinNumber) ? 1 : 0;
+                        neuron.Target = (neuron.Id == number - _minNumber) ? 1 : 0;
                         neuron = neuron.Next;
                     }
 
-                    model.TargetOutput = number - MinNumber;
+                    model.TargetOutput = number - _minNumber;
                 }
                 else
                 {
-                    var number = Rand.Flat.Next(MinNumber, MaxNumber + 1);
+                    var number = Rand.Flat.Next(_minNumber, _maxNumber + 1);
 
                     for (int i = 0; i < shuffled.Count; ++i)
                     {
@@ -138,27 +136,27 @@ namespace Tools
                     var neuron = model.Layers.Last().Neurons[0];
                     while (neuron != null)
                     {
-                        neuron.Target = (neuron.Id == number - MinNumber) ? 1 : 0;
+                        neuron.Target = (neuron.Id == number - _minNumber) ? 1 : 0;
                         neuron = neuron.Next;
                     }
 
-                    model.TargetOutput = number - MinNumber;
+                    model.TargetOutput = number - _minNumber;
                 }
             }
 
             public void VanishConfig()
             {
-                Control.VanishConfig();
+                s_control.VanishConfig();
             }
 
             public bool IsValid()
             {
-                return Control.IsValid();
+                return s_control.IsValid();
             }
 
             public void SetChangeEvent(Action onChanged)
             {
-                Control.SetChangeEvent(onChanged);
+                s_control.SetChangeEvent(onChanged);
             }
 
             public void InvalidateValue()
@@ -169,17 +167,18 @@ namespace Tools
 
         public class MNIST : INetworkTask
         {
-            Config Config;
+            private Config _config;
 
             public static INetworkTask Instance = new MNIST();
-            static MNISTControl Control = new MNISTControl();
+            
+            private static MNISTControl s_control = new MNISTControl();
 
-            int MinNumber;
-            int MaxNumber;
+            private int _minNumber;
+            private int _maxNumber;
 
             public Control GetVisualControl()
             {
-                return Control;
+                return s_control;
             }
 
             public int GetPointsRearrangeSnap()
@@ -194,25 +193,25 @@ namespace Tools
 
             public void ApplyChanges()
             {
-                MinNumber = Control.MinNumber;
-                MaxNumber = Control.MaxNumber;
+                _minNumber = s_control.MinNumber;
+                _maxNumber = s_control.MaxNumber;
             }
 
             public void SetConfig(Config config)
             {
-                Config = config;
-                Control.SetConfig(config);
+                _config = config;
+                s_control.SetConfig(config);
             }
 
             public void LoadConfig()
             {
-                Control.LoadConfig();
+                s_control.LoadConfig();
                 ApplyChanges();
             }
 
             public void SaveConfig()
             {
-                Control.SaveConfig();
+                s_control.SaveConfig();
             }
 
             public int GetInputCount()
@@ -223,16 +222,17 @@ namespace Tools
             public List<string> GetClasses()
             {
                 var classes = new List<string>();
-                for (int i = Control.MinNumber; i <= Control.MaxNumber; ++i)
+                for (int i = s_control.MinNumber; i <= s_control.MaxNumber; ++i)
                 {
                     classes.Add(i.ToString());
                 }
+
                 return classes;
             }
 
             public void Do(NetworkDataModel model)
             {
-                var image = Control.Images[Rand.Flat.Next(Control.Images.Count)];
+                var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
 
                 for (int i = 0; i < model.Layers[0].Neurons.Count; ++i)
                 {
@@ -251,17 +251,17 @@ namespace Tools
 
             public void VanishConfig()
             {
-                Control.VanishConfig();
+                s_control.VanishConfig();
             }
 
             public bool IsValid()
             {
-                return Control.IsValid();
+                return s_control.IsValid();
             }
 
             public void SetChangeEvent(Action onChanged)
             {
-                Control.SetChangeEvent(onChanged);
+                s_control.SetChangeEvent(onChanged);
             }
 
             public void InvalidateValue()

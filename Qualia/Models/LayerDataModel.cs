@@ -1,10 +1,6 @@
-﻿using ILGPU;
+﻿using System.Linq;
+using ILGPU;
 using ILGPU.Runtime;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tools;
 
 namespace Qualia
@@ -16,6 +12,8 @@ namespace Qualia
         public ListX<NeuronDataModel> Neurons;
         public ListX<NeuronDataModel> ShuffledNeurons;
 
+        private MemoryBuffer2D<double> _neurons;
+
         public LayerDataModel(int id, int neuronsCount, int weightsCount)
         {
             Neurons = new ListX<NeuronDataModel>(neuronsCount);
@@ -24,11 +22,12 @@ namespace Qualia
             ShuffledNeurons = new ListX<NeuronDataModel>(Neurons.Where(n => !n.IsBias));
         }
 
-        MemoryBuffer2D<double> _neurons;
         public MemoryBuffer2D<double> GetNeurons()
         {
             if (_neurons != null)
+            {
                 return _neurons;
+            }
 
             var neurons = GPU.Instance.Accelerator.Allocate<double>(1 + 1 + 1 + Neurons[0].Weights.Count, Neurons.Count); // 1 activation + 1 is bias + 1 is bias connected
             for (int y = 0; y < Neurons.Count; ++y)

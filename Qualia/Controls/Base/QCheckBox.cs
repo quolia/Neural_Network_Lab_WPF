@@ -1,41 +1,25 @@
-﻿using Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Controls;
+using Tools;
 
 namespace Qualia.Controls
 {
     public class QCheckBox : CheckBox, IConfigValue
     {
-        Config Config;
+        private Config _config;
 
-        event Action Changed = delegate { };
+        private event Action Changed = delegate { };
 
-        public bool DefaultValue
-        {
-            get;
-            set;
-        }
+        public bool DefaultValue { get; set; }
 
         public bool IsOn
         {
-            get
-            {
-                return IsChecked == true;
-            }
-
-            set
-            {
-                IsChecked = value;
-            }
+            get => IsChecked == true;
+            set => IsChecked = value;
         }
 
         public QCheckBox()
         {
-            //Height = 18;
             Checked += OnOffBox_Changed;
             Unchecked += OnOffBox_Changed;
         }
@@ -47,22 +31,22 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
         }
 
         public void LoadConfig()
         {
-            IsOn = Config.GetBool(Name, DefaultValue);
+            IsOn = _config.GetBool(Name, DefaultValue);
         }
 
         public void SaveConfig()
         {
-            Config.Set(Name, IsOn);
+            _config.Set(Name, IsOn);
         }
 
         public void VanishConfig()
         {
-            Config.Remove(Name);
+            _config.Remove(Name);
         }
 
         public bool IsValid()

@@ -2,6 +2,7 @@
 //   (c) Mokrov Ivan
 // special for habrahabr.ru
 // under MIT license
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms.Integration;
 
@@ -9,28 +10,26 @@ namespace Qualia.Controls
 {
     public partial class RazorPainterWPFCtl : WindowsFormsHost
     {
-        private readonly HandleRef hDCRef;
-        private readonly System.Drawing.Graphics hDCGraphics;
-        private readonly RazorPainter RP;
+        private readonly HandleRef _hDCRef;
+        private readonly Graphics _hDCGraphics;
+        private readonly RazorPainter _RP;
 
-        /// <summary>
-        /// root Bitmap
-        /// </summary>
-        public System.Drawing.Bitmap RazorBMP { get; private set; }
+        public Bitmap RazorBMP { get; private set; }
 
         /// <summary>
         /// Graphics object to paint on RazorBMP
         /// </summary>
-        public System.Drawing.Graphics RazorGFX { get; private set; }
+        public Graphics RazorGFX { get; private set; }
 
         /// <summary>
         /// Real per-pixel width of backend Win32 control, w/o DPI resizes of WPF layout
         /// </summary>
-        public int RazorWidth { get { return RazorBackend1.Width; } }
+        public int RazorWidth => RazorBackend1.Width;
+
         /// <summary>
         /// Real per-pixel height of backend Win32 control, w/o DPI resizes of WPF layout
         /// </summary>
-        public int RazorHeight { get { return RazorBackend1.Height; } }
+        public int RazorHeight => RazorBackend1.Height;
 
         /// <summary>
         /// Lock it to avoid resize/repaint race
@@ -41,21 +40,31 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            hDCGraphics = RazorBackend1.CreateGraphics();
-            hDCRef = new HandleRef(hDCGraphics, hDCGraphics.GetHdc());
-            RP = new RazorPainter();
+            _hDCGraphics = RazorBackend1.CreateGraphics();
+            _hDCRef = new HandleRef(_hDCGraphics, _hDCGraphics.GetHdc());
+            _RP = new RazorPainter();
 
-            RazorBMP = new System.Drawing.Bitmap(RazorWidth, RazorHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            RazorGFX = System.Drawing.Graphics.FromImage(RazorBMP);
+            RazorBMP = new Bitmap(RazorWidth, RazorHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            RazorGFX = Graphics.FromImage(RazorBMP);
 
             RazorBackend1.Resize += (sender, args) =>
             {
                 lock (RazorLock)
                 {
-                    if (RazorGFX != null) RazorGFX.Dispose();
-                    if (RazorBMP != null) RazorBMP.Dispose();
-                    RazorBMP = new System.Drawing.Bitmap(RazorWidth, RazorWidth, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                    RazorGFX = System.Drawing.Graphics.FromImage(RazorBMP);
+                    if (RazorGFX != null)
+                    {
+                        RazorGFX.Dispose();
+                        RazorGFX = null;
+                    }
+
+                    if (RazorBMP != null)
+                    {
+                        RazorBMP.Dispose();
+                        RazorBMP = null;
+                    }
+
+                    RazorBMP = new Bitmap(RazorWidth, RazorWidth, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    RazorGFX = Graphics.FromImage(RazorBMP);
                 }
             };
         }
@@ -65,17 +74,31 @@ namespace Qualia.Controls
         /// </summary>
         public void RazorPaint()
         {
-            RP.Paint(hDCRef, RazorBMP);
+            _RP.Paint(_hDCRef, RazorBMP);
         }
 
         protected override void Dispose(bool disposing)
         {
             lock (this)
             {
-                if (RazorGFX != null) RazorGFX.Dispose();
-                if (RazorBMP != null) RazorBMP.Dispose();
-                if (hDCGraphics != null) hDCGraphics.Dispose();
-                RP.Dispose();
+                if (RazorGFX != null)
+                {
+                    RazorGFX.Dispose();
+                    RazorGFX = null;
+                }
+
+                if (RazorBMP != null)
+                {
+                    RazorBMP.Dispose();
+                    RazorBMP = null;
+                }
+
+                if (_hDCGraphics != null)
+                {
+                    _hDCGraphics.Dispose();
+                }
+                
+                _RP.Dispose();
             }
 
             base.Dispose(disposing);

@@ -1,31 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 
 namespace Qualia.Controls
 {
     public partial class InputLayerControl : LayerBase
     {
-        List<IConfigValue> ConfigParams;
+        private readonly List<IConfigValue> _configParams;
 
         public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            ConfigParams = new List<IConfigValue>()
+            _configParams = new List<IConfigValue>()
             {
                 CtlInputInitial0,
                 CtlInputInitial1,
@@ -36,9 +26,9 @@ namespace Qualia.Controls
                 CtlWeightsInitializerParamA
             };
 
-            ConfigParams.ForEach(p => p.SetConfig(Config));
+            _configParams.ForEach(p => p.SetConfig(Config));
             LoadConfig();
-            ConfigParams.ForEach(p => p.SetChangeEvent(ParameterChanged));
+            _configParams.ForEach(p => p.SetChangeEvent(ParameterChanged));
         }
 
         private void ParameterChanged()
@@ -73,7 +63,7 @@ namespace Qualia.Controls
         {
             ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.None));
             InitializeMode.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeMode.None));
-            ConfigParams.ForEach(p => p.LoadConfig());
+            _configParams.ForEach(p => p.LoadConfig());
 
             var neurons = Config.GetArray(Const.Param.Neurons);
             foreach (var bias in neurons)
@@ -89,6 +79,7 @@ namespace Qualia.Controls
                 ActivationFunc = CtlActivationFunc.SelectedItem.ToString(),
                 ActivationFuncParamA = CtlActivationFuncParamA.ValueOrNull
             };
+
             return neuron;
         }
 
@@ -112,12 +103,12 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return ConfigParams.All(p => p.IsValid()) && GetNeuronsControls().All(n => n.IsValid());
+            return _configParams.All(p => p.IsValid()) && GetNeuronsControls().All(n => n.IsValid());
         }
 
         public override void SaveConfig()
         {
-            ConfigParams.ForEach(p => p.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
 
             var neurons = GetNeuronsControls().Where(n => n.IsBias);
             Config.Set(Const.Param.Neurons, neurons.Select(n => n.Id));
@@ -130,7 +121,7 @@ namespace Qualia.Controls
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
-            ConfigParams.ForEach(p => p.VanishConfig());
+            _configParams.ForEach(p => p.VanishConfig());
             GetNeuronsControls().ForEach(n => n.VanishConfig());
         }
 

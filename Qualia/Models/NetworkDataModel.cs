@@ -1,6 +1,6 @@
-﻿using Qualia.Controls;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Media;
+using Qualia.Controls;
 using Tools;
 
 namespace Qualia
@@ -50,6 +50,7 @@ namespace Qualia
             var neurons = Layers.Last().Neurons;
             var max = neurons[0];
             var neuron = max;
+
             while (neuron != null)
             {
                 if (neuron.Activation > max.Activation)
@@ -75,7 +76,6 @@ namespace Qualia
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
-        
         public void FeedForward2()
         {
             var layer = Layers[0];
@@ -162,6 +162,7 @@ namespace Qualia
         {
             var lastLayer = Layers.Last();
             var neuron = lastLayer.Neurons[0];
+
             while (neuron != null)
             {
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
@@ -170,6 +171,7 @@ namespace Qualia
 
             var layer = lastLayer;
             var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
+
             while (layer != finalLayer)
             {
                 neuron = layer.Neurons[0];
@@ -231,6 +233,7 @@ namespace Qualia
         {
             var lastLayer = Layers.Last();
             var neuron = lastLayer.Neurons[0];
+
             while (neuron != null)
             {
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
@@ -239,6 +242,7 @@ namespace Qualia
 
             var layer = lastLayer;
             var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
+
             while (layer != finalLayer)
             {
                 var neuronPrev = layer.Previous.Neurons[0];
@@ -358,6 +362,7 @@ namespace Qualia
         {
             var layer = Layers[0];
             var layer2 = Copy.Layers[0];
+
             while (layer != null)
             {
                 var neuron = layer.Neurons[0];

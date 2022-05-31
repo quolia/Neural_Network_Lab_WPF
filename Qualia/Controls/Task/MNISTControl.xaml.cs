@@ -1,11 +1,11 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using Tools;
 
 namespace Qualia.Controls
@@ -14,9 +14,9 @@ namespace Qualia.Controls
     {
         public List<MNISTImage> Images = new List<MNISTImage>();
 
-        Config Config;
+        private Config _config;
 
-        event Action OnChange = delegate { };
+        private event Action OnChange = delegate { };
 
         public MNISTControl()
         {
@@ -36,7 +36,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
         }
 
@@ -67,14 +67,8 @@ namespace Qualia.Controls
                 }
 
                 LoadImages(fileName);
-/*
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Cannot load MNIST images with the following message:\r\n\r\n" + ex.Message);
-                }
-                */
 
-                if (!String.IsNullOrEmpty(CtlMNISTLabelsPath.Text))
+                if (!string.IsNullOrEmpty(CtlMNISTLabelsPath.Text))
                 {
                     fileName = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
                     if (!File.Exists(fileName))
@@ -275,7 +269,7 @@ namespace Qualia.Controls
         private void BrowseFile(TextBox control, string targetName)
         {
             var file = BrowseFile();
-            if (!String.IsNullOrEmpty(file))
+            if (!string.IsNullOrEmpty(file))
             {
                 try
                 {

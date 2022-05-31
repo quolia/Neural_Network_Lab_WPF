@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -43,13 +39,6 @@ namespace Qualia.Controls
         private void AddNeuron_Click(object sender, RoutedEventArgs e)
         {
             this.GetParentOfType<LayerBase>().AddNeuron();
-
-            // The code below is needed to refresh Tabcontrol.
-            // Without it newly added neuron control is not visible for hit test (some WPF issue).
-
-            int selectedIndex = this.GetParentOfType<TabControl>().SelectedIndex;
-            this.GetParentOfType<TabControl>().SelectedIndex = 0;
-            this.GetParentOfType<TabControl>().SelectedIndex = selectedIndex;
         }
 
         private void DeleteNeuron_Click(object sender, RoutedEventArgs e)

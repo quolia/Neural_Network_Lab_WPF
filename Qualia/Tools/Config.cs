@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tools
 {
@@ -23,9 +21,10 @@ namespace Tools
         public static Config Main = new Config("config.txt");
         public readonly string Name;
         public Config ParentConfig;
-        string Extender;
+        
+        private string _extender;
 
-        static Dictionary<string, Dictionary<string, string>> Cache = new Dictionary<string, Dictionary<string, string>>();
+        private static readonly Dictionary<string, Dictionary<string, string>> s_cache = new Dictionary<string, Dictionary<string, string>>();
 
         public Config(string name, Config parentConfig = null)
         {
@@ -43,7 +42,7 @@ namespace Tools
             var config = new Config(Name)
             {
                 ParentConfig = this,
-                Extender = "." + extender
+                _extender = "." + extender
             };
 
             return config;
@@ -129,7 +128,7 @@ namespace Tools
             }
 
             string value = GetValue(name, defaultValue);
-            return String.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+            return string.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
         public long[] GetArray(string name, string defaultValue = null)
@@ -140,33 +139,36 @@ namespace Tools
             }
 
             string value = GetValue(name, defaultValue);
-            return String.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+            return string.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
         public void Remove(Const.Param name)
         {
             var values = GetValues();
-            if (values.TryGetValue(name.ToString("G") + Extender, out _))
+            if (values.TryGetValue(name.ToString("G") + _extender, out _))
             {
-                values.Remove(name.ToString("G") + Extender);
+                values.Remove(name.ToString("G") + _extender);
             }
+
             SaveValues(values);
         }
 
         public void Remove(string name)
         {
             var values = GetValues();
-            if (values.TryGetValue(name + Extender, out _))
+            if (values.TryGetValue(name + _extender, out _))
             {
-                values.Remove(name + Extender);
+                values.Remove(name + _extender);
             }
+
             SaveValues(values);
         }
 
         public void Set(Const.Param name, string value)
         {
             var values = GetValues();
-            values[name.ToString("G") + Extender] = value;
+            values[name.ToString("G") + _extender] = value;
+
             SaveValues(values);
         }
 
@@ -175,7 +177,8 @@ namespace Tools
             name = CutName(name);
 
             var values = GetValues();
-            values[name + Extender] = value;
+            values[name + _extender] = value;
+
             SaveValues(values);
         }
 
@@ -211,19 +214,19 @@ namespace Tools
 
         public void Set<T>(Const.Param name, IEnumerable<T> list)
         {
-            Set(name, String.Join(",", list.Select(l => l.ToString())));
+            Set(name, string.Join(",", list.Select(l => l.ToString())));
         }
 
         public void Set<T>(string name, IEnumerable<T> list)
         {
-            Set(name, String.Join(",", list.Select(l => l.ToString())));
+            Set(name, string.Join(",", list.Select(l => l.ToString())));
         }
 
         private string GetValue(Const.Param name, string defaultValue = null)
         {
             var values = GetValues();
 
-            if (values.TryGetValue(name.ToString("G") + Extender, out string value))
+            if (values.TryGetValue(name.ToString("G") + _extender, out string value))
             {
                 return value;
             }
@@ -240,7 +243,7 @@ namespace Tools
 
             var values = GetValues();
 
-            if (values.TryGetValue(name + Extender, out string value))
+            if (values.TryGetValue(name + _extender, out string value))
             {
                 return value;
             }
@@ -253,21 +256,21 @@ namespace Tools
 
         private void SaveValues(Dictionary<string, string> values)
         {
-            if (Cache.ContainsKey(Name))
+            if (s_cache.ContainsKey(Name))
             {
-                Cache[Name] = values;
+                s_cache[Name] = values;
             }
             else
             {
-                Cache.Add(Name, values);
+                s_cache.Add(Name, values);
             }
         }
 
         public void FlushToDrive()
         {
-            if (Cache.ContainsKey(Name))
+            if (s_cache.ContainsKey(Name))
             {
-                var values = Cache[Name];
+                var values = s_cache[Name];
 
                 var lines = new List<string>();
                 foreach (var pair in values)
@@ -281,9 +284,9 @@ namespace Tools
 
         private Dictionary<string, string> GetValues()
         {
-            if (Cache.ContainsKey(Name))
+            if (s_cache.ContainsKey(Name))
             {
-                return Cache[Name];
+                return s_cache[Name];
             }
 
             var result = new Dictionary<string, string>();
@@ -307,7 +310,7 @@ namespace Tools
                 }
             }
 
-            Cache.Add(Name, result);
+            s_cache.Add(Name, result);
 
             return result;
         }
@@ -315,7 +318,7 @@ namespace Tools
         public void Clear()
         {
             File.WriteAllLines(Name, Array.Empty<string>());
-            Cache.Clear();
+            s_cache.Clear();
         }
     }
 }

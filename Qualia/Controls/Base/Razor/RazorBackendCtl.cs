@@ -1,8 +1,4 @@
-﻿//   (c) Mokrov Ivan
-// special for habrahabr.ru
-// under MIT license
-
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Qualia.Controls
 {
@@ -17,7 +13,7 @@ namespace Qualia.Controls
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.Opaque, true);
             
-            this.MinimumSize = new System.Drawing.Size(1, 1);
+            MinimumSize = new System.Drawing.Size(1, 1);
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿// RazorGDIPainter library - ultrafast 2D painting. See test applications
-// on http://razorgdipainter.codeplex.com/
-//   (c) Mokrov Ivan
-// special for habrahabr.ru
-// under MIT license
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -54,14 +48,19 @@ namespace Qualia.Controls
         public void Dispose()
         {
             if (_gcHandle.IsAllocated)
+            {
                 _gcHandle.Free();
+            }
+
             GC.SuppressFinalize(this);
         }
 
         private void Realloc(int width, int height)
         {
             if (_gcHandle.IsAllocated)
+            {
                 _gcHandle.Free();
+            }
 
             _width = width;
             _height = height;
@@ -86,7 +85,7 @@ namespace Qualia.Controls
         {
             if (bitmap == null || bitmap.Width == 0 || bitmap.Height == 0)
             {
-                Console.WriteLine("impossiburu Bitmap at Paint() in RazorPainter");
+                Console.WriteLine("Invalid bitmap in Paint");
                 return;
             }
 
@@ -97,19 +96,17 @@ namespace Qualia.Controls
             }
 
             if (bitmap.Width != _width || bitmap.Height != _height)
+            {
                 Realloc(bitmap.Width, bitmap.Height);
-
-            //_gcHandle = GCHandle.Alloc(_pArray, GCHandleType.Pinned);
+            }
 
             BitmapData BD = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
                                             ImageLockMode.ReadOnly,
                                             PixelFormat.Format32bppArgb);
+
             Marshal.Copy(BD.Scan0, _pArray, 0, _width * _height);
             SetDIBitsToDevice(hRef, 0, 0, _width, _height, 0, 0, 0, _height, ref _pArray[0], ref _BI, 0);
             bitmap.UnlockBits(BD);
-
-            //if (_gcHandle.IsAllocated)
-            //	_gcHandle.Free();
         }
     }
 }

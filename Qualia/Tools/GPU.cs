@@ -1,16 +1,15 @@
-﻿using ILGPU;
-using ILGPU.Backends;
-using ILGPU.Runtime;
-using Qualia;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ILGPU;
+using ILGPU.Runtime;
+using Qualia;
 
 namespace Tools
 {
     public struct NetworkGPU
     {
-        ArrayView<LayerGPU> Layers;
+        private readonly ArrayView<LayerGPU> _layers;
 
         public NetworkGPU(NetworkDataModel model)
         {
@@ -19,7 +18,7 @@ namespace Tools
             {
                 layers.CopyFrom(new LayerGPU(model.Layers[i]), i);
             }
-            Layers = layers.View;
+            _layers = layers.View;
         }
        /*
         public void FeedForward()
@@ -89,7 +88,7 @@ namespace Tools
         public IActivationFunction ActivationFunction;
         public double? ActivationFuncParamA;
 
-        ArrayView<WeightGPU> Weights;
+        private readonly ArrayView<WeightGPU> _weights;
 
         public NeuronGPU(NeuronDataModel neuron)
         {
@@ -105,13 +104,12 @@ namespace Tools
             {
                 weights.CopyFrom(new WeightGPU(neuron.Weights[i]), i);
             }
-            Weights = weights.View;
+            _weights = weights.View;
         }
 
         public double AxW(NeuronGPU nextNeuron)
         {
-            var weight = Weights[nextNeuron.Id];
-
+            var weight = _weights[nextNeuron.Id];
             return Activation * weight.Weight;
         }
     }
@@ -149,27 +147,27 @@ namespace Tools
         }
     }
 
-        public class GPU : IDisposable
+    public class GPU : IDisposable
     {
         public static GPU Instance = new GPU();
-
-        Context Context;
         public Accelerator Accelerator;
 
-        Dictionary<int, List<MemoryBuffer<double>>> Buffers;
+        private Context _context;
 
-        Action<Index, ArrayView2D<double>, ArrayView2D<double>> KernelProduct;
-        Action<Index, double[], double[], VariableView<double>> KernelProduct2;
+        private Dictionary<int, List<MemoryBuffer<double>>> _buffers;
+
+        private Action<Index, ArrayView2D<double>, ArrayView2D<double>> _kernelProduct;
+        private Action<Index, double[], double[], VariableView<double>> _kernelProduct2;
 
         public GPU()
         {
-            Buffers = new Dictionary<int, List<MemoryBuffer<double>>>();
+            _buffers = new Dictionary<int, List<MemoryBuffer<double>>>();
 
-            Context = new Context();
+            _context = new Context();
             var acceleratorId = Accelerator.Accelerators.First(a => a.AcceleratorType == AcceleratorType.Cuda);
-            Accelerator = Accelerator.Create(Context, acceleratorId);
+            Accelerator = Accelerator.Create(_context, acceleratorId);
 
-            KernelProduct = Accelerator.LoadAutoGroupedStreamKernel<Index, ArrayView2D<double>, ArrayView2D<double>>(Product);
+            _kernelProduct = Accelerator.LoadAutoGroupedStreamKernel<Index, ArrayView2D<double>, ArrayView2D<double>>(Product);
             //KernelProduct2 = Accelerator.LoadAutoGroupedStreamKernel<Index, double[], double[], VariableView<double>>(KernelProduct2);
         }
 
@@ -180,13 +178,13 @@ namespace Tools
 
         public MemoryBuffer<double> GetBuffer(int size)
         {
-            if (!Buffers.ContainsKey(size))
+            if (!_buffers.ContainsKey(size))
             {
-                Buffers.Add(size, new List<MemoryBuffer<double>>());
-                Buffers[size].Add(Accelerator.Allocate<double>(size));
+                _buffers.Add(size, new List<MemoryBuffer<double>>());
+                _buffers[size].Add(Accelerator.Allocate<double>(size));
             }
 
-            var list = Buffers[size];
+            var list = _buffers[size];
             MemoryBuffer<double> buffer;
             if (list.Count == 0)
             {
@@ -203,17 +201,17 @@ namespace Tools
 
         private void ReleaseBuffer(MemoryBuffer<double> buffer)
         {
-            Buffers[buffer.Length].Add(buffer);
+            _buffers[buffer.Length].Add(buffer);
         }
 
         public void Dispose()
         {
             Accelerator.Dispose();
-            Context.Dispose();
+            _context.Dispose();
 
-            foreach (var key in Buffers.Keys)
+            foreach (var key in _buffers.Keys)
             {
-                var list = Buffers[key];
+                var list = _buffers[key];
                 foreach (var buff in list)
                 {
                     buff.Dispose();
@@ -258,8 +256,11 @@ namespace Tools
             {
                 var neurons = model.Layers[i].GetNeurons();
                 var neuronsNext = model.Layers[i + 1].GetNeurons();
-                KernelProduct(neuronsNext.Height, neurons, neuronsNext);
+
+                _kernelProduct(neuronsNext.Height, neurons, neuronsNext);
+
                 Accelerator.Synchronize();
+
                 for (int n = 0; n < neuronsNext.Height; ++n)
                 {
                     neuronsNext.CopyTo(out double activation, new Index2(0, n));

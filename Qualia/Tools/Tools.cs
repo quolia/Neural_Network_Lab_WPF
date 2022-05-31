@@ -1,5 +1,4 @@
-﻿using Qualia;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Qualia;
 
 namespace Tools
 {
@@ -33,17 +33,17 @@ namespace Tools
     }
     public unsafe struct Pointer<T>
     {
-        private void* m_value;
+        private void* _value;
 
         public Pointer(void* v)
         {
-            m_value = v;
+            _value = v;
         }
 
         public T Value
         {
-            get => Unsafe.Read<T>(m_value);
-            set => Unsafe.Write(m_value, value);
+            get => Unsafe.Read<T>(_value);
+            set => Unsafe.Write(_value, value);
         }
 
         public static implicit operator Pointer<T>(void* v)
@@ -59,17 +59,14 @@ namespace Tools
 
     public unsafe class Ref : ListNode<Ref>
     {
-        readonly Pointer<double> Ptr;
+        private readonly Pointer<double> _ptr;
         
         public Ref(ref double val)
         {
-            Ptr = UnsafeTools.AddressOf(ref val);
+            _ptr = UnsafeTools.AddressOf(ref val);
         }
 
-        public double Value
-        {
-            get => Ptr.Value;
-        }
+        public double Value => _ptr.Value;
     }
 
     public class ForwardNeuron : ListNode<ForwardNeuron>
@@ -174,10 +171,8 @@ namespace Tools
             {
                 return (depObj.Parent as FrameworkElement).GetParentOfType<T>();
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public static long TotalMicroseconds(this TimeSpan span)
@@ -188,25 +183,27 @@ namespace Tools
 
     public static class Culture
     {
-        static CultureInfo CurrentCulture;
+        private static CultureInfo s_currentCulture;
+
         public static CultureInfo Current
         {
             get
             {
-                if (CurrentCulture == null)
+                if (s_currentCulture == null)
                 {
-                    CurrentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
-                    CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
+                    s_currentCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+                    s_currentCulture.NumberFormat.NumberDecimalSeparator = ".";
                 }
 
-                return CurrentCulture;
+                return s_currentCulture;
             }
         }
     }
 
     public static class UniqId
     {
-        static long _prevId;
+        private static long s_prevId;
+
         public static long GetId(long existingId)
         {
             if (existingId > Const.UnknownId)
@@ -220,9 +217,9 @@ namespace Tools
                 id = DateTime.UtcNow.Ticks;
                 Thread.Sleep(0);
             }
-            while (id <= _prevId);
+            while (id <= s_prevId);
 
-            _prevId = id;
+            s_prevId = id;
             return id;
         }
     }
@@ -335,11 +332,13 @@ namespace Tools
             param = CutName(param);
 
             cb.Items.Clear();
+
             var items = (string[])helper.GetMethod("GetItems").Invoke(null, null);
             foreach (var i in items)
             {
                 cb.Items.Add(i);
             }
+
             var item = config.GetString(param, !String.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
             if (items.Length > 0)
             {
@@ -353,7 +352,7 @@ namespace Tools
                 item = null;
             }
 
-            if (!String.IsNullOrEmpty(item))
+            if (!string.IsNullOrEmpty(item))
             {
                 cb.SelectedItem = item;
             }
@@ -366,19 +365,20 @@ namespace Tools
         {
             return (long)(TimeSpan.FromTicks(ticks).TotalMilliseconds * 1000);
         }
+
         public static long? TextToInt(string text, long? defaultValue = null)
         {
-            return String.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
+            return string.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
         }
 
         public static long TextToInt(string text, long defaultValue)
         {
-            return String.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
+            return string.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
         }
 
         public static bool TryTextToInt(string text, out long? result, long? defaultValue = null)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
                 result = defaultValue;
                 return true;
@@ -401,17 +401,17 @@ namespace Tools
 
         public static double? TextToDouble(string text, double? defaultValue = null)
         {
-            return String.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double a) ? a : defaultValue;
+            return string.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double a) ? a : defaultValue;
         }
 
         public static double TextToDouble(string text, double defaultValue)
         {
-            return String.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double a) ? a : defaultValue;
+            return string.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double a) ? a : defaultValue;
         }
 
         public static bool TryTextToDouble(string text, out double? result, double? defaultValue = null)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
                 result = defaultValue;
                 return true;
@@ -427,8 +427,8 @@ namespace Tools
             return false;
         }
 
-        static char[] _0 = new[] { '0' };
-        static char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
+        private static readonly char[] _0 = new[] { '0' };
+        private static readonly char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
 
         public static string DoubleToText(double? d, string format = "F20", bool trim = true)
         {
@@ -436,15 +436,14 @@ namespace Tools
             {
                 return null;
             }
-            else
+
+            var result = d.Value.ToString(format, Culture.Current);
+            if (trim && result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
             {
-                var result = d.Value.ToString(format, Culture.Current);
-                if (trim && result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
-                {
-                    result = result.TrimEnd(_0).TrimEnd(_S);
-                }
-                return result;
+                result = result.TrimEnd(_0).TrimEnd(_S);
             }
+
+            return result;
         }
     }
 }

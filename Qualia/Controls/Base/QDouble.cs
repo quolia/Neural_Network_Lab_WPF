@@ -1,39 +1,23 @@
-﻿using Tools;
-using System;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Tools;
 
 namespace Qualia.Controls
 {
     public class QDouble : TextBox, IConfigValue
     {
-        Config Config;
+        private Config _config;
 
-        event Action OnChanged = delegate { };
+        private event Action OnChanged = delegate { };
 
-        public double? DefaultValue
-        {
-            get;
-            set;
-        }
+        public double? DefaultValue { get; set; }
 
-        public double MinimumValue
-        {
-            get;
-            set;
-        }
+        public double MinimumValue { get; set; }
 
-        public double MaximumValue
-        {
-            get;
-            set;
-        }
+        public double MaximumValue { get; set; }
 
-        public bool IsNullAllowed
-        {
-            get;
-            set;
-        }
+        public bool IsNullAllowed { get; set; }
 
         public bool IsUnranged => MinimumValue == 0 && MaximumValue == 0;
 
@@ -74,7 +58,7 @@ namespace Qualia.Controls
 
         public bool IsNull()
         {
-            return String.IsNullOrEmpty(Text);
+            return string.IsNullOrEmpty(Text);
         }
 
         public double Value
@@ -101,12 +85,12 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
         }
 
         public void LoadConfig()
         {
-            var value = Config.GetDouble(Name, DefaultValue);
+            var value = _config.GetDouble(Name, DefaultValue);
             if (!IsUnranged && value.HasValue)
             {
                 if (value.Value < MinimumValue)
@@ -132,12 +116,12 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
+            _config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
         }
 
         public void VanishConfig()
         {
-            Config.Remove(Name);
+            _config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)

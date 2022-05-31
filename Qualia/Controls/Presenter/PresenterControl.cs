@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Qualia.Controls
@@ -14,8 +8,8 @@ namespace Qualia.Controls
     {
         public Graphics G;
 
-        Bitmap DrawArea;
-        bool IsRenderNeeded = true;
+        private Bitmap _drawArea;
+        private bool _isRenderNeeded = true;
 
         public PresenterControl()
         {
@@ -29,10 +23,10 @@ namespace Qualia.Controls
 
         private void OnDisposed(object sender, EventArgs e)
         {
-            if (DrawArea != null)
+            if (_drawArea != null)
             {
-                DrawArea.Dispose();
-                DrawArea = null;
+                _drawArea.Dispose();
+                _drawArea = null;
             }
 
             if (G != null)
@@ -44,23 +38,23 @@ namespace Qualia.Controls
 
         private void DrawBox_SizeChanged(object sender, EventArgs e)
         {
-            IsRenderNeeded = true;
+            _isRenderNeeded = true;
         }
 
         public void StartRender()
         {
-            if (IsRenderNeeded && Width > 0 && Height > 0)
+            if (_isRenderNeeded && Width > 0 && Height > 0)
             {
-                IsRenderNeeded = false;
+                _isRenderNeeded = false;
 
                 if (G != null)
                 {
-                    DrawArea.Dispose();
+                    _drawArea.Dispose();
                     G.Dispose();
                 }
-                DrawArea = new Bitmap(Width, Height);
-                CtlBox.Image = DrawArea;
-                G = Graphics.FromImage(DrawArea);
+                _drawArea = new Bitmap(Width, Height);
+                CtlBox.Image = _drawArea;
+                G = Graphics.FromImage(_drawArea);
                 //G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             }
         }

@@ -9,10 +9,7 @@ namespace Tools
 {
     public static class InitializeMode
     {
-        public static double None(double? a)
-        {
-            return Const.SkipValue;
-        }
+        public static double None(double? a) => Const.SkipValue;
 
         public static double Constant(double? a)
         {

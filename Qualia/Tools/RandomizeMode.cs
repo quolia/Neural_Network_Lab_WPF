@@ -13,66 +13,94 @@ namespace Tools
         public static void FlatRandom(NetworkDataModel network, double? a)
         {
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         weight.Weight = Rand.GetFlatRandom(a.HasValue ? a.Value : 1);
                     }
+                }
+            }
         }
 
         public static void GaussRandom(NetworkDataModel network, double? a)
         {
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         weight.Weight = Rand.GaussianRand.NextGaussian(0, a.HasValue ? a.Value : 1);
                     }
+                }
+            }
         }
 
         public static void AbsGaussRandom(NetworkDataModel network, double? a)
         {
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, a.HasValue ? a.Value : 1));
                     }
+                }
+            }
         }
 
         public static void Centered(NetworkDataModel network, double? a)
         {
             if (!a.HasValue)
+            {
                 a = 1;
+            }
 
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         weight.Weight = -a.Value / 2 + a.Value * Rand.GetFlatRandom();
                     }
+                }
+            }
         }
 
         public static void WaveProgress(NetworkDataModel network, double? a)
         {
             if (!a.HasValue)
+            {
                 a = 1;
+            }
 
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         weight.Weight = a.Value * InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
                     }
+                }
+            }
         }
 
         public static void Xavier(NetworkDataModel network, double? a)
         {
             if (!a.HasValue)
+            {
                 a = 1;
+            }
 
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         if (layer.Previous == null)
@@ -84,6 +112,8 @@ namespace Tools
                             weight.Weight = Rand.GetFlatRandom(a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
                     }
+                }
+            }
         }
 
         public static void GaussXavier(NetworkDataModel network, double? a)
@@ -91,10 +121,14 @@ namespace Tools
             // Xavier initialization works better for layers with sigmoid activation.
 
             if (!a.HasValue)
+            {
                 a = 1;
+            }
 
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         if (layer.Previous == null)
@@ -106,15 +140,21 @@ namespace Tools
                             weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
                     }
+                }
+            }
         }
 
         public static void HeEtAl(NetworkDataModel network, double? a)
         {
             if (!a.HasValue)
+            {
                 a = 1;
+            }
 
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         if (layer.Previous == null)
@@ -126,6 +166,8 @@ namespace Tools
                             weight.Weight = Rand.GetFlatRandom(a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
                     }
+                }
+            }
         }
 
         public static void GaussHeEtAl(NetworkDataModel network, double? a)
@@ -133,10 +175,14 @@ namespace Tools
             // He initialization works better for layers with ReLu(s) activation.
 
             if (!a.HasValue)
+            {
                 a = 1;
+            }
 
             foreach (var layer in network.Layers)
+            {
                 foreach (var neuron in layer.Neurons)
+                {
                     foreach (var weight in neuron.Weights)
                     {
                         if (layer.Previous == null)
@@ -148,6 +194,8 @@ namespace Tools
                             weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
                     }
+                }
+            }
         }
 
         public static void Constant(NetworkDataModel network, double? a)

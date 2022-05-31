@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,19 +10,19 @@ namespace Qualia.Controls
 {
     public partial class NetworkPresenter : UserControl
     {
-        const int NEURON_MAX_DIST = 40;
-        const int HORIZONTAL_OFFSET = 10;
-        const int TOP_OFFSET = 10;
-        const int BOTTOM_OFFSET = 25;
-        const int NEURON_SIZE = 8;
-        const double NEURON_RADIUS = NEURON_SIZE / 2;
-        const int BIAS_SIZE = 14;
-        const double BIAS_RADIUS = BIAS_SIZE / 2;
+        private const int NEURON_MAX_DIST = 40;
+        private const int HORIZONTAL_OFFSET = 10;
+        private const int TOP_OFFSET = 10;
+        private const int BOTTOM_OFFSET = 25;
+        private const int NEURON_SIZE = 8;
+        private const double NEURON_RADIUS = NEURON_SIZE / 2;
+        private const int BIAS_SIZE = 14;
+        private const double BIAS_RADIUS = BIAS_SIZE / 2;
 
         public long ResizeTicks;
 
-        readonly Dictionary<NeuronDataModel, Point> Coordinator = new Dictionary<NeuronDataModel, Point>();
-        readonly Dictionary<WeightDataModel, double> WeightsData = new Dictionary<WeightDataModel, double>();
+        private readonly Dictionary<NeuronDataModel, Point> _coordinator = new Dictionary<NeuronDataModel, Point>();
+        private readonly Dictionary<WeightDataModel, double> _weightsData = new Dictionary<WeightDataModel, double>();
 
         public NetworkPresenter()
         {
@@ -33,7 +32,7 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Coordinator.Clear();
+            _coordinator.Clear();
         }
 
         public int LayerDistance(NetworkDataModel model)
@@ -68,15 +67,15 @@ namespace Qualia.Controls
             NeuronDataModel prevNeuron = null;
             foreach (var neuron1 in layer1.Neurons)
             {
-                if (!Coordinator.ContainsKey(neuron1))
+                if (!_coordinator.ContainsKey(neuron1))
                 {
-                    Coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), TOP_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
+                    _coordinator.Add(neuron1, Points.Get(LayerX(model, layer1), TOP_OFFSET + VerticalShift(model, layer1) + neuron1.Id * VerticalDistance(layer1.Height)));
                 }
 
                 // Skip intersected neurons on first layer to improove performance.
                 if (!fullState && !neuron1.IsBias && model.Layers[0] == layer1 && prevNeuron != null)
                 {
-                    if (Coordinator[neuron1].Y - Coordinator[prevNeuron].Y < NEURON_SIZE)
+                    if (_coordinator[neuron1].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                     {
                         continue;
                     }
@@ -95,19 +94,19 @@ namespace Qualia.Controls
                                 bool isWeightChanged = false;
                                 var weight = neuron1.WeightTo(neuron2);
 
-                                if (WeightsData.TryGetValue(weight, out double prevWeight))
+                                if (_weightsData.TryGetValue(weight, out double prevWeight))
                                 {
                                     if (prevWeight != weight.Weight)
                                     {
                                         isWeightChanged = true;
-                                        WeightsData[weight] = weight.Weight;
+                                        _weightsData[weight] = weight.Weight;
                                     }
                                 }
                                 else
                                 {
                                     prevWeight = 0;
                                     isWeightChanged = true;
-                                    WeightsData.Add(weight, weight.Weight);
+                                    _weightsData.Add(weight, weight.Weight);
                                 }
 
                                 double fraction = Math.Min(1, Math.Abs((prevWeight - weight.Weight) / prevWeight));
@@ -141,18 +140,18 @@ namespace Qualia.Controls
 
                                 if (pen != null)
                                 {
-                                    if (!Coordinator.ContainsKey(neuron2))
+                                    if (!_coordinator.ContainsKey(neuron2))
                                     {
-                                        Coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), TOP_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
+                                        _coordinator.Add(neuron2, Points.Get(LayerX(model, layer2), TOP_OFFSET + VerticalShift(model, layer2) + neuron2.Id * VerticalDistance(layer2.Height)));
                                     }
 
-                                    CtlPresenter.DrawLine(pen, Coordinator[neuron1], Coordinator[neuron2]);
+                                    CtlPresenter.DrawLine(pen, _coordinator[neuron1], _coordinator[neuron2]);
                                     prevNeuron = neuron1;
                                 }
 
                                 if (penChange != null)
                                 {
-                                    CtlPresenter.DrawLine(penChange, Coordinator[neuron1], Coordinator[neuron2]);
+                                    CtlPresenter.DrawLine(penChange, _coordinator[neuron1], _coordinator[neuron2]);
                                     prevNeuron = neuron1;
                                 }
                             }
@@ -161,6 +160,7 @@ namespace Qualia.Controls
                 }
             }
         }
+
         private void DrawLayerNeurons(bool fullState, NetworkDataModel model, LayerDataModel layer)
         {
             double threshold = model.Layers[0] == layer ? model.InputThreshold : 0;
@@ -172,15 +172,15 @@ namespace Qualia.Controls
             {
                 if (fullState || neuron.IsBias || neuron.Activation > threshold || layer.Id > 0)
                 {                   
-                    if (!Coordinator.ContainsKey(neuron))
+                    if (!_coordinator.ContainsKey(neuron))
                     {
-                        Coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                        _coordinator.Add(neuron, Points.Get(LayerX(model, layer), TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
                     }
 
                     // Skip intersected neurons on first layer to improove performance.
                     if (!fullState && !neuron.IsBias && model.Layers[0] == layer && prevNeuron != null)
                     {
-                        if (Coordinator[neuron].Y - Coordinator[prevNeuron].Y < NEURON_SIZE)
+                        if (_coordinator[neuron].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                         {
                             continue;
                         }
@@ -192,10 +192,10 @@ namespace Qualia.Controls
 
                     if (neuron.IsBias)
                     {
-                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, Coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, _coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
                     }
 
-                    CtlPresenter.DrawEllipse(brush, pen, Coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  
+                    CtlPresenter.DrawEllipse(brush, pen, _coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace Qualia.Controls
 
             CtlPresenter.Clear();
 
-            //lock (Main.ApplyChangesLocker)
+            lock (Main.ApplyChangesLocker)
             {
                 if (model.Layers.Count > 0)
                 {

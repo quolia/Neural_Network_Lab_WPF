@@ -1,44 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tools;
 
 namespace Qualia.Controls
 {
     public partial class SettingsControl : UserControl, IConfigValue
     {
-        Config Config;
+        private Config _config;
 
-        event Action Changed = delegate { };
+        private event Action Changed = delegate { };
 
-        object Locker = new object();
-        Settings _Settings;
+        private readonly object _locker = new object();
+        private Settings _settings;
+
         public Settings Settings
         {
             get
             {
-                lock (Locker)
+                lock (_locker)
                 {
-                    return _Settings;
+                    return _settings;
                 }
             }
 
             set
             {
-                lock (Locker)
+                lock (_locker)
                 {
-                    _Settings = value;
+                    _settings = value;
                 }
             }
         }
@@ -50,7 +40,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
         }
 
@@ -64,13 +54,13 @@ namespace Qualia.Controls
         public void SaveConfig()
         {
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
-            Config.FlushToDrive();
+            _config.FlushToDrive();
         }
 
         public void VanishConfig()
         {
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
-            Config.FlushToDrive();
+            _config.FlushToDrive();
         }
 
         public bool IsValid()

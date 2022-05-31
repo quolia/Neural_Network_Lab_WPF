@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -11,27 +8,27 @@ namespace Tools
 {
     public static class Rects
     {
-        static int SIZE = 50;
-        static int pointer = 0;
-        static Dictionary<int, Rect> Pool = new Dictionary<int, Rect>(SIZE);
+        private const int SIZE = 50;
+        private static int s_pointer = 0;
+        private static Dictionary<int, Rect> s_pool = new Dictionary<int, Rect>(SIZE);
 
         static Rects()
         {
             for (int i = 0; i < SIZE; ++i)
             {
-                Pool[i] = new Rect();
+                s_pool[i] = new Rect();
             }
         }
 
         public static Rect Get(Size size)
         {
-            var rect = Pool[pointer];
+            var rect = s_pool[s_pointer];
 
             rect.Size = size;
 
-            if (++pointer == SIZE)
+            if (++s_pointer == SIZE)
             {
-                pointer = 0;
+                s_pointer = 0;
             }
 
             return rect;
@@ -39,16 +36,16 @@ namespace Tools
 
         public static Rect Get(double x, double y, double width, double height)
         {
-            var rect = Pool[pointer];
+            var rect = s_pool[s_pointer];
 
             rect.X = x;
             rect.Y = y;
             rect.Width = width;
             rect.Height = height;
 
-            if (++pointer == SIZE)
+            if (++s_pointer == SIZE)
             {
-                pointer = 0;
+                s_pointer = 0;
             }
 
             return rect;
@@ -57,34 +54,33 @@ namespace Tools
 
     public static class Points
     {
-        static int SIZE = 50;
-        static int pointer = 0;
-        static Dictionary<int, Point> Pool = new Dictionary<int, Point>(SIZE);
+        private const int SIZE = 50;
+        private static int s_pointer = 0;
+        private static Dictionary<int, Point> s_pool = new Dictionary<int, Point>(SIZE);
 
         static Points()
         {
             for (int i = 0; i < SIZE; ++i)
             {
-                Pool[i] = new Point();
+                s_pool[i] = new Point();
             }
         }
 
         public static Point Get(double x, double y)
         {
-            var point = Pool[pointer];
+            var point = s_pool[s_pointer];
 
             point.X = x;
             point.Y = y;
 
-            if (++pointer == SIZE)
+            if (++s_pointer == SIZE)
             {
-                pointer = 0;
+                s_pointer = 0;
             }
 
             return point;
         }
     }
-
 
     public static class Render
     {
@@ -105,19 +101,20 @@ namespace Tools
 
         public static double PixelsPerDip { get; private set; }
 
-        static public double SnapToPixels(double value)
+        public static double SnapToPixels(double value)
         { 
             value += HalfPixelSize;
             var div = (value * 1000) / (PixelSize * 1000);
+
             return (int)div * PixelSize;
         }
 
-        static public double Scale(double x)
+        public static double Scale(double x)
         {
             return x;// x / PixelsPerDip;// x;//SnapToPixels(x);
         }
 
-        static public double ScaleThickness(double x)
+        public static double ScaleThickness(double x)
         {
             return SnapToPixels(x);
         }
@@ -154,20 +151,30 @@ namespace Tools
             v = Math.Abs(2 / (1 + Math.Exp(-v * 4)) - 1);
 
             if (v > 1)
+            {
                 v = 1;
+            }
 
             if (s >= 0)
+            {
                 return Color.FromArgb(alpha, (byte)(255 * v), (byte)(50 * v), (byte)(50 * v));
+            }
             else
+            {
                 return Color.FromArgb(alpha, (byte)(50 * v), (byte)(50 * v), (byte)(255 * v));
+            }
         }
 
         public static Color GetColorDradient(Color from, Color to, byte alpha, double fraction)
         {
             if (fraction > 1)
+            {
                 fraction = 1;
+            }
             else if (fraction < 0)
+            {
                 fraction = 0;
+            }
 
             return Color.FromArgb(alpha,
                                   (byte)(from.R - fraction * (from.R - to.R)),

@@ -9,7 +9,7 @@ namespace Qualia.Controls
 {
     public partial class StatisticsPresenter : UserControl
     {
-        Typeface Font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+        private readonly Typeface _font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
         public StatisticsPresenter()
         {
@@ -38,7 +38,7 @@ namespace Qualia.Controls
                 }
             }
 
-            var formattedText = new FormattedText(text, Culture.Current, FlowDirection.LeftToRight, Font, 10, Brushes.Black, Render.PixelsPerDip);
+            var formattedText = new FormattedText(text, Culture.Current, FlowDirection.LeftToRight, _font, 10, Brushes.Black, Render.PixelsPerDip);
             CtlPresenter.DrawText(formattedText, Points.Get(10, 0));
 
             Width = Math.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);

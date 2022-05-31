@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,13 +9,13 @@ namespace Qualia.Controls
 {
     public class QPresenter : Panel
     {
-        private VisualCollection Visuals;
+        private VisualCollection _visuals;
 
         public Func<double, double> Scale = Render.Scale;
 
         public QPresenter()
         {
-            Visuals = new VisualCollection(this);
+            _visuals = new VisualCollection(this);
             SnapsToDevicePixels = true;
             UseLayoutRounding = true;
             SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
@@ -28,39 +23,40 @@ namespace Qualia.Controls
 
         public void Clear()
         {
-            Visuals.Clear();
+            _visuals.Clear();
         }
 
         private DrawingContext G()
         {
             var dv = new DrawingVisual();
-            Visuals.Add(dv);
+            _visuals.Add(dv);
+
             return dv.RenderOpen();
         }
 
         public void AddVisual(Visual visual)
         {
-            Visuals.Add(visual);
+            _visuals.Add(visual);
         }
 
         protected override int VisualChildrenCount
         {
-            get { return Visuals.Count; }
+            get => _visuals.Count;
         }
 
         protected override Visual GetVisualChild(int index)
         {
-            if (index < 0 || index >= Visuals.Count)
+            if (index < 0 || index >= _visuals.Count)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            return Visuals[index];
+            return _visuals[index];
         }
 
         public void Update()
         {
-            //UpdateLayout();
+            //
         }
 
         public void DrawRectangle(Brush brush, Pen pen, Rect rect)
@@ -137,16 +133,13 @@ namespace Qualia.Controls
             Measure(RenderSize);
             Arrange(Rects.Get(RenderSize)); 
 
-            foreach (var visual in Visuals)
+            foreach (var visual in _visuals)
             {               
                 bitmap.Render(visual);
             }
             bitmap.Freeze();
 
-            var image = new Image
-            {
-                Source = bitmap
-            };
+            var image = new Image { Source = bitmap };
             return image;
         }
     }

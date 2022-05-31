@@ -1,27 +1,19 @@
-﻿using Tools;
-using System;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Tools;
 
 namespace Qualia.Controls
 {
     public class QTextBox : TextBox, IConfigValue
     {
-        Config Config;
+        private Config _config;
 
-        event Action OnChanged = delegate { };
+        private event Action OnChanged = delegate { };
 
-        public string DefaultValue
-        {
-            get;
-            set;
-        }
+        public string DefaultValue { get; set; }
 
-        public bool IsNullAllowed
-        {
-            get;
-            set;
-        }
+        public bool IsNullAllowed { get; set; }
 
         public QTextBox()
         {
@@ -50,21 +42,18 @@ namespace Qualia.Controls
             }
             else
             {
-                return !String.IsNullOrEmpty(Text);
+                return !string.IsNullOrEmpty(Text);
             }
         }
 
         public bool IsNull()
         {
-            return String.IsNullOrEmpty(Text);
+            return string.IsNullOrEmpty(Text);
         }
 
         public string Value
         {
-            get
-            {
-                return IsValid() ? Text : throw new InvalidValueException(Name, Text);
-            }
+            get => IsValid() ? Text : throw new InvalidValueException(Name, Text);
 
             set
             {
@@ -75,22 +64,22 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            Config = config;
+            _config = config;
         }
 
         public void LoadConfig()
         {
-            Value = Config.GetString(Name, DefaultValue);
+            Value = _config.GetString(Name, DefaultValue);
         }
 
         public void SaveConfig()
         {
-            Config.Set(Name, Value);
+            _config.Set(Name, Value);
         }
 
         public void VanishConfig()
         {
-            Config.Remove(Name);
+            _config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)
@@ -101,14 +90,7 @@ namespace Qualia.Controls
 
         public void InvalidateValue()
         {
-            if (IsValid())
-            {
-                Background = Brushes.White;
-            }
-            else
-            {
-                Background = Brushes.Tomato;
-            }
+            Background = IsValid() ? Brushes.White : Brushes.Tomato;
         }
     }
 }
