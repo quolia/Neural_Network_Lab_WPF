@@ -311,14 +311,14 @@ namespace Tools
 
     public class InvalidValueException : Exception
     {
-        public InvalidValueException(Const.Param param, string value)
-            : base($"Invalid value {param.ToString()} = '{value}'.")
+        public InvalidValueException(Const.Param paramName, string value)
+            : base($"Invalid value {paramName} = '{value}'.")
         {
             //
         }
 
-        public InvalidValueException(string param, string value)
-            : base($"Invalid value {(param.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? param.Substring(3) : param)} = '{value}'.")
+        public InvalidValueException(string paramName, string value)
+            : base($"Invalid value {(paramName.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? paramName.Substring(3) : paramName)} = '{value}'.")
         {
             //
         }
@@ -331,9 +331,9 @@ namespace Tools
             return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name;
         }
 
-        public static void FillComboBox(Type helper, ComboBox cb, Config config, string param, string defaultValue)
+        public static void FillComboBox(Type helper, ComboBox cb, Config config, string paramName, string defaultValue)
         {
-            param = CutName(param);
+            paramName = CutName(paramName);
 
             cb.Items.Clear();
 
@@ -343,7 +343,7 @@ namespace Tools
                 cb.Items.Add(i);
             }
 
-            var item = config.GetString(param, !String.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
+            var item = config.GetString(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
             if (items.Length > 0)
             {
                 if (!items.Contains(item))

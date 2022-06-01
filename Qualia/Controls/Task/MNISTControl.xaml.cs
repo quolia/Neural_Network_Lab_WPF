@@ -297,11 +297,10 @@ namespace Qualia.Controls
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
+
+            if (loadDialog.ShowDialog() == true)
             {
-                if (loadDialog.ShowDialog() == true)
-                {
-                    return loadDialog.FileName;
-                }
+                return loadDialog.FileName;
             }
 
             return null;

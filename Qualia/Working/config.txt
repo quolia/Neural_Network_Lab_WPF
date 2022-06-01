@@ -1,6 +1,6 @@
 NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\784_20x20.txt
 ScreenWidth:1721.33333333333
-ScreenHeight:1033.33333333333
+ScreenHeight:968
 ScreenTop:21.3333333333333
 ScreenLeft:-45.3333333333333
 OnTop:0

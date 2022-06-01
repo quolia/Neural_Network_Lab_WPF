@@ -17,15 +17,15 @@ namespace Qualia.Controls
         private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
         private readonly TabControl _ctlTabs;
-        private INetworkTask _task;
+        private INetworkTask _networkTask;
         private NetworkDataModel _prevSelectedNetworkModel;
 
-        public NetworksManager(TabControl tabs, string name, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
             _ctlTabs = tabs;
 
-            Config = string.IsNullOrEmpty(name) ? CreateNewManager() : new Config(name);
+            Config = string.IsNullOrEmpty(fileName) ? CreateNewManager() : new Config(fileName);
             if (Config != null)
             {
                 ClearNetworks();
@@ -73,19 +73,21 @@ namespace Qualia.Controls
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
+
+            if (saveDialog.ShowDialog() == true)
             {
-                if (saveDialog.ShowDialog() == true)
+                var fileName = saveDialog.FileName;
+
+                if (File.Exists(fileName))
                 {
-                    if (File.Exists(saveDialog.FileName))
-                    {
-                        File.Delete(saveDialog.FileName);
-                    }
-
-                    var config = new Config(saveDialog.FileName);
-                    Config.Main.Set(Const.Param.NetworksManagerName, saveDialog.FileName);
-
-                    return config;
+                    File.Delete(fileName);
                 }
+
+                var config = new Config(fileName);
+                Config.Main.Set(Const.Param.NetworksManagerName, fileName);
+                Config.Main.FlushToDrive();
+
+                return config;
             }
 
             return null;
@@ -115,7 +117,7 @@ namespace Qualia.Controls
 
         public void RebuildNetworksForTask(INetworkTask task)
         {
-            _task = task;
+            _networkTask = task;
             Networks.ForEach(n => n.OnTaskChanged(task));
 
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
@@ -140,7 +142,7 @@ namespace Qualia.Controls
 
             if (id == Const.UnknownId)
             {
-                network.InputLayer.OnTaskChanged(_task);
+                network.InputLayer.OnTaskChanged(_networkTask);
                 network.ResetLayersTabsNames();
             }
         }
@@ -197,23 +199,22 @@ namespace Qualia.Controls
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
-            {
-                if (saveDialog.ShowDialog() == true)
-                {
-                    if (File.Exists(saveDialog.FileName))
-                    {
-                        File.Delete(saveDialog.FileName);
-                    }
 
-                    File.Copy(Config.Main.GetString(Const.Param.NetworksManagerName), saveDialog.FileName);
+            if (saveDialog.ShowDialog() == true)
+            {
+                if (File.Exists(saveDialog.FileName))
+                {
+                    File.Delete(saveDialog.FileName);
                 }
+
+                File.Copy(Config.Main.GetString(Const.Param.NetworksManagerName), saveDialog.FileName);
             }
         }
 
         public ListX<NetworkDataModel> CreateNetworksDataModels()
         {
             var result = new ListX<NetworkDataModel>(Networks.Count);
-            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(_task, false)));
+            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(_networkTask, false)));
 
             return result;
         }
@@ -252,7 +253,7 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            _task.Do(NetworkModels[0]);
+            _networkTask.Do(NetworkModels[0]);
 
             // copy first layer state and last layer targets to other networks
 

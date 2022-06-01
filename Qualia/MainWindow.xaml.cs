@@ -108,8 +108,8 @@ namespace Qualia
             _configParams.ForEach(p => p.SetConfig(Config.Main));
             _configParams.ForEach(p => p.LoadConfig());
 
-            var name = Config.Main.GetString(Const.Param.NetworksManagerName, null);
-            LoadNetworksManager(name);
+            var fileName = Config.Main.GetString(Const.Param.NetworksManagerName, null);
+            LoadNetworksManager(fileName);
             LoadSettings();
         }
 
@@ -145,32 +145,38 @@ namespace Qualia
 
         private Settings Settings => CtlSettings.Settings;
 
-        private void LoadNetworksManager(string name)
+        private void SetTitle(string fileName)
+        {
+            Title = "Neural Network - " + fileName;
+        }
+
+        private void LoadNetworksManager(string fileName)
         {
             if (!StopRequest())
             {
                 return;
             }
 
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(fileName))
             {
                 return;
             }
 
-            if (!File.Exists(name))
+            if (!File.Exists(fileName))
             {
-                name = "\\Networks\\" + Path.GetFileName(name);
+                fileName = "\\Networks\\" + Path.GetFileName(fileName);
             }
 
-            if (File.Exists(name))
+            if (File.Exists(fileName))
             {
-                _networksManager = new NetworksManager(CtlTabs, name, OnNetworkUIChanged);
-                Config.Main.Set(Const.Param.NetworksManagerName, name);
+                _networksManager = new NetworksManager(CtlTabs, fileName, OnNetworkUIChanged);
+                Config.Main.Set(Const.Param.NetworksManagerName, fileName);
                 CtlInputDataPresenter.LoadConfig(_networksManager.Config, this);
 
                 ReplaceNetworksManagerControl(_networksManager);
                 if (_networksManager.IsValid())
                 {
+                    SetTitle(fileName);
                     ApplyChangesToStandingNetworks();
                 }
                 else
@@ -180,7 +186,7 @@ namespace Qualia
             }
             else
             {
-                MessageBox.Show($"Network '{name}' is not found!", "Error", MessageBoxButton.OK);
+                MessageBox.Show($"Network '{fileName}' is not found!", "Error", MessageBoxButton.OK);
                 Config.Main.Set(Const.Param.NetworksManagerName, string.Empty);
             }
         }
@@ -755,6 +761,9 @@ namespace Qualia
                 ReplaceNetworksManagerControl(_networksManager);
                 if (_networksManager.IsValid())
                 {
+                    var fileName = Config.Main.GetString(Const.Param.NetworksManagerName, null);
+                    SetTitle(fileName);
+
                     ApplyChangesToStandingNetworks();
                 }
                 else
@@ -771,7 +780,7 @@ namespace Qualia
                 return;
             }
 
-            var loadDialog = new OpenFileDialog
+            var loadDialog = new OpenFileDialog()
             {
                 InitialDirectory = Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
@@ -779,11 +788,10 @@ namespace Qualia
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
+
+            if (loadDialog.ShowDialog() == true)
             {
-                if (loadDialog.ShowDialog() == true)
-                {
-                    LoadNetworksManager(loadDialog.FileName);
-                }
+                LoadNetworksManager(loadDialog.FileName);
             }
         }
 
@@ -797,7 +805,7 @@ namespace Qualia
 
             if (!File.Exists(networksManagerName))
             {
-                networksManagerName = "\\Networks\\" + System.IO.Path.GetFileName(networksManagerName);
+                networksManagerName = "\\Networks\\" + Path.GetFileName(networksManagerName);
             }
 
             if (File.Exists(networksManagerName))
@@ -822,7 +830,7 @@ namespace Qualia
             }
             else
             {
-                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName));
+                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName).Replace("_", "__"));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;
