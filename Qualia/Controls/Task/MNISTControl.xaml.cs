@@ -50,43 +50,47 @@ namespace Qualia.Controls
                 CtlMNISTLabelsPath.Text = string.Empty;
             }
 
-            if (!String.IsNullOrEmpty(CtlMNISTImagesPath.Text))
+            if (string.IsNullOrEmpty(CtlMNISTImagesPath.Text))
             {
-                var fileName = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
-                if (!File.Exists(fileName))
+                return;
+            }
+
+            var fileName = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
+            if (!File.Exists(fileName))
+            {
+                try
                 {
-                    try
-                    {
-                        Decompress(CtlMNISTImagesPath.Text, Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin");
-                    }
-                    catch (Exception ex)
-                    {
-                        CtlMNISTImagesPath.Text = string.Empty;
-                        MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
-                    }
+                    Decompress(CtlMNISTImagesPath.Text, Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin");
                 }
-
-                LoadImages(fileName);
-
-                if (!string.IsNullOrEmpty(CtlMNISTLabelsPath.Text))
+                catch (Exception ex)
                 {
-                    fileName = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
-                    if (!File.Exists(fileName))
-                    {
-                        try
-                        {
-                            Decompress(CtlMNISTLabelsPath.Text, Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin");
-                        }
-                        catch (Exception ex)
-                        {
-                            CtlMNISTLabelsPath.Text = string.Empty;
-                            MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
-                        }
-                    }
-
-                    LoadLabels(fileName);
+                    CtlMNISTImagesPath.Text = string.Empty;
+                    MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
                 }
             }
+
+            LoadImages(fileName);
+
+            if (string.IsNullOrEmpty(CtlMNISTLabelsPath.Text))
+            {
+                return;
+            }
+
+            fileName = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
+            if (!File.Exists(fileName))
+            {
+                try
+                {
+                    Decompress(CtlMNISTLabelsPath.Text, Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin");
+                }
+                catch (Exception ex)
+                {
+                    CtlMNISTLabelsPath.Text = string.Empty;
+                    MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
+                }
+            }
+
+            LoadLabels(fileName);
         }
 
         private void LoadImages(string fileName)
@@ -97,82 +101,80 @@ namespace Qualia.Controls
             {
                 return;
             }
-            else
+
+            var buffer = new byte[4];
+            using (var file = File.OpenRead(fileName))
             {
-                var buf = new byte[4];
-                using (var f = File.OpenRead(fileName))
+                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
                 {
-                    if (f.Read(buf, 0, buf.Length) != buf.Length)
-                    {
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
+                    throw new Exception("Invalid MNIST images file format.");
+                }
                     
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        buf = buf.Reverse().ToArray();
-                    }
+                if (BitConverter.IsLittleEndian)
+                {
+                    buffer = buffer.Reverse().ToArray();
+                }
 
-                    int magicNumber = BitConverter.ToInt32(buf, 0);
-                    if (magicNumber != 2051)
+                int magicNumber = BitConverter.ToInt32(buffer, 0);
+                if (magicNumber != 2051)
+                {
+                    throw new Exception("Invalid MNIST images file format.");
+                }
+
+                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    throw new Exception("Invalid MNIST images file format.");
+                }
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    buffer = buffer.Reverse().ToArray();
+                }
+
+                int numberOfImages = BitConverter.ToInt32(buffer, 0);
+
+                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    throw new Exception("Invalid MNIST images file format.");
+                }
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    buffer = buffer.Reverse().ToArray();
+                }
+
+                int numberOfRows = BitConverter.ToInt32(buffer, 0);
+                if (numberOfRows != 28)
+                {
+                    throw new Exception("Invalid MNIST images file format.");
+                }
+
+                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    throw new Exception("Invalid MNIST images file format.");
+                }
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    buffer = buffer.Reverse().ToArray();
+                }
+
+                int numberOfColumns = BitConverter.ToInt32(buffer, 0);
+                if (numberOfColumns != 28)
+                {
+                    throw new Exception("Invalid MNIST images file format.");
+                }
+
+                for (int ind = 0; ind < numberOfImages; ++ind)
+                {
+                    var image = new MNISTImage();
+                    if (file.Read(image.Image, 0, image.Image.Length) != image.Image.Length)
                     {
+                        Images.Clear();
                         throw new Exception("Invalid MNIST images file format.");
                     }
 
-                    if (f.Read(buf, 0, buf.Length) != buf.Length)
-                    {
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
-
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        buf = buf.Reverse().ToArray();
-                    }
-
-                    int numberOfImages = BitConverter.ToInt32(buf, 0);
-
-                    if (f.Read(buf, 0, buf.Length) != buf.Length)
-                    {
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
-
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        buf = buf.Reverse().ToArray();
-                    }
-
-                    int numberOfRows = BitConverter.ToInt32(buf, 0);
-                    if (numberOfRows != 28)
-                    {
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
-
-                    if (f.Read(buf, 0, buf.Length) != buf.Length)
-                    {
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
-
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        buf = buf.Reverse().ToArray();
-                    }
-
-                    int numberOfColumns = BitConverter.ToInt32(buf, 0);
-                    if (numberOfColumns != 28)
-                    {
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
-
-                    for (int i = 0; i < numberOfImages; ++i)
-                    {
-                        var image = new MNISTImage();
-                        if (f.Read(image.Image, 0, image.Image.Length) != image.Image.Length)
-                        {
-                            Images.Clear();
-                            throw new Exception("Invalid MNIST images file format.");
-                        }
-
-                        Images.Add(image);
-                    }
+                    Images.Add(image);
                 }
             }
         }
@@ -183,48 +185,46 @@ namespace Qualia.Controls
             {
                 return;
             }
-            else
+
+            var buffer = new byte[4];
+            using (var file = File.OpenRead(fileName))
             {
-                var buf = new byte[4];
-                using (var f = File.OpenRead(fileName))
+                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
                 {
-                    if (f.Read(buf, 0, buf.Length) != buf.Length)
-                    {
-                        throw new Exception("Invalid MNIST labels file format.");
-                    }
+                    throw new Exception("Invalid MNIST labels file format.");
+                }
 
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        buf = buf.Reverse().ToArray();
-                    }
+                if (BitConverter.IsLittleEndian)
+                {
+                    buffer = buffer.Reverse().ToArray();
+                }
 
-                    int magicNumber = BitConverter.ToInt32(buf, 0);
-                    if (magicNumber != 2049)
-                    {
-                        throw new Exception("Invalid MNIST labels file format.");
-                    }
+                int magicNumber = BitConverter.ToInt32(buffer, 0);
+                if (magicNumber != 2049)
+                {
+                    throw new Exception("Invalid MNIST labels file format.");
+                }
 
-                    if (f.Read(buf, 0, buf.Length) != buf.Length)
-                    {
-                        throw new Exception("Invalid MNIST labels file format.");
-                    }
+                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    throw new Exception("Invalid MNIST labels file format.");
+                }
 
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        buf = buf.Reverse().ToArray();
-                    }
+                if (BitConverter.IsLittleEndian)
+                {
+                    buffer = buffer.Reverse().ToArray();
+                }
 
-                    int numberOfImages = BitConverter.ToInt32(buf, 0);
-                    if (numberOfImages != Images.Count)
-                    {
-                        throw new Exception("Invalid MNIST labels file format.");
-                    }
+                int numberOfImages = BitConverter.ToInt32(buffer, 0);
+                if (numberOfImages != Images.Count)
+                {
+                    throw new Exception("Invalid MNIST labels file format.");
+                }
 
-                    for (int i = 0; i < numberOfImages; ++i)
-                    {
-                        var image = Images[i];
-                        image.Label = (byte)f.ReadByte();
-                    }
+                for (int ind = 0; ind < numberOfImages; ++ind)
+                {
+                    var image = Images[ind];
+                    image.Label = (byte)file.ReadByte();
                 }
             }
         }
@@ -248,6 +248,7 @@ namespace Qualia.Controls
         {
             OnChange -= onChange;
             OnChange += onChange;
+
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(Changed));
         }
 
@@ -269,18 +270,20 @@ namespace Qualia.Controls
         private void BrowseFile(TextBox control, string targetName)
         {
             var file = BrowseFile();
-            if (!string.IsNullOrEmpty(file))
+            if (string.IsNullOrEmpty(file))
             {
-                try
-                {
-                    Decompress(file, Path.GetDirectoryName(file) + Path.DirectorySeparatorChar + targetName);
-                    control.Text = file;
-                }
-                catch (Exception ex)
-                {
-                    control.Text = string.Empty;
-                    MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
-                }
+                return;
+            }
+
+            try
+            {
+                Decompress(file, Path.GetDirectoryName(file) + Path.DirectorySeparatorChar + targetName);
+                control.Text = file;
+            }
+            catch (Exception ex)
+            {
+                control.Text = string.Empty;
+                MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
             }
         }
 
@@ -308,11 +311,9 @@ namespace Qualia.Controls
         {
             using (var srcStream = File.OpenRead(sourceGz))
             using (var targetStream = File.OpenWrite(destBin))
+            using (var decompressionStream = new GZipStream(srcStream, CompressionMode.Decompress, false))
             {
-                using (GZipStream decompressionStream = new GZipStream(srcStream, CompressionMode.Decompress, false))
-                {
-                    decompressionStream.CopyTo(targetStream);
-                }
+                decompressionStream.CopyTo(targetStream);
             }
         }
     }

@@ -1,103 +1,100 @@
 ﻿using Qualia;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Tools
 {
     public static class RandomizeMode
     {
-        public static void FlatRandom(NetworkDataModel network, double? a)
+        public static void FlatRandom(NetworkDataModel networkModel, double? param)
         {
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
                     foreach (var weight in neuron.Weights)
                     {
-                        weight.Weight = Rand.GetFlatRandom(a.HasValue ? a.Value : 1);
+                        weight.Weight = Rand.GetFlatRandom(param.HasValue ? param.Value : 1);
                     }
                 }
             }
         }
 
-        public static void GaussRandom(NetworkDataModel network, double? a)
+        public static void GaussRandom(NetworkDataModel networkModel, double? param)
         {
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
                     foreach (var weight in neuron.Weights)
                     {
-                        weight.Weight = Rand.GaussianRand.NextGaussian(0, a.HasValue ? a.Value : 1);
+                        weight.Weight = Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1);
                     }
                 }
             }
         }
 
-        public static void AbsGaussRandom(NetworkDataModel network, double? a)
+        public static void AbsGaussRandom(NetworkDataModel networkModel, double? param)
         {
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
                     foreach (var weight in neuron.Weights)
                     {
-                        weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, a.HasValue ? a.Value : 1));
+                        weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1));
                     }
                 }
             }
         }
 
-        public static void Centered(NetworkDataModel network, double? a)
+        public static void Centered(NetworkDataModel networkModel, double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
                     foreach (var weight in neuron.Weights)
                     {
-                        weight.Weight = -a.Value / 2 + a.Value * Rand.GetFlatRandom();
+                        weight.Weight = -param.Value / 2 + param.Value * Rand.GetFlatRandom();
                     }
                 }
             }
         }
 
-        public static void WaveProgress(NetworkDataModel network, double? a)
+        public static void WaveProgress(NetworkDataModel networkModel, double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
                     foreach (var weight in neuron.Weights)
                     {
-                        weight.Weight = a.Value * InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                        weight.Weight = param.Value * InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
                     }
                 }
             }
         }
 
-        public static void Xavier(NetworkDataModel network, double? a)
+        public static void Xavier(NetworkDataModel networkModel, double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
@@ -109,23 +106,23 @@ namespace Tools
                         }
                         else
                         {
-                            weight.Weight = Rand.GetFlatRandom(a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
                     }
                 }
             }
         }
 
-        public static void GaussXavier(NetworkDataModel network, double? a)
+        public static void GaussXavier(NetworkDataModel networkModel, double? param)
         {
             // Xavier initialization works better for layers with sigmoid activation.
 
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
@@ -133,25 +130,25 @@ namespace Tools
                     {
                         if (layer.Previous == null)
                         {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value);
+                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
                         }
                         else
                         {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
                     }
                 }
             }
         }
 
-        public static void HeEtAl(NetworkDataModel network, double? a)
+        public static void HeEtAl(NetworkDataModel networkModel, double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
@@ -163,23 +160,23 @@ namespace Tools
                         }
                         else
                         {
-                            weight.Weight = Rand.GetFlatRandom(a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
                     }
                 }
             }
         }
 
-        public static void GaussHeEtAl(NetworkDataModel network, double? a)
+        public static void GaussHeEtAl(NetworkDataModel networkModel, double? param)
         {
             // He initialization works better for layers with ReLu(s) activation.
 
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
@@ -187,31 +184,31 @@ namespace Tools
                     {
                         if (layer.Previous == null)
                         {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value);
+                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
                         }
                         else
                         {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
                     }
                 }
             }
         }
 
-        public static void Constant(NetworkDataModel network, double? a)
+        public static void Constant(NetworkDataModel networkModel, double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 0;
+                param = 0;
             }
 
-            foreach (var layer in network.Layers)
+            foreach (var layer in networkModel.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
                     foreach (var weight in neuron.Weights)
                     {
-                        weight.Weight = a.Value;
+                        weight.Weight = param.Value;
                     }
                 }
             }
@@ -221,18 +218,18 @@ namespace Tools
         {
             public static string[] GetItems()
             {
-                return typeof(RandomizeMode).GetMethods().Where(r => r.IsStatic).Select(r => r.Name).ToArray();
+                return typeof(RandomizeMode).GetMethods().Where(methodInfo => methodInfo.IsStatic).Select(methodInfo => methodInfo.Name).ToArray();
             }
 
-            public static void Invoke(string name, NetworkDataModel N, double? a)
+            public static void Invoke(string methodName, NetworkDataModel networkModel, double? param)
             {
-                var method = typeof(RandomizeMode).GetMethod(name);
-                method.Invoke(null, new object[] { N, a });
+                var method = typeof(RandomizeMode).GetMethod(methodName);
+                method.Invoke(null, new object[] { networkModel, param });
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
+            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(RandomizeMode.Helper), cb, config, cb.Name, defaultValue);
+                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
             }
         }
     }

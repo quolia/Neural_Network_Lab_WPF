@@ -14,6 +14,11 @@ namespace Qualia.Controls
 
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
             OnNetworkUIChanged = onNetworkUIChanged;
 
             Id = UniqId.GetId(id);
@@ -66,6 +71,11 @@ namespace Qualia.Controls
 
         public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            if (sender == null)
+            {
+                throw new ArgumentNullException(nameof(sender));
+            }
+
             MaxWidth = (sender as ScrollViewer).ViewportWidth;
         }
     }

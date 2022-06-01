@@ -128,7 +128,7 @@ namespace Tools
             }
 
             string value = GetValue(name, defaultValue);
-            return string.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+            return string.IsNullOrEmpty(value) ? Array.Empty<long>() : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
         public long[] GetArray(string name, string defaultValue = null)
@@ -139,7 +139,7 @@ namespace Tools
             }
 
             string value = GetValue(name, defaultValue);
-            return string.IsNullOrEmpty(value) ? new long[0] : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+            return string.IsNullOrEmpty(value) ? Array.Empty<long>() : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
         public void Remove(Const.Param name)
@@ -303,7 +303,7 @@ namespace Tools
                 if (line.Contains(":"))
                 {
                     var parts = line.Split(new[] { ':' });
-                    if (parts.Count() > 1)
+                    if (parts.Length > 1)
                     {
                         result[parts[0]] = string.Join(":", parts.Except(parts.Take(1)));
                     }

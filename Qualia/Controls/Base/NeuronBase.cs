@@ -17,8 +17,10 @@ namespace Qualia.Controls
         {
             ContextMenu = new ContextMenu();
             ContextMenu.Opened += ContextMenu_Opened;
+
             ContextMenu.Items.Add(new MenuItem() { Header = "Add" });
             (ContextMenu.Items[0] as MenuItem).Click += AddNeuron_Click;
+
             ContextMenu.Items.Add(new MenuItem() { Header = "Delete..." });
             (ContextMenu.Items[1] as MenuItem).Click += DeleteNeuron_Click;
 
@@ -57,50 +59,34 @@ namespace Qualia.Controls
 
         public void StateChanged()
         {
-            Background = IsBias ? Draw.GetBrush(Draw.GetRandomColor(20, Draw.GetColor(240, 250, 240))) : Draw.GetBrush(Draw.GetRandomColor(20, Colors.Lavender));
+            Background = IsBias 
+                         ? Draw.GetBrush(Draw.GetRandomColor(20, Draw.GetColor(240, 250, 240)))
+                         : Draw.GetBrush(Draw.GetRandomColor(20, Colors.Lavender));
         }
 
-        public virtual string ActivationInitializer
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual string ActivationInitializer => throw new NotImplementedException();
 
-        public virtual double? ActivationInitializerParamA
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual double? ActivationInitializerParamA => throw new NotImplementedException();
 
-        public virtual string WeightsInitializer
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual string WeightsInitializer => throw new NotImplementedException();
 
-        public virtual double? WeightsInitializerParamA
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual double? WeightsInitializerParamA => throw new NotImplementedException();
 
         public virtual string ActivationFunc
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException(); 
         }
 
         public virtual double? ActivationFuncParamA
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
 
-        public virtual bool IsBias
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual bool IsBias => throw new NotImplementedException();
 
-        public virtual bool IsBiasConnected
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual bool IsBiasConnected => throw new NotImplementedException();
 
         public virtual bool IsValid()
         {

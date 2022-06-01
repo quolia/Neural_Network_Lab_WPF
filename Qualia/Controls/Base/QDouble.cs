@@ -56,14 +56,13 @@ namespace Qualia.Controls
             return ok && (IsUnranged || (value >= MinimumValue && value <= MaximumValue));
         }
 
-        public bool IsNull()
-        {
-            return string.IsNullOrEmpty(Text);
-        }
+        public bool IsNull() => string.IsNullOrEmpty(Text);
 
         public double Value
         {
-            get => IsValid() ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToDouble(Text).Value) : throw new InvalidValueException(Name, Text);
+            get => IsValid() 
+                   ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToDouble(Text).Value)
+                   : throw new InvalidValueException(Name, Text);
 
             set
             {
@@ -74,7 +73,9 @@ namespace Qualia.Controls
 
         public double? ValueOrNull
         {
-            get => IsNull() && IsNullAllowed ? null : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
+            get => IsNull() && IsNullAllowed
+                   ? null
+                   : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
 
             set
             {

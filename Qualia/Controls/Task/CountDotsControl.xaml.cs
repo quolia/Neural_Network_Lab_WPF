@@ -61,6 +61,7 @@ namespace Qualia.Controls
 
                 CtlTaskInputCount.InvalidateValue();
             }
+
             return false;
         }
 
@@ -68,6 +69,7 @@ namespace Qualia.Controls
         {
             OnChange -= onChange;
             OnChange += onChange;
+
             Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(Changed));
         }
 

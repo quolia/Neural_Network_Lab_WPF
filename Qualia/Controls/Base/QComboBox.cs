@@ -46,10 +46,7 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public bool IsValid()
-        {
-            return true;
-        }
+        public bool IsValid() => true;
 
         public void SetChangeEvent(Action onChanged)
         {

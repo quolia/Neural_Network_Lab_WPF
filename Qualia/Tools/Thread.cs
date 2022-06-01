@@ -7,7 +7,7 @@ namespace Tools
     public static class Threads
     {
         [DllImport("kernel32")]
-        static extern int GetCurrentThreadId();
+        private static extern int GetCurrentThreadId();
 
         public enum Processor
         {
@@ -20,31 +20,41 @@ namespace Tools
             Proc5 = 32,
             Proc6 = 64,
             Proc7 = 128,
+            Proc8 = 254,
+            Proc9 = 512,
+            Proc10 = 1024,
+            Proc11 = 2048,
+            Proc12 = 4096,
+            Proc13 = Proc12 * 2,
+            Proc14 = Proc13 * 2,
+            Proc15 = Proc14 * 2,
 
-            All = Proc0 | Proc1 | Proc2 | Proc3 | Proc4 | Proc5 | Proc6 | Proc7
+            All = Proc0 | Proc1 | Proc2 | Proc3 | Proc4 | Proc5 | Proc6 | Proc7 | Proc8 | Proc9 | Proc10 | Proc11 | Proc12 | Proc13 | Proc14 | Proc15
         }
 
         public static void SetProcessorAffinity(Processor processors)
         {
-            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
+            foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
             {
-                int utid = GetCurrentThreadId();
-                if (utid == pt.Id)
+                if (GetCurrentThreadId() == thread.Id)
                 {
-                    pt.ProcessorAffinity = (IntPtr)processors;
+                    thread.ProcessorAffinity = (IntPtr)processors;
+
+                    return;
                 }
             }
         }
 
         public static void SetThreadPriority(ThreadPriorityLevel priority)
         {
-            foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
+            foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
             {
-                int utid = GetCurrentThreadId();
-                if (utid == pt.Id)
+                if (GetCurrentThreadId() == thread.Id)
                 {
-                    pt.PriorityLevel = priority;
-                    pt.PriorityBoostEnabled = true;
+                    thread.PriorityLevel = priority;
+                    thread.PriorityBoostEnabled = true;
+                    
+                    return;
                 }
             }
         }

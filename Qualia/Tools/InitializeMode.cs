@@ -9,56 +9,59 @@ namespace Tools
 {
     public static class InitializeMode
     {
-        public static double None(double? a) => Const.SkipValue;
+        public static double None(double? param) => Const.SkipValue;
 
-        public static double Constant(double? a)
+        public static double Constant(double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 0;
+                param = 0;
             }
-            return a.Value;
+
+            return param.Value;
         }
 
-        public static double SimpleRandom(double? a)
+        public static double SimpleRandom(double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
-            return a.Value * Rand.GetFlatRandom();
+
+            return param.Value * Rand.GetFlatRandom();
         }
 
-        public static double Centered(double? a)
+        public static double Centered(double? param)
         {
-            if (!a.HasValue)
+            if (!param.HasValue)
             {
-                a = 1;
+                param = 1;
             }
-            return -a.Value / 2 + a.Value * Rand.GetFlatRandom();
+
+            return -param.Value / 2 + param.Value * Rand.GetFlatRandom();
         }
 
-        public static class Helper
+        internal static class Helper
         {
-            public static bool IsSkipValue(double d)
+            public static bool IsSkipValue(double value)
             {
-                return double.IsNaN(d);
+                return double.IsNaN(value);
             }
 
             public static string[] GetItems()
             {
-                return typeof(InitializeMode).GetMethods().Where(r => r.IsStatic).Select(r => r.Name).ToArray();
+                return typeof(InitializeMode).GetMethods().Where(methodInfo => methodInfo.IsStatic).Select(methodInfo => methodInfo.Name).ToArray();
             }
 
-            public static double Invoke(string name, double? a)
+            public static double Invoke(string methodName, double? param)
             {
-                var method = typeof(InitializeMode).GetMethod(name);
-                return (double)method.Invoke(null, new object[] { a });
+                var method = typeof(InitializeMode).GetMethod(methodName);
+                return (double)method.Invoke(null, new object[] { param });
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
+            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(InitializeMode.Helper), cb, config, cb.Name, defaultValue);
+                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
             }
         }
     }

@@ -367,6 +367,7 @@ namespace Qualia
             {
                 var neuron = layer.Neurons[0];
                 var neuron2 = layer2.Neurons[0];
+
                 while (neuron != null)
                 {
                     neuron2.Activation = neuron.Activation;
@@ -375,6 +376,7 @@ namespace Qualia
                     {
                         var weight = neuron.Weights[0];
                         var weight2 = neuron2.Weights[0];
+
                         while (weight != null)
                         {
                             weight2.Weight = weight.Weight;

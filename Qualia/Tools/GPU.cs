@@ -152,11 +152,11 @@ namespace Tools
         public static GPU Instance = new GPU();
         public Accelerator Accelerator;
 
-        private Context _context;
+        private readonly Context _context;
 
-        private Dictionary<int, List<MemoryBuffer<double>>> _buffers;
+        private readonly Dictionary<int, List<MemoryBuffer<double>>> _buffers;
 
-        private Action<Index, ArrayView2D<double>, ArrayView2D<double>> _kernelProduct;
+        private readonly Action<Index, ArrayView2D<double>, ArrayView2D<double>> _kernelProduct;
         private Action<Index, double[], double[], VariableView<double>> _kernelProduct2;
 
         public GPU()

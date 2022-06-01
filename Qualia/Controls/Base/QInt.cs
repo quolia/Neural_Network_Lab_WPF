@@ -56,16 +56,15 @@ namespace Qualia.Controls
             return ok && (IsUnranged || (value >= MinimumValue && value <= MaximumValue));
         }
 
-        public bool IsNull()
-        {
-            return string.IsNullOrEmpty(Text);
-        }
+        public bool IsNull() => string.IsNullOrEmpty(Text);
 
         public long Value
         {
             get
             {
-                return IsValid() ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToInt(Text).Value) : throw new InvalidValueException(Name, Text);
+                return IsValid()
+                       ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToInt(Text).Value)
+                       : throw new InvalidValueException(Name, Text);
             }
 
             set
@@ -79,7 +78,9 @@ namespace Qualia.Controls
         {
             get
             {
-                return IsNull() && IsNullAllowed ? null : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(Name, Text);
+                return IsNull() && IsNullAllowed
+                       ? null
+                       : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(Name, Text);
             }
 
             set
@@ -97,6 +98,7 @@ namespace Qualia.Controls
         public void LoadConfig()
         {
             var value = _config.GetInt(Name, DefaultValue);
+
             if (!IsUnranged && value.HasValue)
             {
                 if (value.Value < MinimumValue)

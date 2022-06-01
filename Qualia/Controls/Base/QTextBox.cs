@@ -34,22 +34,9 @@ namespace Qualia.Controls
             }
         }
 
-        public bool IsValid()
-        {
-            if (IsNullAllowed)
-            {
-                return true;
-            }
-            else
-            {
-                return !string.IsNullOrEmpty(Text);
-            }
-        }
+        public bool IsValid() => IsNullAllowed || !string.IsNullOrEmpty(Text);
 
-        public bool IsNull()
-        {
-            return string.IsNullOrEmpty(Text);
-        }
+        public bool IsNull() => string.IsNullOrEmpty(Text);
 
         public string Value
         {

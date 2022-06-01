@@ -8,9 +8,9 @@ namespace Qualia.Controls
 {
     public partial class DataPresenter : UserControl
     {
-        public INetworkTask Task;
+        public INetworkTask NetworkTask;
         
-        private int _pointSize;
+        private readonly int _pointSize;
         private int _pointsRearrangeSnap;
         private int _pointsCount;
         private double _threshold;
@@ -36,11 +36,11 @@ namespace Qualia.Controls
                 return;
             }
 
-            Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
-            _pointsRearrangeSnap = Task.GetPointsRearrangeSnap();
-            Task.SetChangeEvent(TaskParameterChanged);
+            NetworkTask = Tools.NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+            _pointsRearrangeSnap = NetworkTask.GetPointsRearrangeSnap();
+            NetworkTask.SetChangeEvent(TaskParameterChanged);
             CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(Task.GetVisualControl());
+            CtlHolder.Children.Add(NetworkTask.GetVisualControl());
             if (_onTaskChanged != null)
             {
                 _onTaskChanged.TaskChanged();
@@ -49,22 +49,22 @@ namespace Qualia.Controls
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
         {
-            if (Task != null && Task.IsGridSnapAdjustmentAllowed())
+            if (NetworkTask != null && NetworkTask.IsGridSnapAdjustmentAllowed())
             {
                 Rearrange(Const.CurrentValue);
             }
         }
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
-        {  
-            NetworkTask.Helper.FillComboBox(CtlTask, config, null);
-            Task = NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
-            _pointsRearrangeSnap = Task.GetPointsRearrangeSnap();
+        {
+            Tools.NetworkTask.Helper.FillComboBox(CtlTask, config, null);
+            NetworkTask = Tools.NetworkTask.Helper.GetInstance(CtlTask.SelectedItem.ToString());
+            _pointsRearrangeSnap = NetworkTask.GetPointsRearrangeSnap();
             CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(Task.GetVisualControl());
-            Task.SetConfig(config);
-            Task.LoadConfig();
-            Task.SetChangeEvent(TaskParameterChanged);
+            CtlHolder.Children.Add(NetworkTask.GetVisualControl());
+            NetworkTask.SetConfig(config);
+            NetworkTask.LoadConfig();
+            NetworkTask.SetChangeEvent(TaskParameterChanged);
             _onTaskChanged = taskChanged;
             TaskParameterChanged();
         }
@@ -82,26 +82,40 @@ namespace Qualia.Controls
 
         public void SaveConfig(Config config)
         {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));   
+            }
+
             CtlTask.SetConfig(config);
-            Task.SetConfig(config);
+            NetworkTask.SetConfig(config);
 
             CtlTask.SaveConfig();
-            Task.SaveConfig();
+            NetworkTask.SaveConfig();
 
             config.FlushToDrive();
         }
 
         private void DrawPoint(int x, int y, double value, bool isData)
         {
-            var brush = value == 0 ? Brushes.White : (isData ? Draw.GetBrush(value) : Draw.GetBrush(Draw.GetColor((byte)(255 * value), Colors.Green)));
+            var brush = value == 0
+                        ? Brushes.White
+                        : (isData ? Draw.GetBrush(value) : Draw.GetBrush(Draw.GetColor((byte)(255 * value), Colors.Green)));
+
             var pen = Draw.GetPen(Colors.Black);
 
             CtlPresenter.DrawRectangle(brush, pen, Rects.Get(x * _pointSize, y * _pointSize, _pointSize, _pointSize));
         }
-        public void SetInputDataAndDraw(NetworkDataModel model)
+        public void SetInputDataAndDraw(NetworkDataModel networkModel)
         {
-            _threshold = model.InputThreshold;
-            var count = model.Layers[0].Neurons.Count(n => !n.IsBias);
+            if (networkModel == null)
+            {
+                throw new ArgumentNullException(nameof(networkModel));
+            }
+
+            _threshold = networkModel.InputThreshold;
+            var count = networkModel.Layers[0].Neurons.Count(n => !n.IsBias);
+
             if (_data == null || _data.Length != count)
             {
                 _data = new double[count];
@@ -112,7 +126,7 @@ namespace Qualia.Controls
                 Array.Clear(_data, 0, _data.Length);
             }
 
-            var neuron = model.Layers[0].Neurons[0];
+            var neuron = networkModel.Layers[0].Neurons[0];
             while (neuron != null)
             {
                 if (!neuron.IsBias)
@@ -127,14 +141,16 @@ namespace Qualia.Controls
         public void RearrangeWithNewPointsCount()
         {
             _data = null;
-            Rearrange(Task.GetInputCount());
+            Rearrange(NetworkTask.GetInputCount());
         }
 
         private int GetSnaps()
         {
             int width = (int)Math.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
-            return Task.IsGridSnapAdjustmentAllowed() ? width / (_pointsRearrangeSnap * _pointSize) : 1;
+            return NetworkTask.IsGridSnapAdjustmentAllowed()
+                   ? width / (_pointsRearrangeSnap * _pointSize)
+                   : 1;
         }
 
         private void Rearrange(int pointsCount)
@@ -154,17 +170,17 @@ namespace Qualia.Controls
 
             double maxStat = _stat == null ? 0 : _stat.Max();
 
-            for (int p = 0; p < _pointsCount; ++p)
+            for (int ind = 0; ind < _pointsCount; ++ind)
             {
-                var pos = GetPointPosition(p);
+                var pos = GetPointPosition(ind);
 
-                if (_data[p] > _threshold)
+                if (_data[ind] > _threshold)
                 {
-                    DrawPoint(pos.Item1, pos.Item2, _data[p], true);
+                    DrawPoint(pos.Item1, pos.Item2, _data[ind], true);
                 }
                 else
                 {
-                    DrawPoint(pos.Item1, pos.Item2, maxStat > 0 ? _stat[p] / maxStat : 0, false);
+                    DrawPoint(pos.Item1, pos.Item2, maxStat > 0 ? _stat[ind] / maxStat : 0, false);
                 }
             }
 
@@ -180,21 +196,29 @@ namespace Qualia.Controls
             return new Tuple<int, int>(x, y);
         }
 
-        public void SetInputStat(NetworkDataModel model)
+        public void SetInputStat(NetworkDataModel networkModel)
         {
-            if (_stat != null)
+            if (_stat == null)
             {
-                int i = 0;
-                var neuron = model.Layers[0].Neurons[0];
-                while (neuron != null)
+                return;
+            }
+
+            if (networkModel == null)
+            {
+                throw new ArgumentNullException(nameof(networkModel));
+            }
+
+            int i = 0;
+            var neuron = networkModel.Layers[0].Neurons[0];
+
+            while (neuron != null)
+            {
+                if (!neuron.IsBias)
                 {
-                    if (!neuron.IsBias)
-                    {
-                        _stat[i] += neuron.Activation > _threshold ? neuron.Activation : 0;
-                    }
-                    ++i;
-                    neuron = neuron.Next;
+                    _stat[i] += neuron.Activation > _threshold ? neuron.Activation : 0;
                 }
+                ++i;
+                neuron = neuron.Next;
             }
         }
     }

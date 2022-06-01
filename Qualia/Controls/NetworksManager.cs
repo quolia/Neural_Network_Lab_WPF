@@ -12,9 +12,9 @@ namespace Qualia.Controls
     public class NetworksManager
     {
         public readonly Config Config;
-        public ListX<NetworkDataModel> Models;
+        public ListX<NetworkDataModel> NetworkModels;
 
-        private Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
         private readonly TabControl _ctlTabs;
         private INetworkTask _task;
@@ -25,7 +25,7 @@ namespace Qualia.Controls
             OnNetworkUIChanged = onNetworkUIChanged;
             _ctlTabs = tabs;
 
-            Config = String.IsNullOrEmpty(name) ? CreateNewManager() : new Config(name);
+            Config = string.IsNullOrEmpty(name) ? CreateNewManager() : new Config(name);
             if (Config != null)
             {
                 ClearNetworks();
@@ -39,8 +39,12 @@ namespace Qualia.Controls
         {
             get
             {
-                var selected = SelectedNetwork == null ? _prevSelectedNetworkModel : Models.FirstOrDefault(m => m.VisualId == SelectedNetwork.Id);
+                var selected = SelectedNetwork == null
+                               ? _prevSelectedNetworkModel
+                               : NetworkModels.FirstOrDefault(m => m.VisualId == SelectedNetwork.Id);
+
                 _prevSelectedNetworkModel = selected;
+
                 return selected;
             }
         }
@@ -113,6 +117,7 @@ namespace Qualia.Controls
         {
             _task = task;
             Networks.ForEach(n => n.OnTaskChanged(task));
+
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
 
@@ -124,9 +129,12 @@ namespace Qualia.Controls
         private void AddNetwork(long id)
         {
             var network = new NetworkControl(id, Config, OnNetworkUIChanged);
-            var tab = new TabItem();
-            tab.Header = $"Network {_ctlTabs.Items.Count}";
-            tab.Content = network;
+            var tab = new TabItem
+            {
+                Header = $"Network {_ctlTabs.Items.Count}",
+                Content = network
+            };
+
             _ctlTabs.Items.Add(tab);
             _ctlTabs.SelectedItem = tab;
 
@@ -148,6 +156,7 @@ namespace Qualia.Controls
                 _ctlTabs.SelectedIndex = index - 1;
 
                 ResetNetworksTabsNames();
+
                 OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
         }
@@ -169,6 +178,7 @@ namespace Qualia.Controls
         {
             Config.Set(Const.Param.Networks, Networks.Select(l => l.Id));
             Config.Set(Const.Param.SelectedNetworkIndex, _ctlTabs.SelectedIndex - 1);
+
             Networks.ForEach(n => n.SaveConfig());
         }
 
@@ -210,7 +220,7 @@ namespace Qualia.Controls
 
         public void RefreshNetworksDataModels()
         {
-            Models = CreateNetworksDataModels();
+            NetworkModels = CreateNetworksDataModels();
         }
 
         public void MergeModels(ListX<NetworkDataModel> models)
@@ -218,7 +228,7 @@ namespace Qualia.Controls
             var newModels = new ListX<NetworkDataModel>(models.Count);
             foreach (var newModel in models)
             {
-                var model = Models.Find(m => m.VisualId == newModel.VisualId);
+                var model = NetworkModels.Find(m => m.VisualId == newModel.VisualId);
                 if (model != null)
                 {
                     newModels.Add(model.Merge(newModel));
@@ -229,12 +239,12 @@ namespace Qualia.Controls
                 }
             }
 
-            Models = newModels;
+            NetworkModels = newModels;
         }
 
         public void PrepareModelsForRun()
         {
-            Models.ForEach(m => m.ActivateFirstLayer());
+            NetworkModels.ForEach(m => m.ActivateFirstLayer());
             ResetModelsDynamicStatistics();
             ResetModelsStatistics();
             ResetErrorMatrix();
@@ -242,15 +252,21 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            _task.Do(Models[0]);
+            _task.Do(NetworkModels[0]);
 
             // copy first layer state and last layer targets to other networks
 
-            var model = Models.Count > 1 ? Models[1] : null;          
-            while (model != null)
+            var networkModel = NetworkModels.Count > 1 ? NetworkModels[1] : null;          
+            while (networkModel != null)
             {
-                var neuronFirstModelFirstLayer = Models[0].Layers[0].Neurons[0];
-                var neuron = model.Layers[0].Neurons[0];
+                if (!networkModel.IsEnabled)
+                {
+                    networkModel = networkModel.Next;
+                    continue;
+                }
+
+                var neuronFirstModelFirstLayer = NetworkModels[0].Layers[0].Neurons[0];
+                var neuron = networkModel.Layers[0].Neurons[0];
 
                 while (neuron != null)
                 {
@@ -263,8 +279,8 @@ namespace Qualia.Controls
                     neuronFirstModelFirstLayer = neuronFirstModelFirstLayer.Next;
                 }
 
-                var neuronFirstModelLastLayer = Models[0].Layers.Last().Neurons[0];
-                neuron = model.Layers.Last().Neurons[0];
+                var neuronFirstModelLastLayer = NetworkModels[0].Layers.Last().Neurons[0];
+                neuron = networkModel.Layers.Last().Neurons[0];
 
                 while (neuron != null)
                 {
@@ -274,30 +290,30 @@ namespace Qualia.Controls
                     neuronFirstModelLastLayer = neuronFirstModelLastLayer.Next;
                 }
 
-                model.TargetOutput = Models[0].TargetOutput;
+                networkModel.TargetOutput = NetworkModels[0].TargetOutput;
 
-                model = model.Next;
+                networkModel = networkModel.Next;
             }
         }
 
         public void FeedForward()
         {
-            Models.ForEach(m => m.FeedForward());
+            NetworkModels.ForEach(m => m.FeedForward());
         }
 
         public void ResetModelsStatistics()
         {
-            Models.ForEach(m => m.Statistics = new Statistics());
+            NetworkModels.ForEach(m => m.Statistics = new Statistics());
         }
 
         private void ResetModelsDynamicStatistics()
         {
-            Models.ForEach(m => m.DynamicStatistics = new DynamicStatistics());
+            NetworkModels.ForEach(m => m.DynamicStatistics = new DynamicStatistics());
         }
 
         public void ResetErrorMatrix()
         {
-            Models.ForEach(m =>
+            NetworkModels.ForEach(m =>
             {
                 m.ErrorMatrix.ClearData();
                 m.ErrorMatrix.Next.ClearData();

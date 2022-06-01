@@ -9,7 +9,7 @@ namespace Tools
 {
     public interface INetworkTask : IConfigValue
     {
-        void Do(NetworkDataModel model);
+        void Do(NetworkDataModel networkModel);
         Control GetVisualControl();
         int GetInputCount();
         List<string> GetClasses();
@@ -31,7 +31,8 @@ namespace Tools
             private Config _config;
 
             public static INetworkTask Instance = new CountDots();
-            static readonly CountDotsControl s_control = new CountDotsControl();
+            
+            private static readonly CountDotsControl s_control = new CountDotsControl();
 
             private bool _isGaussianDistribution;
             private int _minNumber;
@@ -84,16 +85,17 @@ namespace Tools
             public List<string> GetClasses()
             {
                 var classes = new List<string>();
-                for (int i = s_control.MinNumber; i <= s_control.MaxNumber; ++i)
+                for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
-                    classes.Add(i.ToString());
+                    classes.Add(number.ToString());
                 }
+
                 return classes;
             }
 
-            public void Do(NetworkDataModel model)
+            public void Do(NetworkDataModel networkModel)
             {
-                var shuffled = model.Layers[0].ShuffledNeurons;
+                var shuffled = networkModel.Layers[0].ShuffledNeurons;
                 shuffled.Shuffle();
 
                 if (_isGaussianDistribution)
@@ -112,17 +114,17 @@ namespace Tools
 
                     for (int i = 0; i < shuffled.Count; ++i)
                     {
-                        shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
+                        shuffled[i].Activation = i < number ? networkModel.InputInitial1 : networkModel.InputInitial0;
                     }
 
-                    var neuron = model.Layers.Last().Neurons[0];
+                    var neuron = networkModel.Layers.Last().Neurons[0];
                     while (neuron != null)
                     {
                         neuron.Target = (neuron.Id == number - _minNumber) ? 1 : 0;
                         neuron = neuron.Next;
                     }
 
-                    model.TargetOutput = number - _minNumber;
+                    networkModel.TargetOutput = number - _minNumber;
                 }
                 else
                 {
@@ -130,17 +132,17 @@ namespace Tools
 
                     for (int i = 0; i < shuffled.Count; ++i)
                     {
-                        shuffled[i].Activation = i < number ? model.InputInitial1 : model.InputInitial0;
+                        shuffled[i].Activation = i < number ? networkModel.InputInitial1 : networkModel.InputInitial0;
                     }
 
-                    var neuron = model.Layers.Last().Neurons[0];
+                    var neuron = networkModel.Layers.Last().Neurons[0];
                     while (neuron != null)
                     {
                         neuron.Target = (neuron.Id == number - _minNumber) ? 1 : 0;
                         neuron = neuron.Next;
                     }
 
-                    model.TargetOutput = number - _minNumber;
+                    networkModel.TargetOutput = number - _minNumber;
                 }
             }
 
@@ -167,14 +169,9 @@ namespace Tools
 
         public class MNIST : INetworkTask
         {
-            private Config _config;
-
             public static INetworkTask Instance = new MNIST();
             
             private static MNISTControl s_control = new MNISTControl();
-
-            private int _minNumber;
-            private int _maxNumber;
 
             public Control GetVisualControl()
             {
@@ -193,13 +190,11 @@ namespace Tools
 
             public void ApplyChanges()
             {
-                _minNumber = s_control.MinNumber;
-                _maxNumber = s_control.MaxNumber;
+                //
             }
 
             public void SetConfig(Config config)
             {
-                _config = config;
                 s_control.SetConfig(config);
             }
 
@@ -222,31 +217,31 @@ namespace Tools
             public List<string> GetClasses()
             {
                 var classes = new List<string>();
-                for (int i = s_control.MinNumber; i <= s_control.MaxNumber; ++i)
+                for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
-                    classes.Add(i.ToString());
+                    classes.Add(number.ToString());
                 }
 
                 return classes;
             }
 
-            public void Do(NetworkDataModel model)
+            public void Do(NetworkDataModel networkModel)
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
 
-                for (int i = 0; i < model.Layers[0].Neurons.Count; ++i)
+                for (int ind = 0; ind < networkModel.Layers[0].Neurons.Count; ++ind)
                 {
-                    model.Layers[0].Neurons[i].Activation = model.InputInitial1 * image.Image[i];
+                    networkModel.Layers[0].Neurons[ind].Activation = networkModel.InputInitial1 * image.Image[ind];
                 }
 
-                var neuron = model.Layers.Last().Neurons[0];
+                var neuron = networkModel.Layers.Last().Neurons[0];
                 while (neuron != null)
                 {
                     neuron.Target = (neuron.Id == image.Label) ? 1 : 0;
                     neuron = neuron.Next;
                 }
 
-                model.TargetOutput = image.Label;
+                networkModel.TargetOutput = image.Label;
             }
 
             public void VanishConfig()
@@ -254,10 +249,7 @@ namespace Tools
                 s_control.VanishConfig();
             }
 
-            public bool IsValid()
-            {
-                return s_control.IsValid();
-            }
+            public bool IsValid() => s_control.IsValid();
 
             public void SetChangeEvent(Action onChanged)
             {
@@ -273,17 +265,17 @@ namespace Tools
         {
             public static string[] GetItems()
             {
-                return typeof(NetworkTask).GetNestedTypes().Where(c => typeof(INetworkTask).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
+                return typeof(NetworkTask).GetNestedTypes().Where(task => typeof(INetworkTask).IsAssignableFrom(task)).Select(task => task.Name).ToArray();
             }
 
-            public static INetworkTask GetInstance(string name)
+            public static INetworkTask GetInstance(string taskName)
             {
-                return (INetworkTask)typeof(NetworkTask).GetNestedTypes().Where(c => c.Name == name).First().GetField("Instance").GetValue(null);
+                return (INetworkTask)typeof(NetworkTask).GetNestedTypes().Where(c => c.Name == taskName).First().GetField("Instance").GetValue(null);
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
+            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(NetworkTask.Helper), cb, config, cb.Name, defaultValue);
+                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
             }
         }
     }
@@ -292,10 +284,10 @@ namespace Tools
     {
         public static class Helper
         {
-            public static double Invoke(string name, double a)
+            public static double Invoke(string methodName, double param)
             {
-                var method = typeof(NetworkTaskResult).GetMethod(name);
-                return (double)method.Invoke(null, new object[] { a });
+                var method = typeof(NetworkTaskResult).GetMethod(methodName);
+                return (double)method.Invoke(null, new object[] { param });
             }
         }
     }

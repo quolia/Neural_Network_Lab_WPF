@@ -23,8 +23,10 @@ namespace Qualia.Controls
         public MatrixPresenter()
         {
             InitializeComponent();
+
             SnapsToDevicePixels = true;
             UseLayoutRounding = true;
+
             SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
         }
 
@@ -35,9 +37,9 @@ namespace Qualia.Controls
                 return true;
             }
 
-            for (int c = 0; c < classes.Count; ++c)
+            for (int ind = 0; ind < classes.Count; ++ind)
             {
-                if (classes[c] != _classes[c])
+                if (classes[ind] != _classes[ind])
                 {
                     return true;
                 }
@@ -46,17 +48,29 @@ namespace Qualia.Controls
             return false;
         }
 
-        void InitClassesFmtText(List<string> classes)
+        void InitClassesFormatText(List<string> classes)
         {
             _classesFormatText.Clear();
-            for (int i = 0; i < classes.Count; ++i)
+
+            for (int ind = 0; ind < classes.Count; ++ind)
             {
-                _classesFormatText[classes[i]] = new FormattedText(classes[i], Culture.Current, FlowDirection.LeftToRight, s_font, 7, Brushes.Black, Render.PixelsPerDip);
+                _classesFormatText[classes[ind]] = new FormattedText(classes[ind],
+                                                                     Culture.Current,
+                                                                     FlowDirection.LeftToRight,
+                                                                     s_font,
+                                                                     7,
+                                                                     Brushes.Black,
+                                                                     Render.PixelsPerDip);
             }
         }
 
         public void DrawBase(ErrorMatrix matrix)
         {
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             CtlBase.Clear();
 
             int size = 9;
@@ -95,9 +109,14 @@ namespace Qualia.Controls
                 return;
             }
 
+            if (matrix == null)
+            {
+                throw new ArgumentNullException(nameof(matrix));
+            }
+
             if (IsClassesChanged(matrix.Classes))
             {
-                InitClassesFmtText(matrix.Classes);
+                InitClassesFormatText(matrix.Classes);
                 DrawBase(matrix);
             }
 
@@ -176,12 +195,12 @@ namespace Qualia.Controls
 
         public ErrorMatrix(List<string> classes)
         {
-            Classes = classes;
-            var c = Classes.Count;
+            Classes = classes ?? throw new ArgumentNullException(nameof(classes));
+            var count = Classes.Count;
 
-            Input = new long[c];
-            Output = new long[c];
-            Matrix = new long[c, c];
+            Input = new long[count];
+            Output = new long[count];
+            Matrix = new long[count, count];
         }
 
         public void AddData(int input, int output)

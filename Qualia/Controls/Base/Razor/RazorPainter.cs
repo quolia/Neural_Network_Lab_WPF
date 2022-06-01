@@ -27,18 +27,19 @@ namespace Qualia.Controls
         [StructLayout(LayoutKind.Sequential)]
         private struct BITMAPINFO
         {
-            public BITMAPINFOHEADER biHeader;
-            public int biColors;
+            public BITMAPINFOHEADER BIHeader;
+            public int BIColors;
         }
 
         private int _width;
         private int _height;
-        private int[] _pArray;
+        private int[] _array;
         private GCHandle _gcHandle;
         private BITMAPINFO _BI;
 
-        public int Width { get { return _width; } }
-        public int Height { get { return _height; } }
+        public int Width => _width;
+
+        public int Height => _height;
 
         ~RazorPainter()
         {
@@ -65,11 +66,12 @@ namespace Qualia.Controls
             _width = width;
             _height = height;
 
-            _pArray = new int[_width * _height];
-            _gcHandle = GCHandle.Alloc(_pArray, GCHandleType.Pinned);
+            _array = new int[_width * _height];
+            _gcHandle = GCHandle.Alloc(_array, GCHandleType.Pinned);
+
             _BI = new BITMAPINFO
             {
-                biHeader =
+                BIHeader =
                 {
                     bihBitCount = 32,
                     bihPlanes = 1,
@@ -100,13 +102,13 @@ namespace Qualia.Controls
                 Realloc(bitmap.Width, bitmap.Height);
             }
 
-            BitmapData BD = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                                            ImageLockMode.ReadOnly,
-                                            PixelFormat.Format32bppArgb);
+            BitmapData bmData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                                                ImageLockMode.ReadOnly,
+                                                PixelFormat.Format32bppArgb);
 
-            Marshal.Copy(BD.Scan0, _pArray, 0, _width * _height);
-            SetDIBitsToDevice(hRef, 0, 0, _width, _height, 0, 0, 0, _height, ref _pArray[0], ref _BI, 0);
-            bitmap.UnlockBits(BD);
+            Marshal.Copy(bmData.Scan0, _array, 0, _width * _height);
+            SetDIBitsToDevice(hRef, 0, 0, _width, _height, 0, 0, 0, _height, ref _array[0], ref _BI, 0);
+            bitmap.UnlockBits(bmData);
         }
     }
 }

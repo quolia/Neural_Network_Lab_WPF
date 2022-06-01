@@ -1,108 +1,120 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Tools
 {
     public static class Range
     {
-        public static IEnumerable<int> Make(int a, int b = 0)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<int> Make(int start, int end = 0)
         {
-            return a < b ? Enumerable.Range(a, b - a) : Enumerable.Range(b, a - b);
+            return start < end ? Enumerable.Range(start, end - start) : Enumerable.Range(end, start - end);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void For(int range, Action<int> action)
         {
-            for (int y = 0; y < range; ++y)
+            for (int ind = 0; ind < range; ++ind)
             {
-                action(y);
+                action(ind);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ForEach<T>(IEnumerable<T> range, Action<T> action)
         {
-            foreach (T y in range)
+            foreach (T t in range)
             {
-                action(y);
+                action(t);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void BackEach<T>(IEnumerable<T> range, Action<T> action)
         {
             range = range.Reverse();
-            foreach (T y in range)
+            foreach (T t in range)
             {
-                action(y);
+                action(t);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void BackEachTrimEnd<T>(IEnumerable<T> range, int trim, Action<T> action)
         {
-            long n = 0;
+            long ind = 0;
             range = range.Reverse();
             long count = range.Count();
 
-            foreach (T y in range)
+            foreach (T t in range)
             {
-                if (n == count + trim)
+                if (ind == count + trim)
                 {
                     break;
                 }
 
-                action(y);
-                ++n;
+                action(t);
+                ++ind;
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ForEachTrimEnd<T>(IEnumerable<T> range, int trim, Action<T> action)
         {
-            long n = 0;
+            long ind = 0;
             long count = range.Count();
 
-            foreach (T y in range)
+            foreach (T t in range)
             {
-                if (n == count + trim)
+                if (ind == count + trim)
                 {
                     break;
                 }
 
-                action(y);
-                ++n;
+                action(t);
+                ++ind;
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Back(int range, Action<int> action)
         {
-            for (int y = range - 1; y >= 0; --y)
+            for (int ind = range - 1; ind >= 0; --ind)
             {
-                action(y);
+                action(ind);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void For(int range1, int range2, Action<int, int> action)
         {
-            For(range1, y1 => For(range2, y2 => action(y1, y2)));
+            For(range1, ind1 => For(range2, ind2 => action(ind1, ind2)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ForEach<T1, T2>(IEnumerable<T1> range1, IEnumerable<T2> range2, Action<T1, T2> action)
         {
-            ForEach(range1, y1 => ForEach(range2, y2 => action(y1, y2)));
+            ForEach(range1, t1 => ForEach(range2, t2 => action(t1, t2)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Sum(int range, Func<int, double> func)
         {
-            double s = 0;
-            For(range, x => s += func(x));
+            double sum = 0;
+            For(range, ind => sum += func(ind));
 
-            return s;
+            return sum;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double SumForEach<T>(IEnumerable<T> range, Func<T, double> func)
         {
-            double s = 0;
-            ForEach(range, x => s += func(x));
+            double sum = 0;
+            ForEach(range, t => sum += func(t));
 
-            return s;
+            return sum;
         }
     }
 }

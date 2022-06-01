@@ -1,8 +1,4 @@
-﻿// Test control fronend for WPF for RazorGDIPainter library
-//   (c) Mokrov Ivan
-// special for habrahabr.ru
-// under MIT license
-using System.Drawing;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms.Integration;
 
@@ -12,7 +8,7 @@ namespace Qualia.Controls
     {
         private readonly HandleRef _hDCRef;
         private readonly Graphics _hDCGraphics;
-        private readonly RazorPainter _RP;
+        private readonly RazorPainter _painter;
 
         public Bitmap RazorBMP { get; private set; }
 
@@ -42,7 +38,7 @@ namespace Qualia.Controls
 
             _hDCGraphics = RazorBackend1.CreateGraphics();
             _hDCRef = new HandleRef(_hDCGraphics, _hDCGraphics.GetHdc());
-            _RP = new RazorPainter();
+            _painter = new RazorPainter();
 
             RazorBMP = new Bitmap(RazorWidth, RazorHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             RazorGFX = Graphics.FromImage(RazorBMP);
@@ -74,7 +70,7 @@ namespace Qualia.Controls
         /// </summary>
         public void RazorPaint()
         {
-            _RP.Paint(_hDCRef, RazorBMP);
+            _painter.Paint(_hDCRef, RazorBMP);
         }
 
         protected override void Dispose(bool disposing)
@@ -98,7 +94,7 @@ namespace Qualia.Controls
                     _hDCGraphics.Dispose();
                 }
                 
-                _RP.Dispose();
+                _painter.Dispose();
             }
 
             base.Dispose(disposing);

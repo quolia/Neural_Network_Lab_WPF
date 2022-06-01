@@ -17,21 +17,23 @@ namespace Tools
         {
             public static ICostFunction Instance = new MSE();
 
-            public double Do(NetworkDataModel model)
+            public double Do(NetworkDataModel networkModel)
             {
-                double s = 0;
-                var neuron = model.Layers.Last().Neurons[0];
+                double sum = 0;
+                var neuron = networkModel.Layers.Last().Neurons[0];
+
                 while (neuron != null)
                 {
-                    s += Math.Pow(neuron.Target - neuron.Activation, 2);
+                    sum += Math.Pow(neuron.Target - neuron.Activation, 2);
                     neuron = neuron.Next;
                 }
-                return s;
+
+                return sum;
             }
 
-            public double Derivative(NetworkDataModel model, NeuronDataModel neuron)
+            public double Derivative(NetworkDataModel networkModel, NeuronDataModel neuronModel)
             {
-                return neuron.Target - neuron.Activation;
+                return neuronModel.Target - neuronModel.Activation;
             }
         }
 
@@ -42,14 +44,14 @@ namespace Tools
                 return typeof(CostFunction).GetNestedTypes().Where(c => typeof(ICostFunction).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
             }
 
-            public static ICostFunction GetInstance(string name)
+            public static ICostFunction GetInstance(string costFunctionName)
             {
-                return (ICostFunction)typeof(CostFunction).GetNestedTypes().Where(c => c.Name == name).First().GetField("Instance").GetValue(null);
+                return (ICostFunction)typeof(CostFunction).GetNestedTypes().Where(c => c.Name == costFunctionName).First().GetField("Instance").GetValue(null);
             }
 
-            public static void FillComboBox(ComboBox cb, Config config, string defaultValue)
+            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
             {
-                Initializer.FillComboBox(typeof(Helper), cb, config, cb.Name, defaultValue);
+                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
             }
         }
     }

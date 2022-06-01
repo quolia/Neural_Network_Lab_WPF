@@ -8,12 +8,12 @@ namespace Qualia.Controls
 {
     public class WindowResizeControl : Window
     {
+        private bool? _adjustingHeight = null;
+
         public WindowResizeControl()
         {
             SourceInitialized += Window_SourceInitialized;
         }
-
-        bool? _adjustingHeight = null;
 
         internal enum SWP
         {
@@ -51,8 +51,9 @@ namespace Qualia.Controls
 
         public static Point GetMousePosition()
         {
-            Win32Point w32Mouse = new Win32Point();
+            var w32Mouse = new Win32Point();
             GetCursorPos(ref w32Mouse);
+
             return Points.Get(w32Mouse.X, w32Mouse.Y);
         }
 
@@ -76,7 +77,9 @@ namespace Qualia.Controls
                         WINDOWPOS pos = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
 
                         if ((pos.flags & (int)SWP.NOMOVE) != 0)
+                        {
                             return IntPtr.Zero;
+                        }
 
                         Window wnd = (Window)HwndSource.FromHwnd(hwnd).RootVisual;
                         if (wnd == null)
@@ -95,9 +98,13 @@ namespace Qualia.Controls
                         }
 
                         if (_adjustingHeight.Value)
+                        {
                             pos.cy = (int)(9 * pos.cx / 16);
+                        }
                         else
+                        {
                             pos.cx = (int)(16 * pos.cy / 9);
+                        }
 
                         Marshal.StructureToPtr(pos, lParam, true);
                         handled = true;

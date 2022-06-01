@@ -12,15 +12,16 @@ using Qualia;
 
 namespace Tools
 {
-    public class ForLimit
-    {
-        public int Current;
-        public int Original;
 
-        public ForLimit(int limit)
+    public class LoopsLimit
+    {
+        public int CurrentLimit;
+        public readonly int OriginalLimit;
+
+        public LoopsLimit(int limit)
         {
-            Current = limit;
-            Original = limit;
+            CurrentLimit = limit;
+            OriginalLimit = limit;
         }
     }
     unsafe public static class UnsafeTools
@@ -33,7 +34,7 @@ namespace Tools
     }
     public unsafe struct Pointer<T>
     {
-        private void* _value;
+        private readonly void* _value;
 
         public Pointer(void* v)
         {
@@ -85,14 +86,14 @@ namespace Tools
 
     public static class Extension
     {
-        public static DispatcherOperation Dispatch(this UIElement c, Action action, DispatcherPriority priority)
+        public static DispatcherOperation Dispatch(this UIElement element, Action action, DispatcherPriority priority)
         {
-            return c.Dispatcher.BeginInvoke(action, priority);
+            return element.Dispatcher.BeginInvoke(action, priority);
         }
 
-        public static void Visible(this UIElement e, bool visible)
+        public static void Visible(this UIElement element, bool visible)
         {
-            e.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+            element.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public static TabItem Tab(this TabControl tab, int index)
@@ -156,20 +157,20 @@ namespace Tools
             }
         }
 
-        public static T GetParentOfType<T>(this FrameworkElement depObj) where T : class
+        public static T GetParentOfType<T>(this FrameworkElement element) where T : class
         {
-            if (depObj.Parent == null)
+            if (element.Parent == null)
             {
                 return null;
             }
             
-            if (depObj.Parent is T)
+            if (element.Parent is T)
             {
-                return depObj.Parent as T;
+                return element.Parent as T;
             }
-            else if (depObj.Parent is FrameworkElement)
+            else if (element.Parent is FrameworkElement)
             {
-                return (depObj.Parent as FrameworkElement).GetParentOfType<T>();
+                return (element.Parent as FrameworkElement).GetParentOfType<T>();
             }
 
             return null;
@@ -198,6 +199,8 @@ namespace Tools
                 return s_currentCulture;
             }
         }
+
+        public static string TimeFormat => @"hh\:mm\:ss";
     }
 
     public static class UniqId
@@ -236,6 +239,7 @@ namespace Tools
 
         public long TotalTicksElapsed;
         public double PureRoundsPerSecond;
+        public double MaxRoundsPerSecond;
 
         public string LastBadOutput;
         public double LastBadOutputActivation;

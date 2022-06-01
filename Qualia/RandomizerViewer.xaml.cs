@@ -133,7 +133,9 @@ namespace Qualia
                                                      top + 100 - 30 - heightOf1);
 
                 // 1 text
-                CtlPresenter.CtlPresenter.G.DrawString("1", _font, Brushes.Black,
+                CtlPresenter.CtlPresenter.G.DrawString("1",
+                                                       _font,
+                                                       Brushes.Black,
                                                        left - 115,
                                                        top + 100 - _font.Height - 30);
 

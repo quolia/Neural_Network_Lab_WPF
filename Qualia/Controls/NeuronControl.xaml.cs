@@ -45,6 +45,7 @@ namespace Qualia.Controls
         {
             CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
             CtlActivation.Height = CtlIsBias.IsOn ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
+
             StateChanged();
             OnChanged();
         }

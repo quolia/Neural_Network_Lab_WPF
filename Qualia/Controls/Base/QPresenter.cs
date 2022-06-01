@@ -9,7 +9,7 @@ namespace Qualia.Controls
 {
     public class QPresenter : Panel
     {
-        private VisualCollection _visuals;
+        private readonly VisualCollection _visuals;
 
         public Func<double, double> Scale = Render.Scale;
 
@@ -48,7 +48,7 @@ namespace Qualia.Controls
         {
             if (index < 0 || index >= _visuals.Count)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             return _visuals[index];
