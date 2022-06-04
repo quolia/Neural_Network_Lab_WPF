@@ -27,7 +27,7 @@
                 <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
                 <StackPanel Orientation="Horizontal">
                     <local:QCheckBox x:Name="CtlOnlyWeights" Content="Only weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:QCheckBox x:Name="CtlOnlyChangedWeights" Content="Only changed weights (change less than 0.001)" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlOnlyChangedWeights" Content="Only weights changed more than 0.1 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                     <local:QCheckBox x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                 </StackPanel>
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -36,7 +36,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" MinWidth="20" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="300" />
                     </Grid.ColumnDefinitions>
                     <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
                     <local:StatisticsPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />

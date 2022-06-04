@@ -11,8 +11,8 @@ namespace Qualia.Controls
     public partial class MatrixPresenter : UserControl
     {
         private static readonly Typeface s_font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-        private readonly FormattedText _formatOutput = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
-        private readonly FormattedText _formatInput = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
+        private readonly FormattedText _textOutput = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
+        private readonly FormattedText _textInput = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
 
         private readonly Dictionary<string, FormattedText> _classesFormatText = new Dictionary<string, FormattedText>();
 
@@ -96,8 +96,9 @@ namespace Qualia.Controls
                 CtlBase.DrawText(text, Points.Get(1 + axisOffset + matrix.Output.Length * size + (size - text.Width) / 2, axisOffset + y * size));
             }
         
-            CtlBase.DrawText(_formatOutput, Points.Get(axisOffset + (matrix.Output.Length * size - _formatOutput.Width) / 2, axisOffset - _formatOutput.Height - 1));            
-            CtlBase.DrawText(_formatInput, Points.Get(-axisOffset - (matrix.Input.Length * size - _formatInput.Width) / 1, axisOffset - _formatInput.Height - 1), -90);
+            CtlBase.DrawText(_textOutput, Points.Get(axisOffset + (matrix.Output.Length * size - _textOutput.Width) / 2, axisOffset - _textOutput.Height - 1));
+            //CtlBase.DrawText(_textInput, Points.Get(-axisOffset - (matrix.Input.Length * size - _textInput.Width) / 1, axisOffset - _textInput.Height - 1), -90);
+            CtlBase.DrawText(_textInput, Points.Get(-axisOffset - (_textInput.Width * size - matrix.Input.Length) / 2, axisOffset - _textInput.Height - 1), -90);
 
             CtlBase.Update();
         }

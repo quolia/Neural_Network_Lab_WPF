@@ -18,12 +18,14 @@ namespace Qualia.Controls
 
         private readonly TabControl _ctlTabs;
         private INetworkTask _networkTask;
+        private NetworkControl _selectedNetworkControl;
         private NetworkDataModel _prevSelectedNetworkModel;
 
         public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
             _ctlTabs = tabs;
+            _ctlTabs.SelectionChanged += CtlTabs_SelectionChanged;
 
             Config = string.IsNullOrEmpty(fileName) ? CreateNewManager() : new Config(fileName);
             if (Config != null)
@@ -33,15 +35,20 @@ namespace Qualia.Controls
             }
         }
 
-        public NetworkControl SelectedNetwork => _ctlTabs.SelectedContent as NetworkControl;
+        private void CtlTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedNetworkControl = _ctlTabs.SelectedContent as NetworkControl;
+        }
+
+        public NetworkControl SelectedNetworkControl => _selectedNetworkControl;
 
         public NetworkDataModel SelectedNetworkModel
         {
             get
             {
-                var selected = SelectedNetwork == null
+                var selected = SelectedNetworkControl == null
                                ? _prevSelectedNetworkModel
-                               : NetworkModels.FirstOrDefault(m => m.VisualId == SelectedNetwork.Id);
+                               : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
 
                 _prevSelectedNetworkModel = selected;
 
@@ -151,7 +158,7 @@ namespace Qualia.Controls
         {
             if (MessageBox.Show($"Would you really like to delete Network {_ctlTabs.SelectedIndex}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                SelectedNetwork.VanishConfig();
+                SelectedNetworkControl.VanishConfig();
 
                 var index = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
                 _ctlTabs.Items.Remove(_ctlTabs.SelectedTab());

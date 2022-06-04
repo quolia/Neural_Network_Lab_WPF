@@ -34,9 +34,11 @@ namespace Tools
 
         public static void SetProcessorAffinity(Processor processors)
         {
+            var currentThreadId = GetCurrentThreadId();
+
             foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
             {
-                if (GetCurrentThreadId() == thread.Id)
+                if (currentThreadId == thread.Id)
                 {
                     thread.ProcessorAffinity = (IntPtr)processors;
 
@@ -47,9 +49,11 @@ namespace Tools
 
         public static void SetThreadPriority(ThreadPriorityLevel priority)
         {
+            var currentThreadId = GetCurrentThreadId();
+
             foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
             {
-                if (GetCurrentThreadId() == thread.Id)
+                if (currentThreadId == thread.Id)
                 {
                     thread.PriorityLevel = priority;
                     thread.PriorityBoostEnabled = true;

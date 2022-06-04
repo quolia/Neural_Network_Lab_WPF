@@ -58,6 +58,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>CA1051</NoWarn>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -75,13 +76,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ILGPU, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -168,6 +171,7 @@
     <Compile Include="Tools\Draw.cs" />
     <Compile Include="Tools\InitializeMode.cs" />
     <Compile Include="Tools\List.cs" />
+    <Compile Include="Tools\Logger.cs" />
     <Compile Include="Tools\Rand.cs" />
     <Compile Include="Tools\RandomizeMode.cs" />
     <Compile Include="Tools\Range.cs" />

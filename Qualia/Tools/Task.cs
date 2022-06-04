@@ -102,47 +102,47 @@ namespace Tools
                 {
                     double median = ((double)_minNumber + _maxNumber) / 2;
 
-                    var number = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
-                    if (number < _minNumber)
+                    var randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
+                    if (randNumber < _minNumber)
                     {
-                        number = _minNumber;
+                        randNumber = _minNumber;
                     }
-                    if (number > _maxNumber)
+                    if (randNumber > _maxNumber)
                     {
-                        number = _maxNumber;
+                        randNumber = _maxNumber;
                     }
 
-                    for (int i = 0; i < shuffled.Count; ++i)
+                    for (int ind = 0; ind < shuffled.Count; ++ind)
                     {
-                        shuffled[i].Activation = i < number ? networkModel.InputInitial1 : networkModel.InputInitial0;
+                        shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
                     }
 
                     var neuron = networkModel.Layers.Last().Neurons[0];
                     while (neuron != null)
                     {
-                        neuron.Target = (neuron.Id == number - _minNumber) ? 1 : 0;
+                        neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
                         neuron = neuron.Next;
                     }
 
-                    networkModel.TargetOutput = number - _minNumber;
+                    networkModel.TargetOutput = randNumber - _minNumber;
                 }
                 else
                 {
-                    var number = Rand.Flat.Next(_minNumber, _maxNumber + 1);
+                    var randNumber = Rand.Flat.Next(_minNumber, _maxNumber + 1);
 
-                    for (int i = 0; i < shuffled.Count; ++i)
+                    for (int ind = 0; ind < shuffled.Count; ++ind)
                     {
-                        shuffled[i].Activation = i < number ? networkModel.InputInitial1 : networkModel.InputInitial0;
+                        shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
                     }
 
                     var neuron = networkModel.Layers.Last().Neurons[0];
                     while (neuron != null)
                     {
-                        neuron.Target = (neuron.Id == number - _minNumber) ? 1 : 0;
+                        neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
                         neuron = neuron.Next;
                     }
 
-                    networkModel.TargetOutput = number - _minNumber;
+                    networkModel.TargetOutput = randNumber - _minNumber;
                 }
             }
 

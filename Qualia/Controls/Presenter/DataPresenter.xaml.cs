@@ -172,15 +172,15 @@ namespace Qualia.Controls
 
             for (int ind = 0; ind < _pointsCount; ++ind)
             {
-                var pos = GetPointPosition(ind);
+                var position = GetPointPosition(ind);
 
                 if (_data[ind] > _threshold)
                 {
-                    DrawPoint(pos.Item1, pos.Item2, _data[ind], true);
+                    DrawPoint(position.Item1, position.Item2, _data[ind], true);
                 }
                 else
                 {
-                    DrawPoint(pos.Item1, pos.Item2, maxStat > 0 ? _stat[ind] / maxStat : 0, false);
+                    DrawPoint(position.Item1, position.Item2, maxStat > 0 ? _stat[ind] / maxStat : 0, false);
                 }
             }
 

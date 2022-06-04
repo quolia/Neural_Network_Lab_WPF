@@ -1,0 +1,137 @@
+2022-06-02 13:55:44
+Application started.2022-06-02 13:56:02
+Application started.2022-06-02 16:31:08
+Application started.2022-06-02 16:33:41
+Application started.2022-06-02 16:36:28
+Application started.2022-06-02 16:49:03
+Application started.2022-06-02 16:50:04
+Application started.2022-06-02 17:00:22
+Application started.2022-06-02 17:58:42
+Application started.2022-06-02 18:12:16
+Application started.2022-06-02 18:14:23
+Application started.2022-06-02 18:22:01
+Application started.2022-06-02 18:22:28
+Application started.2022-06-02 18:24:03
+Application started.2022-06-02 18:26:20
+Application started.2022-06-02 18:26:46
+Application started.2022-06-02 18:39:56
+Application started.2022-06-02 18:43:00
+Application started.2022-06-02 19:08:09
+Application started.2022-06-02 20:15:20
+Application started.2022-06-02 20:16:31
+Application started.2022-06-03 13:36:06
+Application started.
+
+2022-06-03 13:54:33
+Application started.
+
+2022-06-03 13:58:13
+Application started.
+
+2022-06-03 14:59:21
+Application started.
+
+2022-06-03 15:01:33
+Application started.
+
+2022-06-03 15:58:36
+Application started.
+
+2022-06-03 16:05:27
+Application started.
+
+2022-06-03 16:50:02
+Application started.
+
+2022-06-03 17:01:46
+Application started.
+
+2022-06-03 17:02:14
+Application started.
+
+2022-06-03 17:05:23
+Application started.
+
+2022-06-03 17:06:00
+Application started.
+
+2022-06-03 17:35:02
+Application started.
+
+2022-06-03 19:48:29
+Application started.
+
+2022-06-03 19:59:22
+Application started.
+
+2022-06-03 19:59:33
+Application started.
+
+2022-06-03 20:05:47
+Application started.
+
+2022-06-03 20:48:56
+Application started.
+
+2022-06-03 21:54:30
+Application started.
+
+2022-06-04 15:25:57
+Application started.
+
+2022-06-04 15:32:54
+Application started.
+
+2022-06-04 15:34:54
+Application started.
+
+2022-06-04 15:36:25
+Application started.
+
+2022-06-04 15:37:55
+Application started.
+
+2022-06-04 15:43:21
+Application started.
+
+2022-06-04 15:48:21
+Application started.
+
+2022-06-04 15:49:04
+Application started.
+
+2022-06-04 15:59:00
+Application started.
+
+2022-06-04 16:09:31
+Application started.
+
+2022-06-04 16:10:57
+System.Exception
+Render error.
+   at Qualia.Controls.NetworkPresenter.DrawLayersLinks(Boolean fullState, NetworkDataModel networkModel, LayerDataModel layerModel1, LayerDataModel layerModel2, Boolean isOnlyWeights, Boolean isOnlyChangedWeights, Boolean isHighlightChangedWeights) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\NetworkPresenter.xaml.cs:line 72
+   at Qualia.Controls.NetworkPresenter.Draw(Boolean fullState, NetworkDataModel networkModel, Boolean isOnlyWeights, Boolean isOnlyChangedWeights, Boolean isHighlightChangedWeights) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\NetworkPresenter.xaml.cs:line 235
+   at Qualia.Main.<>c__DisplayClass29_1.<RunNetworks>b__2() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 687
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at MS.Internal.CulturePreservingExecutionContext.CallbackWrapper(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at MS.Internal.CulturePreservingExecutionContext.Run(CulturePreservingExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+

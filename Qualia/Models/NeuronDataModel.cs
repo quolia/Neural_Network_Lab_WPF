@@ -36,10 +36,21 @@ namespace Qualia
             Range.For(weightsCount, n => Weights.Add(new WeightDataModel(n)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double AxW(NeuronDataModel neuron) => Activation * WeightTo(neuron).Weight;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WeightDataModel WeightTo(NeuronDataModel neuron) => Weights[neuron.Id];
+
+        public override int GetHashCode()
+        {
+            return (int)VisualId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return VisualId == (obj as NeuronDataModel).VisualId;
+        }
     }
 
     public class WeightDataModel : ListNode<WeightDataModel>

@@ -238,8 +238,13 @@ namespace Tools
         public double CostAvg;
 
         public long TotalTicksElapsed;
-        public double PureRoundsPerSecond;
-        public double MaxRoundsPerSecond;
+        //public double PureRoundsPerSecond;
+        public double CurrentPureRoundsPerSecond;
+        public double MaxPureRoundsPerSecond;
+        //public double RoundsPerSecond;
+        //public double MaxRoundsPerSecond;
+        public double CurrentLostRoundsPerSecond;
+        public double MaxLostRoundsPerSecond;
 
         public string LastBadOutput;
         public double LastBadOutputActivation;
@@ -286,11 +291,14 @@ namespace Tools
 
         public class PlotPoint : Tuple<double, long>
         {
-            public PlotPoint(double v, long t)
-                : base(v, t)
+            public PlotPoint(double value, long timeTicks)
+                : base(value, timeTicks)
             {
                 //
             }
+
+            public double Value => Item1;
+            public long TimeTicks => Item2;
         }
 
         public class PlotPoints : List<PlotPoint>

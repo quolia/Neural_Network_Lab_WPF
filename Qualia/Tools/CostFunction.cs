@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Qualia;
 
@@ -7,7 +8,10 @@ namespace Tools
 {
     public interface ICostFunction
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         double Do(NetworkDataModel model);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         double Derivative(NetworkDataModel model, NeuronDataModel neuron);
     }
 
@@ -17,6 +21,7 @@ namespace Tools
         {
             public static ICostFunction Instance = new MSE();
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public double Do(NetworkDataModel networkModel)
             {
                 double sum = 0;
@@ -31,6 +36,7 @@ namespace Tools
                 return sum;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public double Derivative(NetworkDataModel networkModel, NeuronDataModel neuronModel)
             {
                 return neuronModel.Target - neuronModel.Activation;

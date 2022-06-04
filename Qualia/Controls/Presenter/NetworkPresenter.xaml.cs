@@ -98,6 +98,7 @@ namespace Qualia.Controls
                             {
                                 Pen pen = null;
                                 Pen penChange = null;
+
                                 bool isWeightChanged = false;
                                 var weight = neuron1.WeightTo(neuron2);
 
@@ -105,21 +106,24 @@ namespace Qualia.Controls
                                 {
                                     if (prevWeight != weight.Weight)
                                     {
-                                        isWeightChanged = true;
                                         _weightsData[weight] = weight.Weight;
+                                        isWeightChanged = true;
                                     }
                                 }
                                 else
                                 {
                                     prevWeight = 0;
-                                    isWeightChanged = true;
                                     _weightsData.Add(weight, weight.Weight);
+                                    isWeightChanged = true;
                                 }
 
-                                double fraction = Math.Min(1, Math.Abs((prevWeight - weight.Weight) / prevWeight));
-                                if (fraction <= 0.001)
+                                if (isWeightChanged && isOnlyChangedWeights)
                                 {
-                                    isWeightChanged = false;
+                                    double fraction = Math.Abs((prevWeight - weight.Weight) / prevWeight);
+                                    if (fraction <= 0.001)
+                                    {
+                                        isWeightChanged = false;
+                                    }
                                 }
 
                                 if (isWeightChanged && isHighlightChangedWeights)
@@ -127,7 +131,7 @@ namespace Qualia.Controls
                                     penChange = Tools.Draw.GetPen(Colors.Lime);
                                 }
 
-                                if (isOnlyWeights)
+                                if (isOnlyWeights || isOnlyChangedWeights)
                                 {
                                     if ((isWeightChanged && isOnlyChangedWeights) || !isOnlyChangedWeights)
                                     {
@@ -143,6 +147,11 @@ namespace Qualia.Controls
                                 {
                                     pen = penChange;
                                     penChange = null;
+                                }
+
+                                if (pen != null && penChange != null)
+                                {
+                                    throw new Exception("Render error.");
                                 }
 
                                 if (pen != null)
@@ -219,7 +228,7 @@ namespace Qualia.Controls
 
             CtlPresenter.Clear();
 
-            lock (Main.ApplyChangesLocker)
+            //lock (Main.ApplyChangesLocker)
             {
                 if (networkModel.Layers.Count > 0)
                 {

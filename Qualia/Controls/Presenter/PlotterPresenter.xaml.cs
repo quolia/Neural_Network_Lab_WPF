@@ -167,7 +167,7 @@ namespace Qualia.Controls
             var firstPointData = plotPoints[0];
             var lastPointData = plotPoints.Last();
 
-            var ticks = lastPointData.Item2 - firstPointData.Item2;
+            var ticks = lastPointData.TimeTicks - firstPointData.TimeTicks;
 
             var prevPoint = new Point(-1000, -1000);
             var prevPointData = firstPointData;
@@ -195,10 +195,10 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPoints data, Color color)
+        private void DrawLabel(DynamicStatistics.PlotPoints plotPoints, Color color)
         {     
-            var text = new FormattedText(TimeSpan.FromTicks(data.Last().Item2 - data[0].Item2).ToString(Culture.TimeFormat)
-                                         + " / " + Converter.DoubleToText(data.Last().Item1, "N6", false) + " %",
+            var text = new FormattedText(TimeSpan.FromTicks(plotPoints.Last().TimeTicks - plotPoints[0].TimeTicks).ToString(Culture.TimeFormat)
+                                         + " / " + Converter.DoubleToText(plotPoints.Last().Value, "N6", true) + " %",
                                          Culture.Current,
                                          FlowDirection.LeftToRight,
                                          _font,
@@ -216,22 +216,22 @@ namespace Qualia.Controls
             CtlPresenter.DrawText(text, Points.Get((ActualWidth - _axisOffset - text.Width) / 2, ActualHeight - _axisOffset - 20));
         }
 
-        private Point GetPointPercentData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long ticks)
+        private Point GetPointPercentData(DynamicStatistics.PlotPoints plotPoints, DynamicStatistics.PlotPoint point, long ticks)
         {
-            var p0 = data[0];
-            var px = ticks == 0 ? _axisOffset : _axisOffset + (ActualWidth - _axisOffset) * (point.Item2 - p0.Item2) / ticks;
-            var py = (ActualHeight - _axisOffset) * (1 - (point.Item1 / 100));
+            var point0 = plotPoints[0];
+            var pointX = ticks == 0 ? _axisOffset : _axisOffset + (ActualWidth - _axisOffset) * (point.TimeTicks - point0.TimeTicks) / ticks;
+            var pointY = (ActualHeight - _axisOffset) * (1 - (point.Item1 / 100));
 
-            return Points.Get((int)px, (int)py);
+            return Points.Get((int)pointX, (int)pointY);
         }
 
-        private Point GetPointCostData(DynamicStatistics.PlotPoints data, DynamicStatistics.PlotPoint point, long ticks)
+        private Point GetPointCostData(DynamicStatistics.PlotPoints plotPoints, DynamicStatistics.PlotPoint point, long ticks)
         {
-            var p0 = data[0];
-            var px = ticks == 0 ? _axisOffset : _axisOffset + (ActualWidth - _axisOffset) * (point.Item2 - p0.Item2) / ticks;
-            var py = (ActualHeight - _axisOffset) * (1 - Math.Min(1, point.Item1));
+            var point0 = plotPoints[0];
+            var pointX = ticks == 0 ? _axisOffset : _axisOffset + (ActualWidth - _axisOffset) * (point.TimeTicks - point0.TimeTicks) / ticks;
+            var pointY = (ActualHeight - _axisOffset) * (1 - Math.Min(1, point.Value));
 
-            return Points.Get((int)px, (int)py);
+            return Points.Get((int)pointX, (int)pointY);
         }
 
         private void Vanish(DynamicStatistics.PlotPoints points, PointFunc func)
@@ -246,17 +246,22 @@ namespace Qualia.Controls
                     return;
                 }
 
-                var pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+                List<DynamicStatistics.PlotPoint> pointsToRemove = null;
 
                 for (int i = 0; i < points.Count - MIN_POINTS_COUNT/*minPointsCount*/; ++i)
                 {
-                    var ticks = points.Last().Item2 - points[0].Item2;
+                    var ticks = points.Last().TimeTicks - points[0].TimeTicks;
                     var point0 = func(points, points[i], ticks);
                     var point1 = func(points, points[i + 1], ticks);
                     var point2 = func(points, points[i + 2], ticks);
 
                     if (Math.Abs(Angle(point0, point1) - Angle(point1, point2)) < Math.PI / 720D)
                     {
+                        if (pointsToRemove == null)
+                        {
+                            pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+                        }
+
                         pointsToRemove.Add(points[i + 1]);
 
                         if (points.Count - pointsToRemove.Count < MIN_POINTS_COUNT)
@@ -270,6 +275,11 @@ namespace Qualia.Controls
                     {
                         if (Math.Abs(point0.X - point1.X) < VANISH_AREA && Math.Abs(point0.Y - point1.Y) < VANISH_AREA)
                         {
+                            if (pointsToRemove == null)
+                            {
+                                pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+                            }
+
                             pointsToRemove.Add(points[i + 1]);
 
                             if (points.Count - pointsToRemove.Count < MIN_POINTS_COUNT)
@@ -282,7 +292,7 @@ namespace Qualia.Controls
                     }
                 }
 
-                if (!pointsToRemove.Any())
+                if (pointsToRemove == null)
                 {
                     return;
                 }
