@@ -97,8 +97,7 @@ namespace Qualia.Controls
             }
         
             CtlBase.DrawText(_textOutput, Points.Get(axisOffset + (matrix.Output.Length * size - _textOutput.Width) / 2, axisOffset - _textOutput.Height - 1));
-            //CtlBase.DrawText(_textInput, Points.Get(-axisOffset - (matrix.Input.Length * size - _textInput.Width) / 1, axisOffset - _textInput.Height - 1), -90);
-            CtlBase.DrawText(_textInput, Points.Get(-axisOffset - (_textInput.Width * size - matrix.Input.Length) / 2, axisOffset - _textInput.Height - 1), -90);
+            CtlBase.DrawText(_textInput, Points.Get(-axisOffset - (matrix.Input.Length * size + _textInput.Width) / 2, axisOffset - _textInput.Height - 1), -90);
 
             CtlBase.Update();
         }

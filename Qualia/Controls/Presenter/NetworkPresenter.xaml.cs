@@ -35,7 +35,7 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _coordinator.Clear();
+            ClearCache();
         }
 
         public int LayerDistance(NetworkDataModel model)
@@ -289,10 +289,15 @@ namespace Qualia.Controls
             CtlPresenter.Update();
         }
 
-        public void RenderStanding(NetworkDataModel model)
+        public void ClearCache()
         {
             _coordinator.Clear();
-            Draw(true, model, false, false, false, false);
+        }
+
+        public void RenderStanding(NetworkDataModel model)
+        {
+            ClearCache();
+            Draw(false, model, false, false, false, false);
         }
 
         public void RenderRunning(NetworkDataModel model, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
