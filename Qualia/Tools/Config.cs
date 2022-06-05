@@ -21,6 +21,8 @@ namespace Tools
         public static Config Main = new Config("config.txt");
         public readonly string Name;
         public Config ParentConfig;
+
+        private static object s_locker = new object();
         
         private string _extender;
 
@@ -281,7 +283,10 @@ namespace Tools
                 lines.Add(pair.Key + ":" + pair.Value);
             }
 
-            File.WriteAllLines(Name, lines);
+            lock (s_locker)
+            {
+                File.WriteAllLines(Name, lines);
+            }
         }
 
         private Dictionary<string, string> GetValues()
@@ -319,7 +324,11 @@ namespace Tools
 
         public void Clear()
         {
-            File.WriteAllLines(Name, Array.Empty<string>());
+            lock (s_locker)
+            {
+                File.WriteAllLines(Name, Array.Empty<string>());
+            }
+
             s_cache.Clear();
         }
     }
