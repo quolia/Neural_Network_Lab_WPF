@@ -268,18 +268,20 @@ namespace Tools
 
         public void FlushToDrive()
         {
-            if (s_cache.ContainsKey(Name))
+            if (!s_cache.ContainsKey(Name))
             {
-                var values = s_cache[Name];
-
-                var lines = new List<string>();
-                foreach (var pair in values)
-                {
-                    lines.Add(pair.Key + ":" + pair.Value);
-                }
-
-                File.WriteAllLines(Name, lines);
+                return;
             }
+
+            var lines = new List<string>();
+
+            var values = s_cache[Name];
+            foreach (var pair in values)
+            {
+                lines.Add(pair.Key + ":" + pair.Value);
+            }
+
+            File.WriteAllLines(Name, lines);
         }
 
         private Dictionary<string, string> GetValues()

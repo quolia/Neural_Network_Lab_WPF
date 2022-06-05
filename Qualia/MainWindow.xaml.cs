@@ -539,21 +539,21 @@ namespace Qualia
                             networkModel = networkModel.Next;
                         }
                     }
-
-                    int currentLimit = currentLoopLimit.CurrentLimit;
-
-                    foreach (var loopLimit in loopLimits)
-                    {
-                        loopLimit.CurrentLimit -= currentLimit;
-                        if (loopLimit.CurrentLimit <= 0)
-                        {
-                            loopLimit.CurrentLimit = loopLimit.OriginalLimit;
-                        }
-                    }
-
-                    loopLimits = loopLimits.OrderBy(limit => limit.CurrentLimit).ToList();
-                    currentLoopLimit = loopLimits.First();
                 }
+
+                int currentLimit = currentLoopLimit.CurrentLimit;
+
+                foreach (var loopLimit in loopLimits)
+                {
+                    loopLimit.CurrentLimit -= currentLimit;
+                    if (loopLimit.CurrentLimit <= 0)
+                    {
+                        loopLimit.CurrentLimit = loopLimit.OriginalLimit;
+                    }
+                }
+
+                loopLimits = loopLimits.OrderBy(limit => limit.CurrentLimit).ToList();
+                currentLoopLimit = loopLimits.First();
 
                 if (isRendering)
                 {

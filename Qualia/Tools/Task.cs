@@ -100,9 +100,9 @@ namespace Tools
 
                 if (_isGaussianDistribution)
                 {
-                    double median = ((double)_minNumber + _maxNumber) / 2;
+                    double median = ((double)_maxNumber + _minNumber) / 2;
 
-                    var randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, median / 2));
+                    var randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, (median - 2) / 2));
                     if (randNumber < _minNumber)
                     {
                         randNumber = _minNumber;
