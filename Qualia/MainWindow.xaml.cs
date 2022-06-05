@@ -607,8 +607,18 @@ namespace Qualia
                         }
                     }
 
+                    if (_cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
                     Dispatcher.BeginInvoke(DispatcherPriority.Render, (Action)(() =>
                     {
+                        if (_cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
                         if (isErrorMatrixRendering)
                         {
                             swRenderTime.Restart();
