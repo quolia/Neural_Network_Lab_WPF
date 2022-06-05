@@ -336,6 +336,12 @@ namespace Qualia
                 return;
             }
 
+            if (!_networksManager.NetworkModels.Any(model => model.IsEnabled))
+            {
+                MessageBox.Show("No one network is enabled.", "Info");
+                return;
+            }
+
             ApplyChangesToStandingNetworks();
 
             _cancellationTokenSource = new CancellationTokenSource();
