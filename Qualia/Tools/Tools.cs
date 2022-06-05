@@ -73,15 +73,15 @@ namespace Tools
     public class ForwardNeuron : ListNode<ForwardNeuron>
     {
         public readonly NeuronDataModel Neuron;
-        public readonly WeightDataModel Weight;
+        public readonly WeightDataModel WeightModel;
 
         public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
         {
             Neuron = neuron;
-            Weight = weight;
+            WeightModel = weight;
         }
 
-        public double AxW => Neuron.Activation * Weight.Weight;
+        public double AxW => Neuron.Activation * WeightModel.Weight;
     }
 
     public static class Extension

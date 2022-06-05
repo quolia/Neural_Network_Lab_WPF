@@ -42,6 +42,8 @@ namespace Qualia
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WeightDataModel WeightTo(NeuronDataModel neuron) => Weights[neuron.Id];
 
+        
+        /*
         public override int GetHashCode()
         {
             return (int)VisualId;
@@ -51,19 +53,38 @@ namespace Qualia
         {
             return VisualId == (obj as NeuronDataModel).VisualId;
         }
+        */
     }
 
     public class WeightDataModel : ListNode<WeightDataModel>
     {
+        private static int s_uniqId = 0;
+
         public int Id;
         public double Weight;
+
+        //private int _uniqId;
+        public int _uniqId;
 
         public WeightDataModel(int id)
         {
             Id = id;
+            _uniqId = s_uniqId++;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(double w) => Weight += w;
+
+        /*
+        public override int GetHashCode()
+        {
+            return _uniqId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return _uniqId == (obj as WeightDataModel)._uniqId;
+        }
+        */
     }
 }

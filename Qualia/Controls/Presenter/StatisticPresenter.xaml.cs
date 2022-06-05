@@ -28,17 +28,14 @@ namespace Qualia.Controls
             }
 
             s_stringBuilder.Clear();
-            //string text = string.Empty;
             foreach (var pair in stats)
             {
                 if (pair.Key.Length == 0)
                 {
-                    //text += "\r\n";
                     s_stringBuilder.AppendLine();
                 }
                 else
                 {
-                    //text += pair.Key + ": " + pair.Value + "\r\n";
                     s_stringBuilder.AppendLine($"{pair.Key}: {pair.Value}");
                 }
             }

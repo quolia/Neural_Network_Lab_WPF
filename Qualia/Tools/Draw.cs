@@ -11,7 +11,7 @@ namespace Tools
     {
         private const int POOL_SIZE = 50;
         private static int s_pointer = 0;
-        private static readonly Dictionary<int, Rect> s_pool = new Dictionary<int, Rect>(POOL_SIZE);
+        private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
 
         static Rects()
         {
@@ -57,7 +57,7 @@ namespace Tools
     {
         private const int POOL_SIZE = 50;
         private static int s_pointer = 0;
-        private static readonly Dictionary<int, Point> s_pool = new Dictionary<int, Point>(POOL_SIZE);
+        private static readonly Point[] s_pool = new Point[POOL_SIZE];
 
         static Points()
         {
