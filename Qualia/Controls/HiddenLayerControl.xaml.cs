@@ -13,8 +13,8 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public HiddenLayerControl(long existingId, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
-            : base(existingId, config, onNetworkUIChanged)
+        public HiddenLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+            : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
@@ -34,12 +34,12 @@ namespace Qualia.Controls
 
         public override Panel NeuronsHolder => CtlNeuronsHolder;
 
-        public override void AddNeuron(long existingId)
+        public override void AddNeuron(long id)
         {
-            var neuron = new NeuronControl(existingId, Config, OnNetworkUIChanged);
+            var neuron = new NeuronControl(id, Config, OnNetworkUIChanged);
             NeuronsHolder.Children.Add(neuron);
 
-            if (existingId == Const.UnknownId)
+            if (id == Const.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }

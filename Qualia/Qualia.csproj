@@ -132,16 +132,6 @@
     <Compile Include="Controls\Base\QCheckBox.cs" />
     <Compile Include="Controls\Base\QComboBox.cs" />
     <Compile Include="Controls\Base\QTextBox.cs" />
-    <Compile Include="Controls\Base\Razor\RazorBackendCtl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Base\Razor\RazorBackendCtl.Designer.cs">
-      <DependentUpon>RazorBackendCtl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Base\Razor\RazorPainter.cs" />
-    <Compile Include="Controls\Base\Razor\RazorPainterWPFCtl.xaml.cs">
-      <DependentUpon>RazorPainterWPFCtl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>
@@ -167,7 +157,6 @@
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Const.cs" />
     <Compile Include="Tools\CostFunction.cs" />
-    <Compile Include="Tools\GPU.cs" />
     <Compile Include="Tools\Draw.cs" />
     <Compile Include="Tools\InitializeMode.cs" />
     <Compile Include="Tools\List.cs" />
@@ -178,10 +167,6 @@
     <Compile Include="Tools\Task.cs" />
     <Compile Include="Tools\Thread.cs" />
     <Compile Include="Tools\Tools.cs" />
-    <Page Include="Controls\Base\Razor\RazorPainterWPFCtl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -324,9 +309,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Controls\Base\Razor\RazorBackendCtl.resx">
-      <DependentUpon>RazorBackendCtl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Presenter\PresenterControl.resx">
       <DependentUpon>PresenterControl.cs</DependentUpon>
     </EmbeddedResource>

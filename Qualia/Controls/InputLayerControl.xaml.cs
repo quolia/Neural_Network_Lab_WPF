@@ -10,8 +10,8 @@ namespace Qualia.Controls
     {
         private readonly List<IConfigParam> _configParams;
 
-        public InputLayerControl(long existingId, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
-            : base(existingId, config, onNetworkUIChanged)
+        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+            : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 

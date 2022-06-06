@@ -23,12 +23,12 @@ namespace Qualia.Controls
 
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.IsOn;
 
-        public NetworkControl(long existingId, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             InitializeComponent();
             OnNetworkUIChanged = onNetworkUIChanged;
 
-            Id = UniqId.GetNextId(existingId);
+            Id = UniqId.GetNextId(id);
             Config = config.Extend(Id);
 
             _configParams = new List<IConfigParam>()
