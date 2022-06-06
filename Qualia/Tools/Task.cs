@@ -7,7 +7,7 @@ using Qualia.Controls;
 
 namespace Tools
 {
-    public interface INetworkTask : IConfigValue
+    public interface INetworkTask : IConfigParam
     {
         void Do(NetworkDataModel networkModel);
         Control GetVisualControl();

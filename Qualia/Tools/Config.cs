@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Tools
 {
-    public interface IConfigValue
+    public interface IConfigParam
     {
         void SetConfig(Config config);
         void LoadConfig();

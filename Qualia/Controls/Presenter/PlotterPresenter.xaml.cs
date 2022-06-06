@@ -12,7 +12,7 @@ namespace Qualia.Controls
 
     public partial class PlotterPresenter : UserControl
     {
-        private readonly int _axisOffset = 6;
+        private const int AXIS_OFFSET = 6;
         private bool _isBaseRedrawNeeded;
 
         private readonly Typeface _font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
@@ -64,7 +64,7 @@ namespace Qualia.Controls
             }
         }
 
-        public void Draw(ListX<NetworkDataModel> networkModels, NetworkDataModel selectedModel)
+        public void Draw(ListX<NetworkDataModel> networkModels, NetworkDataModel selectedNetworkModel)
         {
             if (_isBaseRedrawNeeded)
             {
@@ -107,9 +107,9 @@ namespace Qualia.Controls
                 networkModel = networkModel.Next;
             }
 
-            if (selectedModel != null && selectedModel.DynamicStatistics.PercentData.Count > 0)
+            if (selectedNetworkModel != null && selectedNetworkModel.DynamicStatistics.PercentData.Count > 0)
             {
-                DrawLabel(selectedModel.DynamicStatistics.PercentData, selectedModel.Color);
+                DrawLabel(selectedNetworkModel.DynamicStatistics.PercentData, selectedNetworkModel.Color);
             }
 
             CtlPresenter.Update();
@@ -122,63 +122,63 @@ namespace Qualia.Controls
             var penBlack = Tools.Draw.GetPen(Colors.Black);
             var penLightGray = Tools.Draw.GetPen(Colors.LightGray);
 
-            double step = (ActualWidth - _axisOffset) / 10;
-            double y = ActualHeight - _axisOffset - _axisOffset / 2;
+            double step = (ActualWidth - AXIS_OFFSET) / 10;
+            double y = ActualHeight - AXIS_OFFSET - AXIS_OFFSET / 2;
             double x;
 
             for (x = 0; x < 11; ++x)
             {
-                CtlBase.DrawLine(penLightGray, Points.Get((float)(_axisOffset + step * x), (float)y), Points.Get((float)(_axisOffset + step * x), 0));
-                CtlBase.DrawLine(penBlack, Points.Get((float)(_axisOffset + step * x), (float)y), Points.Get((float)(_axisOffset + step * x), (float)(y + _axisOffset)));
+                CtlBase.DrawLine(penLightGray, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), 0));
+                CtlBase.DrawLine(penBlack, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), (float)(y + AXIS_OFFSET)));
             }
 
-            step = (ActualHeight - _axisOffset) / 10;
-            x = _axisOffset / 2;
+            step = (ActualHeight - AXIS_OFFSET) / 10;
+            x = AXIS_OFFSET / 2;
 
             for (y = 0; y < 11; ++y)
             {
                 CtlBase.DrawLine(penLightGray,
-                                 Points.Get((float)x, (float)(ActualHeight - _axisOffset - step * y)),
-                                 Points.Get(ActualWidth, (float)(ActualHeight - _axisOffset - step * y)));
+                                 Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
+                                 Points.Get(ActualWidth, (float)(ActualHeight - AXIS_OFFSET - step * y)));
 
                 CtlBase.DrawLine(penBlack,
-                                 Points.Get((float)x, (float)(ActualHeight - _axisOffset - step * y)),
-                                 Points.Get((float)(x + _axisOffset), (float)(ActualHeight - _axisOffset - step * y)));
+                                 Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
+                                 Points.Get((float)(x + AXIS_OFFSET), (float)(ActualHeight - AXIS_OFFSET - step * y)));
             }
 
             CtlBase.DrawLine(penBlack,
-                             Points.Get(_axisOffset, 0),
-                             Points.Get(_axisOffset, ActualHeight));
+                             Points.Get(AXIS_OFFSET, 0),
+                             Points.Get(AXIS_OFFSET, ActualHeight));
 
             CtlBase.DrawLine(penBlack,
-                             Points.Get(0, ActualHeight - _axisOffset),
-                             Points.Get(ActualWidth, ActualHeight - _axisOffset));
+                             Points.Get(0, ActualHeight - AXIS_OFFSET),
+                             Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
-        private void DrawData(DynamicStatistics.PlotPoints plotPoints, Color color, PointFunc func, bool isRect)
+        private void DrawData(DynamicStatistics.PlotPoints pointsData, Color color, PointFunc func, bool isRect)
         {
-            if (plotPoints == null || !plotPoints.Any())
+            if (pointsData == null || !pointsData.Any())
             {
                 return;
             }
 
             var pen = Tools.Draw.GetPen(color);
             
-            var firstPointData = plotPoints[0];
-            var lastPointData = plotPoints.Last();
+            var firstPointData = pointsData[0];
+            var lastPointData = pointsData.Last();
 
             var ticks = lastPointData.TimeTicks - firstPointData.TimeTicks;
 
             var prevPoint = new Point(-1000, -1000);
             var prevPointData = firstPointData;
 
-            foreach (var pointData in plotPoints)
+            foreach (var pointData in pointsData)
             {
-                var point = func(plotPoints, pointData, ticks);
+                var point = func(pointsData, pointData, ticks);
 
                 if ((point.X - prevPoint.X) > 10 || Math.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
                 {
-                    CtlPresenter.DrawLine(pen, func(plotPoints, prevPointData, ticks), point);
+                    CtlPresenter.DrawLine(pen, func(pointsData, prevPointData, ticks), point);
 
                     if (isRect)
                     {
@@ -195,10 +195,10 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPoints plotPoints, Color color)
+        private void DrawLabel(DynamicStatistics.PlotPoints pointsData, Color color)
         {     
-            var text = new FormattedText(TimeSpan.FromTicks(plotPoints.Last().TimeTicks - plotPoints[0].TimeTicks).ToString(Culture.TimeFormat)
-                                         + " / " + Converter.DoubleToText(plotPoints.Last().Value, "N6", true) + " %",
+            var text = new FormattedText(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks).ToString(Culture.TimeFormat)
+                                         + " / " + Converter.DoubleToText(pointsData.Last().Value, "N6", true) + " %",
                                          Culture.Current,
                                          FlowDirection.LeftToRight,
                                          _font,
@@ -208,102 +208,102 @@ namespace Qualia.Controls
 
             CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, Colors.White)),
                                        null,
-                                       Rects.Get((ActualWidth - _axisOffset - text.Width) / 2 - 5,
-                                                 ActualHeight - _axisOffset - 20,
+                                       Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
+                                                 ActualHeight - AXIS_OFFSET - 20,
                                                  text.Width + 10,
                                                  text.Height));
 
-            CtlPresenter.DrawText(text, Points.Get((ActualWidth - _axisOffset - text.Width) / 2, ActualHeight - _axisOffset - 20));
+            CtlPresenter.DrawText(text, Points.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2, ActualHeight - AXIS_OFFSET - 20));
         }
 
-        private Point GetPointPercentData(DynamicStatistics.PlotPoints plotPoints, DynamicStatistics.PlotPoint point, long ticks)
+        private Point GetPointPercentData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
         {
-            var point0 = plotPoints[0];
-            var pointX = ticks == 0 ? _axisOffset : _axisOffset + (ActualWidth - _axisOffset) * (point.TimeTicks - point0.TimeTicks) / ticks;
-            var pointY = (ActualHeight - _axisOffset) * (1 - (point.Item1 / 100));
+            var pointData0 = pointsData[0];
+            var pointX = ticks == 0 ? AXIS_OFFSET : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
+            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - (plotPoint.Item1 / 100));
 
             return Points.Get((int)pointX, (int)pointY);
         }
 
-        private Point GetPointCostData(DynamicStatistics.PlotPoints plotPoints, DynamicStatistics.PlotPoint point, long ticks)
+        private Point GetPointCostData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
         {
-            var point0 = plotPoints[0];
-            var pointX = ticks == 0 ? _axisOffset : _axisOffset + (ActualWidth - _axisOffset) * (point.TimeTicks - point0.TimeTicks) / ticks;
-            var pointY = (ActualHeight - _axisOffset) * (1 - Math.Min(1, point.Value));
+            var pointData0 = pointsData[0];
+            var pointX = ticks == 0 ? AXIS_OFFSET : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
+            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - Math.Min(1, plotPoint.Value));
 
             return Points.Get((int)pointX, (int)pointY);
         }
 
-        private void Vanish(DynamicStatistics.PlotPoints points, PointFunc func)
+        private void Vanish(DynamicStatistics.PlotPoints pointsData, PointFunc func)
         {
             const int VANISH_AREA = 14;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
             {
-                if (points.Count <= MIN_POINTS_COUNT)
+                if (pointsData.Count <= MIN_POINTS_COUNT)
                 {
                     return;
                 }
 
-                List<DynamicStatistics.PlotPoint> pointsToRemove = null;
+                List<DynamicStatistics.PlotPoint> pointsDataToRemove = null;
 
-                for (int i = 0; i < points.Count - MIN_POINTS_COUNT/*minPointsCount*/; ++i)
+                for (int ind = 0; ind < pointsData.Count - MIN_POINTS_COUNT; ++ind)
                 {
-                    var ticks = points.Last().TimeTicks - points[0].TimeTicks;
-                    var point0 = func(points, points[i], ticks);
-                    var point1 = func(points, points[i + 1], ticks);
-                    var point2 = func(points, points[i + 2], ticks);
+                    var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
+                    var point0 = func(pointsData, pointsData[ind], ticks);
+                    var point1 = func(pointsData, pointsData[ind + 1], ticks);
+                    var point2 = func(pointsData, pointsData[ind + 2], ticks);
 
-                    if (Math.Abs(Angle(point0, point1) - Angle(point1, point2)) < Math.PI / 720D)
+                    if (Math.Abs(Angle(ref point0, ref point1) - Angle(ref point1, ref point2)) < Math.PI / 720D)
                     {
-                        if (pointsToRemove == null)
+                        if (pointsDataToRemove == null)
                         {
-                            pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+                            pointsDataToRemove = new List<DynamicStatistics.PlotPoint>();
                         }
 
-                        pointsToRemove.Add(points[i + 1]);
+                        pointsDataToRemove.Add(pointsData[ind + 1]);
 
-                        if (points.Count - pointsToRemove.Count < MIN_POINTS_COUNT)
+                        if (pointsData.Count - pointsDataToRemove.Count < MIN_POINTS_COUNT)
                         {
                             break;
                         }
 
-                        i += 2;
+                        ind += 2;
                     }
                     else
                     {
                         if (Math.Abs(point0.X - point1.X) < VANISH_AREA && Math.Abs(point0.Y - point1.Y) < VANISH_AREA)
                         {
-                            if (pointsToRemove == null)
+                            if (pointsDataToRemove == null)
                             {
-                                pointsToRemove = new List<DynamicStatistics.PlotPoint>();
+                                pointsDataToRemove = new List<DynamicStatistics.PlotPoint>();
                             }
 
-                            pointsToRemove.Add(points[i + 1]);
+                            pointsDataToRemove.Add(pointsData[ind + 1]);
 
-                            if (points.Count - pointsToRemove.Count < MIN_POINTS_COUNT)
+                            if (pointsData.Count - pointsDataToRemove.Count < MIN_POINTS_COUNT)
                             {
                                 break;
                             }
 
-                            i += 2;
+                            ind += 2;
                         }
                     }
                 }
 
-                if (pointsToRemove == null)
+                if (pointsDataToRemove == null)
                 {
                     return;
                 }
 
-                pointsToRemove.ForEach(p => points.Remove(p));
+                pointsDataToRemove.ForEach(pointData => pointsData.Remove(pointData));
             }
         }
 
-        private double Angle(Point point0, Point point1)
+        private double Angle(ref Point point1, ref Point point2)
         {
-            return Math.Atan2(point1.Y - point0.Y, point1.X - point0.X);
+            return Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
         }
 
         public void Clear()

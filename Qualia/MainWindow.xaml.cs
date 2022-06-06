@@ -30,7 +30,7 @@ namespace Qualia
         private Stopwatch _startTime;
         private long _rounds;
 
-        private readonly List<IConfigValue> _configParams;
+        private readonly List<IConfigParam> _configParams;
 
         public Main()
         {
@@ -44,7 +44,7 @@ namespace Qualia
 
             WindowState = WindowState.Maximized;
 
-            _configParams = new List<IConfigValue>()
+            _configParams = new List<IConfigParam>()
             {
                 CtlUseWeightsColors,
                 CtlOnlyChangedWeights,

@@ -1,11 +1,11 @@
 NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\784_20x20.txt
 ScreenWidth:1721.33333333333
-ScreenHeight:968
+ScreenHeight:1033.33333333333
 ScreenTop:24.6666666666667
 ScreenLeft:-55.3333333333333
 OnTop:0
 DataWidth:277
-NetworkHeight:669
+NetworkHeight:613
 SkipRoundsToDrawErrorMatrix:10000
 SkipRoundsToDrawNetworks:10000
 SkipRoundsToDrawStatistic:10000
@@ -13,7 +13,7 @@ PointSize:7
 PointsArrangeSnap:10
 SkipRoundsToDrawStatistics:10000
 OnlyWeights:0
-OnlyChangedWeights:0
+OnlyChangedWeights:1
 HighlightChangedWeights:0
 UseWeightsColors:1
 ShowOnlyUnchangedWeights:1

@@ -5,7 +5,7 @@ namespace Tools
     {
         public const int UnknownId = -1;
         public const int NewId = UnknownId - 1;
-        public const int CurrentValue = -1;
+        //public const int CurrentPointsCount = -1;
         public const int InputLayerId = 0;
         public const int OutputLayerId = 1;
         public const double SkipValue = double.NaN;

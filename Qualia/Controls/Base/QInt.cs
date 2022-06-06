@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    public class QInt : TextBox, IConfigValue
+    public class QInt : TextBox, IConfigParam
     {
         private Config _config;
 

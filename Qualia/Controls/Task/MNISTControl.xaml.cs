@@ -10,11 +10,9 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class MNISTControl : UserControl, IConfigValue
+    public partial class MNISTControl : UserControl, IConfigParam
     {
         public List<MNISTImage> Images = new List<MNISTImage>();
-
-        private Config _config;
 
         private event Action OnChange = delegate { };
 
@@ -36,13 +34,12 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config;
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
         public void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
             if (!File.Exists(CtlMNISTImagesPath.Text) || !File.Exists(CtlMNISTLabelsPath.Text))
             {
@@ -231,17 +228,17 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
         public void VanishConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
         }
 
         public bool IsValid()
         {
-            return this.FindVisualChildren<IConfigValue>().All(c => c.IsValid());
+            return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
         public void SetChangeEvent(Action onChange)
@@ -249,7 +246,7 @@ namespace Qualia.Controls
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(Changed));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
         }
 
         public void InvalidateValue()
@@ -257,32 +254,32 @@ namespace Qualia.Controls
             throw new NotImplementedException();
         }
 
-        private void CtlBrowseImagesPath_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void CtlBrowseImagesPath_Click(object sender, RoutedEventArgs e)
         {
             BrowseFile(CtlMNISTImagesPath, "images.bin");
         }
 
-        private void CtlBrowseLabelsPath_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void CtlBrowseLabelsPath_Click(object sender, RoutedEventArgs e)
         {
             BrowseFile(CtlMNISTLabelsPath, "labels.bin");
         }
 
-        private void BrowseFile(TextBox control, string targetName)
+        private void BrowseFile(TextBox ctlTextBox, string targetFileName)
         {
-            var file = BrowseFile();
-            if (string.IsNullOrEmpty(file))
+            var fileName = BrowseFile();
+            if (string.IsNullOrEmpty(fileName))
             {
                 return;
             }
 
             try
             {
-                Decompress(file, Path.GetDirectoryName(file) + Path.DirectorySeparatorChar + targetName);
-                control.Text = file;
+                Decompress(fileName, Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar + targetFileName);
+                ctlTextBox.Text = fileName;
             }
             catch (Exception ex)
             {
-                control.Text = string.Empty;
+                ctlTextBox.Text = string.Empty;
                 MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
             }
         }

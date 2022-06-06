@@ -17,7 +17,7 @@
 
         <StackPanel  Orientation="Vertical" >
             <local:QLabel Content="Task:" />
-            <local:QComboBox x:Name="CtlTask" />
+            <local:QComboBox x:Name="CtlTasks" />
             <Grid Name="CtlHolder">
             </Grid>
         </StackPanel>

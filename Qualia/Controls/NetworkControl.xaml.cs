@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Collections.Generic;
+using System.Linq;
 using Tools;
 
 namespace Qualia.Controls
@@ -16,22 +16,22 @@ namespace Qualia.Controls
         public Config Config;
         
         private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
-        private readonly List<IConfigValue> _configParams;
+        private readonly List<IConfigParam> _configParams;
         private OutputLayerControl _outputLayer;
 
         public InputLayerControl InputLayer { get; private set; }
 
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.IsOn;
 
-        public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public NetworkControl(long existingId, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             InitializeComponent();
             OnNetworkUIChanged = onNetworkUIChanged;
 
-            Id = UniqId.GetId(id);
+            Id = UniqId.GetNextId(existingId);
             Config = config.Extend(Id);
 
-            _configParams = new List<IConfigValue>()
+            _configParams = new List<IConfigParam>()
             {
                 CtlRandomizeModeParamA,
                 CtlRandomizeMode,
@@ -40,9 +40,10 @@ namespace Qualia.Controls
                 CtlCostFunction
             };
 
-            _configParams.ForEach(p => p.SetConfig(Config));
+            _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
-            _configParams.ForEach(p => p.SetChangeEvent(OnChanged));
+
+            _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
         }
 
         private void OnChanged()
@@ -55,19 +56,26 @@ namespace Qualia.Controls
             AddLayer(Const.UnknownId);
         }
 
-        private void AddLayer(long id)
+        private void AddLayer(long layerId)
         {
-            var layer = new HiddenLayerControl(id, Config, OnNetworkUIChanged);
-            var sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
-            sv.Content = layer;
-            sv.ScrollChanged += layer.OnScrollChanged;
+            var ctlLayer = new HiddenLayerControl(layerId, Config, OnNetworkUIChanged);
+            var ctlScroll = new ScrollViewer
+            {
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Content = ctlLayer
+            };
+            ctlScroll.ScrollChanged += ctlLayer.OnScrollChanged;
 
-            var tab = new TabItem();
-            tab.Content = sv;
-            CtlTabsLayers.Items.Insert(CtlTabsLayers.Items.Count - 1, tab);
-            CtlTabsLayers.SelectedItem = tab;
+            var tabItem = new TabItem
+            {
+                Content = ctlScroll
+            };
+
+            CtlTabsLayers.Items.Insert(CtlTabsLayers.Items.Count - 1, tabItem);
+            CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
-            if (id == Const.UnknownId)
+
+            if (layerId == Const.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
@@ -75,20 +83,20 @@ namespace Qualia.Controls
 
         public void ResetLayersTabsNames()
         {
-            var layers = GetLayersControls();
-            for (int i = 0; i < layers.Count; ++i)
+            var ctlLayers = GetLayersControls();
+            for (int ind = 0; ind < ctlLayers.Count; ++ind)
             {
-                if (layers[i].IsInput)
+                if (ctlLayers[ind].IsInput)
                 {
-                    CtlTabsLayers.Tab(i).Header = $"Input ({layers[i].NeuronsCount})";
+                    CtlTabsLayers.Tab(ind).Header = $"Input ({ctlLayers[ind].NeuronsCount})";
                 }
-                else if (layers[i].IsOutput)
+                else if (ctlLayers[ind].IsOutput)
                 {
-                    CtlTabsLayers.Tab(i).Header = $"Output ({layers[i].NeuronsCount})";
+                    CtlTabsLayers.Tab(ind).Header = $"Output ({ctlLayers[ind].NeuronsCount})";
                 }
                 else
                 {
-                    CtlTabsLayers.Tab(i).Header = $"L{i} ({layers[i].NeuronsCount})";
+                    CtlTabsLayers.Tab(ind).Header = $"L{ind} ({ctlLayers[ind].NeuronsCount})";
                 }
             }
 
@@ -102,28 +110,28 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            return _configParams.All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
+            return _configParams.All(param => param.IsValid()) && GetLayersControls().All(control => control.IsValid());
         }
 
         public void SaveConfig()
         {
             Config.Set(Const.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
             Config.Set(Const.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
-            _configParams.ForEach(p => p.SaveConfig());
+            _configParams.ForEach(param => param.SaveConfig());
 
-            var layers = GetLayersControls();
-            layers.ForEach(l => l.SaveConfig());
-            Config.Set(Const.Param.Layers, layers.Select(l => l.Id));
+            var ctlLayers = GetLayersControls();
+            ctlLayers.ForEach(ctlLayer => ctlLayer.SaveConfig());
+            Config.Set(Const.Param.Layers, ctlLayers.Select(ctlLayer => ctlLayer.Id));
 
             //
 
             ResetLayersTabsNames();
         }
 
-        public void OnTaskChanged(INetworkTask task)
+        public void OnTaskChanged(INetworkTask networkTask)
         {
-            InputLayer.OnTaskChanged(task);
-            _outputLayer.OnTaskChanged(task);
+            InputLayer.OnTaskChanged(networkTask);
+            _outputLayer.OnTaskChanged(networkTask);
         }
 
         public void VanishConfig()
@@ -131,21 +139,21 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.SelectedLayerIndex);
             Config.Remove(Const.Param.Color);
 
-            _configParams.ForEach(p => p.VanishConfig());
+            _configParams.ForEach(param => param.VanishConfig());
 
-            GetLayersControls().ForEach(l => l.VanishConfig());
+            GetLayersControls().ForEach(ctlLayer => ctlLayer.VanishConfig());
             Config.Remove(Const.Param.Layers);
         }
 
         public ListX<LayerBase> GetLayersControls()
         {
-            var result = new ListX<LayerBase>(CtlTabsLayers.Items.Count);
-            for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
+            var ctlLayers = new ListX<LayerBase>(CtlTabsLayers.Items.Count);
+            for (int ind = 0; ind < CtlTabsLayers.Items.Count; ++ind)
             {
-                result.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
+                ctlLayers.Add(CtlTabsLayers.Tab(ind).FindVisualChildren<LayerBase>().First());
             }
 
-            return result;
+            return ctlLayers;
         }
 
         private void LoadConfig()
@@ -153,44 +161,56 @@ namespace Qualia.Controls
             Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.FlatRandom));
             Tools.CostFunction.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunction.MSE));
 
-            _configParams.ForEach(p => p.LoadConfig());
+            _configParams.ForEach(param => param.LoadConfig());
 
             var color = Config.GetArray(Const.Param.Color, "255,100,100,100");
             CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0], (byte)color[1], (byte)color[2], (byte)color[3]));
 
             //
 
-            var layers = Config.GetArray(Const.Param.Layers);
-            var inputLayerId = layers.Length > 0 ? layers[0] : Const.UnknownId;
-            var outputLayerId = layers.Length > 0 ? layers[layers.Length - 1] : Const.UnknownId;
+            var layerIds = Config.GetArray(Const.Param.Layers);
+            var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Const.UnknownId;
+            var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Const.UnknownId;
 
             InputLayer = new InputLayerControl(inputLayerId, Config, OnNetworkUIChanged);
-            var sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
-            sv.Content = InputLayer;
-            CtlTabInput.Content = sv;
-            sv.ScrollChanged += InputLayer.OnScrollChanged;
+            var ctlScroll = new ScrollViewer
+            {
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Content = InputLayer
+            };
+
+            CtlTabInput.Content = ctlScroll;
+            ctlScroll.ScrollChanged += InputLayer.OnScrollChanged;
 
             _outputLayer = new OutputLayerControl(outputLayerId, Config, OnNetworkUIChanged);
-            sv = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
-            sv.Content = _outputLayer;
-            CtlTabOutput.Content = sv;
-            sv.ScrollChanged += _outputLayer.OnScrollChanged;
-
-            foreach (var layer in layers)
+            ctlScroll = new ScrollViewer
             {
-                if (layer != layers[0] && layer != layers.Last())
-                    AddLayer(layer);
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Content = _outputLayer
+            };
+
+            CtlTabOutput.Content = ctlScroll;
+            ctlScroll.ScrollChanged += _outputLayer.OnScrollChanged;
+
+            var lastLayerId = layerIds.Last();
+
+            foreach (var layerId in layerIds)
+            {
+                if (layerId != layerIds[0] && layerId != lastLayerId)
+                {
+                    AddLayer(layerId);
+                }
             }
 
             CtlTabsLayers.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
         }
 
-        public int[] GetLayersSize()
+        public int[] GetLayersSizes()
         {
-            return GetLayersControls().Select(l => l.NeuronsCount).ToArray();
+            return GetLayersControls().Select(ctlLayer => ctlLayer.NeuronsCount).ToArray();
         }
 
-        public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(c => !c.IsBias);
+        public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(ctlNeuron => !ctlNeuron.IsBias);
 
         public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
 
@@ -213,21 +233,21 @@ namespace Qualia.Controls
             }
         }
 
-        public NetworkDataModel CreateNetworkDataModel(INetworkTask task, bool isCopy)
+        public NetworkDataModel CreateNetworkDataModel(INetworkTask networkTask, bool isCopy)
         {
-            ErrorMatrix em1 = null;
-            if (task != null)
+            ErrorMatrix matrix = null;
+            if (networkTask != null)
             {
-                em1 = new ErrorMatrix(task.GetClasses());
-                var em2 = new ErrorMatrix(task.GetClasses());
-                em1.Next = em2;
-                em2.Next = em1;
+                matrix = new ErrorMatrix(networkTask.GetClasses());
+                var nextMatrix = new ErrorMatrix(networkTask.GetClasses());
+                matrix.Next = nextMatrix;
+                nextMatrix.Next = matrix;
             }
 
-            var model = new NetworkDataModel(Id, GetLayersSize())
+            var networkModel = new NetworkDataModel(Id, GetLayersSizes())
             {
-                ErrorMatrix = em1,
-                Classes = task?.GetClasses(),
+                ErrorMatrix = matrix,
+                Classes = networkTask?.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = RandomizeMode,
@@ -239,37 +259,38 @@ namespace Qualia.Controls
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
-            model.ActivateNetwork();
+            networkModel.ActivateNetwork();
 
-            LayerDataModel prevLayer = null;
+            LayerDataModel prevLayerModel = null;
 
-            var layers = GetLayersControls();
-            for (int ln = 0; ln < layers.Count; ++ln)
+            var ctlLayers = GetLayersControls();
+            for (int layerInd = 0; layerInd < ctlLayers.Count; ++layerInd)
             {
-                if (ln > 0)
+                if (layerInd > 0)
                 {
-                    prevLayer = model.Layers[ln - 1];
+                    prevLayerModel = networkModel.Layers[layerInd - 1];
                 }
 
-                model.Layers[ln].VisualId = layers[ln].Id;
+                networkModel.Layers[layerInd].VisualId = ctlLayers[layerInd].Id;
 
-                var neurons = layers[ln].GetNeuronsControls();
+                var ctlNeurons = ctlLayers[layerInd].GetNeuronsControls();
 
-                for (int nn = 0; nn < neurons.Count; ++nn)
+                for (int neuronInd = 0; neuronInd < ctlNeurons.Count; ++neuronInd)
                 {
-                    var neuronModel = model.Layers[ln].Neurons[nn];
-                    neuronModel.VisualId = neurons[nn].Id;
-                    neuronModel.IsBias = neurons[nn].IsBias;
-                    neuronModel.IsBiasConnected = neurons[nn].IsBiasConnected;
+                    var neuronModel = networkModel.Layers[layerInd].Neurons[neuronInd];
+                    neuronModel.VisualId = ctlNeurons[neuronInd].Id;
+                    neuronModel.IsBias = ctlNeurons[neuronInd].IsBias;
+                    neuronModel.IsBiasConnected = ctlNeurons[neuronInd].IsBiasConnected;
 
-                    neuronModel.ActivationFunction = ActivationFunction.Helper.GetInstance(neurons[nn].ActivationFunc);
-                    neuronModel.ActivationFuncParamA = neurons[nn].ActivationFuncParamA;
+                    neuronModel.ActivationFunction = ActivationFunction.Helper.GetInstance(ctlNeurons[neuronInd].ActivationFunc);
+                    neuronModel.ActivationFuncParamA = ctlNeurons[neuronInd].ActivationFuncParamA;
 
 
-                    if (ln == 0 && !neuronModel.IsBias)
+                    if (layerInd == 0 && !neuronModel.IsBias)
                     {
                         neuronModel.WeightsInitializer = InputLayer.WeightsInitializer;
                         neuronModel.WeightsInitializerParamA = InputLayer.WeightsInitializerParamA;
+
                         double initValue = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParamA);
                         if (!InitializeMode.Helper.IsSkipValue(initValue))
                         {
@@ -278,8 +299,9 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        neuronModel.WeightsInitializer = neurons[nn].WeightsInitializer;
-                        neuronModel.WeightsInitializerParamA = neurons[nn].WeightsInitializerParamA;
+                        neuronModel.WeightsInitializer = ctlNeurons[neuronInd].WeightsInitializer;
+                        neuronModel.WeightsInitializerParamA = ctlNeurons[neuronInd].WeightsInitializerParamA;
+
                         double initValue = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParamA);
                         if (!InitializeMode.Helper.IsSkipValue(initValue))
                         {
@@ -289,48 +311,49 @@ namespace Qualia.Controls
 
                     if (neuronModel.IsBias)
                     {
-                        neuronModel.ActivationInitializer = neurons[nn].ActivationInitializer;
-                        neuronModel.ActivationInitializerParamA = neurons[nn].ActivationInitializerParamA;
-                        double initValue = InitializeMode.Helper.Invoke(neurons[nn].ActivationInitializer, neurons[nn].ActivationInitializerParamA);
+                        neuronModel.ActivationInitializer = ctlNeurons[neuronInd].ActivationInitializer;
+                        neuronModel.ActivationInitializerParamA = ctlNeurons[neuronInd].ActivationInitializerParamA;
+                        double initValue = InitializeMode.Helper.Invoke(ctlNeurons[neuronInd].ActivationInitializer, ctlNeurons[neuronInd].ActivationInitializerParamA);
+
                         if (!InitializeMode.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Activation = initValue;
                         }
                     }
                     
-                    if (!isCopy && prevLayer != null && prevLayer.Height > 0)
+                    if (!isCopy && prevLayerModel != null && prevLayerModel.Height > 0)
                     {
-                        neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayer.Height);
+                        neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayerModel.Height);
 
-                        var prevNeuron = prevLayer.Neurons[0];
-                        while (prevNeuron != null)
+                        var prevNeuronModel = prevLayerModel.Neurons[0];
+                        while (prevNeuronModel != null)
                         {
-                            if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuron.IsBias))
+                            if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))
                             {
-                                neuronModel.ForwardHelper.Add(new ForwardNeuron(prevNeuron, prevNeuron.WeightTo(neuronModel)));
+                                neuronModel.ForwardHelper.Add(new ForwardNeuron(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
                             }
 
-                            prevNeuron = prevNeuron.Next;
+                            prevNeuronModel = prevNeuronModel.Next;
                         }
                     }
                 }
             }
 
-            model.Layers.Last().VisualId = Const.OutputLayerId;
+            networkModel.Layers.Last().VisualId = Const.OutputLayerId;
             {
-                var neurons = _outputLayer.GetNeuronsControls();
-                for (int i = 0; i < neurons.Count; ++i)
+                var ctlNeurons = _outputLayer.GetNeuronsControls();
+                for (int ind = 0; ind < ctlNeurons.Count; ++ind)
                 {
-                    model.Layers.Last().Neurons[i].VisualId = neurons[i].Id;
+                    networkModel.Layers.Last().Neurons[ind].VisualId = ctlNeurons[ind].Id;
                 }
             }
 
             if (!isCopy)
             {
-                model.Copy = CreateNetworkDataModel(task, true);
+                networkModel.Copy = CreateNetworkDataModel(networkTask, true);
             }
 
-            return model;
+            return networkModel;
         }
 
         private void CtlColor_Click(object sender, MouseButtonEventArgs e)

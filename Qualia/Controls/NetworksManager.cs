@@ -46,13 +46,13 @@ namespace Qualia.Controls
         {
             get
             {
-                var selected = SelectedNetworkControl == null
-                               ? _prevSelectedNetworkModel
-                               : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
+                var selectedNetworkModel = SelectedNetworkControl == null
+                                           ? _prevSelectedNetworkModel
+                                           : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
 
-                _prevSelectedNetworkModel = selected;
+                _prevSelectedNetworkModel = selectedNetworkModel;
 
-                return selected;
+                return selectedNetworkModel;
             }
         }
 
@@ -60,13 +60,13 @@ namespace Qualia.Controls
         {
             get
             {
-                var result = new List<NetworkControl>();
-                for (int i = 1; i < _ctlTabs.Items.Count; ++i)
+                var ctlNetworks = new List<NetworkControl>();
+                for (int ind = 1; ind < _ctlTabs.Items.Count; ++ind)
                 {
-                    result.Add(_ctlTabs.Tab(i).Content as NetworkControl);
+                    ctlNetworks.Add(_ctlTabs.Tab(ind).Content as NetworkControl);
                 }
 
-                return result;
+                return ctlNetworks;
             }
         }
 
@@ -110,13 +110,13 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            var networks = Config.GetArray(Const.Param.Networks);
-            if (networks.Length == 0)
+            var networkIds = Config.GetArray(Const.Param.Networks);
+            if (networkIds.Length == 0)
             {
-                networks = new long[] { Const.UnknownId };
+                networkIds = new long[] { Const.UnknownId };
             }
 
-            Range.For(networks.Length, i => AddNetwork(networks[i]));
+            Range.For(networkIds.Length, ind => AddNetwork(networkIds[ind]));
             _ctlTabs.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
 
             RefreshNetworksDataModels();
@@ -125,7 +125,7 @@ namespace Qualia.Controls
         public void RebuildNetworksForTask(INetworkTask task)
         {
             _networkTask = task;
-            Networks.ForEach(n => n.OnTaskChanged(task));
+            Networks.ForEach(ctlNetwork => ctlNetwork.OnTaskChanged(task));
 
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
@@ -135,22 +135,22 @@ namespace Qualia.Controls
             AddNetwork(Const.UnknownId);
         }
 
-        private void AddNetwork(long id)
+        private void AddNetwork(long networkId)
         {
-            var network = new NetworkControl(id, Config, OnNetworkUIChanged);
-            var tab = new TabItem
+            var ctlNetwork = new NetworkControl(networkId, Config, OnNetworkUIChanged);
+            var tabItem = new TabItem
             {
                 Header = $"Network {_ctlTabs.Items.Count}",
-                Content = network
+                Content = ctlNetwork
             };
 
-            _ctlTabs.Items.Add(tab);
-            _ctlTabs.SelectedItem = tab;
+            _ctlTabs.Items.Add(tabItem);
+            _ctlTabs.SelectedItem = tabItem;
 
-            if (id == Const.UnknownId)
+            if (networkId == Const.UnknownId)
             {
-                network.InputLayer.OnTaskChanged(_networkTask);
-                network.ResetLayersTabsNames();
+                ctlNetwork.InputLayer.OnTaskChanged(_networkTask);
+                ctlNetwork.ResetLayersTabsNames();
             }
         }
 
@@ -160,9 +160,9 @@ namespace Qualia.Controls
             {
                 SelectedNetworkControl.VanishConfig();
 
-                var index = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
+                var ind = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
                 _ctlTabs.Items.Remove(_ctlTabs.SelectedTab());
-                _ctlTabs.SelectedIndex = index - 1;
+                _ctlTabs.SelectedIndex = ind - 1;
 
                 ResetNetworksTabsNames();
 
@@ -172,28 +172,28 @@ namespace Qualia.Controls
 
         private void ResetNetworksTabsNames()
         {
-            for (int i = 1; i < _ctlTabs.Items.Count; ++i)
+            for (int ind = 1; ind < _ctlTabs.Items.Count; ++ind)
             {
-                _ctlTabs.Tab(i).Header = $"Network {i}";
+                _ctlTabs.Tab(ind).Header = $"Network {ind}";
             }
         }
 
         public bool IsValid()
         {
-            return !Networks.Any() || Networks.All(n => n.IsValid());
+            return !Networks.Any() || Networks.All(ctlNetwork => ctlNetwork.IsValid());
         }
 
         public void SaveConfig()
         {
-            Config.Set(Const.Param.Networks, Networks.Select(l => l.Id));
+            Config.Set(Const.Param.Networks, Networks.Select(ctlNetwork => ctlNetwork.Id));
             Config.Set(Const.Param.SelectedNetworkIndex, _ctlTabs.SelectedIndex - 1);
 
-            Networks.ForEach(n => n.SaveConfig());
+            Networks.ForEach(ctlNetwork => ctlNetwork.SaveConfig());
         }
 
         public void ResetLayersTabsNames()
         {
-            Networks.ForEach(n => n.ResetLayersTabsNames());
+            Networks.ForEach(ctlNetwork => ctlNetwork.ResetLayersTabsNames());
         }
 
         public void SaveAs()
@@ -220,10 +220,10 @@ namespace Qualia.Controls
 
         public ListX<NetworkDataModel> CreateNetworksDataModels()
         {
-            var result = new ListX<NetworkDataModel>(Networks.Count);
-            Networks.ForEach(n => result.Add(n.CreateNetworkDataModel(_networkTask, false)));
+            var networkModels = new ListX<NetworkDataModel>(Networks.Count);
+            Networks.ForEach(ctlNetwork => networkModels.Add(ctlNetwork.CreateNetworkDataModel(_networkTask, false)));
 
-            return result;
+            return networkModels;
         }
 
         public void RefreshNetworksDataModels()
@@ -231,19 +231,19 @@ namespace Qualia.Controls
             NetworkModels = CreateNetworksDataModels();
         }
 
-        public void MergeModels(ListX<NetworkDataModel> models)
+        public void MergeModels(ListX<NetworkDataModel> networkModels)
         {
-            var newModels = new ListX<NetworkDataModel>(models.Count);
-            foreach (var newModel in models)
+            var newModels = new ListX<NetworkDataModel>(networkModels.Count);
+            foreach (var newNetworkModel in networkModels)
             {
-                var model = NetworkModels.Find(m => m.VisualId == newModel.VisualId);
-                if (model != null)
+                var networkModel = NetworkModels.Find(model => model.VisualId == newNetworkModel.VisualId);
+                if (networkModel != null)
                 {
-                    newModels.Add(model.Merge(newModel));
+                    newModels.Add(networkModel.Merge(newNetworkModel));
                 }
                 else
                 {
-                    newModels.Add(newModel);
+                    newModels.Add(newNetworkModel);
                 }
             }
 
@@ -252,7 +252,7 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRun()
         {
-            NetworkModels.ForEach(m => m.ActivateFirstLayer());
+            NetworkModels.ForEach(model => model.ActivateFirstLayer());
             ResetModelsDynamicStatistics();
             ResetModelsStatistics();
             ResetErrorMatrix();
@@ -273,29 +273,29 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                var neuronFirstModelFirstLayer = NetworkModels[0].Layers[0].Neurons[0];
-                var neuron = networkModel.Layers[0].Neurons[0];
+                var firstNeuronModelOfFirstLayer = NetworkModels[0].Layers[0].Neurons[0];
+                var neuronModel = networkModel.Layers[0].Neurons[0];
 
-                while (neuron != null)
+                while (neuronModel != null)
                 {
-                    if (!neuron.IsBias)
+                    if (!neuronModel.IsBias)
                     {
-                        neuron.Activation = neuronFirstModelFirstLayer.Activation;
+                        neuronModel.Activation = firstNeuronModelOfFirstLayer.Activation;
                     }
 
-                    neuron = neuron.Next;
-                    neuronFirstModelFirstLayer = neuronFirstModelFirstLayer.Next;
+                    neuronModel = neuronModel.Next;
+                    firstNeuronModelOfFirstLayer = firstNeuronModelOfFirstLayer.Next;
                 }
 
-                var neuronFirstModelLastLayer = NetworkModels[0].Layers.Last().Neurons[0];
-                neuron = networkModel.Layers.Last().Neurons[0];
+                var firstNeuronModekOfLastLastLayer = NetworkModels[0].Layers.Last().Neurons[0];
+                neuronModel = networkModel.Layers.Last().Neurons[0];
 
-                while (neuron != null)
+                while (neuronModel != null)
                 {
-                    neuron.Target = neuronFirstModelLastLayer.Target;
+                    neuronModel.Target = firstNeuronModekOfLastLastLayer.Target;
 
-                    neuron = neuron.Next;
-                    neuronFirstModelLastLayer = neuronFirstModelLastLayer.Next;
+                    neuronModel = neuronModel.Next;
+                    firstNeuronModekOfLastLastLayer = firstNeuronModekOfLastLastLayer.Next;
                 }
 
                 networkModel.TargetOutput = NetworkModels[0].TargetOutput;

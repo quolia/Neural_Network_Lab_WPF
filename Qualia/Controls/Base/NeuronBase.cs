@@ -26,7 +26,7 @@ namespace Qualia.Controls
 
             OnNetworkUIChanged = onNetworkUIChanged;
 
-            Id = UniqId.GetId(id);
+            Id = UniqId.GetNextId(id);
             if (config != null)
             {
                 Config = config.Extend(Id);

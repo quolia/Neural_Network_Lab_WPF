@@ -7,14 +7,14 @@ namespace Qualia.Controls
 {
     public partial class NeuronControl : NeuronBase
     {
-        private readonly List<IConfigValue> _configParams;
+        private readonly List<IConfigParam> _configParams;
 
         public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            _configParams = new List<IConfigValue>()
+            _configParams = new List<IConfigParam>()
             {
                 CtlActivationInitializerParamA,
                 CtlActivationInitializer,
@@ -26,9 +26,10 @@ namespace Qualia.Controls
                 CtlActivationFuncParamA
             };
 
-            _configParams.ForEach(p => p.SetConfig(Config));
+            _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
-            _configParams.ForEach(p => p.SetChangeEvent(OnChanged));
+
+            _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
         }
 
         private void OnChanged()
@@ -65,7 +66,7 @@ namespace Qualia.Controls
             InitializeMode.Helper.FillComboBox(CtlActivationInitializer, Config, nameof(InitializeMode.Constant));
             ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
 
-            _configParams.ForEach(p => p.LoadConfig());
+            _configParams.ForEach(param => param.LoadConfig());
 
             CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
             CtlIsBiasConnected.IsOn &= CtlIsBias.IsOn;
@@ -86,7 +87,7 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            _configParams.ForEach(p => p.SaveConfig());
+            _configParams.ForEach(param => param.SaveConfig());
 
             if (!CtlIsBias.IsOn)
             {
@@ -97,7 +98,7 @@ namespace Qualia.Controls
 
         public override void VanishConfig()
         {
-            _configParams.ForEach(p => p.VanishConfig());
+            _configParams.ForEach(param => param.VanishConfig());
         }
     }
 }

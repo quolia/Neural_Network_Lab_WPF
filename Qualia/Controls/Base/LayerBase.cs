@@ -21,14 +21,15 @@ namespace Qualia.Controls
 
             OnNetworkUIChanged = onNetworkUIChanged;
 
-            Id = UniqId.GetId(id);
+            Id = UniqId.GetNextId(id);
             Config = config.Extend(Id);
         }
 
         public void RefreshOrdinalNumbers()
         {
             int ordinalNumber = 0;
-            GetNeuronsControls().ForEach(c => c.OrdinalNumberChanged(++ordinalNumber));
+            var ctlNeurons = GetNeuronsControls();
+            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.OrdinalNumberChanged(++ordinalNumber));
         }
 
         public virtual bool IsInput => false;

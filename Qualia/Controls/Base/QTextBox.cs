@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class QTextBox : TextBox, IConfigValue
+    public class QTextBox : TextBox, IConfigParam
     {
         private Config _config;
 

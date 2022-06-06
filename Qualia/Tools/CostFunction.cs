@@ -25,12 +25,12 @@ namespace Tools
             public double Do(NetworkDataModel networkModel)
             {
                 double sum = 0;
-                var neuron = networkModel.Layers.Last().Neurons[0];
+                var neuronModel = networkModel.Layers.Last().Neurons[0];
 
-                while (neuron != null)
+                while (neuronModel != null)
                 {
-                    sum += Math.Pow(neuron.Target - neuron.Activation, 2);
-                    neuron = neuron.Next;
+                    sum += Math.Pow(neuronModel.Target - neuronModel.Activation, 2);
+                    neuronModel = neuronModel.Next;
                 }
 
                 return sum;

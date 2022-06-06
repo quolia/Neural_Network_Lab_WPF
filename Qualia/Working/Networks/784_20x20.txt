@@ -186,7 +186,7 @@ ActivationInitializer637020629173053733:Constant
 ActivationInitializerParamA637020629173053733:
 ActivationFunc637020629173053733:LogisticSigmoid
 ActivationFuncParamA637020629173053733:
-IsGaussianDistribution:1
+IsGaussianDistribution:0
 IsBias637022790232007522:0
 IsBiasConnected637022790232007522:0
 WeightsInitializer637022790232007522:None
@@ -1202,3 +1202,4 @@ ActivationFunc.637900525725339525:LogisticSigmoid
 ActivationFuncParamA.637900525725339525:
 ActivationFunc.637900525725449513:LogisticSigmoid
 ActivationFuncParamA.637900525725449513:
+Tasks:CountDots

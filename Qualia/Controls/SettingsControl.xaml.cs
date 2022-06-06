@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class SettingsControl : UserControl, IConfigValue
+    public partial class SettingsControl : UserControl, IConfigParam
     {
         private Config _config;
 
@@ -18,7 +18,7 @@ namespace Qualia.Controls
         {
             get
             {
-                lock (_locker)
+                //lock (_locker)
                 {
                     return _settings;
                 }
@@ -26,7 +26,7 @@ namespace Qualia.Controls
 
             set
             {
-                lock (_locker)
+                //lock (_locker)
                 {
                     _settings = value;
                 }
@@ -41,31 +41,32 @@ namespace Qualia.Controls
         public void SetConfig(Config config)
         {
             _config = config;
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
         public void LoadConfig()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(OnChanged));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(OnChanged));
+
             OnChanged();
         }
 
         public void SaveConfig()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
             _config.FlushToDrive();
         }
 
         public void VanishConfig()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
             _config.FlushToDrive();
         }
 
         public bool IsValid()
         {
-            return CtlPanel.FindVisualChildren<IConfigValue>().All(c => c.IsValid());
+            return CtlPanel.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
         public void SetChangeEvent(Action action)

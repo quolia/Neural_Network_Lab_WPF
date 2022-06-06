@@ -22,7 +22,7 @@ namespace Qualia.Controls
         public long ResizeTicks;
 
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new Dictionary<NeuronDataModel, Point>();
-        private readonly Dictionary<WeightDataModel, double> _weightsData = new Dictionary<WeightDataModel, double>();
+        private readonly Dictionary<WeightDataModel, double> _prevWeights = new Dictionary<WeightDataModel, double>();
 
         private readonly Pen _penChange = Tools.Draw.GetPen(Colors.Lime);
 
@@ -73,55 +73,55 @@ namespace Qualia.Controls
         {
             double threshold = networkModel.Layers[0] == layerModel1 ? networkModel.InputThreshold : 0;
 
-            NeuronDataModel prevNeuron = null;
-            foreach (var neuron1 in layerModel1.Neurons)
+            NeuronDataModel prevNeuronModel = null;
+            foreach (var neuronModel1 in layerModel1.Neurons)
             {
-                if (!_coordinator.ContainsKey(neuron1))
+                if (!_coordinator.ContainsKey(neuronModel1))
                 {
-                    _coordinator.Add(neuron1, Points.Get(LayerX(networkModel, layerModel1), TOP_OFFSET + VerticalShift(networkModel, layerModel1) + neuron1.Id * VerticalDistance(layerModel1.Height)));
+                    _coordinator.Add(neuronModel1, Points.Get(LayerX(networkModel, layerModel1), TOP_OFFSET + VerticalShift(networkModel, layerModel1) + neuronModel1.Id * VerticalDistance(layerModel1.Height)));
                 }
 
                 // Skip intersected neurons on first layer to improove performance.
-                if (!fullState && !neuron1.IsBias && networkModel.Layers[0] == layerModel1 && prevNeuron != null)
+                if (!fullState && !neuronModel1.IsBias && networkModel.Layers[0] == layerModel1 && prevNeuronModel != null)
                 {
-                    if (_coordinator[neuron1].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
+                    if (_coordinator[neuronModel1].Y - _coordinator[prevNeuronModel].Y < NEURON_SIZE)
                     {
                         continue;
                     }
                 }
 
-                if (fullState || neuron1.IsBias || neuron1.Activation > threshold)
+                if (fullState || neuronModel1.IsBias || neuronModel1.Activation > threshold)
                 {
-                    foreach (var neuron2 in layerModel2.Neurons)
+                    foreach (var neuronModel2 in layerModel2.Neurons)
                     {
-                        if (!neuron2.IsBias || (neuron2.IsBiasConnected && neuron1.IsBias))
+                        if (!neuronModel2.IsBias || (neuronModel2.IsBiasConnected && neuronModel1.IsBias))
                         {
-                            if (fullState || ((neuron1.IsBias || neuron1.Activation > threshold) && neuron1.AxW(neuron2) != 0))
+                            if (fullState || ((neuronModel1.IsBias || neuronModel1.Activation > threshold) && neuronModel1.AxW(neuronModel2) != 0))
                             {
                                 Pen pen = null;
 
                                 bool isWeightChanged = false;
-                                var weightModel = neuron1.WeightTo(neuron2);
+                                var weightModel = neuronModel1.WeightTo(neuronModel2);
 
-                                if (_weightsData.TryGetValue(weightModel, out double prevWeight))
+                                if (_prevWeights.TryGetValue(weightModel, out double prevWeight))
                                 {
                                     if (prevWeight != weightModel.Weight)
                                     {
-                                        _weightsData[weightModel] = weightModel.Weight;
+                                        _prevWeights[weightModel] = weightModel.Weight;
                                         isWeightChanged = true;
                                     }
                                 }
                                 else
                                 {
                                     prevWeight = 0;
-                                    _weightsData.Add(weightModel, weightModel.Weight);
+                                    _prevWeights.Add(weightModel, weightModel.Weight);
                                     isWeightChanged = true;
                                 }
 
                                 if (isWeightChanged && isShowOnlyChangedWeights)
                                 {
-                                    double fraction = Math.Abs((prevWeight - weightModel.Weight) / prevWeight);
-                                    if (fraction <= 0.001)
+                                    double changeFraction = (prevWeight - weightModel.Weight) / prevWeight;
+                                    if (changeFraction < 0.00001 && changeFraction > -0.00001)
                                     {
                                         isWeightChanged = false;
                                     }
@@ -145,7 +145,7 @@ namespace Qualia.Controls
                                                 }
                                                 else
                                                 {
-                                                    pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                                                    pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                                 }
                                             }
                                         }
@@ -158,7 +158,7 @@ namespace Qualia.Controls
                                         }
                                         else
                                         {
-                                            pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                                            pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                         }
                                     }
                                 }
@@ -174,17 +174,21 @@ namespace Qualia.Controls
                                             }
                                             else
                                             {
-                                                pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                                                pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        if (isHighlightChangedWeights)
+                                        if (isWeightChanged)
                                         {
-                                            pen = Tools.Draw.GetPen(Colors.Lime);
+                                            if (isHighlightChangedWeights)
+                                            {
+                                                pen = _penChange;
+                                            }
                                         }
-                                        else
+
+                                        if (pen == null)
                                         {
                                             if (isUseColorOfWeight)
                                             {
@@ -192,7 +196,7 @@ namespace Qualia.Controls
                                             }
                                             else
                                             {
-                                                pen = Tools.Draw.GetPen(neuron1.AxW(neuron2), 1);
+                                                pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                             }
                                         }
                                     }
@@ -200,13 +204,13 @@ namespace Qualia.Controls
 
                                 if (pen != null)
                                 {
-                                    if (!_coordinator.ContainsKey(neuron2))
+                                    if (!_coordinator.ContainsKey(neuronModel2))
                                     {
-                                        _coordinator.Add(neuron2, Points.Get(LayerX(networkModel, layerModel2), TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuron2.Id * VerticalDistance(layerModel2.Height)));
+                                        _coordinator.Add(neuronModel2, Points.Get(LayerX(networkModel, layerModel2), TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuronModel2.Id * VerticalDistance(layerModel2.Height)));
                                     }
 
-                                    CtlPresenter.DrawLine(pen, _coordinator[neuron1], _coordinator[neuron2]);
-                                    prevNeuron = neuron1;
+                                    CtlPresenter.DrawLine(pen, _coordinator[neuronModel1], _coordinator[neuronModel2]);
+                                    prevNeuronModel = neuronModel1;
                                 }
                             }
                         }
@@ -215,43 +219,43 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLayerNeurons(bool fullState, NetworkDataModel model, LayerDataModel layer)
+        private void DrawLayerNeurons(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel)
         {
-            double threshold = model.Layers[0] == layer ? model.InputThreshold : 0;
+            double threshold = networkModel.Layers[0] == layerModel ? networkModel.InputThreshold : 0;
 
             var biasColor = Tools.Draw.GetPen(Colors.Orange);
 
             NeuronDataModel prevNeuron = null;
-            foreach (var neuron in layer.Neurons)
+            foreach (var neuronModel in layerModel.Neurons)
             {
-                if (fullState || neuron.IsBias || neuron.Activation > threshold || layer.Id > 0)
+                if (fullState || neuronModel.IsBias || neuronModel.Activation > threshold || layerModel.Id > 0)
                 {                   
-                    if (!_coordinator.ContainsKey(neuron))
+                    if (!_coordinator.ContainsKey(neuronModel))
                     {
-                        _coordinator.Add(neuron,
-                                         Points.Get(LayerX(model, layer),
-                                         TOP_OFFSET + VerticalShift(model, layer) + neuron.Id * VerticalDistance(layer.Height)));
+                        _coordinator.Add(neuronModel,
+                                         Points.Get(LayerX(networkModel, layerModel),
+                                         TOP_OFFSET + VerticalShift(networkModel, layerModel) + neuronModel.Id * VerticalDistance(layerModel.Height)));
                     }
 
                     // Skip intersected neurons on first layer to improove performance.
-                    if (!fullState && !neuron.IsBias && model.Layers[0] == layer && prevNeuron != null)
+                    if (!fullState && !neuronModel.IsBias && networkModel.Layers[0] == layerModel && prevNeuron != null)
                     {
-                        if (_coordinator[neuron].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
+                        if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                         {
                             continue;
                         }
                     }
-                    prevNeuron = neuron;
+                    prevNeuron = neuronModel;
 
-                    var pen = Tools.Draw.GetPen(neuron.Activation);
+                    var pen = Tools.Draw.GetPen(neuronModel.Activation);
                     var brush = pen.Brush;
 
-                    if (neuron.IsBias)
+                    if (neuronModel.IsBias)
                     {
-                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, _coordinator[neuron], BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, _coordinator[neuronModel], BIAS_RADIUS, BIAS_RADIUS);
                     }
 
-                    CtlPresenter.DrawEllipse(brush, pen, _coordinator[neuron], NEURON_RADIUS, NEURON_RADIUS);  
+                    CtlPresenter.DrawEllipse(brush, pen, _coordinator[neuronModel], NEURON_RADIUS, NEURON_RADIUS);  
                 }
             }
         }
@@ -269,19 +273,21 @@ namespace Qualia.Controls
             {
                 if (networkModel.Layers.Count > 0)
                 {
-                    foreach (var layer in networkModel.Layers)
+                    var lastLayerModel = networkModel.Layers.Last();
+
+                    foreach (var layerModel in networkModel.Layers)
                     {
-                        if (layer == networkModel.Layers.Last())
+                        if (layerModel == lastLayerModel)
                         {
                             break;
                         }
 
-                        DrawLayersLinks(fullState, networkModel, layer, layer.Next, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
+                        DrawLayersLinks(fullState, networkModel, layerModel, layerModel.Next, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
                     }
 
-                    foreach (var layer in networkModel.Layers)
+                    foreach (var layerModel in networkModel.Layers)
                     {
-                        DrawLayerNeurons(fullState, networkModel, layer);
+                        DrawLayerNeurons(fullState, networkModel, layerModel);
                     }
                 }
             }
@@ -294,15 +300,15 @@ namespace Qualia.Controls
             _coordinator.Clear();
         }
 
-        public void RenderStanding(NetworkDataModel model)
+        public void RenderStanding(NetworkDataModel networkModel)
         {
             ClearCache();
-            Draw(false, model, false, false, false, false);
+            Draw(false, networkModel, false, false, false, false);
         }
 
-        public void RenderRunning(NetworkDataModel model, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
+        public void RenderRunning(NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
-            Draw(false, model, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
+            Draw(false, networkModel, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
         }
     }
 }

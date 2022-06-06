@@ -8,9 +8,9 @@ namespace Tools
     public static class Range
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<int> Make(int start, int end = 0)
+        public static IEnumerable<int> Make(int from, int to = 0)
         {
-            return start < end ? Enumerable.Range(start, end - start) : Enumerable.Range(end, start - end);
+            return from < to ? Enumerable.Range(from, to - from) : Enumerable.Range(to, from - to);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

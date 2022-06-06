@@ -5,10 +5,8 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class CountDotsControl : UserControl, IConfigValue
+    public partial class CountDotsControl : UserControl, IConfigParam
     {
-        private Config _config;
-
         private event Action OnChange = delegate { };
 
         public CountDotsControl()
@@ -31,28 +29,27 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config;
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetConfig(config));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
         public void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.LoadConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
         }
 
         public void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SaveConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
         public void VanishConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.VanishConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
         }
 
         public bool IsValid()
         {
-            if (this.FindVisualChildren<IConfigValue>().All(c => c.IsValid()))
+            if (this.FindVisualChildren<IConfigParam>().All(param => param.IsValid()))
             {
                 if (CtlTaskInputCount.Value >= CtlTaskMaxNumber.Value)
                 {
@@ -70,7 +67,7 @@ namespace Qualia.Controls
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigValue>(), c => c.SetChangeEvent(Changed));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
         }
 
         public void InvalidateValue()

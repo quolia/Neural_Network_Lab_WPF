@@ -12,12 +12,12 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            var neurons = Config.GetArray(Const.Param.Neurons);
-            neurons.ToList().ForEach(n => AddNeuron(n));
+            var neuronIds = Config.GetArray(Const.Param.Neurons);
+            neuronIds.ToList().ForEach(neuronId => AddNeuron(neuronId));
 
-            if (neurons.Length == 0)
+            if (neuronIds.Length == 0)
             {
-                Range.For(Const.DefaultOutputNeuronsCount, c => AddNeuron(Const.UnknownId));
+                Range.For(Const.DefaultOutputNeuronsCount, _ => AddNeuron(Const.UnknownId));
             }
         }
 
@@ -30,12 +30,12 @@ namespace Qualia.Controls
             AddNeuron(Const.UnknownId);
         }
 
-        public override void AddNeuron(long id)
+        public override void AddNeuron(long neuronId)
         {
-            var neuron = new OutputNeuronControl(id, Config, OnNetworkUIChanged);
-            NeuronsHolder.Children.Add(neuron);
+            var ctlNeuron = new OutputNeuronControl(neuronId, Config, OnNetworkUIChanged);
+            NeuronsHolder.Children.Add(ctlNeuron);
 
-            if (id == Const.UnknownId)
+            if (neuronId == Const.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
@@ -45,32 +45,32 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return GetNeuronsControls().All(n => n.IsValid());
+            return GetNeuronsControls().All(ctlNeuron => ctlNeuron.IsValid());
         }
 
         public override void SaveConfig()
         {
-            var neurons = GetNeuronsControls();
-            Config.Set(Const.Param.Neurons, neurons.Select(n => n.Id));
-            neurons.ForEach(n => n.SaveConfig());
+            var ctlNeurons = GetNeuronsControls();
+            Config.Set(Const.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
+            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
-            GetNeuronsControls().ForEach(n => n.VanishConfig());
+            GetNeuronsControls().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
         }
 
-        public void OnTaskChanged(INetworkTask task)
+        public void OnTaskChanged(INetworkTask networkTask)
         {
-            var controls = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
+            var ctlNeurons = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
 
-            for (int i = controls.Count; i < task.GetClasses().Count; ++i)
+            for (int ind = ctlNeurons.Count; ind < networkTask.GetClasses().Count; ++ind)
             {
                 AddNeuron();
             }
 
-            for (int i = task.GetClasses().Count; i < controls.Count; ++i)
+            for (int ind = networkTask.GetClasses().Count; ind < ctlNeurons.Count; ++ind)
             {
                 NeuronsHolder.Children.RemoveAt(NeuronsHolder.Children.Count - 1);
             }

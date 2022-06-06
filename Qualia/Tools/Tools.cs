@@ -12,7 +12,6 @@ using Qualia;
 
 namespace Tools
 {
-
     public class LoopsLimit
     {
         public int CurrentLimit;
@@ -207,7 +206,7 @@ namespace Tools
     {
         private static long s_prevId;
 
-        public static long GetId(long existingId)
+        public static long GetNextId(long existingId)
         {
             if (existingId > Const.UnknownId)
             {
@@ -238,11 +237,8 @@ namespace Tools
         public double CostAvg;
 
         public long TotalTicksElapsed;
-        //public double PureRoundsPerSecond;
         public double CurrentPureRoundsPerSecond;
         public double MaxPureRoundsPerSecond;
-        //public double RoundsPerSecond;
-        //public double MaxRoundsPerSecond;
         public double CurrentLostRoundsPerSecond;
         public double MaxLostRoundsPerSecond;
 

@@ -18,8 +18,8 @@ namespace Qualia
         {
             Neurons = new ListX<NeuronDataModel>(neuronsCount);
             Id = id;
-            Range.For(neuronsCount, n => Neurons.Add(new NeuronDataModel(n, weightsCount)));
-            ShuffledNeurons = new ListX<NeuronDataModel>(Neurons.Where(n => !n.IsBias));
+            Range.For(neuronsCount, neuronId => Neurons.Add(new NeuronDataModel(neuronId, weightsCount)));
+            ShuffledNeurons = new ListX<NeuronDataModel>(Neurons.Where(neuronModel => !neuronModel.IsBias));
         }
 
         public MemoryBuffer2D<double> GetNeurons()
