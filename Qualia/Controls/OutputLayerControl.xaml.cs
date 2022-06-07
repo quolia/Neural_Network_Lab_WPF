@@ -45,20 +45,31 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return GetNeuronsControls().All(ctlNeuron => ctlNeuron.IsValid());
+            var ctlNeurons = GetNeuronsControls();
+            return ctlNeurons.All(ctlNeuron => ctlNeuron.IsValid());
         }
 
         public override void SaveConfig()
         {
             var ctlNeurons = GetNeuronsControls();
             Config.Set(Const.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
+            
+            foreach (var ctlNeuron in ctlNeurons)
+            {
+                ctlNeuron.SaveConfig();
+            }
+            //ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
-            GetNeuronsControls().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            //            GetNeuronsControls().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            var ctlNeurons = GetNeuronsControls();
+            foreach (var ctlNeuron in ctlNeurons)
+            {
+                ctlNeuron.SaveConfig();
+            }
         }
 
         public void OnTaskChanged(INetworkTask networkTask)

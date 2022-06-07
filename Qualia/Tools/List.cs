@@ -4,6 +4,9 @@ namespace Tools
 {
     public class ListX<T> : List<T> where T : class
     {
+        public T First { get; private set; }
+        public T Last { get; private set; }
+
         public ListX(int capacity)
             : base(capacity)
         {
@@ -13,7 +16,11 @@ namespace Tools
         public ListX(IEnumerable<T> collection)
             : base(collection)
         {
-            //
+            if (Count > 0)
+            {
+                First = this[0];
+                Last = this[Count - 1];
+            }
         }
 
         public new void Add(T obj)
@@ -24,20 +31,23 @@ namespace Tools
             }
             else if (obj is ListNode<T>)
             {
-                var last = Last() as ListNode<T>;
+                var last = Last as ListNode<T>;
                 last.Next = obj;
-                (obj as ListNode<T>).Previous = Last();
+                (obj as ListNode<T>).Previous = Last;
                 (this as List<T>).Add(obj);
             }
             else
             {
                 (this as List<T>).Add(obj);
             }
+
+            First = this[0];
+            Last = this[Count - 1];
         }
 
-        public T Last() => this[Count - 1];
+        //public T Last() => this[Count - 1];
 
-        public bool Any() => Count > 0;
+        //public bool Any() => Count > 0;
 
         // Fisher-Yates shuffle.
         public void Shuffle()

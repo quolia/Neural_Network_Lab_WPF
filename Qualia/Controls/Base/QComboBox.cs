@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using Tools;
 
@@ -14,8 +15,8 @@ namespace Qualia.Controls
 
         public QComboBox()
         {
-            Padding = new System.Windows.Thickness(2);
-            Margin = new System.Windows.Thickness(1);
+            Padding = new Thickness(2);
+            Margin = new Thickness(1);
             MinWidth = 60;
 
             SelectionChanged += SelectBox_SelectionChanged;
@@ -54,9 +55,6 @@ namespace Qualia.Controls
             OnChanged += onChanged;
         }
 
-        public void InvalidateValue()
-        {
-            throw new NotImplementedException();
-        }
+        public void InvalidateValue() => throw new InvalidOperationException();
     }
 }

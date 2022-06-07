@@ -70,9 +70,6 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
         }
 
-        public void InvalidateValue()
-        {
-            throw new NotImplementedException();
-        }
+        public void InvalidateValue() => throw new InvalidOperationException();
     }
 }

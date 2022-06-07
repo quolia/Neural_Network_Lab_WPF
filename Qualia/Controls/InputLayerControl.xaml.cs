@@ -38,7 +38,7 @@ namespace Qualia.Controls
 
         public override bool IsInput => true;
         public override Panel NeuronsHolder => CtlNeuronsHolder;
-        public override int NeuronsCount => GetNeuronsControls().Count;
+        //public override int NeuronsCount => GetNeuronsControls().Count;
 
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
@@ -125,7 +125,12 @@ namespace Qualia.Controls
         {
             Config.Remove(Const.Param.Neurons);
             _configParams.ForEach(param => param.VanishConfig());
-            GetNeuronsControls().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            //GetNeuronsControls().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            var ctlNeurons = GetNeuronsControls();
+            foreach (var ctlNeuron in ctlNeurons)
+            {
+                ctlNeuron.VanishConfig();
+            }
         }
 
         private void CtlMenuAddBias_Click(object sender, EventArgs e)

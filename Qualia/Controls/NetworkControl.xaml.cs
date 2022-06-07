@@ -273,9 +273,9 @@ namespace Qualia.Controls
 
                 networkModel.Layers[layerInd].VisualId = ctlLayers[layerInd].Id;
 
-                var ctlNeurons = ctlLayers[layerInd].GetNeuronsControls();
+                var ctlNeurons = ctlLayers[layerInd].GetNeuronsControls().ToArray();
 
-                for (int neuronInd = 0; neuronInd < ctlNeurons.Count; ++neuronInd)
+                for (int neuronInd = 0; neuronInd < ctlNeurons.Length; ++neuronInd)
                 {
                     var neuronModel = networkModel.Layers[layerInd].Neurons[neuronInd];
                     neuronModel.VisualId = ctlNeurons[neuronInd].Id;
@@ -321,11 +321,11 @@ namespace Qualia.Controls
                         }
                     }
                     
-                    if (!isCopy && prevLayerModel != null && prevLayerModel.Height > 0)
+                    if (!isCopy && prevLayerModel != null && prevLayerModel.NeuronsCount > 0)
                     {
-                        neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayerModel.Height);
+                        neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayerModel.NeuronsCount);
 
-                        var prevNeuronModel = prevLayerModel.Neurons[0];
+                        var prevNeuronModel = prevLayerModel.Neurons.First;
                         while (prevNeuronModel != null)
                         {
                             if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))
@@ -339,18 +339,20 @@ namespace Qualia.Controls
                 }
             }
 
-            networkModel.Layers.Last().VisualId = Const.OutputLayerId;
+            var lastLayer = networkModel.Layers.Last;
+            lastLayer.VisualId = Const.OutputLayerId;
             {
-                var ctlNeurons = _outputLayer.GetNeuronsControls();
-                for (int ind = 0; ind < ctlNeurons.Count; ++ind)
+                var ctlNeurons = _outputLayer.GetNeuronsControls().ToArray();
+                for (int ind = 0; ind < ctlNeurons.Length; ++ind)
                 {
-                    networkModel.Layers.Last().Neurons[ind].VisualId = ctlNeurons[ind].Id;
+                    lastLayer.Neurons[ind].VisualId = ctlNeurons[ind].Id;
                 }
             }
 
             if (!isCopy)
             {
-                networkModel.Copy = CreateNetworkDataModel(networkTask, true);
+                var copy = CreateNetworkDataModel(networkTask, true);
+                networkModel.SetCopy(copy);
             }
 
             return networkModel;

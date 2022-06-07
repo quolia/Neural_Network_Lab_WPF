@@ -260,63 +260,64 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            _networkTask.Do(NetworkModels[0]);
+            var baseNetwork = NetworkModels.First;
+            _networkTask.Do(baseNetwork);
 
             // copy first layer state and last layer targets to other networks
 
-            var networkModel = NetworkModels.Count > 1 ? NetworkModels[1] : null;          
-            while (networkModel != null)
+            var network = NetworkModels.Count > 1 ? NetworkModels[1] : null;          
+            while (network != null)
             {
-                if (!networkModel.IsEnabled)
+                if (!network.IsEnabled)
                 {
-                    networkModel = networkModel.Next;
+                    network = network.Next;
                     continue;
                 }
 
-                var firstNeuronModelOfFirstLayer = NetworkModels[0].Layers[0].Neurons[0];
-                var neuronModel = networkModel.Layers[0].Neurons[0];
+                var baseNeuron = baseNetwork.Layers.First.Neurons.First;
+                var neuron = network.Layers.First.Neurons.First;
 
-                while (neuronModel != null)
+                while (neuron != null)
                 {
-                    if (!neuronModel.IsBias)
+                    if (!neuron.IsBias)
                     {
-                        neuronModel.Activation = firstNeuronModelOfFirstLayer.Activation;
+                        neuron.Activation = baseNeuron.Activation;
                     }
 
-                    neuronModel = neuronModel.Next;
-                    firstNeuronModelOfFirstLayer = firstNeuronModelOfFirstLayer.Next;
+                    neuron = neuron.Next;
+                    baseNeuron = baseNeuron.Next;
                 }
 
-                var firstNeuronModekOfLastLastLayer = NetworkModels[0].Layers.Last().Neurons[0];
-                neuronModel = networkModel.Layers.Last().Neurons[0];
+                baseNeuron = baseNetwork.Layers.Last.Neurons.First;
+                neuron = network.Layers.Last.Neurons.First;
 
-                while (neuronModel != null)
+                while (neuron != null)
                 {
-                    neuronModel.Target = firstNeuronModekOfLastLastLayer.Target;
+                    neuron.Target = baseNeuron.Target;
 
-                    neuronModel = neuronModel.Next;
-                    firstNeuronModekOfLastLastLayer = firstNeuronModekOfLastLastLayer.Next;
+                    neuron = neuron.Next;
+                    baseNeuron = baseNeuron.Next;
                 }
 
-                networkModel.TargetOutput = NetworkModels[0].TargetOutput;
+                network.TargetOutput = baseNetwork.TargetOutput;
 
-                networkModel = networkModel.Next;
+                network = network.Next;
             }
         }
 
         public void FeedForward()
         {
-            NetworkModels.ForEach(m => m.FeedForward());
+            NetworkModels.ForEach(model => model.FeedForward());
         }
 
         public void ResetModelsStatistics()
         {
-            NetworkModels.ForEach(m => m.Statistics = new Statistics());
+            NetworkModels.ForEach(model => model.Statistics = new Statistics());
         }
 
         private void ResetModelsDynamicStatistics()
         {
-            NetworkModels.ForEach(m => m.DynamicStatistics = new DynamicStatistics());
+            NetworkModels.ForEach(model => model.DynamicStatistics = new DynamicStatistics());
         }
 
         public void ResetErrorMatrix()

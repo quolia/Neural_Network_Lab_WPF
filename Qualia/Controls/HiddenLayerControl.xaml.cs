@@ -58,14 +58,22 @@ namespace Qualia.Controls
             var ids = ctlNeurons.Select(ctlNeuron => ctlNeuron.Id);
             Config.Set(Const.Param.Neurons, ids);
 
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
+            //ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
+            foreach (var ctlNeuron in ctlNeurons)
+            {
+                ctlNeuron.SaveConfig();
+            }
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
             var ctlNeurons = GetNeuronsControls();
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+//            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            foreach (var ctlNeuron in ctlNeurons)
+            {
+                ctlNeuron.VanishConfig();
+            }
         }
     }
 }

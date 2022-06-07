@@ -12,10 +12,12 @@ namespace Qualia
     {
         public App()
         {
-            Logger.LogFileName = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
+            Logger.LogFileName = WorkingDirectory + "log.txt";
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
+
+        public static string WorkingDirectory => AppDomain.CurrentDomain.BaseDirectory;
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {

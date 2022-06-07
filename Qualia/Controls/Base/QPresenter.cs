@@ -81,7 +81,7 @@ namespace Qualia.Controls
 
                 if (angle != 0)
                 {
-                    RotateTransform rt = new RotateTransform
+                    var rt = new RotateTransform
                     {
                         Angle = angle
                     };
@@ -121,26 +121,6 @@ namespace Qualia.Controls
 
                 g.DrawEllipse(brush, pen, center, radiusX, radiusY);
             }
-        }
-
-        public Image GetImage(double width = 0, double height = 0)
-        {
-            double w = width == 0 ? SystemParameters.PrimaryScreenWidth : width ;
-            double h = height == 0 ? SystemParameters.PrimaryScreenHeight : height ;
-
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)w, (int)h, Render.Dpi, Render.Dpi, PixelFormats.Pbgra32);
-
-            Measure(RenderSize);
-            Arrange(Rects.Get(RenderSize)); 
-
-            foreach (var visual in _visuals)
-            {               
-                bitmap.Render(visual);
-            }
-            bitmap.Freeze();
-
-            var image = new Image { Source = bitmap };
-            return image;
         }
     }
 }

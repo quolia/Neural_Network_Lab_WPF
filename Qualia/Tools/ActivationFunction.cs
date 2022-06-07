@@ -56,7 +56,7 @@ namespace Tools
             public double Do(double x, double? a) => x / (1 + Math.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => throw new NotImplementedException();
+            public double Derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
         public class Tanh : IActivationFunction

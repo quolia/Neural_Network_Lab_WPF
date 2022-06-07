@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using Tools;
@@ -28,47 +29,23 @@ namespace Qualia.Controls
         public void RefreshOrdinalNumbers()
         {
             int ordinalNumber = 0;
-            var ctlNeurons = GetNeuronsControls();
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.OrdinalNumberChanged(++ordinalNumber));
+            var neurons = GetNeuronsControls();
+            Range.ForEach(neurons, n => n.OrdinalNumberChanged(++ordinalNumber));
         }
 
         public virtual bool IsInput => false;
         public virtual bool IsHidden => false;
         public virtual bool IsOutput => false;
+        public virtual Panel NeuronsHolder => throw new InvalidOperationException();
+        public virtual int NeuronsCount => GetNeuronsControls().Count();
+        public IEnumerable<NeuronBase> GetNeuronsControls() => NeuronsHolder.Children.OfType<NeuronBase>();
 
-        public virtual Panel NeuronsHolder => throw new NotImplementedException();
+        public void AddNeuron() => AddNeuron(Const.UnknownId);
 
-        public virtual int NeuronsCount => GetNeuronsControls().Count;
-
-        public ListX<NeuronBase> GetNeuronsControls()
-        {
-            return new ListX<NeuronBase>(NeuronsHolder.Children.OfType<NeuronBase>());
-        }
-
-        public void AddNeuron()
-        {
-            AddNeuron(Const.UnknownId);
-        }
-
-        public virtual void AddNeuron(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool IsValid()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void SaveConfig()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void VanishConfig()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void AddNeuron(long id) => throw new InvalidOperationException();
+        public virtual bool IsValid() => throw new InvalidOperationException();
+        public virtual void SaveConfig() => throw new InvalidOperationException();
+        public virtual void VanishConfig() => throw new InvalidOperationException();
 
         public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {

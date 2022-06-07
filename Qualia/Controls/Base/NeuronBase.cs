@@ -13,16 +13,21 @@ namespace Qualia.Controls
 
         public Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
+        private MenuItem _menuAdd;
+        private MenuItem _menuDelete;
+
         public NeuronBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             ContextMenu = new ContextMenu();
             ContextMenu.Opened += ContextMenu_Opened;
 
-            ContextMenu.Items.Add(new MenuItem() { Header = "Add" });
-            (ContextMenu.Items[0] as MenuItem).Click += AddNeuron_Click;
+            _menuAdd = new MenuItem() { Header = "Add" };
+            ContextMenu.Items.Add(_menuAdd);
+            _menuAdd.Click += AddNeuron_Click;
 
-            ContextMenu.Items.Add(new MenuItem() { Header = "Delete..." });
-            (ContextMenu.Items[1] as MenuItem).Click += DeleteNeuron_Click;
+            _menuDelete = new MenuItem() { Header = "Delete..." };
+            ContextMenu.Items.Add(_menuDelete);
+            _menuDelete.Click += DeleteNeuron_Click;
 
             OnNetworkUIChanged = onNetworkUIChanged;
 
@@ -35,7 +40,7 @@ namespace Qualia.Controls
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
-            (ContextMenu.Items[1] as MenuItem).IsEnabled = this.GetParentOfType<LayerBase>().NeuronsCount > 1;
+            _menuDelete.IsEnabled = this.GetParentOfType<LayerBase>().NeuronsCount > 1;
         }
 
         private void AddNeuron_Click(object sender, RoutedEventArgs e)
@@ -64,49 +69,29 @@ namespace Qualia.Controls
                          : Draw.GetBrush(Draw.GetRandomColor(20, Colors.Lavender));
         }
 
-        public virtual string ActivationInitializer => throw new NotImplementedException();
-
-        public virtual double? ActivationInitializerParamA => throw new NotImplementedException();
-
-        public virtual string WeightsInitializer => throw new NotImplementedException();
-
-        public virtual double? WeightsInitializerParamA => throw new NotImplementedException();
+        public virtual string ActivationInitializer => throw new InvalidOperationException();
+        public virtual double? ActivationInitializerParamA => throw new InvalidOperationException();
+        public virtual string WeightsInitializer => throw new InvalidOperationException();
+        public virtual double? WeightsInitializerParamA => throw new InvalidOperationException();
 
         public virtual string ActivationFunc
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException(); 
+            get => throw new InvalidOperationException();
+            set => throw new InvalidOperationException();
         }
 
         public virtual double? ActivationFuncParamA
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => throw new InvalidOperationException();
+            set => throw new InvalidOperationException();
         }
 
-        public virtual bool IsBias => throw new NotImplementedException();
-
-        public virtual bool IsBiasConnected => throw new NotImplementedException();
-
-        public virtual bool IsValid()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void SaveConfig()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void VanishConfig()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void OrdinalNumberChanged(int number)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual bool IsBias => throw new InvalidOperationException();
+        public virtual bool IsBiasConnected => throw new InvalidOperationException();
+        public virtual bool IsValid() => throw new InvalidOperationException();
+        public virtual void SaveConfig() => throw new InvalidOperationException();
+        public virtual void VanishConfig() => throw new InvalidOperationException();
+        public virtual void OrdinalNumberChanged(int number) => throw new InvalidOperationException();
 
         private void DeleteNeuron()
         {

@@ -88,10 +88,7 @@ namespace Qualia.Controls
             Changed();
         }
 
-        public void InvalidateValue()
-        {
-            throw new NotImplementedException();
-        }
+        public void InvalidateValue() => throw new InvalidOperationException();
     }
 
     public class Settings

@@ -60,29 +60,29 @@ namespace Qualia.Controls
 
         private new float MaxHeight(NetworkDataModel networkModel)
         {
-            return networkModel.Layers.Max(layer => layer.Height * VerticalDistance(layer.Height));
+            return networkModel.Layers.Max(layer => layer.NeuronsCount * VerticalDistance(layer.NeuronsCount));
         }
 
         private float VerticalShift(NetworkDataModel networkModel, LayerDataModel layerModel)
         {
-            return (MaxHeight(networkModel) - layerModel.Height * VerticalDistance(layerModel.Height)) / 2;
+            return (MaxHeight(networkModel) - layerModel.NeuronsCount * VerticalDistance(layerModel.NeuronsCount)) / 2;
         }
 
         private void DrawLayersLinks(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel1, LayerDataModel layerModel2,
                                      bool isUseColorOfWeight, bool isShowOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
-            double threshold = networkModel.Layers[0] == layerModel1 ? networkModel.InputThreshold : 0;
+            double threshold = networkModel.Layers.First == layerModel1 ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuronModel = null;
             foreach (var neuronModel1 in layerModel1.Neurons)
             {
                 if (!_coordinator.ContainsKey(neuronModel1))
                 {
-                    _coordinator.Add(neuronModel1, Points.Get(LayerX(networkModel, layerModel1), TOP_OFFSET + VerticalShift(networkModel, layerModel1) + neuronModel1.Id * VerticalDistance(layerModel1.Height)));
+                    _coordinator.Add(neuronModel1, Points.Get(LayerX(networkModel, layerModel1), TOP_OFFSET + VerticalShift(networkModel, layerModel1) + neuronModel1.Id * VerticalDistance(layerModel1.NeuronsCount)));
                 }
 
                 // Skip intersected neurons on first layer to improove performance.
-                if (!fullState && !neuronModel1.IsBias && networkModel.Layers[0] == layerModel1 && prevNeuronModel != null)
+                if (!fullState && !neuronModel1.IsBias && networkModel.Layers.First == layerModel1 && prevNeuronModel != null)
                 {
                     if (_coordinator[neuronModel1].Y - _coordinator[prevNeuronModel].Y < NEURON_SIZE)
                     {
@@ -206,7 +206,7 @@ namespace Qualia.Controls
                                 {
                                     if (!_coordinator.ContainsKey(neuronModel2))
                                     {
-                                        _coordinator.Add(neuronModel2, Points.Get(LayerX(networkModel, layerModel2), TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuronModel2.Id * VerticalDistance(layerModel2.Height)));
+                                        _coordinator.Add(neuronModel2, Points.Get(LayerX(networkModel, layerModel2), TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuronModel2.Id * VerticalDistance(layerModel2.NeuronsCount)));
                                     }
 
                                     CtlPresenter.DrawLine(pen, _coordinator[neuronModel1], _coordinator[neuronModel2]);
@@ -221,7 +221,7 @@ namespace Qualia.Controls
 
         private void DrawLayerNeurons(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel)
         {
-            double threshold = networkModel.Layers[0] == layerModel ? networkModel.InputThreshold : 0;
+            double threshold = networkModel.Layers.First == layerModel ? networkModel.InputThreshold : 0;
 
             var biasColor = Tools.Draw.GetPen(Colors.Orange);
 
@@ -234,11 +234,11 @@ namespace Qualia.Controls
                     {
                         _coordinator.Add(neuronModel,
                                          Points.Get(LayerX(networkModel, layerModel),
-                                         TOP_OFFSET + VerticalShift(networkModel, layerModel) + neuronModel.Id * VerticalDistance(layerModel.Height)));
+                                         TOP_OFFSET + VerticalShift(networkModel, layerModel) + neuronModel.Id * VerticalDistance(layerModel.NeuronsCount)));
                     }
 
                     // Skip intersected neurons on first layer to improove performance.
-                    if (!fullState && !neuronModel.IsBias && networkModel.Layers[0] == layerModel && prevNeuron != null)
+                    if (!fullState && !neuronModel.IsBias && networkModel.Layers.First == layerModel && prevNeuron != null)
                     {
                         if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                         {
@@ -273,7 +273,7 @@ namespace Qualia.Controls
             {
                 if (networkModel.Layers.Count > 0)
                 {
-                    var lastLayerModel = networkModel.Layers.Last();
+                    var lastLayerModel = networkModel.Layers.Last;
 
                     foreach (var layerModel in networkModel.Layers)
                     {

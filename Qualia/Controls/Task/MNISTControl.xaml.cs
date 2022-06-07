@@ -41,53 +41,74 @@ namespace Qualia.Controls
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
-            if (!File.Exists(CtlMNISTImagesPath.Text) || !File.Exists(CtlMNISTLabelsPath.Text))
+            var fileNameImagesBin = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
+            if (!File.Exists(fileNameImagesBin))
             {
-                CtlMNISTImagesPath.Text = string.Empty;
-                CtlMNISTLabelsPath.Text = string.Empty;
-            }
-
-            if (string.IsNullOrEmpty(CtlMNISTImagesPath.Text))
-            {
-                return;
-            }
-
-            var fileName = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
-            if (!File.Exists(fileName))
-            {
-                try
+                if (!File.Exists(CtlMNISTImagesPath.Text))
                 {
-                    Decompress(CtlMNISTImagesPath.Text, Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin");
+                    CtlMNISTImagesPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
                 }
-                catch (Exception ex)
-                {
-                    CtlMNISTImagesPath.Text = string.Empty;
-                    MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
-                }
-            }
 
-            LoadImages(fileName);
-
-            if (string.IsNullOrEmpty(CtlMNISTLabelsPath.Text))
-            {
-                return;
-            }
-
-            fileName = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
-            if (!File.Exists(fileName))
-            {
-                try
+                fileNameImagesBin = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
+                if (!File.Exists(fileNameImagesBin))
                 {
-                    Decompress(CtlMNISTLabelsPath.Text, Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin");
-                }
-                catch (Exception ex)
-                {
-                    CtlMNISTLabelsPath.Text = string.Empty;
-                    MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
+                    fileNameImagesBin = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "images.bin";
+                    if (!File.Exists(fileNameImagesBin))
+                    {
+                        try
+                        {
+                            if (!File.Exists(CtlMNISTImagesPath.Text))
+                            {
+                                throw new Exception($"Cannot find file '{CtlMNISTImagesPath.Text}'.");
+                            }
+
+                            Decompress(CtlMNISTImagesPath.Text, fileNameImagesBin);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Cannot open MNIST images file.\r\n\r\n" + ex.Message);
+                            return;
+                        }
+                    }
                 }
             }
 
-            LoadLabels(fileName);
+            LoadImages(fileNameImagesBin);
+
+
+            var fileNameLabelsBin = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
+            if (!File.Exists(fileNameLabelsBin))
+            {
+                if (!File.Exists(CtlMNISTLabelsPath.Text))
+                {
+                    CtlMNISTLabelsPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
+                }
+
+                fileNameLabelsBin = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
+                if (!File.Exists(fileNameLabelsBin))
+                {
+                    fileNameLabelsBin = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "labels.bin";
+                    if (!File.Exists(fileNameLabelsBin))
+                    {
+                        try
+                        {
+                            if (!File.Exists(CtlMNISTLabelsPath.Text))
+                            {
+                                throw new Exception($"Cannot find file '{CtlMNISTLabelsPath.Text}'.");
+                            }
+
+                            Decompress(CtlMNISTLabelsPath.Text, fileNameLabelsBin);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Cannot open MNIST labels file.\r\n\r\n" + ex.Message);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            LoadLabels(fileNameLabelsBin);
         }
 
         private void LoadImages(string fileName)
@@ -249,10 +270,7 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
         }
 
-        public void InvalidateValue()
-        {
-            throw new NotImplementedException();
-        }
+        public void InvalidateValue() => throw new InvalidOperationException();
 
         private void CtlBrowseImagesPath_Click(object sender, RoutedEventArgs e)
         {
@@ -266,7 +284,7 @@ namespace Qualia.Controls
 
         private void BrowseFile(TextBox ctlTextBox, string targetFileName)
         {
-            var fileName = BrowseFile();
+            var fileName = BrowseGzFile();
             if (string.IsNullOrEmpty(fileName))
             {
                 return;
@@ -284,14 +302,14 @@ namespace Qualia.Controls
             }
         }
 
-        private string BrowseFile()
+        private string BrowseGzFile()
         {
             var loadDialog = new OpenFileDialog
             {
                 InitialDirectory = Path.GetFullPath("."),
                 DefaultExt = "gz",
                 Filter = "WinZip files (*.gz)|*.gz|All files (*.*)|*.*",
-                FilterIndex = 2,
+                FilterIndex = 1,
                 RestoreDirectory = true
             };
 

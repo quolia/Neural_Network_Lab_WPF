@@ -247,6 +247,12 @@ namespace Qualia
             {
                 Directory.CreateDirectory("Networks");
             }
+
+            var MNISTDirectory = "Networks" + Path.DirectorySeparatorChar + "MNIST";
+            if (!Directory.Exists(MNISTDirectory))
+            {
+                Directory.CreateDirectory(MNISTDirectory);
+            }
         }
 
         private void ToggleApplyChanges(Const.Toggle state)
@@ -440,7 +446,7 @@ namespace Qualia
                     {
                         _networksManager.PrepareModelsForRound();
 
-                        var networkModel = _networksManager.NetworkModels[0];
+                        var networkModel = _networksManager.NetworkModels.First;
                         while (networkModel != null)
                         {
                             if (!networkModel.IsEnabled)
@@ -494,7 +500,7 @@ namespace Qualia
                     {
                         var totalTicksElapsed = _startTime.Elapsed.Ticks;
 
-                        var networkModel = _networksManager.NetworkModels[0];
+                        var networkModel = _networksManager.NetworkModels.First;
                         while (networkModel != null)
                         {
                             if (!networkModel.IsEnabled)
@@ -595,7 +601,7 @@ namespace Qualia
                         //lock (ApplyChangesLocker)
                         {
                             networkModelToRender = selectedNetworkModel.GetCopyForRender();
-                            CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels[0]);
+                            CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
                         }
                     }
 
@@ -965,7 +971,7 @@ namespace Qualia
             {
                 lock (ApplyChangesLocker)
                 {
-                    CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels[0]);
+                    CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels.First);
                     CtlNetworkPresenter.ClearCache();
                     CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn, CtlShowOnlyUnchangedWeights.IsOn);
                     CtlPlotPresenter.Draw(_networksManager.NetworkModels, _networksManager.SelectedNetworkModel);

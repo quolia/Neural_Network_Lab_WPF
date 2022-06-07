@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows;
 
 namespace Qualia.Controls
 {
@@ -23,8 +24,8 @@ namespace Qualia.Controls
 
         public QInt()
         {
-            Padding = new System.Windows.Thickness(0);
-            Margin = new System.Windows.Thickness(3);
+            Padding = new Thickness(0);
+            Margin = new Thickness(3);
             MinWidth = 60;
 
             TextChanged += IntBox_TextChanged;

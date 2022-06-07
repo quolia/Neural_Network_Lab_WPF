@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using ILGPU;
-using ILGPU.Runtime;
 using Tools;
 
 namespace Qualia
@@ -12,16 +10,14 @@ namespace Qualia
         public ListX<NeuronDataModel> Neurons;
         public ListX<NeuronDataModel> ShuffledNeurons;
 
-        private MemoryBuffer2D<double> _neurons;
-
-        public LayerDataModel(int id, int neuronsCount, int weightsCount)
+        public LayerDataModel(int id, int neuronsCount, int weightsCountPerNeuron)
         {
             Neurons = new ListX<NeuronDataModel>(neuronsCount);
             Id = id;
-            Range.For(neuronsCount, neuronId => Neurons.Add(new NeuronDataModel(neuronId, weightsCount)));
+            Range.For(neuronsCount, neuronId => Neurons.Add(new NeuronDataModel(neuronId, weightsCountPerNeuron)));
             ShuffledNeurons = new ListX<NeuronDataModel>(Neurons.Where(neuronModel => !neuronModel.IsBias));
         }
 
-        public int Height => Neurons.Count;
+        public int NeuronsCount => Neurons.Count;
     }
 }
