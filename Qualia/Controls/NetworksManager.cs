@@ -260,7 +260,7 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            var baseNetwork = NetworkModels.First;
+            var baseNetwork = NetworkModels[0];
             _networkTask.Do(baseNetwork);
 
             // copy first layer state and last layer targets to other networks
@@ -274,8 +274,8 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                var baseNeuron = baseNetwork.Layers.First.Neurons.First;
-                var neuron = network.Layers.First.Neurons.First;
+                var baseNeuron = baseNetwork.Layers[0].Neurons[0];
+                var neuron = network.Layers[0].Neurons[0];
 
                 while (neuron != null)
                 {
@@ -288,8 +288,8 @@ namespace Qualia.Controls
                     baseNeuron = baseNeuron.Next;
                 }
 
-                baseNeuron = baseNetwork.Layers.Last.Neurons.First;
-                neuron = network.Layers.Last.Neurons.First;
+                baseNeuron = baseNetwork.Layers.Last.Neurons[0];
+                neuron = network.Layers.Last.Neurons[0];
 
                 while (neuron != null)
                 {

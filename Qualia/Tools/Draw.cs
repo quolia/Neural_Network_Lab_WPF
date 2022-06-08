@@ -8,9 +8,9 @@ namespace Tools
 {
     public static class Rects
     {
-        //private const int POOL_SIZE = 50;
-        //private static int s_pointer = 0;
-        //private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
+        private const int POOL_SIZE = 50;
+        private static int s_pointer = 0;
+        private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rect Get(in Size size)
@@ -31,11 +31,11 @@ namespace Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rect Get(double x, double y, double width, double height)
+        public static ref Rect Get(double x, double y, double width, double height)
         {
-            return new Rect(x, y, width, height);
-            /*
-            var rect = s_pool[s_pointer];
+            //ref return new Rect(x, y, width, height);
+            
+            ref var rect = ref s_pool[s_pointer];
 
             rect.X = x;
             rect.Y = y;
@@ -47,22 +47,21 @@ namespace Tools
                 s_pointer = 0;
             }
 
-            return rect;
-            */
+            return ref rect;
         }
     }
 
     public static class Points
     {
-        //private const int POOL_SIZE = 50;
-        //private static int s_pointer = 0;
-        //private static readonly Point[] s_pool = new Point[POOL_SIZE];
+        private const int POOL_SIZE = 50;
+        private static int s_pointer = 0;
+        private static readonly Point[] s_pool = new Point[POOL_SIZE];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point Get(double x, double y)
+        public static ref Point Get(double x, double y)
         {
-            return new Point(x, y);
-            /*
+            //return new Point(x, y);
+            
             ref var point = ref s_pool[s_pointer];
 
             point.X = x;
@@ -74,7 +73,6 @@ namespace Tools
             }
 
             return ref point;
-            */
         }
     }
 

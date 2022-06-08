@@ -22,7 +22,7 @@ namespace Qualia.Controls
 
         private INetworkTaskChanged _onTaskChanged;
 
-        private System.Windows.Media.Pen _penBlack = Draw.GetPen(Colors.Black);
+        private readonly System.Windows.Media.Pen _penBlack = Draw.GetPen(Colors.Black);
 
         public DataPresenter()
         {
@@ -116,7 +116,7 @@ namespace Qualia.Controls
                         ? System.Windows.Media.Brushes.White
                         : (isData ? Draw.GetBrush(value) : Draw.GetBrush(Draw.GetColor((byte)(255 * value), Colors.Green)));
 
-            CtlPresenter.DrawRectangle(brush, _penBlack, Rects.Get(x * _pointSize, y * _pointSize, _pointSize, _pointSize));
+            CtlPresenter.DrawRectangle(brush, _penBlack, ref Rects.Get(x * _pointSize, y * _pointSize, _pointSize, _pointSize));
         }
         public void SetInputDataAndDraw(NetworkDataModel networkModel)
         {

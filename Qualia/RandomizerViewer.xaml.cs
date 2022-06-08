@@ -55,13 +55,13 @@ namespace Qualia
         {
             double max = 0;
 
-            var layer = _model.Layers.First;
+            var layer = _model.Layers[0];
             while (layer != _model.Layers.Last)
             {
-                var neuron = layer.Neurons.First;
+                var neuron = layer.Neurons[0];
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.First;
+                    var weight = neuron.Weights[0];
                     while (weight != null)
                     {
                         if (Math.Abs(weight.Weight) > max)
@@ -88,7 +88,7 @@ namespace Qualia
             const int layersDistance = 200;
 
             int left = CtlPresenter.CtlPresenter.Width / 2 - (_model.Layers.Count - 1) * (layersDistance - 100 / 2) / 2;
-            int top = CtlPresenter.CtlPresenter.Height / 2 - _model.Layers.First.NeuronsCount / 2;
+            int top = CtlPresenter.CtlPresenter.Height / 2 - _model.Layers[0].NeuronsCount / 2;
 
             byte alpha = 100;
             int heightOf1 = (int)((CtlPresenter.CtlPresenter.Height - 250) / 2 / GetModelWeightsMaxValue());

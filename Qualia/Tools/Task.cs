@@ -95,7 +95,7 @@ namespace Tools
 
             public void Do(NetworkDataModel networkModel)
             {
-                var shuffled = networkModel.Layers.First.ShuffledNeurons;
+                var shuffled = networkModel.Layers[0].ShuffledNeurons;
                 shuffled.Shuffle();
 
                 if (_isGaussianDistribution)
@@ -117,7 +117,7 @@ namespace Tools
                         shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
                     }
 
-                    var neuron = networkModel.Layers.Last.Neurons.First;
+                    var neuron = networkModel.Layers.Last.Neurons[0];
                     while (neuron != null)
                     {
                         neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
@@ -135,7 +135,7 @@ namespace Tools
                         shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
                     }
 
-                    var neuron = networkModel.Layers.Last.Neurons.First;
+                    var neuron = networkModel.Layers.Last.Neurons[0];
                     while (neuron != null)
                     {
                         neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
@@ -226,12 +226,12 @@ namespace Tools
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
 
-                for (int ind = 0; ind < networkModel.Layers.First.Neurons.Count; ++ind)
+                for (int ind = 0; ind < networkModel.Layers[0].Neurons.Count; ++ind)
                 {
-                    networkModel.Layers.First.Neurons[ind].Activation = networkModel.InputInitial1 * image.Image[ind];
+                    networkModel.Layers[0].Neurons[ind].Activation = networkModel.InputInitial1 * image.Image[ind];
                 }
 
-                var neuron = networkModel.Layers.Last.Neurons.First;
+                var neuron = networkModel.Layers.Last.Neurons[0];
                 while (neuron != null)
                 {
                     neuron.Target = (neuron.Id == image.Label) ? 1 : 0;

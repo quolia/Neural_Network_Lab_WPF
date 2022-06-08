@@ -24,8 +24,8 @@ namespace Qualia.Controls
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new Dictionary<NeuronDataModel, Point>();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new Dictionary<WeightDataModel, double>();
 
-        private Pen _penChange = Tools.Draw.GetPen(Colors.Lime);
-        private Pen _biasPen = Tools.Draw.GetPen(Colors.Orange);
+        private readonly Pen _penChange = Tools.Draw.GetPen(Colors.Lime);
+        private readonly Pen _biasPen = Tools.Draw.GetPen(Colors.Orange);
 
         public NetworkPresenter()
         {
@@ -75,7 +75,7 @@ namespace Qualia.Controls
         private void DrawLayersLinks(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel1, LayerDataModel layerModel2,
                                      bool isUseColorOfWeight, bool isShowOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
-            double threshold = networkModel.Layers.First == layerModel1 ? networkModel.InputThreshold : 0;
+            double threshold = networkModel.Layers[0] == layerModel1 ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuronModel = null;
             foreach (var neuronModel1 in layerModel1.Neurons)
@@ -86,7 +86,7 @@ namespace Qualia.Controls
                 }
 
                 // Skip intersected neurons on first layer to improove performance.
-                if (!fullState && !neuronModel1.IsBias && networkModel.Layers.First == layerModel1 && prevNeuronModel != null)
+                if (!fullState && !neuronModel1.IsBias && networkModel.Layers[0] == layerModel1 && prevNeuronModel != null)
                 {
                     if (_coordinator[neuronModel1].Y - _coordinator[prevNeuronModel].Y < NEURON_SIZE)
                     {
@@ -213,7 +213,10 @@ namespace Qualia.Controls
                                         _coordinator.Add(neuronModel2, Points.Get(LayerX(networkModel, layerModel2), TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuronModel2.Id * VerticalDistance(layerModel2.NeuronsCount)));
                                     }
 
-                                    CtlPresenter.DrawLine(pen, _coordinator[neuronModel1], _coordinator[neuronModel2]);
+                                    var point1 = _coordinator[neuronModel1];
+                                    var point2 = _coordinator[neuronModel2];
+
+                                    CtlPresenter.DrawLine(pen, ref point1, ref point2);
                                     prevNeuronModel = neuronModel1;
                                 }
                             }
@@ -225,7 +228,7 @@ namespace Qualia.Controls
 
         private void DrawLayerNeurons(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel)
         {
-            double threshold = networkModel.Layers.First == layerModel ? networkModel.InputThreshold : 0;
+            double threshold = networkModel.Layers[0] == layerModel ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuron = null;
             foreach (var neuronModel in layerModel.Neurons)
@@ -240,7 +243,7 @@ namespace Qualia.Controls
                     }
 
                     // Skip intersected neurons on first layer to improove performance.
-                    if (!fullState && !neuronModel.IsBias && networkModel.Layers.First == layerModel && prevNeuron != null)
+                    if (!fullState && !neuronModel.IsBias && networkModel.Layers[0] == layerModel && prevNeuron != null)
                     {
                         if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                         {
@@ -252,12 +255,14 @@ namespace Qualia.Controls
                     var pen = Tools.Draw.GetPen(neuronModel.Activation);
                     var brush = pen.Brush;
 
+                    var centerPoint = _coordinator[neuronModel];
+
                     if (neuronModel.IsBias)
                     {
-                        CtlPresenter.DrawEllipse(Brushes.Orange, _biasPen, _coordinator[neuronModel], BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, _biasPen, ref centerPoint, BIAS_RADIUS, BIAS_RADIUS);
                     }
 
-                    CtlPresenter.DrawEllipse(brush, pen, _coordinator[neuronModel], NEURON_RADIUS, NEURON_RADIUS);  
+                    CtlPresenter.DrawEllipse(brush, pen, ref centerPoint, NEURON_RADIUS, NEURON_RADIUS);  
                 }
             }
         }

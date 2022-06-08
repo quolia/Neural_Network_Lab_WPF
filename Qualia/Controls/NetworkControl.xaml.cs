@@ -145,12 +145,12 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.Layers);
         }
 
-        public ListX<LayerBase> GetLayersControls()
+        public List<LayerBase> GetLayersControls()
         {
-            var ctlLayers = new ListX<LayerBase>(CtlTabsLayers.Items.Count);
+            var ctlLayers = new List<LayerBase>(CtlTabsLayers.Items.Count);
             for (int ind = 0; ind < CtlTabsLayers.Items.Count; ++ind)
             {
-                ctlLayers.Add(CtlTabsLayers.Tab(ind).FindVisualChildren<LayerBase>().First());
+                ctlLayers.Add(CtlTabsLayers.Tab(ind).FindVisualChildren<LayerBase>().FirstOrDefault());
             }
 
             return ctlLayers;
@@ -325,7 +325,7 @@ namespace Qualia.Controls
                     {
                         neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayerModel.NeuronsCount);
 
-                        var prevNeuronModel = prevLayerModel.Neurons.First;
+                        var prevNeuronModel = prevLayerModel.Neurons[0];
                         while (prevNeuronModel != null)
                         {
                             if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))

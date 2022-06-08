@@ -57,7 +57,7 @@ namespace Tools
         }
     }
 
-    public unsafe class Ref : ListNode<Ref>
+    public unsafe class Ref : ListXNode<Ref>
     {
         private readonly Pointer<double> _ptr;
         
@@ -69,7 +69,7 @@ namespace Tools
         public double Value => _ptr.Value;
     }
 
-    public class ForwardNeuron : ListNode<ForwardNeuron>
+    public class ForwardNeuron : ListXNode<ForwardNeuron>
     {
         public readonly NeuronDataModel Neuron;
         public readonly WeightDataModel WeightModel;

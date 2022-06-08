@@ -48,7 +48,7 @@ namespace Qualia.Controls
                                                   Brushes.Black,
                                                   Render.PixelsPerDip);
 
-            CtlPresenter.DrawText(formattedText, Points.Get(10, 0));
+            CtlPresenter.DrawText(formattedText, ref Points.Get(10, 0));
 
             Width = Math.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
 

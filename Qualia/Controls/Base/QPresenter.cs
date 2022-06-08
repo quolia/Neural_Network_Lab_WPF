@@ -59,7 +59,7 @@ namespace Qualia.Controls
             //
         }
 
-        public void DrawRectangle(Brush brush, Pen pen, Rect rect)
+        public void DrawRectangle(Brush brush, Pen pen, ref Rect rect)
         {
             using (var g = G())
             {
@@ -72,7 +72,7 @@ namespace Qualia.Controls
             }
         }
 
-        public void DrawText(FormattedText text, Point point, double angle = 0)
+        public void DrawText(FormattedText text, ref Point point, double angle = 0)
         {
             using (var g = G())
             {
@@ -97,20 +97,20 @@ namespace Qualia.Controls
             }
         }
 
-        public void DrawLine(Pen pen, Point point0, Point point1)
+        public void DrawLine(Pen pen, ref Point point1, ref Point point2)
         {
             using (var g = G())
             {
-                point0.X = Scale(point0.X);
-                point0.Y = Scale(point0.Y);
                 point1.X = Scale(point1.X);
                 point1.Y = Scale(point1.Y);
+                point2.X = Scale(point2.X);
+                point2.Y = Scale(point2.Y);
 
-                g.DrawLine(pen, point0, point1);
+                g.DrawLine(pen, point1, point2);
             }
         }
 
-        public void DrawEllipse(Brush brush, Pen pen, Point center, double radiusX, double radiusY)
+        public void DrawEllipse(Brush brush, Pen pen, ref Point center, double radiusX, double radiusY)
         {
             using (var g = G())
             {

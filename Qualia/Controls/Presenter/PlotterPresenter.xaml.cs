@@ -52,7 +52,7 @@ namespace Qualia.Controls
                 throw new ArgumentException("No network models.", nameof(networkModels));
             }
 
-            var networkModel = networkModels.First;
+            var networkModel = networkModels[0];
 
             while (networkModel != null)
             {
@@ -91,7 +91,7 @@ namespace Qualia.Controls
                 throw new ArgumentException("No network models.", nameof(networkModels));
             }
 
-            var networkModel = networkModels.First;
+            var networkModel = networkModels[0];
 
             while (networkModel != null)
             { 
@@ -132,8 +132,8 @@ namespace Qualia.Controls
 
             for (x = 0; x < 11; ++x)
             {
-                CtlBase.DrawLine(_penLightGray, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), 0));
-                CtlBase.DrawLine(_penBlack, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), (float)(y + AXIS_OFFSET)));
+                CtlBase.DrawLine(_penLightGray, ref Points.Get((float)(AXIS_OFFSET + step * x), (float)y), ref Points.Get((float)(AXIS_OFFSET + step * x), 0));
+                CtlBase.DrawLine(_penBlack, ref Points.Get((float)(AXIS_OFFSET + step * x), (float)y), ref Points.Get((float)(AXIS_OFFSET + step * x), (float)(y + AXIS_OFFSET)));
             }
 
             step = (ActualHeight - AXIS_OFFSET) / 10;
@@ -142,21 +142,21 @@ namespace Qualia.Controls
             for (y = 0; y < 11; ++y)
             {
                 CtlBase.DrawLine(_penLightGray,
-                                 Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
-                                 Points.Get(ActualWidth, (float)(ActualHeight - AXIS_OFFSET - step * y)));
+                                 ref Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
+                                 ref Points.Get(ActualWidth, (float)(ActualHeight - AXIS_OFFSET - step * y)));
 
                 CtlBase.DrawLine(_penBlack,
-                                 Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
-                                 Points.Get((float)(x + AXIS_OFFSET), (float)(ActualHeight - AXIS_OFFSET - step * y)));
+                                 ref Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
+                                 ref Points.Get((float)(x + AXIS_OFFSET), (float)(ActualHeight - AXIS_OFFSET - step * y)));
             }
 
             CtlBase.DrawLine(_penBlack,
-                             Points.Get(AXIS_OFFSET, 0),
-                             Points.Get(AXIS_OFFSET, ActualHeight));
+                             ref Points.Get(AXIS_OFFSET, 0),
+                             ref Points.Get(AXIS_OFFSET, ActualHeight));
 
             CtlBase.DrawLine(_penBlack,
-                             Points.Get(0, ActualHeight - AXIS_OFFSET),
-                             Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
+                             ref Points.Get(0, ActualHeight - AXIS_OFFSET),
+                             ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
         private void DrawData(DynamicStatistics.PlotPoints pointsData, Color color, PointFunc func, bool isRect)
@@ -182,15 +182,16 @@ namespace Qualia.Controls
 
                 if ((point.X - prevPoint.X) > 10 || Math.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
                 {
-                    CtlPresenter.DrawLine(pen, func(pointsData, prevPointData, ticks), point);
+                    var fromPoint = func(pointsData, prevPointData, ticks);
+                    CtlPresenter.DrawLine(pen, ref fromPoint, ref point);
 
                     if (isRect)
                     {
-                        CtlPresenter.DrawRectangle(pen.Brush, pen, Rects.Get(point.X - 6 / 2, point.Y - 6 / 2, 6, 6));
+                        CtlPresenter.DrawRectangle(pen.Brush, pen, ref Rects.Get(point.X - 6 / 2, point.Y - 6 / 2, 6, 6));
                     }
                     else
                     {
-                        CtlPresenter.DrawEllipse(pen.Brush, pen, Points.Get(point.X, point.Y), 7 / 2, 7 / 2);
+                        CtlPresenter.DrawEllipse(pen.Brush, pen, ref Points.Get(point.X, point.Y), 7 / 2, 7 / 2);
                     }
 
                     prevPointData = pointData;
@@ -212,12 +213,12 @@ namespace Qualia.Controls
 
             CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, Colors.White)),
                                        null,
-                                       Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
-                                                 ActualHeight - AXIS_OFFSET - 20,
-                                                 text.Width + 10,
-                                                 text.Height));
+                                       ref Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
+                                                     ActualHeight - AXIS_OFFSET - 20,
+                                                     text.Width + 10,
+                                                     text.Height));
 
-            CtlPresenter.DrawText(text, Points.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2, ActualHeight - AXIS_OFFSET - 20));
+            CtlPresenter.DrawText(text, ref Points.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2, ActualHeight - AXIS_OFFSET - 20));
         }
 
         private Point GetPointPercentData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
