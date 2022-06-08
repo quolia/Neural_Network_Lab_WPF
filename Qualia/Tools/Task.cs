@@ -26,7 +26,7 @@ namespace Tools
 
     public static class NetworkTask
     {
-        public class CountDots : INetworkTask
+        sealed public class CountDots : INetworkTask
         {
             private Config _config;
 
@@ -164,7 +164,7 @@ namespace Tools
             public void InvalidateValue() => throw new InvalidOperationException();
         }
 
-        public class MNIST : INetworkTask
+        sealed public class MNIST : INetworkTask
         {
             public static INetworkTask Instance = new MNIST();
             

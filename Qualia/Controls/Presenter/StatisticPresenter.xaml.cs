@@ -40,7 +40,14 @@ namespace Qualia.Controls
                 }
             }
 
-            var formattedText = new FormattedText(s_stringBuilder.ToString(), Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
+            var formattedText = new FormattedText(s_stringBuilder.ToString(),
+                                                  Culture.Current,
+                                                  FlowDirection.LeftToRight,
+                                                  s_font,
+                                                  10,
+                                                  Brushes.Black,
+                                                  Render.PixelsPerDip);
+
             CtlPresenter.DrawText(formattedText, Points.Get(10, 0));
 
             Width = Math.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);

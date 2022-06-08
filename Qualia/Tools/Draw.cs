@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -9,20 +8,15 @@ namespace Tools
 {
     public static class Rects
     {
-        private const int POOL_SIZE = 50;
-        private static int s_pointer = 0;
-        private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
+        //private const int POOL_SIZE = 50;
+        //private static int s_pointer = 0;
+        //private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
 
-        static Rects()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rect Get(in Size size)
         {
-            for (int ind = 0; ind < POOL_SIZE; ++ind)
-            {
-                s_pool[ind] = new Rect();
-            }
-        }
-
-        public static Rect Get(Size size)
-        {
+            return new Rect(size);
+            /*
             var rect = s_pool[s_pointer];
 
             rect.Size = size;
@@ -33,10 +27,14 @@ namespace Tools
             }
 
             return rect;
+            */
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rect Get(double x, double y, double width, double height)
         {
+            return new Rect(x, y, width, height);
+            /*
             var rect = s_pool[s_pointer];
 
             rect.X = x;
@@ -50,26 +48,22 @@ namespace Tools
             }
 
             return rect;
+            */
         }
     }
 
     public static class Points
     {
-        private const int POOL_SIZE = 50;
-        private static int s_pointer = 0;
-        private static readonly Point[] s_pool = new Point[POOL_SIZE];
+        //private const int POOL_SIZE = 50;
+        //private static int s_pointer = 0;
+        //private static readonly Point[] s_pool = new Point[POOL_SIZE];
 
-        static Points()
-        {
-            for (int ind = 0; ind < POOL_SIZE; ++ind)
-            {
-                s_pool[ind] = new Point();
-            }
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point Get(double x, double y)
         {
-            var point = s_pool[s_pointer];
+            return new Point(x, y);
+            /*
+            ref var point = ref s_pool[s_pointer];
 
             point.X = x;
             point.Y = y;
@@ -79,7 +73,8 @@ namespace Tools
                 s_pointer = 0;
             }
 
-            return point;
+            return ref point;
+            */
         }
     }
 
@@ -112,11 +107,13 @@ namespace Tools
             return (int)div * PixelSize;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Scale(double x)
         {
             return x;// x / PixelsPerDip;// x;//SnapToPixels(x);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double ScaleThickness(double x)
         {
             return SnapToPixels(x);
@@ -126,19 +123,19 @@ namespace Tools
     public static class Draw
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static System.Drawing.Color MediaColorToSystemColor(Color wpfColor)
+        public static System.Drawing.Color MediaColorToSystemColor(in Color wpfColor)
         {
             return System.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B); ;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color SystemColorToMediaColor(System.Drawing.Color color)
+        public static Color SystemColorToMediaColor(in System.Drawing.Color color)
         {
             return Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetColor(byte alpha, Color color)
+        public static Color GetColor(byte alpha, in Color color)
         {
             return Color.FromArgb(alpha, color.R, color.G, color.B);
         }
@@ -172,7 +169,7 @@ namespace Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetColorDradient(Color fromColor, Color toColor, byte alpha, double fraction)
+        public static Color GetColorDradient(in Color fromColor, in Color toColor, byte alpha, double fraction)
         {
             if (fraction > 1)
             {
@@ -190,7 +187,7 @@ namespace Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetColorDradient(Color fromColor, Color zeroColor, Color toColor, byte alpha, double fraction)
+        public static Color GetColorDradient(in Color fromColor, in Color zeroColor, in Color toColor, byte alpha, double fraction)
         {
             if (fraction < 0.5)
             {
@@ -209,7 +206,7 @@ namespace Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Brush GetBrush(Color color)
+        public static Brush GetBrush(in Color color)
         {
             return new SolidColorBrush(color);
         }
@@ -225,14 +222,19 @@ namespace Tools
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
-            return new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
+            var pen = new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
+            //pen.Freeze();
+            return pen;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Pen GetPen(Color color, double width = 1)
+        public static Pen GetPen(in Color color, double width = 1)
         {
             width *= Render.PixelSize;
-            return new Pen(GetBrush(color), Render.ScaleThickness(width));
+
+            var pen = new Pen(GetBrush(color), Render.ScaleThickness(width));
+            //pen.Freeze();
+            return pen;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

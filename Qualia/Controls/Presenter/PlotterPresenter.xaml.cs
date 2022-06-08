@@ -17,9 +17,16 @@ namespace Qualia.Controls
 
         private readonly Typeface _font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
+        private Pen _penBlack = Tools.Draw.GetPen(Colors.Black);
+        private Pen _penLightGray = Tools.Draw.GetPen(Colors.LightGray);
+
+
         public PlotterPresenter()
         {
             InitializeComponent();
+
+            _penBlack.Freeze();
+            _penLightGray.Freeze();
 
             SnapsToDevicePixels = true;
             UseLayoutRounding = true;
@@ -119,17 +126,14 @@ namespace Qualia.Controls
         {
             CtlBase.Clear();
 
-            var penBlack = Tools.Draw.GetPen(Colors.Black);
-            var penLightGray = Tools.Draw.GetPen(Colors.LightGray);
-
             double step = (ActualWidth - AXIS_OFFSET) / 10;
             double y = ActualHeight - AXIS_OFFSET - AXIS_OFFSET / 2;
             double x;
 
             for (x = 0; x < 11; ++x)
             {
-                CtlBase.DrawLine(penLightGray, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), 0));
-                CtlBase.DrawLine(penBlack, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), (float)(y + AXIS_OFFSET)));
+                CtlBase.DrawLine(_penLightGray, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), 0));
+                CtlBase.DrawLine(_penBlack, Points.Get((float)(AXIS_OFFSET + step * x), (float)y), Points.Get((float)(AXIS_OFFSET + step * x), (float)(y + AXIS_OFFSET)));
             }
 
             step = (ActualHeight - AXIS_OFFSET) / 10;
@@ -137,20 +141,20 @@ namespace Qualia.Controls
 
             for (y = 0; y < 11; ++y)
             {
-                CtlBase.DrawLine(penLightGray,
+                CtlBase.DrawLine(_penLightGray,
                                  Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
                                  Points.Get(ActualWidth, (float)(ActualHeight - AXIS_OFFSET - step * y)));
 
-                CtlBase.DrawLine(penBlack,
+                CtlBase.DrawLine(_penBlack,
                                  Points.Get((float)x, (float)(ActualHeight - AXIS_OFFSET - step * y)),
                                  Points.Get((float)(x + AXIS_OFFSET), (float)(ActualHeight - AXIS_OFFSET - step * y)));
             }
 
-            CtlBase.DrawLine(penBlack,
+            CtlBase.DrawLine(_penBlack,
                              Points.Get(AXIS_OFFSET, 0),
                              Points.Get(AXIS_OFFSET, ActualHeight));
 
-            CtlBase.DrawLine(penBlack,
+            CtlBase.DrawLine(_penBlack,
                              Points.Get(0, ActualHeight - AXIS_OFFSET),
                              Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }

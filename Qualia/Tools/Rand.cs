@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Tools
 {
@@ -7,16 +8,19 @@ namespace Tools
         public static Random Flat = new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
         public static GaussianRandom GaussianRand = new GaussianRandom(Flat);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double GetFlatRandom(double upperBound = 1)
         {
             return upperBound * Flat.NextDouble();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double GetSpreadRandom(double lowerBound, double upperBound)
         {
             return -lowerBound + upperBound * Flat.NextDouble();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double GetSpreadInRange(double range)
         {
             return -range / 2 + range * Flat.NextDouble();
@@ -46,6 +50,7 @@ namespace Tools
         /// <param name="mu">The mean of the distribution.  Default is zero.</param>
         /// <param name="sigma">The standard deviation of the distribution.  Default is one.</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double NextGaussian(double mu = 0, double sigma = 1)
         {
             if (sigma <= 0)

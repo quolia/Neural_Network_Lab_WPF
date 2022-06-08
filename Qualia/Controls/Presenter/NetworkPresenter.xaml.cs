@@ -24,11 +24,15 @@ namespace Qualia.Controls
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new Dictionary<NeuronDataModel, Point>();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new Dictionary<WeightDataModel, double>();
 
-        private readonly Pen _penChange = Tools.Draw.GetPen(Colors.Lime);
+        private Pen _penChange = Tools.Draw.GetPen(Colors.Lime);
+        private Pen _biasPen = Tools.Draw.GetPen(Colors.Orange);
 
         public NetworkPresenter()
         {
             InitializeComponent();
+            
+            _penChange.Freeze();
+            _biasPen.Freeze();
 
             SizeChanged += NetworkPresenter_SizeChanged;
         }
@@ -223,8 +227,6 @@ namespace Qualia.Controls
         {
             double threshold = networkModel.Layers.First == layerModel ? networkModel.InputThreshold : 0;
 
-            var biasColor = Tools.Draw.GetPen(Colors.Orange);
-
             NeuronDataModel prevNeuron = null;
             foreach (var neuronModel in layerModel.Neurons)
             {
@@ -252,7 +254,7 @@ namespace Qualia.Controls
 
                     if (neuronModel.IsBias)
                     {
-                        CtlPresenter.DrawEllipse(Brushes.Orange, biasColor, _coordinator[neuronModel], BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, _biasPen, _coordinator[neuronModel], BIAS_RADIUS, BIAS_RADIUS);
                     }
 
                     CtlPresenter.DrawEllipse(brush, pen, _coordinator[neuronModel], NEURON_RADIUS, NEURON_RADIUS);  

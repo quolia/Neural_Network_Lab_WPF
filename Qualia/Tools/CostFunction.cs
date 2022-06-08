@@ -17,7 +17,7 @@ namespace Tools
 
     public static class CostFunction
     {
-        public class MSE : ICostFunction
+        sealed public class MSE : ICostFunction
         {
             public static ICostFunction Instance = new MSE();
 
