@@ -234,7 +234,9 @@ namespace Qualia.Controls
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {
             var newModels = new ListX<NetworkDataModel>(networkModels.Count);
-            foreach (var newNetworkModel in networkModels)
+            var newNetworkModel = networkModels[0];
+            //foreach (var newNetworkModel in networkModels)
+            while (newNetworkModel != null)
             {
                 var networkModel = NetworkModels.Find(model => model.VisualId == newNetworkModel.VisualId);
                 if (networkModel != null)
@@ -245,6 +247,8 @@ namespace Qualia.Controls
                 {
                     newModels.Add(newNetworkModel);
                 }
+
+                newNetworkModel = newNetworkModel.Next;
             }
 
             NetworkModels = newModels;

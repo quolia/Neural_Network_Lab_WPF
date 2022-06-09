@@ -78,7 +78,8 @@ namespace Qualia.Controls
             double threshold = networkModel.Layers[0] == layerModel1 ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuronModel = null;
-            foreach (var neuronModel1 in layerModel1.Neurons)
+            NeuronDataModel neuronModel1 = layerModel1.Neurons[0];
+            while (neuronModel1 != null)
             {
                 if (!_coordinator.ContainsKey(neuronModel1))
                 {
@@ -96,7 +97,9 @@ namespace Qualia.Controls
 
                 if (fullState || neuronModel1.IsBias || neuronModel1.Activation > threshold)
                 {
-                    foreach (var neuronModel2 in layerModel2.Neurons)
+                    var neuronModel2 = layerModel2.Neurons[0];
+                    //foreach (var neuronModel2 in layerModel2.Neurons)
+                    while (neuronModel2 != null)
                     {
                         if (!neuronModel2.IsBias || (neuronModel2.IsBiasConnected && neuronModel1.IsBias))
                         {
@@ -221,8 +224,12 @@ namespace Qualia.Controls
                                 }
                             }
                         }
+
+                        neuronModel2 = neuronModel2.Next;
                     }
                 }
+
+                neuronModel1 = neuronModel1.Next;
             }
         }
 
@@ -231,7 +238,9 @@ namespace Qualia.Controls
             double threshold = networkModel.Layers[0] == layerModel ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuron = null;
-            foreach (var neuronModel in layerModel.Neurons)
+            NeuronDataModel neuronModel = layerModel.Neurons[0];
+            //foreach (var neuronModel in layerModel.Neurons)
+            while (neuronModel != null)
             {
                 if (fullState || neuronModel.IsBias || neuronModel.Activation > threshold || layerModel.Id > 0)
                 {                   
@@ -264,6 +273,8 @@ namespace Qualia.Controls
 
                     CtlPresenter.DrawEllipse(brush, pen, ref centerPoint, NEURON_RADIUS, NEURON_RADIUS);  
                 }
+
+                neuronModel = neuronModel.Next;
             }
         }
 
@@ -282,7 +293,9 @@ namespace Qualia.Controls
                 {
                     var lastLayerModel = networkModel.Layers.Last;
 
-                    foreach (var layerModel in networkModel.Layers)
+                    var layerModel = networkModel.Layers[0];
+                    //foreach (var layerModel in networkModel.Layers)
+                    while (layerModel != null)
                     {
                         if (layerModel == lastLayerModel)
                         {
@@ -290,11 +303,17 @@ namespace Qualia.Controls
                         }
 
                         DrawLayersLinks(fullState, networkModel, layerModel, layerModel.Next, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
+                    
+                        layerModel = layerModel.Next;
                     }
 
-                    foreach (var layerModel in networkModel.Layers)
+                    layerModel = networkModel.Layers[0];
+                    //foreach (var layerModel in networkModel.Layers)
+                    while (layerModel != null)
                     {
                         DrawLayerNeurons(fullState, networkModel, layerModel);
+
+                        layerModel = layerModel.Next;
                     }
                 }
             }

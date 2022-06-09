@@ -318,12 +318,16 @@ namespace Qualia
             newNetworkModel.Statistics = Statistics;
             newNetworkModel.DynamicStatistics = DynamicStatistics;
 
-            foreach (var newLayerModel in newNetworkModel.Layers)
+            var newLayerModel = newNetworkModel.Layers[0];
+            //foreach (var newLayerModel in newNetworkModel.Layers)
+            while (newLayerModel != null)
             {
                 var layerModel = Layers.Find(l => l.VisualId == newLayerModel.VisualId);
                 if (layerModel != null)
                 {
-                    foreach (var newNeuronModel in newLayerModel.Neurons)
+                    var newNeuronModel = newLayerModel.Neurons[0];
+                    //foreach (var newNeuronModel in newLayerModel.Neurons)
+                    while (newNeuronModel != null)
                     {
                         var neuronModel = layerModel.Neurons.Find(n => n.VisualId == newNeuronModel.VisualId);
                         if (neuronModel == null)
@@ -331,21 +335,28 @@ namespace Qualia
                             double initValue = InitializeMode.Helper.Invoke(newNeuronModel.WeightsInitializer, newNeuronModel.WeightsInitializerParamA);
                             if (!InitializeMode.Helper.IsSkipValue(initValue))
                             {
-                                foreach (var newWeightModel in newNeuronModel.Weights)
+                                var newWeightModel = newNeuronModel.Weights[0];
+                                //foreach (var newWeightModel in newNeuronModel.Weights)
+                                while (newWeightModel != null)
                                 {
                                     newWeightModel.Weight = initValue;
+                                    newWeightModel = newWeightModel.Next;
                                 }
                             }
                         }
                         else
                         {
-                            foreach (var newWeightModel in newNeuronModel.Weights)
+                            var newWeightModel = newNeuronModel.Weights[0];
+                            //foreach (var newWeightModel in newNeuronModel.Weights)
+                            while (newWeightModel != null)
                             {
                                 var weightModel = neuronModel.Weights.Find(w => w.Id == newWeightModel.Id);
                                 if (weightModel != null)
                                 {
                                     newWeightModel.Weight = weightModel.Weight;
                                 }
+
+                                newWeightModel = newWeightModel.Next;
                             }
 
                             if (newNeuronModel.IsBias)
@@ -357,8 +368,12 @@ namespace Qualia
                                 }
                             }
                         }
+
+                        newNeuronModel = newNeuronModel.Next;
                     }
                 }
+
+                newLayerModel = newLayerModel.Next;
             }
 
             return newNetworkModel;

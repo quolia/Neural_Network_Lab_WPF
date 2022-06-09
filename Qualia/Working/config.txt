@@ -13,7 +13,7 @@ PointSize:7
 PointsArrangeSnap:10
 SkipRoundsToDrawStatistics:10000
 OnlyWeights:0
-OnlyChangedWeights:0
-HighlightChangedWeights:0
+OnlyChangedWeights:1
+HighlightChangedWeights:1
 UseWeightsColors:1
-ShowOnlyUnchangedWeights:1
+ShowOnlyUnchangedWeights:0

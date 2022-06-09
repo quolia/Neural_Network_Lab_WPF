@@ -126,7 +126,7 @@ namespace Qualia.Controls
             }
 
             _threshold = networkModel.InputThreshold;
-            var count = networkModel.Layers[0].Neurons.Count(n => !n.IsBias);
+            var count = networkModel.Layers[0].Neurons.CountIf(n => !n.IsBias);
 
             if (_data == null || _data.Length != count)
             {

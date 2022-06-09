@@ -9,43 +9,76 @@ namespace Tools
     {
         public static void FlatRandom(NetworkDataModel networkModel, double? param)
         {
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         weight.Weight = Rand.GetFlatRandom(param.HasValue ? param.Value : 1);
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
         public static void GaussRandom(NetworkDataModel networkModel, double? param)
         {
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         weight.Weight = Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1);
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
         public static void AbsGaussRandom(NetworkDataModel networkModel, double? param)
         {
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1));
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -56,15 +89,26 @@ namespace Tools
                 param = 1;
             }
 
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         weight.Weight = -param.Value / 2 + param.Value * Rand.GetFlatRandom();
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -75,15 +119,26 @@ namespace Tools
                 param = 1;
             }
 
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         weight.Weight = param.Value * InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -94,11 +149,17 @@ namespace Tools
                 param = 1;
             }
 
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         if (layer.Previous == null)
                         {
@@ -108,8 +169,14 @@ namespace Tools
                         {
                             weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
+
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -122,11 +189,17 @@ namespace Tools
                 param = 1;
             }
 
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         if (layer.Previous == null)
                         {
@@ -136,8 +209,14 @@ namespace Tools
                         {
                             weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                         }
+
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -148,11 +227,17 @@ namespace Tools
                 param = 1;
             }
 
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         if (layer.Previous == null)
                         {
@@ -162,8 +247,14 @@ namespace Tools
                         {
                             weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
+
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -175,12 +266,17 @@ namespace Tools
             {
                 param = 1;
             }
-
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         if (layer.Previous == null)
                         {
@@ -190,8 +286,14 @@ namespace Tools
                         {
                             weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                         }
+
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 
@@ -202,15 +304,26 @@ namespace Tools
                 param = 0;
             }
 
-            foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers[0];
+            //foreach (var layer in networkModel.Layers)
+            while (layer != null)
             {
-                foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons[0];
+                //foreach (var neuron in layer.Neurons)
+                while (neuron != null)
                 {
-                    foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights[0];
+                    //foreach (var weight in neuron.Weights)
+                    while (weight != null)
                     {
                         weight.Weight = param.Value;
+                        weight = weight.Next;
                     }
+
+                    neuron = neuron.Next;
                 }
+
+                layer = layer.Next;
             }
         }
 

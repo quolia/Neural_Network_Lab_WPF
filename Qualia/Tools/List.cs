@@ -1,63 +1,77 @@
-﻿using System;
+﻿using Qualia;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tools
 {
-    public class ListX<T> : List<T> where T : ListXNode<T>
+    public class ListX<T> where T : ListXNode<T>
     {
-        //public T First { get; private set; }
         public T Last { get; private set; }
 
-        private T[] _array;
+        private T[] _array = Array.Empty<T>();
 
-        public ListX(int capacity)
-            : base(capacity)
+        public ListX()
+        {
+            //
+        }
+
+        public ListX(int count)
         {
             //
         }
 
         public ListX(IEnumerable<T> collection)
-            : base(collection)
         {
-            FillArray();
-
-            if (Count > 0)
+            foreach (var item in collection)
             {
-                //First = this[0];
-                Last = this[Count - 1];
+                Add(item);
             }
         }
 
-        public new T this[int index]
+        public void ForEach(Action<T> action)
         {
-            get => _array[index];
-            set => _array[index] = value;
+            Array.ForEach(_array, action);
         }
 
-        public new void Add(T node)
+        internal List<T> Where(Predicate<T> match)
         {
-            if (Count == 0)
+            var list = new List<T>(_array);
+            return list.FindAll(match);
+        }
+
+        public int Count => _array.Length;
+
+        public T this[int index]
+        {
+            get
             {
-                //(this as List<T>).Add(obj);
-                base.Add(node);
+                return _array.Length > 0 ? _array[index] : null;
+            }
+            
+            set
+            {
+                _array[index] = value;
+            }
+        }
+
+        public void Add(T node)
+        {
+            var array = new T[Count + 1];
+            _array.CopyTo(array, 0);
+            array[Count] = node;
+            _array = array;
+
+            if (Count == 1)
+            {
                 Last = node;
-                FillArray();
                 return;
             }
 
             Last.Next = node;
             node.Previous = Last;
-            //(this as List<T>).Add(obj);
-            base.Add(node);
-
-            //First = this[0];
             Last = node;
-            FillArray();
         }
-
-        //public T Last() => this[Count - 1];
-
-        //public bool Any() => Count > 0;
 
         // Fisher-Yates shuffle.
         public void Shuffle()
@@ -71,17 +85,38 @@ namespace Tools
             }
         }
 
-        private void FillArray()
+        internal bool Any()
         {
-            if (Count > 0)
-            {
-                _array = new T[Count];
-                CopyTo(_array);
-            }
-            else
-            {
-                _array = null;
-            }
+            return _array.Length > 0;
+        }
+
+        internal T FirstOrDefault(Predicate<T> match)
+        {
+            var list = new List<T>(_array);
+            return list.Find(match);
+        }
+
+        internal bool Any(Predicate<T> match)
+        {
+            var list = new List<T>(_array);
+            return list.Exists(match);
+        }
+
+        internal int CountIf(Predicate<T> match)
+        {
+            var list = new List<T>(_array);
+            return Where(match).Count;
+        }
+
+        internal float Max(Func<T, float> value)
+        {
+            var list = new List<T>(_array);
+            return Enumerable.Max<T>(list, value);
+        }
+
+        internal T Find(Predicate<T> match)
+        {
+            return Array.Find(_array, match);
         }
     }
 
