@@ -1,20 +1,14 @@
-﻿using Qualia;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Tools
 {
     public class ListX<T> : List<T> where T : ListXNode<T>
     {
+        //public T First { get; private set; }
         public T Last { get; private set; }
 
         private T[] _array = Array.Empty<T>();
-
-        public ListX()
-        {
-            //
-        }
 
         public ListX(int capacity)
             : base(capacity)
@@ -25,52 +19,40 @@ namespace Tools
         public ListX(IEnumerable<T> collection)
             : base(collection)
         {
-            //
+            FillArray();
         }
 
-        public void ForEach(Action<T> action)
-        {
-            Array.ForEach(_array, action);
-        }
-
-        internal List<T> Where(Predicate<T> match)
-        {
-            var list = new List<T>(_array);
-            return list.FindAll(match);
-        }
-
-        public int Count => _array.Length;
-
-        public T this[int index]
+        /*
+        public new T this[int index]
         {
             get
             {
-                return _array.Length > 0 ? _array[index] : null;
+                return _array[index];
             }
-            
+
             set
             {
                 _array[index] = value;
             }
         }
+        */
 
-        public void Add(T node)
+        public new void Add(T node)
         {
-            var array = new T[Count + 1];
-            _array.CopyTo(array, 0);
-            array[Count] = node;
-            _array = array;
+            base.Add(node);
 
-            if (Count == 1)
+            if (Count > 1)
             {
-                Last = node;
-                return;
+                Last.Next = node;
+                node.Previous = Last;
             }
 
-            Last.Next = node;
-            node.Previous = Last;
-            Last = node;
+            FillArray();
         }
+
+        //public T Last() => this[Count - 1];
+
+        //public bool Any() => Count > 0;
 
         // Fisher-Yates shuffle.
         public void Shuffle()
@@ -84,39 +66,18 @@ namespace Tools
             }
         }
 
-        internal bool Any()
+        private void FillArray()
         {
-            Any();
-            return _array.Length > 0;
-        }
-
-        internal T FirstOrDefault(Predicate<T> match)
-        {
-            var list = new List<T>(_array);
-            return list.Find(match);
-        }
-
-        internal bool Any(Predicate<T> match)
-        {
-            var list = new List<T>(_array);
-            return list.Exists(match);
-        }
-
-        internal int CountIf(Predicate<T> match)
-        {
-            var list = new List<T>(_array);
-            return Where(match).Count;
-        }
-
-        internal float Max(Func<T, float> value)
-        {
-            var list = new List<T>(_array);
-            return Enumerable.Max<T>(list, value);
-        }
-
-        internal T Find(Predicate<T> match)
-        {
-            return Array.Find(_array, match);
+            if (Count > 0)
+            {
+                _array = new T[Count];
+                CopyTo(_array);
+                Last = this[Count - 1];
+            }
+            else
+            {
+                _array = Array.Empty<T>();
+            }
         }
     }
 
