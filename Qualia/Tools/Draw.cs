@@ -8,27 +8,9 @@ namespace Tools
 {
     public static class Rects
     {
-        private const int POOL_SIZE = 50;
+        private const int POOL_SIZE = 5;
         private static int s_pointer = 0;
         private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rect Get(in Size size)
-        {
-            return new Rect(size);
-            /*
-            var rect = s_pool[s_pointer];
-
-            rect.Size = size;
-
-            if (++s_pointer == POOL_SIZE)
-            {
-                s_pointer = 0;
-            }
-
-            return rect;
-            */
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref Rect Get(double x, double y, double width, double height)
@@ -53,7 +35,7 @@ namespace Tools
 
     public static class Points
     {
-        private const int POOL_SIZE = 50;
+        private const int POOL_SIZE = 5;
         private static int s_pointer = 0;
         private static readonly Point[] s_pool = new Point[POOL_SIZE];
 
@@ -200,7 +182,8 @@ namespace Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Brush GetBrush(double v, byte alpha = 255)
         {
-            return GetBrush(GetColor(v, alpha));
+            var color = GetColor(v, alpha);
+            return GetBrush(in color);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -230,24 +213,19 @@ namespace Tools
         {
             width *= Render.PixelSize;
 
-            var pen = new Pen(GetBrush(color), Render.ScaleThickness(width));
+            var pen = new Pen(GetBrush(in color), Render.ScaleThickness(width));
             //pen.Freeze();
             return pen;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomColor(byte offsetFromTop, Color? baseColor = null)
+        public static Color GetRandomColor(byte offsetFromTop, in Color baseColor)
         {
-            if (baseColor == null)
-            {
-                baseColor = Colors.White;
-            }
-
             var rand = (byte)Rand.Flat.Next(offsetFromTop);
             return Color.FromArgb(255,
-                                  (byte)(Math.Max(baseColor.Value.R - offsetFromTop, 0) + rand),
-                                  (byte)(Math.Max(baseColor.Value.G - offsetFromTop, 0) + rand),
-                                  (byte)(Math.Max(baseColor.Value.B - offsetFromTop, 0) + rand));
+                                  (byte)(Math.Max(baseColor.R - offsetFromTop, 0) + rand),
+                                  (byte)(Math.Max(baseColor.G - offsetFromTop, 0) + rand),
+                                  (byte)(Math.Max(baseColor.B - offsetFromTop, 0) + rand));
         }
     }
 }
