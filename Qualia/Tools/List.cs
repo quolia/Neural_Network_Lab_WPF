@@ -8,7 +8,7 @@ namespace Tools
         //public T First { get; private set; }
         public T Last { get; private set; }
 
-        private T[] _array = Array.Empty<T>();
+        //private T[] _array = Array.Empty<T>();
 
         public ListX(int capacity)
             : base(capacity)
@@ -19,7 +19,10 @@ namespace Tools
         public ListX(IEnumerable<T> collection)
             : base(collection)
         {
-            FillArray();
+            if (Count > 0)
+            {
+                Last = this[Count - 1];
+            }
         }
 
         /*
@@ -36,6 +39,7 @@ namespace Tools
             }
         }
         */
+        
 
         public new void Add(T node)
         {
@@ -47,7 +51,7 @@ namespace Tools
                 node.Previous = Last;
             }
 
-            FillArray();
+            Last = node;
         }
 
         //public T Last() => this[Count - 1];
@@ -63,20 +67,6 @@ namespace Tools
                 n--;
                 int k = Rand.Flat.Next(n + 1);
                 (this[k], this[n]) = (this[n], this[k]);
-            }
-        }
-
-        private void FillArray()
-        {
-            if (Count > 0)
-            {
-                _array = new T[Count];
-                CopyTo(_array);
-                Last = this[Count - 1];
-            }
-            else
-            {
-                _array = Array.Empty<T>();
             }
         }
     }

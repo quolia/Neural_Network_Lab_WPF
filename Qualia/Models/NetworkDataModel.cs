@@ -212,21 +212,23 @@ namespace Qualia
                 neuronModel = layerModel.Neurons[0];
                 while (neuronModel != null)
                 {
-                    if (neuronModel.Error != 0)
+                    if (neuronModel.Error== 0)
                     {
-                        var AxW = neuronModel.ForwardHelper[0];
-                        while (AxW != null)
+                        int a = 1;
+                    }
+                        
+                    var AxW = neuronModel.ForwardHelper[0];
+                    while (AxW != null)
+                    {
+                        if (AxW.Neuron.Activation != 0)
                         {
-                            if (AxW.Neuron.Activation != 0)
-                            {
-                                AxW.WeightModel.Weight += neuronModel.Error * AxW.Neuron.Activation * LearningRate;
-                            }
-
-                            AxW = AxW.Next;
+                            AxW.WeightModel.Weight += neuronModel.Error * AxW.Neuron.Activation * LearningRate;
                         }
 
-                        neuronModel.Error = 0;
+                        AxW = AxW.Next;
                     }
+
+                    neuronModel.Error = 0;
 
                     neuronModel = neuronModel.Next;
                 }

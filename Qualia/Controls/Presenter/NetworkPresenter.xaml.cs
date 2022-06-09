@@ -297,11 +297,11 @@ namespace Qualia.Controls
 
                     var layerModel = networkModel.Layers[0];
                     //foreach (var layerModel in networkModel.Layers)
-                    while (layerModel != null)
+                    while (layerModel != lastLayerModel)
                     {
-                        if (layerModel == lastLayerModel)
+                        //if (layerModel == lastLayerModel)
                         {
-                            break;
+                        //    break;
                         }
 
                         DrawLayersLinks(fullState, networkModel, layerModel, layerModel.Next, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
