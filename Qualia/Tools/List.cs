@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Tools
 {
-    public class ListX<T> where T : ListXNode<T>
+    public class ListX<T> : List<T> where T : ListXNode<T>
     {
         public T Last { get; private set; }
 
@@ -16,17 +16,16 @@ namespace Tools
             //
         }
 
-        public ListX(int count)
+        public ListX(int capacity)
+            : base(capacity)
         {
             //
         }
 
         public ListX(IEnumerable<T> collection)
+            : base(collection)
         {
-            foreach (var item in collection)
-            {
-                Add(item);
-            }
+            //
         }
 
         public void ForEach(Action<T> action)
@@ -87,6 +86,7 @@ namespace Tools
 
         internal bool Any()
         {
+            Any();
             return _array.Length > 0;
         }
 

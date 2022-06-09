@@ -91,6 +91,7 @@ namespace Qualia.Controls
                 {
                     if (_coordinator[neuronModel1].Y - _coordinator[prevNeuronModel].Y < NEURON_SIZE)
                     {
+                        neuronModel1 = neuronModel1.Next;
                         continue;
                     }
                 }
@@ -256,6 +257,7 @@ namespace Qualia.Controls
                     {
                         if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                         {
+                            neuronModel = neuronModel.Next;
                             continue;
                         }
                     }
