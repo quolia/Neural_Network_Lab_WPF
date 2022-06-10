@@ -9,13 +9,13 @@ namespace Tools
 
     public class ActivationFunction
     {
-        public ActivationFunctionDelegate Do;
-        public ActivationFunctionDelegate Derivative;
+        public readonly ActivationFunctionDelegate Do;
+        public readonly ActivationFunctionDelegate Derivative;
 
-        public ActivationFunction(ActivationFunctionDelegate _do, ActivationFunctionDelegate _derivative)
+        public ActivationFunction(ActivationFunctionDelegate doFunc, ActivationFunctionDelegate derivativeFunc)
         {
-            Do = _do;
-            Derivative = _derivative;
+            Do = doFunc;
+            Derivative = derivativeFunc;
         }
     }
 
