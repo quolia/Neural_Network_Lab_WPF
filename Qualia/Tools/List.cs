@@ -97,7 +97,7 @@ namespace Tools
         }
     }
 
-    unsafe public class ListXNode<T>
+    public class ListXNode<T>
     {
         public T Next;
         public T Previous;

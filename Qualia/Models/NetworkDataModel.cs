@@ -144,7 +144,7 @@ namespace Qualia
         }
         */
 
-        unsafe public void FeedForward()
+        public void FeedForward()
         {
             var layer = Layers.First;
             var lastLayer = Layers.Last;
@@ -163,11 +163,7 @@ namespace Qualia
                         AxW = AxW.Next;
                     }
 
-                    unsafe
-                    {
-                        neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParamA);
-                    }
-
+                    neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParamA);
                     neuron = neuron.Next;
                 }
 
@@ -175,7 +171,7 @@ namespace Qualia
             }
         }
 
-        unsafe public void BackPropagation()
+        public void BackPropagation()
         {
             var lastLayer = Layers.Last;
             var neuron = lastLayer.Neurons.First;
