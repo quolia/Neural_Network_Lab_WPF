@@ -210,8 +210,6 @@ namespace Qualia.Controls
             return GetLayersControls().Select(ctlLayer => ctlLayer.NeuronsCount).ToArray();
         }
 
-        //public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(ctlNeuron => !ctlNeuron.IsBias);
-
         public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
 
         public Type SelectedLayerType => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First().GetType();

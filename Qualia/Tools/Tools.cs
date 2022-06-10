@@ -22,7 +22,7 @@ namespace Tools
         {
             int min = int.MaxValue;
 
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < array.Length; ++i)
             {
                 var loop = array[i];
                 if (loop.CurrentLimit < min)
@@ -123,7 +123,7 @@ namespace Tools
         {
             if (depObj != null)
             {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); ++i)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
                     if (child != null && child is T)

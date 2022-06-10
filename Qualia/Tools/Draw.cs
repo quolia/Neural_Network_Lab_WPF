@@ -199,17 +199,13 @@ namespace Tools
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
-            var pen = new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
-            return pen;
+            return new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Pen GetPen(in Color color, double width = 1)
         {
-            width *= Render.PixelSize;
-
-            var pen = new Pen(GetBrush(in color), Render.ScaleThickness(width));
-            return pen;
+            return new Pen(GetBrush(in color), Render.ScaleThickness(width * Render.PixelSize));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
