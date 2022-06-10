@@ -84,6 +84,7 @@ namespace Qualia
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
+        /*
         public void FeedForward2()
         {
             var layerModel = Layers.First;
@@ -141,6 +142,7 @@ namespace Qualia
                 layerModel = layerModel.Next;
             }
         }
+        */
 
         unsafe public void FeedForward()
         {
@@ -161,7 +163,11 @@ namespace Qualia
                         AxW = AxW.Next;
                     }
 
-                    neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParamA);
+                    unsafe
+                    {
+                        neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParamA);
+                    }
+
                     neuron = neuron.Next;
                 }
 
@@ -176,11 +182,6 @@ namespace Qualia
 
             while (neuron != null)
             {
-                if (neuron.Activation == 0)
-                {
-                    int a = 1;
-                }
-
                 neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
@@ -193,11 +194,6 @@ namespace Qualia
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    if (neuron.Error == 0)
-                    {
-                        int a = 1;
-                    }
-
                     var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
@@ -205,10 +201,6 @@ namespace Qualia
                         if (prevNeuron.Activation != 0)
                         {
                             prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
-                        }
-                        else
-                        {
-                            int a = 1;
                         }
 
                         AxW = AxW.Next;
@@ -222,21 +214,12 @@ namespace Qualia
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    if (neuron.Error == 0)
-                    {
-                        int a = 1;
-                    }
-                    
                     var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
                         if (AxW.Neuron.Activation != 0)
                         {
                             AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
-                        }
-                        else
-                        {
-                            int a = 1;
                         }
 
                         AxW = AxW.Next;

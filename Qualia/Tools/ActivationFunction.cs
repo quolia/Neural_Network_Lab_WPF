@@ -7,10 +7,10 @@ namespace Tools
 {
     unsafe public delegate double ActivationFunctionDelegate(double x, double? a);
 
-    public class ActivationFunction
+    unsafe public class ActivationFunction
     {
-        public readonly ActivationFunctionDelegate Do;
-        public readonly ActivationFunctionDelegate Derivative;
+        unsafe public readonly ActivationFunctionDelegate Do;
+        unsafe public readonly ActivationFunctionDelegate Derivative;
 
         public ActivationFunction(ActivationFunctionDelegate doFunc, ActivationFunctionDelegate derivativeFunc)
         {
@@ -19,7 +19,7 @@ namespace Tools
         }
     }
 
-    public static class ActivationFunctionList
+    unsafe public static class ActivationFunctionList
     {
         sealed public class None : ActivationFunction
         {
@@ -37,7 +37,7 @@ namespace Tools
             private static double _derivative(double x, double? a) => x;
         }
 
-        sealed public class LogisticSigmoid : ActivationFunction
+        unsafe sealed public class LogisticSigmoid : ActivationFunction
         {
             public static readonly LogisticSigmoid Instance = new LogisticSigmoid();
 
@@ -48,13 +48,13 @@ namespace Tools
 
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
+            unsafe private static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => x * (1 - x);
+            unsafe private static double _derivative(double x, double? a) => x * (1 - x);
         }
 
-        sealed public class SymmetricSigmoid : ActivationFunction
+        unsafe sealed public class SymmetricSigmoid : ActivationFunction
         {
             public static readonly SymmetricSigmoid Instance = new SymmetricSigmoid();
 
@@ -71,7 +71,7 @@ namespace Tools
             private static double _derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
         }
 
-        sealed public class Softsign : ActivationFunction
+        unsafe sealed public class Softsign : ActivationFunction
         {
             public static readonly Softsign Instance = new Softsign();
 
@@ -87,7 +87,7 @@ namespace Tools
             private static double _derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
-        sealed public class Tanh : ActivationFunction
+        unsafe sealed public class Tanh : ActivationFunction
         {
             public static readonly Tanh Instance = new Tanh();
 
@@ -103,7 +103,7 @@ namespace Tools
             private static double _derivative(double x, double? a) => x * (2 - x);
         }
 
-        sealed public class ReLu : ActivationFunction
+        unsafe sealed public class ReLu : ActivationFunction
         {
             public static readonly ReLu Instance = new ReLu();
 
@@ -135,7 +135,7 @@ namespace Tools
             }
         }
 
-        sealed public class StepConst : ActivationFunction
+        unsafe sealed public class StepConst : ActivationFunction
         {
             public static readonly StepConst Instance = new StepConst();
 
