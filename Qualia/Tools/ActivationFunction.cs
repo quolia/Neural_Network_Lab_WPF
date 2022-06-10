@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Tools
 {
-    public delegate double ActivationFunctionDelegate(double x, double? a);
+    unsafe public delegate double ActivationFunctionDelegate(double x, double? a);
 
     public class ActivationFunction
     {
