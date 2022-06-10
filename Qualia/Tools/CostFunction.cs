@@ -6,26 +6,17 @@ using Qualia;
 
 namespace Tools
 {
-    public interface ICostFunction
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        double Do(NetworkDataModel model);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        double Derivative(NetworkDataModel model, NeuronDataModel neuron);
-    }
+    public delegate double CostFunctionDoDelegate (NetworkDataModel network);
+    public delegate double CostFunctionDerivativeDelegate(NetworkDataModel network, NeuronDataModel neuron);
 
     public static class CostFunction
     {
-        sealed public class MSE : ICostFunction
+        public static class MSE
         {
-            public static ICostFunction Instance = new MSE();
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(NetworkDataModel networkModel)
+            public static double Do(NetworkDataModel network)
             {
                 double sum = 0;
-                var neuronModel = networkModel.Layers.Last.Neurons.First;
+                var neuronModel = network.Layers.Last.Neurons.First;
 
                 while (neuronModel != null)
                 {
@@ -38,10 +29,9 @@ namespace Tools
                 return sum;
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(NetworkDataModel networkModel, NeuronDataModel neuronModel)
+            public static double Derivative(NetworkDataModel _, NeuronDataModel neuron)
             {
-                return neuronModel.Target - neuronModel.Activation;
+                return neuron.Target - neuron.Activation;
             }
         }
 
@@ -49,13 +39,23 @@ namespace Tools
         {
             public static string[] GetItems()
             {
-                return typeof(CostFunction).GetNestedTypes().Where(c => typeof(ICostFunction).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
+                return typeof(CostFunction).GetNestedTypes().Select(c => c.Name).Where(c => c != "Helper").ToArray();
             }
 
-            public static ICostFunction GetInstance(string costFunctionName)
+            public static CostFunctionDoDelegate GetDo(string costFunctionName)
             {
-                return (ICostFunction)typeof(CostFunction).GetNestedTypes().Where(c => c.Name == costFunctionName).First().GetField("Instance").GetValue(null);
+                return Get<CostFunctionDoDelegate>(costFunctionName, "Do");
             }
+
+            public static CostFunctionDerivativeDelegate GetDerivative(string costFunctionName)
+            {
+                return Get<CostFunctionDerivativeDelegate>(costFunctionName, "Derivative");
+            }
+            private static T Get<T>(string costFunctionName, string methodName) where T : Delegate
+            {
+                return (T)typeof(CostFunction).GetNestedTypes().Where(c => c.Name == costFunctionName).First().GetMethod(methodName).CreateDelegate(typeof(T));
+            }
+
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
             {

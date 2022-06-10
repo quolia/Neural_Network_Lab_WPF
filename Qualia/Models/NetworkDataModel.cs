@@ -23,7 +23,8 @@ namespace Qualia
         public double InputInitial1;
         public bool IsAdjustFirstLayerWeights;
 
-        public ICostFunction CostFunction;
+        public CostFunctionDoDelegate CostFunctionDo;
+        public CostFunctionDerivativeDelegate CostFunctionDerivative;
 
         public Statistics Statistics;
         public DynamicStatistics DynamicStatistics;
@@ -173,7 +174,7 @@ namespace Qualia
 
             while (neuron != null)
             {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron.Error = CostFunctionDerivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
 
@@ -258,7 +259,7 @@ namespace Qualia
 
             while (neuron != null)
             {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron.Error = CostFunctionDerivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
 

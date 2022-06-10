@@ -285,7 +285,7 @@ namespace Tools
 
             lock (s_locker)
             {
-                File.WriteAllLines(Name, lines);
+                //File.WriteAllLines(Name, lines);
             }
         }
 
@@ -326,7 +326,7 @@ namespace Tools
         {
             lock (s_locker)
             {
-                File.WriteAllLines(Name, Array.Empty<string>());
+                //File.WriteAllLines(Name, Array.Empty<string>());
             }
 
             s_cache.Clear();

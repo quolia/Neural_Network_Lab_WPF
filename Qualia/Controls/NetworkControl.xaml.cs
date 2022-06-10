@@ -255,7 +255,8 @@ namespace Qualia.Controls
                 LearningRate = LearningRate,
                 InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
                 InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA),
-                CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
+                CostFunctionDo = CostFunction.Helper.GetDo(CtlCostFunction.SelectedValue.ToString()),
+                CostFunctionDerivative = CostFunction.Helper.GetDerivative(CtlCostFunction.SelectedValue.ToString()),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
