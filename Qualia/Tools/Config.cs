@@ -285,7 +285,7 @@ namespace Tools
 
             lock (s_locker)
             {
-                //File.WriteAllLines(Name, lines);
+                File.WriteAllLines(Name, lines);
             }
         }
 
