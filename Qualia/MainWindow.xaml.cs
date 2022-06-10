@@ -547,8 +547,9 @@ namespace Qualia
                 }
 
                 int currentLimit = int.MaxValue;
-                foreach (var loopLimit in loopLimits)
+                for (int i = 0; i < loopLimits.Length; ++i)
                 {
+                    ref var loopLimit = ref loopLimits[i];
                     loopLimit.CurrentLimit -= currentLoopLimit;
                     if (loopLimit.CurrentLimit <= 0)
                     {

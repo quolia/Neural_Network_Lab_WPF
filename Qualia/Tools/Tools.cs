@@ -13,7 +13,7 @@ using Qualia;
 
 namespace Tools
 {
-    sealed public class LoopsLimit
+    public struct LoopsLimit
     {
         public int CurrentLimit;
         public readonly int OriginalLimit;
@@ -24,7 +24,7 @@ namespace Tools
 
             for (int i = 0; i < array.Length; ++i)
             {
-                var loop = array[i];
+                ref var loop = ref array[i];
                 if (loop.CurrentLimit < min)
                 {
                     min = loop.CurrentLimit;
@@ -235,7 +235,7 @@ namespace Tools
         }
     }
 
-    sealed public class Statistics
+    public class Statistics
     {
         public long Rounds;
         public long CorrectRoundsTotal;
@@ -294,16 +294,16 @@ namespace Tools
             CostData.Add(new PlotPoint(cost, now));
         }
 
-        sealed public class PlotPoint : Tuple<double, long>
+        sealed public class PlotPoint
         {
-            public PlotPoint(double value, long timeTicks)
-                : base(value, timeTicks)
-            {
-                //
-            }
+            public readonly double Value;
+            public readonly long TimeTicks;
 
-            public double Value => Item1;
-            public long TimeTicks => Item2;
+            public PlotPoint(double value, long timeTicks)
+            {
+                Value = value;
+                TimeTicks = timeTicks;
+            }
         }
 
         public class PlotPoints : List<PlotPoint>

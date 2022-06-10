@@ -224,7 +224,7 @@ namespace Qualia.Controls
         {
             var pointData0 = pointsData[0];
             var pointX = ticks == 0 ? AXIS_OFFSET : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
-            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - (plotPoint.Item1 / 100));
+            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - (plotPoint.Value / 100));
 
             return Points.Get((int)pointX, (int)pointY);
         }
