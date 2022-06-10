@@ -6,6 +6,8 @@ using System.Windows.Media;
 
 namespace Tools
 {
+    //using Point = System.Drawing.Point;
+
     public static class Rects
     {
         private const int POOL_SIZE = 5;
@@ -171,11 +173,11 @@ namespace Tools
         {
             if (fraction < 0.5)
             {
-                return GetColorDradient(fromColor, zeroColor, alpha, fraction * 2);
+                return GetColorDradient(in fromColor, in zeroColor, alpha, fraction * 2);
             }
             else
             {
-                return GetColorDradient(zeroColor, toColor, alpha, 2 * (fraction - 0.5));
+                return GetColorDradient(in zeroColor, in toColor, alpha, 2 * (fraction - 0.5));
             }
         }
 

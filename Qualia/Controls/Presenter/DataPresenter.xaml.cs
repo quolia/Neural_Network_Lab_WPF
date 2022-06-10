@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
+//using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Tools;
 
 namespace Qualia.Controls
 {
+    using Point = System.Windows.Point;
     public partial class DataPresenter : UserControl
     {
         private const int CURRENT_POINTS_COUNT = -1;
@@ -110,7 +111,7 @@ namespace Qualia.Controls
             config.FlushToDrive();
         }
 
-        private void DrawPoint(int x, int y, double value, bool isData)
+        private void DrawPoint(double x, double y, double value, bool isData)
         {
             var brush = value == 0
                         ? System.Windows.Media.Brushes.White
@@ -126,7 +127,7 @@ namespace Qualia.Controls
             }
 
             _threshold = networkModel.InputThreshold;
-            var count = networkModel.Layers[0].Neurons.Count(n => !n.IsBias);
+            var count = networkModel.Layers[0].Neurons.CountIf(n => !n.IsBias);
 
             if (_data == null || _data.Length != count)
             {
@@ -180,11 +181,11 @@ namespace Qualia.Controls
                 _stat = new double[_pointsCount];
             }
 
-            double maxStat = _stat == null ? 0 : _stat.Max();
+            double maxStat = MaxStat();
 
             for (int ind = 0; ind < _pointsCount; ++ind)
             {
-                var pointPosition = GetPointPosition(ind);
+                ref var pointPosition = ref GetPointPosition(ind);
 
                 if (_data[ind] > _threshold)
                 {
@@ -199,13 +200,32 @@ namespace Qualia.Controls
             CtlPresenter.Update();
         }
 
-        private Point GetPointPosition(int pointNumber)
+        private double MaxStat()
+        {
+            if (_stat == null)
+            {
+                return 0;
+            }
+
+            double max = 0;
+            for (int ind = 0; ind < _stat.Length; ++ind)
+            {
+                if (_stat[ind] > max)
+                {
+                    max = _stat[ind];
+                }
+            }
+
+            return max;
+        }
+
+        private ref Point GetPointPosition(int pointNumber)
         {
             int snaps = GetSnaps();
             int y = (int)Math.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
             int x = pointNumber - (y * snaps * _pointsRearrangeSnap);
 
-            return new Point(x, y);
+            return ref Points.Get(x, y);// new Point(x, y);
         }
 
         public void SetInputStat(NetworkDataModel networkModel)

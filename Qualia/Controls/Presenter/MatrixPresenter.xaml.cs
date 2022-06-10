@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -166,7 +166,7 @@ namespace Qualia.Controls
                 }
             }
         
-            long outputMax = Math.Max(matrix.Output.Max(), 1);
+            long outputMax = matrix.MaxOutput();
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
                 //_penSilver = Tools.Draw.GetPen(Colors.Silver);
@@ -176,7 +176,7 @@ namespace Qualia.Controls
                 CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
             }
 
-            long inputMax = Math.Max(matrix.Input.Max(), 1);
+            long inputMax = matrix.MaxInput();
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
                 //_penSilver = Tools.Draw.GetPen(Colors.Silver);
@@ -221,6 +221,34 @@ namespace Qualia.Controls
             ++Output[output];
             ++Matrix[input, output];
             ++Count;
+        }
+
+        public long MaxInput()
+        {
+            long max = 0;
+            for (int ind = 0; ind < Input.Length; ++ind)
+            {
+                if (Input[ind] > max)
+                {
+                    max = Input[ind];
+                }
+            }
+
+            return Math.Max(max, 1);
+        }
+
+        public long MaxOutput()
+        {
+            long max = 0;
+            for (int ind = 0; ind < Output.Length; ++ind)
+            {
+                if (Output[ind] > max)
+                {
+                    max = Output[ind];
+                }
+            }
+
+            return Math.Max(max, 1);
         }
 
         public void ClearData()

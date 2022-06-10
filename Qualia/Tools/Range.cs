@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Tools
 {
     public static class Range
     {
+        /*
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<int> Make(int from, int to = 0)
         {
             return from < to ? Enumerable.Range(from, to - from) : Enumerable.Range(to, from - to);
         }
+        */
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void For(int range, Action<int> action)
@@ -31,6 +33,7 @@ namespace Tools
             }
         }
 
+        /*
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void BackEach<T>(IEnumerable<T> range, Action<T> action)
         {
@@ -40,6 +43,7 @@ namespace Tools
                 action(t);
             }
         }
+        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void BackEachTrimEnd<T>(IEnumerable<T> range, int trim, Action<T> action)
@@ -116,5 +120,6 @@ namespace Tools
 
             return sum;
         }
+        */
     }
 }

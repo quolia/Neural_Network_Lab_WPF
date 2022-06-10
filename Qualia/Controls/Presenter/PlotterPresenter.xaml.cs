@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -116,7 +116,7 @@ namespace Qualia.Controls
 
             if (selectedNetworkModel != null && selectedNetworkModel.DynamicStatistics.PercentData.Count > 0)
             {
-                DrawLabel(selectedNetworkModel.DynamicStatistics.PercentData, selectedNetworkModel.Color);
+                DrawLabel(selectedNetworkModel.DynamicStatistics.PercentData, in selectedNetworkModel.Color);
             }
 
             CtlPresenter.Update();
@@ -159,14 +159,14 @@ namespace Qualia.Controls
                              ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
-        private void DrawData(DynamicStatistics.PlotPoints pointsData, Color color, PointFunc func, bool isRect)
+        private void DrawData(DynamicStatistics.PlotPoints pointsData, in Color color, PointFunc func, bool isRect)
         {
             if (pointsData == null || !pointsData.Any())
             {
                 return;
             }
 
-            var pen = Tools.Draw.GetPen(color);
+            var pen = Tools.Draw.GetPen(in color);
             
             var firstPointData = pointsData[0];
             var lastPointData = pointsData.Last();
@@ -200,7 +200,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPoints pointsData, Color color)
+        private void DrawLabel(DynamicStatistics.PlotPoints pointsData, in Color color)
         {     
             var text = new FormattedText(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks).ToString(Culture.TimeFormat)
                                          + " / " + Converter.DoubleToText(pointsData.Last().Value, "N6", true) + " %",
@@ -208,7 +208,7 @@ namespace Qualia.Controls
                                          FlowDirection.LeftToRight,
                                          _font,
                                          10,
-                                         Tools.Draw.GetBrush(color),
+                                         Tools.Draw.GetBrush(in color),
                                          Render.PixelsPerDip);
 
             CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, Colors.White)),
@@ -260,7 +260,7 @@ namespace Qualia.Controls
                     var point1 = func(pointsData, pointsData[ind + 1], ticks);
                     var point2 = func(pointsData, pointsData[ind + 2], ticks);
 
-                    if (Math.Abs(Angle(ref point0, ref point1) - Angle(ref point1, ref point2)) < Math.PI / 720D)
+                    if (Math.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
                     {
                         if (pointsDataToRemove == null)
                         {
@@ -306,7 +306,7 @@ namespace Qualia.Controls
             }
         }
 
-        private double Angle(ref Point point1, ref Point point2)
+        private double Angle(in Point point1, in Point point2)
         {
             return Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
         }

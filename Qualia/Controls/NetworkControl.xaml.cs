@@ -145,12 +145,12 @@ namespace Qualia.Controls
             Config.Remove(Const.Param.Layers);
         }
 
-        public List<LayerBase> GetLayersControls()
+        private List<LayerBase> GetLayersControls()
         {
             var ctlLayers = new List<LayerBase>(CtlTabsLayers.Items.Count);
             for (int ind = 0; ind < CtlTabsLayers.Items.Count; ++ind)
             {
-                ctlLayers.Add(CtlTabsLayers.Tab(ind).FindVisualChildren<LayerBase>().FirstOrDefault());
+                ctlLayers.Add(CtlTabsLayers.Tab(ind).FindVisualChildren<LayerBase>().First());
             }
 
             return ctlLayers;
@@ -210,7 +210,7 @@ namespace Qualia.Controls
             return GetLayersControls().Select(ctlLayer => ctlLayer.NeuronsCount).ToArray();
         }
 
-        public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(ctlNeuron => !ctlNeuron.IsBias);
+        //public int InputNeuronsCount => InputLayer.GetNeuronsControls().Count(ctlNeuron => !ctlNeuron.IsBias);
 
         public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,6 +22,26 @@ namespace Tools
         {
             CurrentLimit = limit;
             OriginalLimit = limit;
+        }
+
+        public class Comparer : IComparer<LoopsLimit>
+        {
+            public static Comparer Instance = new Comparer();
+
+            public int Compare(LoopsLimit x, LoopsLimit y)
+            {
+                if (x.CurrentLimit < y.CurrentLimit)
+                {
+                    return -1;
+                }
+
+                if (x.CurrentLimit > y.CurrentLimit)
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
         }
     }
     unsafe public static class UnsafeTools
@@ -85,6 +106,17 @@ namespace Tools
 
     public static class Extension
     {
+        public static bool Any<T>(this List<T> list)
+        {
+            return list.Count > 0;
+        }
+
+        public static bool All<T>(this List<T> list, Func<T, bool> predicate)// Predicate<T> value)
+        {
+            //return list .AsEnumerable().All(value);
+            return list.AsEnumerable().All(predicate);// (list as IEnumerable).All(value);// .AsEnumerable().All(value);
+        }
+
         public static DispatcherOperation Dispatch(this UIElement element, Action action, DispatcherPriority priority)
         {
             return element.Dispatcher.BeginInvoke(action, priority);
@@ -299,6 +331,11 @@ namespace Tools
 
         public class PlotPoints : List<PlotPoint>
         {
+            public PlotPoint Last()
+            {
+                return base[Count - 1];
+            }
+
             public PlotPoints Copy()
             {
                 return (PlotPoints)MemberwiseClone();

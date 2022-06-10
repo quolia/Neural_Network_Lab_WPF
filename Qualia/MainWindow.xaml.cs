@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -406,9 +406,11 @@ namespace Qualia
                 new LoopsLimit(Settings.SkipRoundsToDrawNetworks),
                 new LoopsLimit(Settings.SkipRoundsToDrawStatistics)
 
-            }.OrderBy(limit => limit.OriginalLimit).ToList();
+            };//
+              //.OrderBy(limit => limit.OriginalLimit).ToList();
 
-            var currentLoopLimit = loopLimits.First();
+            loopLimits.Sort(LoopsLimit.Comparer.Instance);
+            var currentLoopLimit = loopLimits[0];// .First();
 
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
@@ -548,7 +550,7 @@ namespace Qualia
                 }
 
                 int currentLimit = currentLoopLimit.CurrentLimit;
-
+                
                 foreach (var loopLimit in loopLimits)
                 {
                     loopLimit.CurrentLimit -= currentLimit;
@@ -557,9 +559,12 @@ namespace Qualia
                         loopLimit.CurrentLimit = loopLimit.OriginalLimit;
                     }
                 }
+                
+                //loopLimits = loopLimits.OrderBy(limit => limit.CurrentLimit).ToList();
+                //currentLoopLimit = loopLimits.First();
 
-                loopLimits = loopLimits.OrderBy(limit => limit.CurrentLimit).ToList();
-                currentLoopLimit = loopLimits.First();
+                loopLimits.Sort(LoopsLimit.Comparer.Instance);
+                currentLoopLimit = loopLimits[0];
 
                 if (isRendering)
                 {
