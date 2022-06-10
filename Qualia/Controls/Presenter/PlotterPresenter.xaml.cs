@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -253,12 +252,12 @@ namespace Qualia.Controls
 
                 List<DynamicStatistics.PlotPoint> pointsDataToRemove = null;
 
-                for (int ind = 0; ind < pointsData.Count - MIN_POINTS_COUNT; ++ind)
+                for (int i = 0; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
                 {
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
-                    var point0 = func(pointsData, pointsData[ind], ticks);
-                    var point1 = func(pointsData, pointsData[ind + 1], ticks);
-                    var point2 = func(pointsData, pointsData[ind + 2], ticks);
+                    var point0 = func(pointsData, pointsData[i], ticks);
+                    var point1 = func(pointsData, pointsData[i + 1], ticks);
+                    var point2 = func(pointsData, pointsData[i + 2], ticks);
 
                     if (Math.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
                     {
@@ -267,14 +266,14 @@ namespace Qualia.Controls
                             pointsDataToRemove = new List<DynamicStatistics.PlotPoint>();
                         }
 
-                        pointsDataToRemove.Add(pointsData[ind + 1]);
+                        pointsDataToRemove.Add(pointsData[i + 1]);
 
                         if (pointsData.Count - pointsDataToRemove.Count < MIN_POINTS_COUNT)
                         {
                             break;
                         }
 
-                        ind += 2;
+                        i += 2;
                     }
                     else
                     {
@@ -285,14 +284,14 @@ namespace Qualia.Controls
                                 pointsDataToRemove = new List<DynamicStatistics.PlotPoint>();
                             }
 
-                            pointsDataToRemove.Add(pointsData[ind + 1]);
+                            pointsDataToRemove.Add(pointsData[i + 1]);
 
                             if (pointsData.Count - pointsDataToRemove.Count < MIN_POINTS_COUNT)
                             {
                                 break;
                             }
 
-                            ind += 2;
+                            i += 2;
                         }
                     }
                 }

@@ -5,7 +5,7 @@ namespace Qualia
 {
     public class NeuronDataModel : ListXNode<NeuronDataModel>
     {
-        public int Id;
+        public readonly int Id;
         public long VisualId;
 
         public double Activation;
@@ -23,7 +23,7 @@ namespace Qualia
         public IActivationFunction ActivationFunction;
         public double? ActivationFuncParamA;
 
-        public ListX<WeightDataModel> Weights;
+        public readonly ListX<WeightDataModel> Weights;
 
         public double Target;
 
@@ -33,7 +33,7 @@ namespace Qualia
         {
             Weights = new ListX<WeightDataModel>(weightsCount);
             Id = id;
-            Range.For(weightsCount, ind => Weights.Add(new WeightDataModel(ind)));
+            Range.For(weightsCount, i => Weights.Add(new WeightDataModel(i)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,7 +45,7 @@ namespace Qualia
 
     public class WeightDataModel : ListXNode<WeightDataModel>
     {
-        public int Id;
+        public readonly int Id;
         public double Weight;
 
         public WeightDataModel(int id)
@@ -55,5 +55,19 @@ namespace Qualia
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(double weight) => Weight += weight;
+    }
+
+    public class ForwardNeuron : ListXNode<ForwardNeuron>
+    {
+        public readonly NeuronDataModel Neuron;
+        public readonly WeightDataModel WeightModel;
+
+        public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
+        {
+            Neuron = neuron;
+            WeightModel = weight;
+        }
+
+        public double AxW => Neuron.Activation * WeightModel.Weight;
     }
 }

@@ -8,8 +8,8 @@ namespace Qualia
 {
     public class NetworkDataModel : ListXNode<NetworkDataModel>
     {
-        public long VisualId;
-        public ListX<LayerDataModel> Layers;
+        public readonly long VisualId;
+        public readonly ListX<LayerDataModel> Layers;
         public int TargetOutput;
         public List<string> Classes;
 
@@ -23,8 +23,10 @@ namespace Qualia
         public double InputInitial1;
         public bool IsAdjustFirstLayerWeights;
 
-        public CostFunctionDoDelegate CostFunctionDo;
-        public CostFunctionDerivativeDelegate CostFunctionDerivative;
+        //public CostFunctionDoDelegate CostFunctionDo;
+        //public CostFunctionDerivativeDelegate CostFunctionDerivative;
+
+        public ICostFunction CostFunction;
 
         public Statistics Statistics;
         public DynamicStatistics DynamicStatistics;
@@ -37,7 +39,7 @@ namespace Qualia
         {
             VisualId = visualId;
             Layers = new ListX<LayerDataModel>(layerSizes.Length);
-            Range.For(layerSizes.Length, ind => CreateLayer(layerSizes[ind], ind < layerSizes.Length - 1 ? layerSizes[ind + 1] : 0));
+            Range.For(layerSizes.Length, i => CreateLayer(layerSizes[i], i < layerSizes.Length - 1 ? layerSizes[i + 1] : 0));
         }
 
         public void SetCopy(NetworkDataModel networkModelCopy)
@@ -174,7 +176,12 @@ namespace Qualia
 
             while (neuron != null)
             {
-                neuron.Error = CostFunctionDerivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                if (neuron.Activation == 0)
+                {
+                    int a = 1;
+                }
+
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
 
@@ -186,6 +193,11 @@ namespace Qualia
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
+                    if (neuron.Error == 0)
+                    {
+                        int a = 1;
+                    }
+
                     var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
@@ -193,6 +205,10 @@ namespace Qualia
                         if (prevNeuron.Activation != 0)
                         {
                             prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
+                        }
+                        else
+                        {
+                            int a = 1;
                         }
 
                         AxW = AxW.Next;
@@ -206,12 +222,21 @@ namespace Qualia
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
+                    if (neuron.Error == 0)
+                    {
+                        int a = 1;
+                    }
+                    
                     var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
                         if (AxW.Neuron.Activation != 0)
                         {
                             AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
+                        }
+                        else
+                        {
+                            int a = 1;
                         }
 
                         AxW = AxW.Next;
@@ -223,43 +248,16 @@ namespace Qualia
 
                 layer = layer.Previous;
             }
-
-            // update weights
-            /*
-            layer = lastLayer;
-            while (layer != finalLayer)
-            {
-                neuron = layer.Neurons.First;
-                while (neuron != null)
-                {
-                    var AxW = neuron.WeightsToNextLayer.First;
-                    while (AxW != null)
-                    {
-                        if (AxW.Neuron.Activation != 0)
-                        {
-                            AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
-                        }
-
-                        AxW = AxW.Next;
-                    }
-
-                    neuron.Error = 0;
-                    neuron = neuron.Next;
-                }
-
-                layer = layer.Previous;
-            }
-            */
         }
 
-        unsafe public void BackPropagation2()
+        /*unsafe public void BackPropagation2()
         {
             var lastLayer = Layers.Last;
             var neuron = lastLayer.Neurons.First;
 
             while (neuron != null)
             {
-                neuron.Error = CostFunctionDerivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
                 neuron = neuron.Next;
             }
 
@@ -329,6 +327,7 @@ namespace Qualia
                 layer = layer.Previous;
             }
         }
+        */
 
         public NetworkDataModel Merge(NetworkDataModel newNetworkModel)
         {

@@ -54,7 +54,7 @@ namespace Qualia.Controls
             var w32Mouse = new Win32Point();
             GetCursorPos(ref w32Mouse);
 
-            return new Point(w32Mouse.X, w32Mouse.Y);// Points.Get(w32Mouse.X, w32Mouse.Y);
+            return new Point(w32Mouse.X, w32Mouse.Y);
         }
 
         public virtual void OnResizeEnd()

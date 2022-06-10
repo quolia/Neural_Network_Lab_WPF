@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-//using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Tools;
@@ -183,17 +182,17 @@ namespace Qualia.Controls
 
             double maxStat = MaxStat();
 
-            for (int ind = 0; ind < _pointsCount; ++ind)
+            for (int i = 0; i < _pointsCount; ++i)
             {
-                ref var pointPosition = ref GetPointPosition(ind);
+                ref var pointPosition = ref GetPointPosition(i);
 
-                if (_data[ind] > _threshold)
+                if (_data[i] > _threshold)
                 {
-                    DrawPoint(pointPosition.X, pointPosition.Y, _data[ind], true);
+                    DrawPoint(pointPosition.X, pointPosition.Y, _data[i], true);
                 }
                 else
                 {
-                    DrawPoint(pointPosition.X, pointPosition.Y, maxStat > 0 ? _stat[ind] / maxStat : 0, false);
+                    DrawPoint(pointPosition.X, pointPosition.Y, maxStat > 0 ? _stat[i] / maxStat : 0, false);
                 }
             }
 
@@ -208,11 +207,11 @@ namespace Qualia.Controls
             }
 
             double max = 0;
-            for (int ind = 0; ind < _stat.Length; ++ind)
+            for (int i = 0; i < _stat.Length; ++i)
             {
-                if (_stat[ind] > max)
+                if (_stat[i] > max)
                 {
-                    max = _stat[ind];
+                    max = _stat[i];
                 }
             }
 
@@ -225,7 +224,7 @@ namespace Qualia.Controls
             int y = (int)Math.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
             int x = pointNumber - (y * snaps * _pointsRearrangeSnap);
 
-            return ref Points.Get(x, y);// new Point(x, y);
+            return ref Points.Get(x, y);
         }
 
         public void SetInputStat(NetworkDataModel networkModel)
@@ -240,17 +239,17 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(networkModel));
             }
 
-            int ind = 0;
+            int index = 0;
             var neuronModel = networkModel.Layers.First.Neurons.First;
 
             while (neuronModel != null)
             {
                 if (!neuronModel.IsBias)
                 {
-                    _stat[ind] += neuronModel.Activation > _threshold ? neuronModel.Activation : 0;
+                    _stat[index] += neuronModel.Activation > _threshold ? neuronModel.Activation : 0;
                 }
 
-                ++ind;
+                ++index;
                 neuronModel = neuronModel.Next;
             }
         }

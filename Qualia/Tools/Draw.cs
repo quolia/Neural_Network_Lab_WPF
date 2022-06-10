@@ -6,8 +6,6 @@ using System.Windows.Media;
 
 namespace Tools
 {
-    //using Point = System.Drawing.Point;
-
     public static class Rects
     {
         private const int POOL_SIZE = 5;
@@ -17,8 +15,6 @@ namespace Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref Rect Get(double x, double y, double width, double height)
         {
-            //ref return new Rect(x, y, width, height);
-            
             ref var rect = ref s_pool[s_pointer];
 
             rect.X = x;
@@ -44,8 +40,6 @@ namespace Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref Point Get(double x, double y)
         {
-            //return new Point(x, y);
-            
             ref var point = ref s_pool[s_pointer];
 
             point.X = x;
@@ -92,7 +86,7 @@ namespace Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Scale(double x)
         {
-            return x;// x / PixelsPerDip;// x;//SnapToPixels(x);
+            return x;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -206,7 +200,6 @@ namespace Tools
             }
 
             var pen = new Pen(GetBrush(v, alpha), Render.ScaleThickness(width));
-            //pen.Freeze();
             return pen;
         }
 
@@ -216,7 +209,6 @@ namespace Tools
             width *= Render.PixelSize;
 
             var pen = new Pen(GetBrush(in color), Render.ScaleThickness(width));
-            //pen.Freeze();
             return pen;
         }
 

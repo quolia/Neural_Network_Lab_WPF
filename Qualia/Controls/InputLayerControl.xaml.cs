@@ -38,8 +38,6 @@ namespace Qualia.Controls
 
         public override bool IsInput => true;
         public override Panel NeuronsHolder => CtlNeuronsHolder;
-        //public override int NeuronsCount => GetNeuronsControls().Count;
-
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
         public string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();

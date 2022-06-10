@@ -5,7 +5,7 @@ ScreenTop:42
 ScreenLeft:-134.666666666667
 OnTop:0
 DataWidth:230
-NetworkHeight:632
+NetworkHeight:625
 SkipRoundsToDrawErrorMatrix:10000
 SkipRoundsToDrawNetworks:10000
 SkipRoundsToDrawStatistic:10000

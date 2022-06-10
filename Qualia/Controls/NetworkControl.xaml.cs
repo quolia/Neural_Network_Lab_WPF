@@ -84,19 +84,19 @@ namespace Qualia.Controls
         public void ResetLayersTabsNames()
         {
             var ctlLayers = GetLayersControls();
-            for (int ind = 0; ind < ctlLayers.Count; ++ind)
+            for (int i = 0; i < ctlLayers.Count; ++i)
             {
-                if (ctlLayers[ind].IsInput)
+                if (ctlLayers[i].IsInput)
                 {
-                    CtlTabsLayers.Tab(ind).Header = $"Input ({ctlLayers[ind].NeuronsCount})";
+                    CtlTabsLayers.Tab(i).Header = $"Input ({ctlLayers[i].NeuronsCount})";
                 }
-                else if (ctlLayers[ind].IsOutput)
+                else if (ctlLayers[i].IsOutput)
                 {
-                    CtlTabsLayers.Tab(ind).Header = $"Output ({ctlLayers[ind].NeuronsCount})";
+                    CtlTabsLayers.Tab(i).Header = $"Output ({ctlLayers[i].NeuronsCount})";
                 }
                 else
                 {
-                    CtlTabsLayers.Tab(ind).Header = $"L{ind} ({ctlLayers[ind].NeuronsCount})";
+                    CtlTabsLayers.Tab(i).Header = $"L{i} ({ctlLayers[i].NeuronsCount})";
                 }
             }
 
@@ -148,9 +148,9 @@ namespace Qualia.Controls
         private List<LayerBase> GetLayersControls()
         {
             var ctlLayers = new List<LayerBase>(CtlTabsLayers.Items.Count);
-            for (int ind = 0; ind < CtlTabsLayers.Items.Count; ++ind)
+            for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
-                ctlLayers.Add(CtlTabsLayers.Tab(ind).FindVisualChildren<LayerBase>().First());
+                ctlLayers.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
             }
 
             return ctlLayers;
@@ -255,8 +255,8 @@ namespace Qualia.Controls
                 LearningRate = LearningRate,
                 InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
                 InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA),
-                CostFunctionDo = CostFunction.Helper.GetDo(CtlCostFunction.SelectedValue.ToString()),
-                CostFunctionDerivative = CostFunction.Helper.GetDerivative(CtlCostFunction.SelectedValue.ToString()),
+                CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
+                //CostFunctionDerivative = CostFunction.Helper.GetDerivative(CtlCostFunction.SelectedValue.ToString()),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
@@ -344,9 +344,9 @@ namespace Qualia.Controls
             lastLayer.VisualId = Const.OutputLayerId;
             {
                 var ctlNeurons = _outputLayer.GetNeuronsControls().ToArray();
-                for (int ind = 0; ind < ctlNeurons.Length; ++ind)
+                for (int i = 0; i < ctlNeurons.Length; ++i)
                 {
-                    lastLayer.Neurons[ind].VisualId = ctlNeurons[ind].Id;
+                    lastLayer.Neurons[i].VisualId = ctlNeurons[i].Id;
                 }
             }
 

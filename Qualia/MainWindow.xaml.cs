@@ -460,7 +460,7 @@ namespace Qualia
                             var output = networkModel.GetMaxActivatedOutputNeuron();
                             var outputId = output.Id;
                             var input = networkModel.TargetOutput;
-                            var cost = networkModel.CostFunctionDo(networkModel);
+                            var cost = networkModel.CostFunction.Do(networkModel);
                             var statistics = networkModel.Statistics;
 
                             if (input == outputId)

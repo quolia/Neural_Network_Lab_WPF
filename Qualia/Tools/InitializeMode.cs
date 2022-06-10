@@ -13,31 +13,17 @@ namespace Tools
 
         public static double Constant(double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 0;
-            }
-
-            return param.Value;
+            return param ?? 0;
         }
 
         public static double SimpleRandom(double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
-
-            return param.Value * Rand.GetFlatRandom();
+            return (param ?? 1) * Rand.GetFlatRandom();
         }
 
         public static double Centered(double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
-
+            param = param ?? 1;
             return -param.Value / 2 + param.Value * Rand.GetFlatRandom();
         }
 

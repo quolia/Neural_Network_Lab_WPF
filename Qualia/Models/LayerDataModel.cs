@@ -5,9 +5,10 @@ namespace Qualia
 {
     public class LayerDataModel : ListXNode<LayerDataModel>
     {
-        public int Id;
         public long VisualId;
-        public ListX<NeuronDataModel> Neurons;
+
+        public readonly int Id;
+        public readonly ListX<NeuronDataModel> Neurons;
         
         public LayerDataModel(int id, int neuronsCount, int weightsCountPerNeuron)
         {

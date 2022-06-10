@@ -39,27 +39,8 @@ namespace Tools
             CurrentLimit = limit;
             OriginalLimit = limit;
         }
-
-        public class Comparer : IComparer<LoopsLimit>
-        {
-            public static Comparer Instance = new Comparer();
-
-            public int Compare(LoopsLimit x, LoopsLimit y)
-            {
-                if (x.CurrentLimit < y.CurrentLimit)
-                {
-                    return -1;
-                }
-
-                if (x.CurrentLimit > y.CurrentLimit)
-                {
-                    return 1;
-                }
-
-                return 0;
-            }
-        }
     }
+
     unsafe public static class UnsafeTools
     {
         public static IntPtr AddressOf<T>(ref T t)
@@ -104,20 +85,6 @@ namespace Tools
         }
 
         public double Value => _ptr.Value;
-    }
-
-    public class ForwardNeuron : ListXNode<ForwardNeuron>
-    {
-        public readonly NeuronDataModel Neuron;
-        public readonly WeightDataModel WeightModel;
-
-        public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
-        {
-            Neuron = neuron;
-            WeightModel = weight;
-        }
-
-        public double AxW => Neuron.Activation * WeightModel.Weight;
     }
 
     public static class Extension

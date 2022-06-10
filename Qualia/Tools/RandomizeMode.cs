@@ -9,6 +9,8 @@ namespace Tools
     {
         public static void FlatRandom(NetworkDataModel networkModel, double? param)
         {
+            param = param ?? 1;
+
             var layer = networkModel.Layers.First;
             while (layer != null)
             {
@@ -18,7 +20,7 @@ namespace Tools
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        weight.Weight = Rand.GetFlatRandom(param.HasValue ? param.Value : 1);
+                        weight.Weight = Rand.GetFlatRandom(param.Value);
                         weight = weight.Next;
                     }
 
@@ -31,6 +33,8 @@ namespace Tools
 
         public static void GaussRandom(NetworkDataModel networkModel, double? param)
         {
+            param = param ?? 1;
+
             var layer = networkModel.Layers.First;
             while (layer != null)
             {
@@ -40,7 +44,7 @@ namespace Tools
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        weight.Weight = Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1);
+                        weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
                         weight = weight.Next;
                     }
 
@@ -53,6 +57,8 @@ namespace Tools
 
         public static void AbsGaussRandom(NetworkDataModel networkModel, double? param)
         {
+            param = param ?? 1;
+
             var layer = networkModel.Layers.First;
             while (layer != null)
             {
@@ -62,7 +68,7 @@ namespace Tools
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1));
+                        weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
                         weight = weight.Next;
                     }
 
@@ -75,10 +81,7 @@ namespace Tools
 
         public static void Centered(NetworkDataModel networkModel, double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
+            param = param ?? 1;
 
             var layer = networkModel.Layers.First;
             while (layer != null)
@@ -102,10 +105,7 @@ namespace Tools
 
         public static void WaveProgress(NetworkDataModel networkModel, double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
+            param = param ?? 1;
 
             var layer = networkModel.Layers.First;
             while (layer != null)
@@ -129,10 +129,7 @@ namespace Tools
 
         public static void Xavier(NetworkDataModel networkModel, double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
+            param = param ?? 1;
 
             var layer = networkModel.Layers.First;
             while (layer != null)
@@ -166,10 +163,7 @@ namespace Tools
         {
             // Xavier initialization works better for layers with sigmoid activation.
 
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
+            param = param ?? 1;
 
             var layer = networkModel.Layers.First;
             while (layer != null)
@@ -201,10 +195,7 @@ namespace Tools
 
         public static void HeEtAl(NetworkDataModel networkModel, double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
+            param = param ?? 1;
 
             var layer = networkModel.Layers.First;
             while (layer != null)
@@ -238,10 +229,8 @@ namespace Tools
         {
             // He initialization works better for layers with ReLu(s) activation.
 
-            if (!param.HasValue)
-            {
-                param = 1;
-            }
+            param = param ?? 1;
+
             var layer = networkModel.Layers.First;
             while (layer != null)
             {
@@ -272,10 +261,7 @@ namespace Tools
 
         public static void Constant(NetworkDataModel networkModel, double? param)
         {
-            if (!param.HasValue)
-            {
-                param = 0;
-            }
+            param = param ?? 0;
 
             var layer = networkModel.Layers.First;
             while (layer != null)

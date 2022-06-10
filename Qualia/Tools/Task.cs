@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Qualia;
 using Qualia.Controls;
@@ -9,12 +10,25 @@ namespace Tools
 {
     public interface INetworkTask : IConfigParam
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void Do(NetworkDataModel networkModel);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Control GetVisualControl();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int GetInputCount();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         List<string> GetClasses();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void ApplyChanges();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         bool IsGridSnapAdjustmentAllowed();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int GetPointsRearrangeSnap();
     }
 
@@ -28,13 +42,14 @@ namespace Tools
     {
         sealed public class CountDots : INetworkTask
         {
-            public static INetworkTask Instance = new CountDots();
+            public static readonly CountDots Instance = new CountDots();
             
             private static readonly CountDotsControl s_control = new CountDotsControl();
 
             private bool _isGaussianDistribution;
             private int _minNumber;
             private int _maxNumber;
+            private double _median;
 
             public Control GetVisualControl()
             {
@@ -56,6 +71,7 @@ namespace Tools
                 _isGaussianDistribution = s_control.IsGaussianDistribution;
                 _minNumber = s_control.MinNumber;
                 _maxNumber = s_control.MaxNumber;
+                _median = ((double)_maxNumber + _minNumber) / 2;
             }
 
             public void SetConfig(Config config)
@@ -90,27 +106,27 @@ namespace Tools
                 return classes;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Do(NetworkDataModel networkModel)
             {
                 int randNumber;
 
-                if (_isGaussianDistribution)
+                if (!_isGaussianDistribution)
                 {
-                    double median = ((double)_maxNumber + _minNumber) / 2;
-                    randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, (median - 2) / 2));
+                    randNumber = Rand.Flat.Next(0, _maxNumber + 1 - _minNumber);
+                }
+                else
+                {
+                    randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(_median, (_median - 2) / 2));
 
                     if (randNumber < _minNumber)
                     {
                         randNumber = _minNumber;
                     }
-                    if (randNumber > _maxNumber)
+                    else if (randNumber > _maxNumber)
                     {
                         randNumber = _maxNumber;
                     }
-                }
-                else
-                {
-                    randNumber = Rand.Flat.Next(0, _maxNumber + 1 - _minNumber);
                 }
 
                 networkModel.TargetOutput = randNumber;
@@ -174,9 +190,9 @@ namespace Tools
 
         sealed public class MNIST : INetworkTask
         {
-            public static INetworkTask Instance = new MNIST();
+            public static readonly MNIST Instance = new MNIST();
             
-            private static MNISTControl s_control = new MNISTControl();
+            private static readonly MNISTControl s_control = new MNISTControl();
 
             public Control GetVisualControl()
             {
@@ -230,13 +246,15 @@ namespace Tools
                 return classes;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Do(NetworkDataModel networkModel)
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
+                var count = networkModel.Layers.First.Neurons.Count;
 
-                for (int ind = 0; ind < networkModel.Layers.First.Neurons.Count; ++ind)
+                for (int i = 0; i < count; ++i)
                 {
-                    networkModel.Layers.First.Neurons[ind].Activation = networkModel.InputInitial1 * image.Image[ind];
+                    networkModel.Layers.First.Neurons[i].Activation = networkModel.InputInitial1 * image.Image[i];
                 }
 
                 var neuron = networkModel.Layers.Last.Neurons.First;

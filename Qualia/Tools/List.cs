@@ -4,13 +4,12 @@ namespace Tools
 {
     public class ListX<T> where T : ListXNode<T>
     {
-        public T First;// { get; private set; }
-        public T Last;// { get; private set; }
+        public T First;
+        public T Last;
 
         private T[] _array = Array.Empty<T>();
 
         public ListX(int capacity)
-            //: base(capacity)
         {
             //
         }

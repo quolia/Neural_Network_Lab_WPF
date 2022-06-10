@@ -61,9 +61,9 @@ namespace Qualia.Controls
             get
             {
                 var ctlNetworks = new List<NetworkControl>();
-                for (int ind = 1; ind < _ctlTabs.Items.Count; ++ind)
+                for (int i = 1; i < _ctlTabs.Items.Count; ++i)
                 {
-                    ctlNetworks.Add(_ctlTabs.Tab(ind).Content as NetworkControl);
+                    ctlNetworks.Add(_ctlTabs.Tab(i).Content as NetworkControl);
                 }
 
                 return ctlNetworks;
@@ -116,7 +116,7 @@ namespace Qualia.Controls
                 networkIds = new long[] { Const.UnknownId };
             }
 
-            Range.For(networkIds.Length, ind => AddNetwork(networkIds[ind]));
+            Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
             _ctlTabs.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
 
             RefreshNetworksDataModels();
@@ -160,9 +160,9 @@ namespace Qualia.Controls
             {
                 SelectedNetworkControl.VanishConfig();
 
-                var ind = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
+                var index = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
                 _ctlTabs.Items.Remove(_ctlTabs.SelectedTab());
-                _ctlTabs.SelectedIndex = ind - 1;
+                _ctlTabs.SelectedIndex = index - 1;
 
                 ResetNetworksTabsNames();
 
@@ -172,9 +172,9 @@ namespace Qualia.Controls
 
         private void ResetNetworksTabsNames()
         {
-            for (int ind = 1; ind < _ctlTabs.Items.Count; ++ind)
+            for (int i = 1; i < _ctlTabs.Items.Count; ++i)
             {
-                _ctlTabs.Tab(ind).Header = $"Network {ind}";
+                _ctlTabs.Tab(i).Header = $"Network {i}";
             }
         }
 
@@ -269,7 +269,7 @@ namespace Qualia.Controls
 
             // copy first layer state and last layer targets to other networks
 
-            var network = baseNetwork.Next;// NetworkModels.Count > 1 ? NetworkModels[1] : null;          
+            var network = baseNetwork.Next;
             while (network != null)
             {
                 if (!network.IsEnabled)

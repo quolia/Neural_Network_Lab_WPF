@@ -183,7 +183,7 @@ namespace Qualia.Controls
                     throw new Exception("Invalid MNIST images file format.");
                 }
 
-                for (int ind = 0; ind < numberOfImages; ++ind)
+                for (int i = 0; i < numberOfImages; ++i)
                 {
                     var image = new MNISTImage();
                     if (file.Read(image.Image, 0, image.Image.Length) != image.Image.Length)
@@ -239,9 +239,9 @@ namespace Qualia.Controls
                     throw new Exception("Invalid MNIST labels file format.");
                 }
 
-                for (int ind = 0; ind < numberOfImages; ++ind)
+                for (int i = 0; i < numberOfImages; ++i)
                 {
-                    var image = Images[ind];
+                    var image = Images[i];
                     image.Label = (byte)file.ReadByte();
                 }
             }
