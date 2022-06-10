@@ -2,7 +2,7 @@
 
 namespace Tools
 {
-    public class ListX<T> where T : ListXNode<T>
+    sealed public class ListX<T> where T : ListXNode<T>
     {
         public T First;
         public T Last;

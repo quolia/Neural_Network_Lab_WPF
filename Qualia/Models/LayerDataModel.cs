@@ -3,7 +3,7 @@ using Tools;
 
 namespace Qualia
 {
-    public class LayerDataModel : ListXNode<LayerDataModel>
+    sealed public class LayerDataModel : ListXNode<LayerDataModel>
     {
         public long VisualId;
 

@@ -4,7 +4,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class QCheckBox : CheckBox, IConfigParam
+    sealed public class QCheckBox : CheckBox, IConfigParam
     {
         private Config _config;
 

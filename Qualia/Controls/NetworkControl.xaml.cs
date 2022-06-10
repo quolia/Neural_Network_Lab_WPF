@@ -10,7 +10,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class NetworkControl : System.Windows.Controls.UserControl
+    sealed public partial class NetworkControl : System.Windows.Controls.UserControl
     {
         public readonly long Id;
         public Config Config;

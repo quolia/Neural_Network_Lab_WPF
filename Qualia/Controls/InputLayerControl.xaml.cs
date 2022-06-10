@@ -6,7 +6,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class InputLayerControl : LayerBase
+    sealed public partial class InputLayerControl : LayerBase
     {
         private readonly List<IConfigParam> _configParams;
 

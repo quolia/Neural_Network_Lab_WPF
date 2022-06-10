@@ -4,7 +4,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class OutputNeuronControl : NeuronBase
+    sealed public partial class OutputNeuronControl : NeuronBase
     {
         private readonly List<IConfigParam> _configParams;
 

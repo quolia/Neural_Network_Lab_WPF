@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Qualia.Controls
 {
-    public partial class PresenterControl : UserControl
+    sealed public partial class PresenterControl : UserControl
     {
         public Graphics G;
 

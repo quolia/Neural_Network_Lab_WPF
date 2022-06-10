@@ -10,7 +10,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class MNISTControl : UserControl, IConfigParam
+    sealed public partial class MNISTControl : UserControl, IConfigParam
     {
         public List<MNISTImage> Images = new List<MNISTImage>();
 
@@ -332,7 +332,7 @@ namespace Qualia.Controls
         }
     }
 
-    public class MNISTImage
+    sealed public class MNISTImage
     {
         public byte[] Image = new byte[28 * 28];
         public byte Label;

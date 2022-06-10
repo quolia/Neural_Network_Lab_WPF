@@ -2,7 +2,7 @@
 
 namespace Qualia.Controls
 {
-    public partial class PresenterControlHost : WindowsFormsHost
+    sealed public partial class PresenterControlHost : WindowsFormsHost
     {
         public PresenterControlHost()
         {

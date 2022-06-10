@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class OutputLayerControl : LayerBase
+    sealed public partial class OutputLayerControl : LayerBase
     {
         public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)

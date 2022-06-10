@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class QComboBox : ComboBox, IConfigParam
+    sealed public class QComboBox : ComboBox, IConfigParam
     {
         private Config _config;
 

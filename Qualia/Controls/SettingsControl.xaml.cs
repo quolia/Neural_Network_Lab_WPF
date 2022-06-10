@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class SettingsControl : UserControl, IConfigParam
+    sealed public partial class SettingsControl : UserControl, IConfigParam
     {
         private Config _config;
 
@@ -91,7 +91,7 @@ namespace Qualia.Controls
         public void InvalidateValue() => throw new InvalidOperationException();
     }
 
-    public class Settings
+    sealed public class Settings
     {
         public int SkipRoundsToDrawErrorMatrix;
         public int SkipRoundsToDrawNetworks;

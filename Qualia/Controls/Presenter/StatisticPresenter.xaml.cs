@@ -8,7 +8,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class StatisticsPresenter : UserControl
+    sealed public partial class StatisticsPresenter : UserControl
     {
         private static readonly Typeface s_font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         private static readonly StringBuilder s_stringBuilder = new StringBuilder();

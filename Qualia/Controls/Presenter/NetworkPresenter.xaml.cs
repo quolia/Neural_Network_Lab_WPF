@@ -7,7 +7,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class NetworkPresenter : UserControl
+    sealed public partial class NetworkPresenter : UserControl
     {
         private const int NEURON_MAX_DIST = 40;
         private const int HORIZONTAL_OFFSET = 10;

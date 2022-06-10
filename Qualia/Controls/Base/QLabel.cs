@@ -2,8 +2,8 @@
 using System.Windows.Controls;
 
 namespace Qualia.Controls
-{ 
-    public class QLabel : Label
+{
+    sealed public class QLabel : Label
     {
         public QLabel()
         {

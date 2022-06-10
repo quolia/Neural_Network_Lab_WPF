@@ -9,7 +9,7 @@ namespace Qualia.Controls
 {
     using PointFunc = Func<DynamicStatistics.PlotPoints, DynamicStatistics.PlotPoint, long, Point>;
 
-    public partial class PlotterPresenter : UserControl
+    sealed public partial class PlotterPresenter : UserControl
     {
         private const int AXIS_OFFSET = 6;
         private bool _isBaseRedrawNeeded;

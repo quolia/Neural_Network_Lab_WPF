@@ -3,7 +3,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class InputBiasControl : NeuronControl
+    sealed public class InputBiasControl : NeuronControl
     {
         public InputBiasControl()
             : base(0, null, null)

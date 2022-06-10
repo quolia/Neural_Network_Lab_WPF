@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class HiddenLayerControl : LayerBase
+    sealed public partial class HiddenLayerControl : LayerBase
     {
         public HiddenLayerControl()
             : base(0, null, null)

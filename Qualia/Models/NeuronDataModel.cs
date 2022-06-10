@@ -3,7 +3,7 @@ using Tools;
 
 namespace Qualia
 {
-    public class NeuronDataModel : ListXNode<NeuronDataModel>
+    sealed public class NeuronDataModel : ListXNode<NeuronDataModel>
     {
         public readonly int Id;
         public long VisualId;
@@ -43,7 +43,7 @@ namespace Qualia
         public WeightDataModel WeightTo(NeuronDataModel neuronModel) => Weights[neuronModel.Id];
     }
 
-    public class WeightDataModel : ListXNode<WeightDataModel>
+    sealed public class WeightDataModel : ListXNode<WeightDataModel>
     {
         public readonly int Id;
         public double Weight;
@@ -57,7 +57,7 @@ namespace Qualia
         public void Add(double weight) => Weight += weight;
     }
 
-    public class ForwardNeuron : ListXNode<ForwardNeuron>
+    sealed public class ForwardNeuron : ListXNode<ForwardNeuron>
     {
         public readonly NeuronDataModel Neuron;
         public readonly WeightDataModel WeightModel;

@@ -5,7 +5,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class CountDotsControl : UserControl, IConfigParam
+    sealed public partial class CountDotsControl : UserControl, IConfigParam
     {
         private event Action OnChange = delegate { };
 

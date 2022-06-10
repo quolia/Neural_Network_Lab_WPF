@@ -7,7 +7,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class QPresenter : Panel
+    sealed public class QPresenter : Panel
     {
         private readonly VisualCollection _visuals;
 

@@ -13,7 +13,7 @@ using Qualia;
 
 namespace Tools
 {
-    public class LoopsLimit
+    sealed public class LoopsLimit
     {
         public int CurrentLimit;
         public readonly int OriginalLimit;
@@ -235,7 +235,7 @@ namespace Tools
         }
     }
 
-    public class Statistics
+    sealed public class Statistics
     {
         public long Rounds;
         public long CorrectRoundsTotal;
@@ -268,7 +268,7 @@ namespace Tools
         }
     }
 
-    public class DynamicStatistics
+    sealed public class DynamicStatistics
     {
         public DynamicStatistics CopyForRender;
 
@@ -294,7 +294,7 @@ namespace Tools
             CostData.Add(new PlotPoint(cost, now));
         }
 
-        public class PlotPoint : Tuple<double, long>
+        sealed public class PlotPoint : Tuple<double, long>
         {
             public PlotPoint(double value, long timeTicks)
                 : base(value, timeTicks)
@@ -332,7 +332,7 @@ namespace Tools
         public static long ErrorMatrix;
     }
 
-    public class InvalidValueException : Exception
+    sealed public class InvalidValueException : Exception
     {
         public InvalidValueException(Const.Param paramName, string value)
             : base($"Invalid value {paramName} = '{value}'.")

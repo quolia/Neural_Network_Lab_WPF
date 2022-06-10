@@ -6,7 +6,7 @@ using Tools;
 
 namespace Qualia
 {
-    public class NetworkDataModel : ListXNode<NetworkDataModel>
+    sealed public class NetworkDataModel : ListXNode<NetworkDataModel>
     {
         public readonly long VisualId;
         public readonly ListX<LayerDataModel> Layers;

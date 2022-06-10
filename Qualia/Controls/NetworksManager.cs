@@ -9,7 +9,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class NetworksManager
+    sealed public class NetworksManager
     {
         public readonly Config Config;
         public ListX<NetworkDataModel> NetworkModels;

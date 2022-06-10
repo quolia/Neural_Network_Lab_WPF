@@ -6,7 +6,7 @@ using Tools;
 
 namespace Qualia
 {
-    public partial class RandomizerViewer : WindowResizeControl
+    sealed public partial class RandomizerViewer : WindowResizeControl
     {
         private readonly string _randomizer;
         private readonly double? _A;

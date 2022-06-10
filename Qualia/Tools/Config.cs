@@ -16,7 +16,7 @@ namespace Tools
         void InvalidateValue();
     }
 
-    public class Config
+    sealed public class Config
     {
         public static Config Main = new Config("config.txt");
         public readonly string Name;

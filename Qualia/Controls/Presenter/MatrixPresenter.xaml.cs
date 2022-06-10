@@ -7,7 +7,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public partial class MatrixPresenter : UserControl
+    sealed public partial class MatrixPresenter : UserControl
     {
         private static readonly Typeface s_font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
         private readonly FormattedText _textOutput = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
@@ -185,7 +185,7 @@ namespace Qualia.Controls
         }
     }
 
-    public class ErrorMatrix : ListXNode<ErrorMatrix>
+    sealed public class ErrorMatrix : ListXNode<ErrorMatrix>
     {
         public long[] Input;
         public long[] Output;

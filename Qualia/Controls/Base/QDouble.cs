@@ -6,7 +6,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    public class QDouble : TextBox, IConfigParam
+    sealed public class QDouble : TextBox, IConfigParam
     {
         private Config _config;
 

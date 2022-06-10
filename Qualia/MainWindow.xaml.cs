@@ -16,7 +16,7 @@ using static Tools.Threads;
 
 namespace Qualia
 {
-    public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
+    sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
     {
         public static object ApplyChangesLocker = new object();
 
