@@ -18,6 +18,22 @@ namespace Tools
         public int CurrentLimit;
         public readonly int OriginalLimit;
 
+        public static int Min(ref LoopsLimit[] array)
+        {
+            int min = int.MaxValue;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                var loop = array[i];
+                if (loop.CurrentLimit < min)
+                {
+                    min = loop.CurrentLimit;
+                }
+            }
+
+            return min;
+        }
+
         public LoopsLimit(int limit)
         {
             CurrentLimit = limit;
@@ -106,15 +122,9 @@ namespace Tools
 
     public static class Extension
     {
-        public static bool Any<T>(this List<T> list)
+        public static bool All<T>(this List<T> list, Func<T, bool> predicate)
         {
-            return list.Count > 0;
-        }
-
-        public static bool All<T>(this List<T> list, Func<T, bool> predicate)// Predicate<T> value)
-        {
-            //return list .AsEnumerable().All(value);
-            return list.AsEnumerable().All(predicate);// (list as IEnumerable).All(value);// .AsEnumerable().All(value);
+            return list.AsEnumerable().All(predicate);
         }
 
         public static DispatcherOperation Dispatch(this UIElement element, Action action, DispatcherPriority priority)
@@ -334,6 +344,11 @@ namespace Tools
             public PlotPoint Last()
             {
                 return base[Count - 1];
+            }
+
+            public bool Any()
+            {
+                return Count > 0;
             }
 
             public PlotPoints Copy()

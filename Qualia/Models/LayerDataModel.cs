@@ -15,7 +15,5 @@ namespace Qualia
             Id = id;
             Range.For(neuronsCount, neuronId => Neurons.Add(new NeuronDataModel(neuronId, weightsCountPerNeuron)));
         }
-
-        public int NeuronsCount => Neurons.Count;
     }
 }

@@ -400,17 +400,15 @@ namespace Qualia
             //SetProcessorAffinity(processors);
             SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
-            var loopLimits = new List<LoopsLimit>()
+            var loopLimits = new LoopsLimit[3]
             {
                 new LoopsLimit(Settings.SkipRoundsToDrawErrorMatrix),
                 new LoopsLimit(Settings.SkipRoundsToDrawNetworks),
                 new LoopsLimit(Settings.SkipRoundsToDrawStatistics)
 
-            };//
-              //.OrderBy(limit => limit.OriginalLimit).ToList();
+            };
 
-            loopLimits.Sort(LoopsLimit.Comparer.Instance);
-            var currentLoopLimit = loopLimits[0].CurrentLimit;// .First();
+            var currentLoopLimit = LoopsLimit.Min(ref loopLimits);
 
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
@@ -448,7 +446,7 @@ namespace Qualia
                     {
                         _networksManager.PrepareModelsForRound();
 
-                        var networkModel = _networksManager.NetworkModels[0];
+                        var networkModel = _networksManager.NetworkModels.First;
                         while (networkModel != null)
                         {
                             if (!networkModel.IsEnabled)
@@ -502,7 +500,7 @@ namespace Qualia
                     {
                         var totalTicksElapsed = _startTime.Elapsed.Ticks;
 
-                        var networkModel = _networksManager.NetworkModels[0];
+                        var networkModel = _networksManager.NetworkModels.First;
                         while (networkModel != null)
                         {
                             if (!networkModel.IsEnabled)
@@ -562,12 +560,6 @@ namespace Qualia
                         currentLimit = loopLimit.CurrentLimit;
                     }
                 }
-                
-                //loopLimits = loopLimits.OrderBy(limit => limit.CurrentLimit).ToList();
-                //currentLoopLimit = loopLimits.First();
-
-                //loopLimits.Sort(LoopsLimit.Comparer.Instance);
-                //currentLoopLimit = loopLimits[0];
 
                 if (isRendering)
                 {
@@ -609,7 +601,7 @@ namespace Qualia
                         //lock (ApplyChangesLocker)
                         {
                             networkModelToRender = selectedNetworkModel.GetCopyForRender();
-                            CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels[0]);
+                            CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
                         }
                     }
 
@@ -979,7 +971,7 @@ namespace Qualia
             {
                 lock (ApplyChangesLocker)
                 {
-                    CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels[0]);
+                    CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels.First);
                     CtlNetworkPresenter.ClearCache();
                     CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn, CtlShowOnlyUnchangedWeights.IsOn);
                     CtlPlotPresenter.Draw(_networksManager.NetworkModels, _networksManager.SelectedNetworkModel);

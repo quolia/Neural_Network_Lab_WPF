@@ -114,23 +114,15 @@ namespace Qualia.Controls
 
             var ctlNeurons = GetNeuronsControls().Where(ctlNeuron => ctlNeuron.IsBias);
             Config.Set(Const.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
-            
-            foreach (var ctlNeuron in ctlNeurons)
-            {
-                ctlNeuron.SaveConfig();
-            }
+            ctlNeurons.ToList().ForEach(neuron => neuron.SaveConfig());
         }
 
         public override void VanishConfig()
         {
             Config.Remove(Const.Param.Neurons);
             _configParams.ForEach(param => param.VanishConfig());
-            //GetNeuronsControls().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
             var ctlNeurons = GetNeuronsControls();
-            foreach (var ctlNeuron in ctlNeurons)
-            {
-                ctlNeuron.VanishConfig();
-            }
+            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
         }
 
         private void CtlMenuAddBias_Click(object sender, EventArgs e)

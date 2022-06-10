@@ -321,16 +321,16 @@ namespace Qualia.Controls
                         }
                     }
                     
-                    if (!isCopy && prevLayerModel != null && prevLayerModel.NeuronsCount > 0)
+                    if (!isCopy && prevLayerModel != null && prevLayerModel.Neurons.Count > 0)
                     {
-                        neuronModel.ForwardHelper = new ListX<ForwardNeuron>(prevLayerModel.NeuronsCount);
+                        neuronModel.WeightsToNextLayer = new ListX<ForwardNeuron>(prevLayerModel.Neurons.Count);
 
-                        var prevNeuronModel = prevLayerModel.Neurons[0];
+                        var prevNeuronModel = prevLayerModel.Neurons.First;
                         while (prevNeuronModel != null)
                         {
                             if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))
                             {
-                                neuronModel.ForwardHelper.Add(new ForwardNeuron(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
+                                neuronModel.WeightsToNextLayer.Add(new ForwardNeuron(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
                             }
 
                             prevNeuronModel = prevNeuronModel.Next;

@@ -9,16 +9,13 @@ namespace Tools
     {
         public static void FlatRandom(NetworkDataModel networkModel, double? param)
         {
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         weight.Weight = Rand.GetFlatRandom(param.HasValue ? param.Value : 1);
@@ -34,16 +31,13 @@ namespace Tools
 
         public static void GaussRandom(NetworkDataModel networkModel, double? param)
         {
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         weight.Weight = Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1);
@@ -59,16 +53,13 @@ namespace Tools
 
         public static void AbsGaussRandom(NetworkDataModel networkModel, double? param)
         {
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, param.HasValue ? param.Value : 1));
@@ -89,16 +80,13 @@ namespace Tools
                 param = 1;
             }
 
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         weight.Weight = -param.Value / 2 + param.Value * Rand.GetFlatRandom();
@@ -119,16 +107,13 @@ namespace Tools
                 param = 1;
             }
 
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         weight.Weight = param.Value * InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
@@ -149,16 +134,13 @@ namespace Tools
                 param = 1;
             }
 
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         if (layer.Previous == null)
@@ -189,16 +171,13 @@ namespace Tools
                 param = 1;
             }
 
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         if (layer.Previous == null)
@@ -227,16 +206,13 @@ namespace Tools
                 param = 1;
             }
 
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         if (layer.Previous == null)
@@ -266,16 +242,13 @@ namespace Tools
             {
                 param = 1;
             }
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         if (layer.Previous == null)
@@ -304,16 +277,13 @@ namespace Tools
                 param = 0;
             }
 
-            var layer = networkModel.Layers.FirstOrDefault(); // [0]
-            //foreach (var layer in networkModel.Layers)
+            var layer = networkModel.Layers.First;
             while (layer != null)
             {
-                var neuron = layer.Neurons.FirstOrDefault(); // [0]
-                //foreach (var neuron in layer.Neurons)
+                var neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var weight = neuron.Weights.FirstOrDefault(); // [0]
-                    //foreach (var weight in neuron.Weights)
+                    var weight = neuron.Weights.First;
                     while (weight != null)
                     {
                         weight.Weight = param.Value;

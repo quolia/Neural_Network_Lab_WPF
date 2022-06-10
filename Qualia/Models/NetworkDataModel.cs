@@ -53,7 +53,7 @@ namespace Qualia
 
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
-            var maxNeuronModel = Layers.Last.Neurons[0];
+            var maxNeuronModel = Layers.Last.Neurons.First;
             var neuronModel = maxNeuronModel;
 
             while (neuronModel != null)
@@ -71,7 +71,7 @@ namespace Qualia
 
         public void ActivateFirstLayer()
         {
-            Layers[0].Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1);
+            Layers.First.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1);
             Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
         }
 
@@ -83,17 +83,17 @@ namespace Qualia
 
         public void FeedForward2()
         {
-            var layerModel = Layers[0];
+            var layerModel = Layers.First;
             while (layerModel != Layers.Last)
             {
-                var nextNeuron = layerModel.Next.Neurons[0];
+                var nextNeuron = layerModel.Next.Neurons.First;
                 while (nextNeuron != null)
                 {
                     if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
                     {
                         nextNeuron.Activation = 0;
 
-                        var neuron = layerModel.Neurons[0];
+                        var neuron = layerModel.Neurons.First;
                         while (neuron != null)
                         {
                             if (neuron.IsBias)
@@ -110,7 +110,7 @@ namespace Qualia
                     {
                         nextNeuron.Activation = 0;
 
-                        var neuron = layerModel.Neurons[0];
+                        var neuron = layerModel.Neurons.First;
                         while (neuron != null)
                         {
                             if (neuron.Activation != 0)
@@ -141,99 +141,99 @@ namespace Qualia
 
         unsafe public void FeedForward()
         {
-            var layerModel = Layers[0];
-            var lastLayerModel = Layers.Last;
+            var layer = Layers.First;
+            var lastLayer = Layers.Last;
             double sum;
 
-            while (layerModel != lastLayerModel)
+            while (layer != lastLayer)
             {
-                var neuronModel = layerModel.Next.Neurons[0];
-                while (neuronModel != null)
+                var neuron = layer.Next.Neurons.First;
+                while (neuron != null)
                 {
                     sum = 0;
-                    var AxW = neuronModel.ForwardHelper[0];
+                    var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
                         sum += AxW.AxW;
                         AxW = AxW.Next;
                     }
 
-                    neuronModel.Activation = neuronModel.ActivationFunction.Do(sum, neuronModel.ActivationFuncParamA);
-                    neuronModel = neuronModel.Next;
+                    neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParamA);
+                    neuron = neuron.Next;
                 }
 
-                layerModel = layerModel.Next;
+                layer = layer.Next;
             }
         }
 
         unsafe public void BackPropagation()
         {
-            var lastLayerModel = Layers.Last;
-            var neuronModel = lastLayerModel.Neurons[0];
+            var lastLayer = Layers.Last;
+            var neuron = lastLayer.Neurons.First;
 
-            while (neuronModel != null)
+            while (neuron != null)
             {
-                neuronModel.Error = CostFunction.Derivative(this, neuronModel) * neuronModel.ActivationFunction.Derivative(neuronModel.Activation, neuronModel.ActivationFuncParamA);
-                neuronModel = neuronModel.Next;
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron = neuron.Next;
             }
 
-            var layerModel = lastLayerModel;
-            var finalLayerModel = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
+            var layer = lastLayer;
+            var finalLayer = IsAdjustFirstLayerWeights ? Layers.First : Layers.First.Next;
 
-            while (layerModel != finalLayerModel)
+            while (layer != finalLayer)
             {
-                neuronModel = layerModel.Neurons[0];
-                while (neuronModel != null)
+                neuron = layer.Neurons.First;
+                while (neuron != null)
                 {
-                    var AxW = neuronModel.ForwardHelper[0];
+                    var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
                         var prevNeuron = AxW.Neuron;
                         if (prevNeuron.Activation != 0)
                         {
-                            prevNeuron.Error += neuronModel.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
+                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
                         }
 
                         AxW = AxW.Next;
                     }
 
-                    neuronModel = neuronModel.Next;
+                    neuron = neuron.Next;
                 }
 
-                layerModel = layerModel.Previous;
+                layer = layer.Previous;
             }
 
             // update weights
 
-            layerModel = lastLayerModel;
-            while (layerModel != finalLayerModel)
+            layer = lastLayer;
+            while (layer != finalLayer)
             {
-                neuronModel = layerModel.Neurons[0];
-                while (neuronModel != null)
+                neuron = layer.Neurons.First;
+                while (neuron != null)
                 {
-                    var AxW = neuronModel.ForwardHelper[0];
+                    var AxW = neuron.WeightsToNextLayer.First;
                     while (AxW != null)
                     {
                         if (AxW.Neuron.Activation != 0)
                         {
-                            AxW.WeightModel.Weight += neuronModel.Error * AxW.Neuron.Activation * LearningRate;
+                            AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
                         }
 
                         AxW = AxW.Next;
                     }
 
-                    neuronModel.Error = 0;
-                    neuronModel = neuronModel.Next;
+                    neuron.Error = 0;
+                    neuron = neuron.Next;
                 }
 
-                layerModel = layerModel.Previous;
+                layer = layer.Previous;
             }
         }
 
         unsafe public void BackPropagation2()
         {
             var lastLayer = Layers.Last;
-            var neuron = lastLayer.Neurons[0];
+            var neuron = lastLayer.Neurons.First;
 
             while (neuron != null)
             {
@@ -246,12 +246,12 @@ namespace Qualia
 
             while (layer != finalLayer)
             {
-                var neuronPrev = layer.Previous.Neurons[0];
+                var neuronPrev = layer.Previous.Neurons.First;
                 while (neuronPrev != null)
                 {
                     neuronPrev.Error = 0;
 
-                    neuron = layer.Neurons[0];
+                    neuron = layer.Neurons.First;
                     while (neuron != null)
                     {
                         if (neuronPrev.IsBias)
@@ -280,10 +280,10 @@ namespace Qualia
             layer = lastLayer;
             while (layer != finalLayer)
             {
-                var neuronPrev = layer.Previous.Neurons[0];
+                var neuronPrev = layer.Previous.Neurons.First;
                 while (neuronPrev != null)
                 {
-                    neuron = layer.Neurons[0];
+                    neuron = layer.Neurons.First;
                     while (neuron != null)
                     {
                         if (neuronPrev.Activation != 0)
@@ -313,15 +313,13 @@ namespace Qualia
             newNetworkModel.Statistics = Statistics;
             newNetworkModel.DynamicStatistics = DynamicStatistics;
 
-            var newLayerModel = newNetworkModel.Layers[0];
-            //foreach (var newLayerModel in newNetworkModel.Layers)
+            var newLayerModel = newNetworkModel.Layers.First;
             while (newLayerModel != null)
             {
                 var layerModel = Layers.Find(l => l.VisualId == newLayerModel.VisualId);
                 if (layerModel != null)
                 {
-                    var newNeuronModel = newLayerModel.Neurons[0];
-                    //foreach (var newNeuronModel in newLayerModel.Neurons)
+                    var newNeuronModel = newLayerModel.Neurons.First;
                     while (newNeuronModel != null)
                     {
                         var neuronModel = layerModel.Neurons.Find(n => n.VisualId == newNeuronModel.VisualId);
@@ -330,8 +328,7 @@ namespace Qualia
                             double initValue = InitializeMode.Helper.Invoke(newNeuronModel.WeightsInitializer, newNeuronModel.WeightsInitializerParamA);
                             if (!InitializeMode.Helper.IsSkipValue(initValue))
                             {
-                                var newWeightModel = newNeuronModel.Weights[0];
-                                //foreach (var newWeightModel in newNeuronModel.Weights)
+                                var newWeightModel = newNeuronModel.Weights.First;
                                 while (newWeightModel != null)
                                 {
                                     newWeightModel.Weight = initValue;
@@ -341,8 +338,7 @@ namespace Qualia
                         }
                         else
                         {
-                            var newWeightModel = newNeuronModel.Weights[0];
-                            //foreach (var newWeightModel in newNeuronModel.Weights)
+                            var newWeightModel = newNeuronModel.Weights.First;
                             while (newWeightModel != null)
                             {
                                 var weightModel = neuronModel.Weights.Find(w => w.Id == newWeightModel.Id);
@@ -376,13 +372,13 @@ namespace Qualia
 
         public NetworkDataModel GetCopyForRender()
         {
-            var layerModel = Layers[0];
-            var layerModelCopy = _copy.Layers[0];
+            var layerModel = Layers.First;
+            var layerModelCopy = _copy.Layers.First;
 
             while (layerModel != null)
             {
-                var neuronModel = layerModel.Neurons[0];
-                var neuronModelCopy = layerModelCopy.Neurons[0];
+                var neuronModel = layerModel.Neurons.First;
+                var neuronModelCopy = layerModelCopy.Neurons.First;
 
                 while (neuronModel != null)
                 {
@@ -390,8 +386,8 @@ namespace Qualia
 
                     if (neuronModel.Activation != 0 && layerModel != Layers.Last)
                     {
-                        var weightModel = neuronModel.Weights[0];
-                        var weightModelCopy = neuronModelCopy.Weights[0];
+                        var weightModel = neuronModel.Weights.First;
+                        var weightModelCopy = neuronModelCopy.Weights.First;
 
                         while (weightModel != null)
                         {

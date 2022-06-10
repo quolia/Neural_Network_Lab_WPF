@@ -27,9 +27,6 @@ namespace Tools
         }
     }
 
-    //
-    // Taken from Stackoverflow
-    //
     public sealed class GaussianRandom
     {
         private bool _hasDeviate;
@@ -72,7 +69,8 @@ namespace Tools
                 v2 = 2 * _random.NextDouble() - 1;
                 squared = v1 * v1 + v2 * v2;
                 // ensure within the unit circle
-            } while (squared >= 1 || squared == 0);
+            }
+            while (squared >= 1 || squared == 0);
 
             // calculate polar tranformation for each deviate
             var polar = Math.Sqrt(-2 * Math.Log(squared) / squared);
@@ -82,25 +80,6 @@ namespace Tools
 
             // return second deviate
             return v1 * polar * sigma + mu;
-        }
-    }
-
-    public static class Uniq
-    {
-        public static double[] GetUniq(double spread, long count)
-        {
-            var result = new double[count];
-
-            double step = 1 / (double)count;
-            double a = step;
-
-            for (long c = 0; c < count; ++c)
-            {
-                result[c] = spread * a;
-                a += step;
-            }
-
-            return result;
         }
     }
 }

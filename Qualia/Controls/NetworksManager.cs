@@ -234,8 +234,8 @@ namespace Qualia.Controls
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {
             var newModels = new ListX<NetworkDataModel>(networkModels.Count);
-            var newNetworkModel = networkModels[0];
-            //foreach (var newNetworkModel in networkModels)
+            var newNetworkModel = networkModels.First;
+
             while (newNetworkModel != null)
             {
                 var networkModel = NetworkModels.Find(model => model.VisualId == newNetworkModel.VisualId);
@@ -264,7 +264,7 @@ namespace Qualia.Controls
 
         public void PrepareModelsForRound()
         {
-            var baseNetwork = NetworkModels[0];
+            var baseNetwork = NetworkModels.First;
             _networkTask.Do(baseNetwork);
 
             // copy first layer state and last layer targets to other networks
@@ -278,8 +278,8 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                var baseNeuron = baseNetwork.Layers[0].Neurons[0];
-                var neuron = network.Layers[0].Neurons[0];
+                var baseNeuron = baseNetwork.Layers.First.Neurons.First;
+                var neuron = network.Layers.First.Neurons.First;
 
                 while (neuron != null)
                 {
@@ -292,8 +292,8 @@ namespace Qualia.Controls
                     baseNeuron = baseNeuron.Next;
                 }
 
-                baseNeuron = baseNetwork.Layers.Last.Neurons[0];
-                neuron = network.Layers.Last.Neurons[0];
+                baseNeuron = baseNetwork.Layers.Last.Neurons.First;
+                neuron = network.Layers.Last.Neurons.First;
 
                 while (neuron != null)
                 {

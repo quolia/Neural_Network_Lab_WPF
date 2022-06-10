@@ -28,8 +28,6 @@ namespace Tools
     {
         sealed public class CountDots : INetworkTask
         {
-            private Config _config;
-
             public static INetworkTask Instance = new CountDots();
             
             private static readonly CountDotsControl s_control = new CountDotsControl();
@@ -62,7 +60,6 @@ namespace Tools
 
             public void SetConfig(Config config)
             {
-                _config = config;
                 s_control.SetConfig(config);
             }
 
@@ -113,11 +110,10 @@ namespace Tools
                 }
                 else
                 {
-                    randNumber = Rand.Flat.Next(_minNumber, _maxNumber + 1);
+                    randNumber = Rand.Flat.Next(0, _maxNumber + 1 - _minNumber);
                 }
 
-                networkModel.TargetOutput = randNumber - _minNumber;
-                randNumber = networkModel.TargetOutput;
+                networkModel.TargetOutput = randNumber;
 
                 var neurons = networkModel.Layers.First.Neurons;
                 var neuron = neurons.First;
@@ -238,12 +234,12 @@ namespace Tools
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
 
-                for (int ind = 0; ind < networkModel.Layers[0].Neurons.Count; ++ind)
+                for (int ind = 0; ind < networkModel.Layers.First.Neurons.Count; ++ind)
                 {
-                    networkModel.Layers[0].Neurons[ind].Activation = networkModel.InputInitial1 * image.Image[ind];
+                    networkModel.Layers.First.Neurons[ind].Activation = networkModel.InputInitial1 * image.Image[ind];
                 }
 
-                var neuron = networkModel.Layers.Last.Neurons[0];
+                var neuron = networkModel.Layers.Last.Neurons.First;
                 while (neuron != null)
                 {
                     neuron.Target = (neuron.Id == image.Label) ? 1 : 0;

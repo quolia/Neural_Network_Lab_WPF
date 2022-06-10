@@ -127,7 +127,7 @@ namespace Qualia.Controls
             }
 
             _threshold = networkModel.InputThreshold;
-            var count = networkModel.Layers[0].Neurons.CountIf(n => !n.IsBias);
+            var count = networkModel.Layers.First.Neurons.CountIf(n => !n.IsBias);
 
             if (_data == null || _data.Length != count)
             {
@@ -139,7 +139,7 @@ namespace Qualia.Controls
                 Array.Clear(_data, 0, _data.Length);
             }
 
-            var neuronModel = networkModel.Layers[0].Neurons[0];
+            var neuronModel = networkModel.Layers.First.Neurons.First;
             while (neuronModel != null)
             {
                 if (!neuronModel.IsBias)
@@ -241,7 +241,7 @@ namespace Qualia.Controls
             }
 
             int ind = 0;
-            var neuronModel = networkModel.Layers[0].Neurons[0];
+            var neuronModel = networkModel.Layers.First.Neurons.First;
 
             while (neuronModel != null)
             {

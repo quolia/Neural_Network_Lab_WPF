@@ -25,7 +25,7 @@ namespace Tools
             public double Do(NetworkDataModel networkModel)
             {
                 double sum = 0;
-                var neuronModel = networkModel.Layers.Last.Neurons[0];
+                var neuronModel = networkModel.Layers.Last.Neurons.First;
 
                 while (neuronModel != null)
                 {

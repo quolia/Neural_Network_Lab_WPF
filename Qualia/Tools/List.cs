@@ -1,92 +1,42 @@
-﻿using Qualia;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Tools
 {
-    public class ListX<T> : List<T> where T : ListXNode<T>
+    public class ListX<T> where T : ListXNode<T>
     {
         public T First;// { get; private set; }
         public T Last;// { get; private set; }
 
-        private T[] _array;// Array.Empty<T>();
-
-        /*
-        internal T FirstOrDefault()
-        {
-            if (Last == null)
-            {
-                return null;
-            }
-
-            return this[0];
-        }
-        */
-
-        //private T[] _array = Array.Empty<T>();
+        private T[] _array = Array.Empty<T>();
 
         public ListX(int capacity)
-            : base(capacity)
+            //: base(capacity)
         {
             //
         }
 
-        /*
-        public ListX(List<T> collection)
-            : base(collection)
+        public T this[int index] => _array[index];
+
+        public int Count => _array.Length;
+
+        public void Add(T node)
         {
-            if (Count > 0)
-            {
-                Update();
-            }
-        }
-        */
-
-        public new T this[int index]
-        {
-            get
-            {
-                return _array[index];
-            }
-
-            set
-            {
-                _array[index] = value;
-            }
-        }
-
-        public new void Add(T node)
-        {
-            base.Add(node);
-
             if (Last != null)
             { 
                 Last.Next = node;
                 node.Previous = Last;
             }
 
-            Update();
+            Array.Resize(ref _array, Count + 1);
+            _array[Count - 1] = node;
+
+            First = _array[0];
+            Last = node;
         }
 
-        private void Update()
+        internal T FirstOrDefault(Predicate<T> match)
         {
-            _array = new T[Count];
-            CopyTo(_array);
-
-            First = this[0];
-            Last = this[Count - 1];
-        }
-
-        //public T Last() => this[Count - 1];
-
-        //public bool Any() => Count > 0;
-
-        // Fisher-Yates shuffle.
-
-
-        internal T FirstOrDefault(Predicate<T> value)
-        {
-            return Find(value);
+            return Array.Find(_array, match);
         }
 
         internal bool Any()
@@ -94,9 +44,9 @@ namespace Tools
             return First != null;
         }
 
-        internal bool Any(Predicate<T> value)
+        internal bool Any(Predicate<T> match)
         {
-            return Find(value) != null;
+            return Array.Find(_array, match) != null;
         }
 
         internal int CountIf(Func<T, bool> value)
@@ -135,6 +85,16 @@ namespace Tools
             }
 
             return max;
+        }
+
+        internal void ForEach(Action<T> action)
+        {
+            Array.ForEach(_array, action);
+        }
+
+        internal T Find(Predicate<T> match)
+        {
+            return Array.Find(_array, match);
         }
     }
 

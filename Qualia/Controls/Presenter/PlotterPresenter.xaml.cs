@@ -52,7 +52,7 @@ namespace Qualia.Controls
                 throw new ArgumentException("No network models.", nameof(networkModels));
             }
 
-            var networkModel = networkModels[0];
+            var networkModel = networkModels.First;
 
             while (networkModel != null)
             {
@@ -91,7 +91,7 @@ namespace Qualia.Controls
                 throw new ArgumentException("No network models.", nameof(networkModels));
             }
 
-            var networkModel = networkModels[0];
+            var networkModel = networkModels.First;
 
             while (networkModel != null)
             { 
