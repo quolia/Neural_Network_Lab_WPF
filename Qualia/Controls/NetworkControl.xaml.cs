@@ -253,8 +253,8 @@ namespace Qualia.Controls
                 RandomizeMode = RandomizeMode,
                 RandomizerParamA = RandomizerParamA,
                 LearningRate = LearningRate,
-                InputInitial0 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
-                InputInitial1 = ActivationFunction.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA),
+                InputInitial0 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParamA),
+                InputInitial1 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParamA),
                 CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
                 //CostFunctionDerivative = CostFunction.Helper.GetDerivative(CtlCostFunction.SelectedValue.ToString()),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
@@ -283,7 +283,7 @@ namespace Qualia.Controls
                     neuronModel.IsBias = ctlNeurons[neuronInd].IsBias;
                     neuronModel.IsBiasConnected = ctlNeurons[neuronInd].IsBiasConnected;
 
-                    neuronModel.ActivationFunction = ActivationFunction.Helper.GetInstance(ctlNeurons[neuronInd].ActivationFunc);
+                    neuronModel.ActivationFunction = ActivationFunctionList.Helper.GetInstance(ctlNeurons[neuronInd].ActivationFunc);
                     neuronModel.ActivationFuncParamA = ctlNeurons[neuronInd].ActivationFuncParamA;
 
 

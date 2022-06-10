@@ -34,7 +34,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            ActivationFunction.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunction.LogisticSigmoid));
+            ActivationFunctionList.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunctionList.LogisticSigmoid));
             _configParams.ForEach(param => param.LoadConfig());
 
             StateChanged();

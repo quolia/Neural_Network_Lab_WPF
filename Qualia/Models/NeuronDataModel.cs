@@ -20,7 +20,7 @@ namespace Qualia
         public string WeightsInitializer;
         public double? WeightsInitializerParamA;
 
-        public IActivationFunction ActivationFunction;
+        public ActivationFunction ActivationFunction;
         public double? ActivationFuncParamA;
 
         public readonly ListX<WeightDataModel> Weights;

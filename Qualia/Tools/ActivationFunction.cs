@@ -7,120 +7,113 @@ namespace Tools
 {
     public delegate double ActivationFunctionDelegate(double x, double? a);
 
-    public class IActivationFunction
+    public class ActivationFunction
     {
         public ActivationFunctionDelegate Do;
         public ActivationFunctionDelegate Derivative;
 
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public double Do(double x, double? a) => _do(x, a);
-
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //;public double Derivative(double x, double? a) => _derivative(x, a);
+        public ActivationFunction(ActivationFunctionDelegate _do, ActivationFunctionDelegate _derivative)
+        {
+            Do = _do;
+            Derivative = _derivative;
+        }
     }
 
-    public static class ActivationFunction
+    public static class ActivationFunctionList
     {
-        sealed public class None : IActivationFunction
+        sealed public class None : ActivationFunction
         {
             public static readonly None Instance = new None();
 
             private None()
+                :base(_do, _derivative)
             {
-                base.Do = None.Do;
-                base.Derivative = None.Derivative;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a) => x;
+            private static double _do(double x, double? a) => x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a) => x;
+            private static double _derivative(double x, double? a) => x;
         }
 
-        sealed public class LogisticSigmoid : IActivationFunction
+        sealed public class LogisticSigmoid : ActivationFunction
         {
             public static readonly LogisticSigmoid Instance = new LogisticSigmoid();
 
             private LogisticSigmoid()
+                : base(_do, _derivative)
             {
-                base.Do = LogisticSigmoid.Do;
-                base.Derivative = LogisticSigmoid.Derivative;
             }
 
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a) => 1 / (1 + Math.Exp(-x));
+            private static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a) => x * (1 - x);
+            private static double _derivative(double x, double? a) => x * (1 - x);
         }
 
-        sealed public class SymmetricSigmoid : IActivationFunction
+        sealed public class SymmetricSigmoid : ActivationFunction
         {
             public static readonly SymmetricSigmoid Instance = new SymmetricSigmoid();
 
             private SymmetricSigmoid()
+                : base(_do, _derivative)
             {
-                base.Do = SymmetricSigmoid.Do;
-                base.Derivative = SymmetricSigmoid.Derivative;
             }
 
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
+            private static double _do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a) => 2 * LogisticSigmoid.Do(x, null) * (1 - LogisticSigmoid.Do(x, null));
+            private static double _derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
         }
 
-        sealed public class Softsign : IActivationFunction
+        sealed public class Softsign : ActivationFunction
         {
             public static readonly Softsign Instance = new Softsign();
 
             private Softsign()
+                : base(_do, _derivative)
             {
-                base.Do = Softsign.Do;
-                base.Derivative = Softsign.Derivative;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a) => x / (1 + Math.Abs(x));
+            private static double _do(double x, double? a) => x / (1 + Math.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a) => throw new InvalidOperationException();
+            private static double _derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
-        sealed public class Tanh : IActivationFunction
+        sealed public class Tanh : ActivationFunction
         {
             public static readonly Tanh Instance = new Tanh();
 
             private Tanh()
+                : base(_do, _derivative)
             {
-                base.Do = Tanh.Do;
-                base.Derivative = Tanh.Derivative;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+            private static double _do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a) => x * (2 - x);
+            private static double _derivative(double x, double? a) => x * (2 - x);
         }
 
-        sealed public class ReLu : IActivationFunction
+        sealed public class ReLu : ActivationFunction
         {
             public static readonly ReLu Instance = new ReLu();
 
             private ReLu()
+                : base(_do, _derivative)
             {
-                base.Do = ReLu.Do;
-                base.Derivative = ReLu.Derivative;
             }
 
-
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a)
+            private static double _do(double x, double? a)
             {
                 if (!a.HasValue)
                 {
@@ -131,7 +124,7 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a)
+            private static double _derivative(double x, double? a)
             {
                 if (!a.HasValue)
                 {
@@ -142,19 +135,17 @@ namespace Tools
             }
         }
 
-        sealed public class StepConst : IActivationFunction
+        sealed public class StepConst : ActivationFunction
         {
             public static readonly StepConst Instance = new StepConst();
 
             private StepConst()
+                : base(_do, _derivative)
             {
-                base.Do = StepConst.Do;
-                base.Derivative = StepConst.Derivative;
             }
 
-
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? a)
+            private static double _do(double x, double? a)
             {
                 if (!a.HasValue)
                 {
@@ -165,29 +156,24 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? a) => 0;
+            private static double _derivative(double x, double? a) => 0;
         }
 
         internal static class Helper
         {
             public static string[] GetItems()
             {
-                return typeof(ActivationFunction).GetNestedTypes().Where(c => typeof(IActivationFunction).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
+                return typeof(ActivationFunctionList).GetNestedTypes().Where(c => typeof(ActivationFunction).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
             }
 
-            public static IActivationFunction GetInstance(string activationFunctionName)
+            public static ActivationFunction GetInstance(string activationFunctionName)
             {
-                return (IActivationFunction)typeof(ActivationFunction).GetNestedTypes().Where(c => c.Name == activationFunctionName).First().GetField("Instance").GetValue(null);
+                return (ActivationFunction)typeof(ActivationFunctionList).GetNestedTypes().Where(c => c.Name == activationFunctionName).First().GetField("Instance").GetValue(null);
             }
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
             {
                 Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
-            }
-
-            public static ActivationFunctionDelegate GetDelegate(string methodName)
-            {
-                return (ActivationFunctionDelegate)Delegate.CreateDelegate(typeof(ActivationFunctionDelegate), typeof(ActivationFunction).GetMethod(methodName));
             }
         }
     }
