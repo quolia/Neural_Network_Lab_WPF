@@ -95,14 +95,15 @@ namespace Tools
 
             public void Do(NetworkDataModel networkModel)
             {
-                var shuffled = networkModel.Layers[0].ShuffledNeurons;
-                shuffled.Shuffle();
+                var shuffled = networkModel.Layers.First.GetShuffledNeurons();
+
+                int randNumber;
 
                 if (_isGaussianDistribution)
                 {
                     double median = ((double)_maxNumber + _minNumber) / 2;
+                    randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, (median - 2) / 2));
 
-                    var randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(median, (median - 2) / 2));
                     if (randNumber < _minNumber)
                     {
                         randNumber = _minNumber;
@@ -111,39 +112,25 @@ namespace Tools
                     {
                         randNumber = _maxNumber;
                     }
-
-                    for (int ind = 0; ind < shuffled.Count; ++ind)
-                    {
-                        shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
-                    }
-
-                    var neuron = networkModel.Layers.Last.Neurons[0];
-                    while (neuron != null)
-                    {
-                        neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
-                        neuron = neuron.Next;
-                    }
-
-                    networkModel.TargetOutput = randNumber - _minNumber;
                 }
                 else
                 {
-                    var randNumber = Rand.Flat.Next(_minNumber, _maxNumber + 1);
-
-                    for (int ind = 0; ind < shuffled.Count; ++ind)
-                    {
-                        shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
-                    }
-
-                    var neuron = networkModel.Layers.Last.Neurons[0];
-                    while (neuron != null)
-                    {
-                        neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
-                        neuron = neuron.Next;
-                    }
-
-                    networkModel.TargetOutput = randNumber - _minNumber;
+                    randNumber = Rand.Flat.Next(_minNumber, _maxNumber + 1);
                 }
+
+                for (int ind = 0; ind < shuffled.Length; ++ind)
+                {
+                    shuffled[ind].Activation = ind < randNumber ? networkModel.InputInitial1 : networkModel.InputInitial0;
+                }
+
+                var neuron = networkModel.Layers.Last.Neurons.First;
+                while (neuron != null)
+                {
+                    neuron.Target = (neuron.Id == randNumber - _minNumber) ? 1 : 0;
+                    neuron = neuron.Next;
+                }
+
+                networkModel.TargetOutput = randNumber - _minNumber;
             }
 
             public void VanishConfig()

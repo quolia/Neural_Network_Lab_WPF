@@ -6,11 +6,12 @@ namespace Tools
 {
     public class ListX<T> : List<T> where T : ListXNode<T>
     {
-        //public T First { get; private set; }
+        public T First;// { get; private set; }
         public T Last;// { get; private set; }
 
-        private T[] _array = Array.Empty<T>();
+        private T[] _array;// Array.Empty<T>();
 
+        /*
         internal T FirstOrDefault()
         {
             if (Last == null)
@@ -20,6 +21,7 @@ namespace Tools
 
             return this[0];
         }
+        */
 
         //private T[] _array = Array.Empty<T>();
 
@@ -29,15 +31,17 @@ namespace Tools
             //
         }
 
-        public ListX(IEnumerable<T> collection)
+        /*
+        public ListX(List<T> collection)
             : base(collection)
         {
             if (Count > 0)
             {
                 Update();
-                Last = this[Count - 1];
             }
         }
+        */
+
         public new T this[int index]
         {
             get
@@ -55,20 +59,22 @@ namespace Tools
         {
             base.Add(node);
 
-            if (Count > 1)
-            {
+            if (Last != null)
+            { 
                 Last.Next = node;
                 node.Previous = Last;
             }
 
-            Last = node;
             Update();
         }
 
         private void Update()
         {
             _array = new T[Count];
-            CopyTo(_array, 0);
+            CopyTo(_array);
+
+            First = this[0];
+            Last = this[Count - 1];
         }
 
         //public T Last() => this[Count - 1];
@@ -76,16 +82,7 @@ namespace Tools
         //public bool Any() => Count > 0;
 
         // Fisher-Yates shuffle.
-        public void Shuffle()
-        {
-            int n = Count;
-            while (n > 1)
-            {
-                n--;
-                int k = Rand.Flat.Next(n + 1);
-                (this[k], this[n]) = (this[n], this[k]);
-            }
-        }
+
 
         internal T FirstOrDefault(Predicate<T> value)
         {
@@ -94,7 +91,7 @@ namespace Tools
 
         internal bool Any()
         {
-            return Last != null;
+            return First != null;
         }
 
         internal bool Any(Predicate<T> value)
@@ -106,7 +103,7 @@ namespace Tools
         {
             int count = 0;
 
-            var node = this[0];
+            var node = First;
 
             while (node != null)
             {
@@ -125,7 +122,7 @@ namespace Tools
         {
             float max = 0;
 
-            var node = this[0];
+            var node = First;
             while (node != null)
             {
                 var v = value(node);

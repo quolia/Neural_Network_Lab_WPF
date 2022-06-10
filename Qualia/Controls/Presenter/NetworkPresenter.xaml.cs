@@ -78,7 +78,7 @@ namespace Qualia.Controls
             double threshold = networkModel.Layers[0] == layerModel1 ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuronModel = null;
-            NeuronDataModel neuronModel1 = layerModel1.Neurons.FirstOrDefault(); // [0]
+            NeuronDataModel neuronModel1 = layerModel1.Neurons.First; // [0]
             while (neuronModel1 != null)
             {
                 if (!_coordinator.ContainsKey(neuronModel1))
@@ -239,7 +239,7 @@ namespace Qualia.Controls
             double threshold = networkModel.Layers[0] == layerModel ? networkModel.InputThreshold : 0;
 
             NeuronDataModel prevNeuron = null;
-            NeuronDataModel neuronModel = layerModel.Neurons.FirstOrDefault(); // [0]
+            NeuronDataModel neuronModel = layerModel.Neurons.First; // [0]
             //foreach (var neuronModel in layerModel.Neurons)
             while (neuronModel != null)
             {
