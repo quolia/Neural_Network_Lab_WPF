@@ -43,7 +43,7 @@ namespace Qualia.Controls
 
         public int LayerDistance(NetworkDataModel model)
         {
-            if (model == null)
+            if (model is null)
             {
                 throw new ArgumentNullException(nameof(model));
             }

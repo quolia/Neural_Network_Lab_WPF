@@ -41,7 +41,7 @@ namespace Qualia.Controls
 
         public void Vanish(ListX<NetworkDataModel> networkModels)
         {
-            if (networkModels == null)
+            if (networkModels is null)
             {
                 throw new ArgumentNullException(nameof(networkModels));
             }

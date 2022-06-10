@@ -15,7 +15,7 @@ namespace Qualia.Controls
 
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
-            if (config == null)
+            if (config is null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
@@ -49,7 +49,7 @@ namespace Qualia.Controls
 
         public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (sender == null)
+            if (sender is null)
             {
                 throw new ArgumentNullException(nameof(sender));
             }

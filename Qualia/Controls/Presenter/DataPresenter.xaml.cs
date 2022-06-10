@@ -96,7 +96,7 @@ namespace Qualia.Controls
 
         public void SaveConfig(Config config)
         {
-            if (config == null)
+            if (config is null)
             {
                 throw new ArgumentNullException(nameof(config));   
             }
@@ -120,7 +120,7 @@ namespace Qualia.Controls
         }
         public void SetInputDataAndDraw(NetworkDataModel networkModel)
         {
-            if (networkModel == null)
+            if (networkModel is null)
             {
                 throw new ArgumentNullException(nameof(networkModel));
             }
@@ -234,7 +234,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (networkModel == null)
+            if (networkModel is null)
             {
                 throw new ArgumentNullException(nameof(networkModel));
             }

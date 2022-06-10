@@ -67,7 +67,7 @@ namespace Qualia.Controls
 
         public void DrawBase(ErrorMatrix matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
             {
                 throw new ArgumentNullException(nameof(matrix));
             }
@@ -110,7 +110,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (matrix == null)
+            if (matrix is null)
             {
                 throw new ArgumentNullException(nameof(matrix));
             }
@@ -130,9 +130,10 @@ namespace Qualia.Controls
             long axisOffset = 12;
             long bound = 30;
 
-            for (int y = 0; y < matrix.Output.Length; ++y)
+            
+            for (int x = 0; x < matrix.Input.Length; ++x)
             {
-                for (int x = 0; x < matrix.Input.Length; ++x)
+                for (int y = 0; y < matrix.Output.Length; ++y)
                 {
                     if (x == y)
                     {
@@ -246,9 +247,9 @@ namespace Qualia.Controls
             Array.Clear(Input, 0, Input.Length);
             Array.Clear(Output, 0, Output.Length);
             
-            for (int y = 0; y < Input.Length; ++y)
+            for (int x = 0; x < Output.Length; ++x)
             {
-                for (int x = 0; x < Output.Length; ++x)
+                for (int y = 0; y < Input.Length; ++y)
                 {
                     Matrix[x, y] = 0;
                 }
