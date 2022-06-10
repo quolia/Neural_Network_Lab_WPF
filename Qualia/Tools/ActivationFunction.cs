@@ -5,15 +5,18 @@ using System.Windows.Controls;
 
 namespace Tools
 {
-    public delegate void ActivationFunctionDelegate(double x, double? a);
+    public delegate double ActivationFunctionDelegate(double x, double? a);
 
-    public interface IActivationFunction
+    public class IActivationFunction
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        double Do(double x, double? a);
+        public ActivationFunctionDelegate Do;
+        public ActivationFunctionDelegate Derivative;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        double Derivative(double x, double? a);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //public double Do(double x, double? a) => _do(x, a);
+
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //;public double Derivative(double x, double? a) => _derivative(x, a);
     }
 
     public static class ActivationFunction
@@ -22,63 +25,102 @@ namespace Tools
         {
             public static readonly None Instance = new None();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a) => x;
+            private None()
+            {
+                base.Do = None.Do;
+                base.Derivative = None.Derivative;
+            }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => x;
+            public static double Do(double x, double? a) => x;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double? a) => x;
         }
 
         sealed public class LogisticSigmoid : IActivationFunction
         {
             public static readonly LogisticSigmoid Instance = new LogisticSigmoid();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a) => 1 / (1 + Math.Exp(-x));
+            private LogisticSigmoid()
+            {
+                base.Do = LogisticSigmoid.Do;
+                base.Derivative = LogisticSigmoid.Derivative;
+            }
+
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => x * (1 - x);
+            public static double Do(double x, double? a) => 1 / (1 + Math.Exp(-x));
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double? a) => x * (1 - x);
         }
 
         sealed public class SymmetricSigmoid : IActivationFunction
         {
             public static readonly SymmetricSigmoid Instance = new SymmetricSigmoid();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
+            private SymmetricSigmoid()
+            {
+                base.Do = SymmetricSigmoid.Do;
+                base.Derivative = SymmetricSigmoid.Derivative;
+            }
+
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
+            public static double Do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double? a) => 2 * LogisticSigmoid.Do(x, null) * (1 - LogisticSigmoid.Do(x, null));
         }
 
         sealed public class Softsign : IActivationFunction
         {
             public static readonly Softsign Instance = new Softsign();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a) => x / (1 + Math.Abs(x));
+            private Softsign()
+            {
+                base.Do = Softsign.Do;
+                base.Derivative = Softsign.Derivative;
+            }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => throw new InvalidOperationException();
+            public static double Do(double x, double? a) => x / (1 + Math.Abs(x));
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
         sealed public class Tanh : IActivationFunction
         {
             public static readonly Tanh Instance = new Tanh();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+            private Tanh()
+            {
+                base.Do = Tanh.Do;
+                base.Derivative = Tanh.Derivative;
+            }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => x * (2 - x);
+            public static double Do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double? a) => x * (2 - x);
         }
 
         sealed public class ReLu : IActivationFunction
         {
             public static readonly ReLu Instance = new ReLu();
 
+            private ReLu()
+            {
+                base.Do = ReLu.Do;
+                base.Derivative = ReLu.Derivative;
+            }
+
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a)
+            public static double Do(double x, double? a)
             {
                 if (!a.HasValue)
                 {
@@ -89,7 +131,7 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a)
+            public static double Derivative(double x, double? a)
             {
                 if (!a.HasValue)
                 {
@@ -104,8 +146,15 @@ namespace Tools
         {
             public static readonly StepConst Instance = new StepConst();
 
+            private StepConst()
+            {
+                base.Do = StepConst.Do;
+                base.Derivative = StepConst.Derivative;
+            }
+
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Do(double x, double? a)
+            public static double Do(double x, double? a)
             {
                 if (!a.HasValue)
                 {
@@ -116,7 +165,7 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Derivative(double x, double? a) => 0;
+            public static double Derivative(double x, double? a) => 0;
         }
 
         internal static class Helper
