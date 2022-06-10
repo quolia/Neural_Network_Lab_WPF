@@ -410,7 +410,7 @@ namespace Qualia
               //.OrderBy(limit => limit.OriginalLimit).ToList();
 
             loopLimits.Sort(LoopsLimit.Comparer.Instance);
-            var currentLoopLimit = loopLimits[0];// .First();
+            var currentLoopLimit = loopLimits[0].CurrentLimit;// .First();
 
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
@@ -444,7 +444,7 @@ namespace Qualia
                 {
                     swCurrentPureRoundsPerSecond.Restart();
 
-                    for (int round = 0; round < currentLoopLimit.CurrentLimit; ++round)
+                    for (int round = 0; round < currentLoopLimit; ++round)
                     {
                         _networksManager.PrepareModelsForRound();
 
@@ -496,7 +496,7 @@ namespace Qualia
                     swCurrentPureRoundsPerSecond.Stop();
                     swCurrentMiscCodeTime.Restart();
 
-                    _rounds += currentLoopLimit.CurrentLimit;
+                    _rounds += currentLoopLimit;
 
                     if (_rounds % Settings.SkipRoundsToDrawStatistics == 0)
                     {
@@ -517,14 +517,13 @@ namespace Qualia
                             statistics.TotalTicksElapsed = totalTicksElapsed;
                             statistics.CostSumTotal += statistics.CostSum;
 
-                            statistics.CurrentPureRoundsPerSecond = currentLoopLimit.CurrentLimit / swCurrentPureRoundsPerSecond.Elapsed.TotalSeconds;
+                            statistics.CurrentPureRoundsPerSecond = currentLoopLimit / swCurrentPureRoundsPerSecond.Elapsed.TotalSeconds;
                             if (statistics.CurrentPureRoundsPerSecond > statistics.MaxPureRoundsPerSecond)
                             {
                                 statistics.MaxPureRoundsPerSecond = statistics.CurrentPureRoundsPerSecond;
                             }
 
-                            var miscCodeSeconds = currentMiscCodeTimeSpan.Duration().TotalSeconds;
-                            statistics.CurrentLostRoundsPerSecond = statistics.CurrentPureRoundsPerSecond * miscCodeSeconds;
+                            statistics.CurrentLostRoundsPerSecond = statistics.CurrentPureRoundsPerSecond * currentMiscCodeTimeSpan.TotalSeconds;
                             if (statistics.CurrentLostRoundsPerSecond > statistics.MaxLostRoundsPerSecond)
                             {
                                 statistics.MaxLostRoundsPerSecond = statistics.CurrentLostRoundsPerSecond;
@@ -549,22 +548,26 @@ namespace Qualia
                     }
                 }
 
-                int currentLimit = currentLoopLimit.CurrentLimit;
-                
+                int currentLimit = int.MaxValue;
                 foreach (var loopLimit in loopLimits)
                 {
-                    loopLimit.CurrentLimit -= currentLimit;
+                    loopLimit.CurrentLimit -= currentLoopLimit;
                     if (loopLimit.CurrentLimit <= 0)
                     {
                         loopLimit.CurrentLimit = loopLimit.OriginalLimit;
+                    }
+
+                    if (loopLimit.CurrentLimit < currentLimit)
+                    {
+                        currentLimit = loopLimit.CurrentLimit;
                     }
                 }
                 
                 //loopLimits = loopLimits.OrderBy(limit => limit.CurrentLimit).ToList();
                 //currentLoopLimit = loopLimits.First();
 
-                loopLimits.Sort(LoopsLimit.Comparer.Instance);
-                currentLoopLimit = loopLimits[0];
+                //loopLimits.Sort(LoopsLimit.Comparer.Instance);
+                //currentLoopLimit = loopLimits[0];
 
                 if (isRendering)
                 {

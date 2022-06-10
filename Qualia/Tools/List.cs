@@ -7,7 +7,9 @@ namespace Tools
     public class ListX<T> : List<T> where T : ListXNode<T>
     {
         //public T First { get; private set; }
-        public T Last { get; private set; }
+        public T Last;// { get; private set; }
+
+        private T[] _array = Array.Empty<T>();
 
         internal T FirstOrDefault()
         {
@@ -32,11 +34,10 @@ namespace Tools
         {
             if (Count > 0)
             {
+                Update();
                 Last = this[Count - 1];
             }
         }
-
-        /*
         public new T this[int index]
         {
             get
@@ -49,8 +50,6 @@ namespace Tools
                 _array[index] = value;
             }
         }
-        */
-        
 
         public new void Add(T node)
         {
@@ -63,6 +62,13 @@ namespace Tools
             }
 
             Last = node;
+            Update();
+        }
+
+        private void Update()
+        {
+            _array = new T[Count];
+            CopyTo(_array, 0);
         }
 
         //public T Last() => this[Count - 1];

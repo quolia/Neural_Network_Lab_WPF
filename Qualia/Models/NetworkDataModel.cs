@@ -53,8 +53,7 @@ namespace Qualia
 
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
-            var neuronsModel = Layers.Last.Neurons;
-            var maxNeuronModel = neuronsModel[0];
+            var maxNeuronModel = Layers.Last.Neurons[0];
             var neuronModel = maxNeuronModel;
 
             while (neuronModel != null)
@@ -212,11 +211,6 @@ namespace Qualia
                 neuronModel = layerModel.Neurons[0];
                 while (neuronModel != null)
                 {
-                    if (neuronModel.Error== 0)
-                    {
-                        int a = 1;
-                    }
-                        
                     var AxW = neuronModel.ForwardHelper[0];
                     while (AxW != null)
                     {
@@ -229,7 +223,6 @@ namespace Qualia
                     }
 
                     neuronModel.Error = 0;
-
                     neuronModel = neuronModel.Next;
                 }
 

@@ -269,7 +269,7 @@ namespace Qualia.Controls
 
             // copy first layer state and last layer targets to other networks
 
-            var network = NetworkModels.Count > 1 ? NetworkModels[1] : null;          
+            var network = baseNetwork.Next;// NetworkModels.Count > 1 ? NetworkModels[1] : null;          
             while (network != null)
             {
                 if (!network.IsEnabled)
