@@ -200,11 +200,31 @@ namespace Qualia
                     neuron = neuron.Next;
                 }
 
+                // update weights
+
+                neuron = layer.Neurons.First;
+                while (neuron != null)
+                {
+                    var AxW = neuron.WeightsToNextLayer.First;
+                    while (AxW != null)
+                    {
+                        if (AxW.Neuron.Activation != 0)
+                        {
+                            AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
+                        }
+
+                        AxW = AxW.Next;
+                    }
+
+                    neuron.Error = 0;
+                    neuron = neuron.Next;
+                }
+
                 layer = layer.Previous;
             }
 
             // update weights
-
+            /*
             layer = lastLayer;
             while (layer != finalLayer)
             {
@@ -228,6 +248,7 @@ namespace Qualia
 
                 layer = layer.Previous;
             }
+            */
         }
 
         unsafe public void BackPropagation2()

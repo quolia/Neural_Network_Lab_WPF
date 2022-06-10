@@ -29,7 +29,9 @@ namespace Tools
 
                 while (neuronModel != null)
                 {
-                    sum += Math.Pow(neuronModel.Target - neuronModel.Activation, 2);
+                    var diff = neuronModel.Target - neuronModel.Activation;
+                    sum += diff * diff;
+
                     neuronModel = neuronModel.Next;
                 }
 
