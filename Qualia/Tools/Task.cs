@@ -146,8 +146,7 @@ namespace Tools
 
                 while (randNumber > 0)
                 {
-                    var id = Rand.Flat.Next(neurons.Count);
-                    var active = neurons[id];
+                    var active = neurons[Rand.Flat.Next(neurons.Count)];
 
                     while (active.Activation == networkModel.InputInitial1 || active.IsBias)
                     {

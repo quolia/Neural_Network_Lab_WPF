@@ -436,11 +436,11 @@ namespace Qualia
 
             while (!_cancellationToken.IsCancellationRequested)
             {
-                //Thread.Sleep(1);
+                swCurrentPureRoundsPerSecond.Restart();
 
                 lock (ApplyChangesLocker)
                 {
-                    swCurrentPureRoundsPerSecond.Restart();
+                    //swCurrentPureRoundsPerSecond.Restart();
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
