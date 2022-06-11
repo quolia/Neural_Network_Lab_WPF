@@ -7,7 +7,7 @@ using Tools;
 
 namespace Qualia.Controls
 {
-    using PointFunc = Func<DynamicStatistics.PlotPoints, DynamicStatistics.PlotPoint, long, Point>;
+    public delegate ref Point GetPointDelegate(DynamicStatistics.PlotPoints plotPoints, DynamicStatistics.PlotPoint plotPoint, long timeTicks);
 
     sealed public partial class PlotterPresenter : UserControl
     {
@@ -16,8 +16,8 @@ namespace Qualia.Controls
 
         private readonly Typeface _font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
-        private Pen _penBlack = Tools.Draw.GetPen(Colors.Black);
-        private Pen _penLightGray = Tools.Draw.GetPen(Colors.LightGray);
+        private readonly Pen _penBlack = Tools.Draw.GetPen(Colors.Black);
+        private readonly Pen _penLightGray = Tools.Draw.GetPen(Colors.LightGray);
 
 
         public PlotterPresenter()
@@ -158,7 +158,7 @@ namespace Qualia.Controls
                              ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
-        private void DrawData(DynamicStatistics.PlotPoints pointsData, in Color color, PointFunc func, bool isRect)
+        private void DrawData(DynamicStatistics.PlotPoints pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
         {
             if (pointsData == null || !pointsData.Any())
             {
@@ -177,11 +177,11 @@ namespace Qualia.Controls
 
             foreach (var pointData in pointsData)
             {
-                var point = func(pointsData, pointData, ticks);
+                ref var point = ref getPoint(pointsData, pointData, ticks);
 
                 if ((point.X - prevPoint.X) > 10 || Math.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
                 {
-                    var fromPoint = func(pointsData, prevPointData, ticks);
+                    ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
                     CtlPresenter.DrawLine(pen, ref fromPoint, ref point);
 
                     if (isRect)
@@ -220,25 +220,25 @@ namespace Qualia.Controls
             CtlPresenter.DrawText(text, ref Points.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2, ActualHeight - AXIS_OFFSET - 20));
         }
 
-        private Point GetPointPercentData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
+        private ref Point GetPointPercentData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
         {
             var pointData0 = pointsData[0];
             var pointX = ticks == 0 ? AXIS_OFFSET : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
             var pointY = (ActualHeight - AXIS_OFFSET) * (1 - (plotPoint.Value / 100));
 
-            return Points.Get((int)pointX, (int)pointY);
+            return ref Points.Get((int)pointX, (int)pointY);
         }
 
-        private Point GetPointCostData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
+        private ref Point GetPointCostData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
         {
             var pointData0 = pointsData[0];
             var pointX = ticks == 0 ? AXIS_OFFSET : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
             var pointY = (ActualHeight - AXIS_OFFSET) * (1 - Math.Min(1, plotPoint.Value));
 
-            return Points.Get((int)pointX, (int)pointY);
+            return ref Points.Get((int)pointX, (int)pointY);
         }
 
-        private void Vanish(DynamicStatistics.PlotPoints pointsData, PointFunc func)
+        private void Vanish(DynamicStatistics.PlotPoints pointsData, GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 14;
             const int MIN_POINTS_COUNT = 10;
@@ -253,13 +253,13 @@ namespace Qualia.Controls
                 for (int i = 0; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
                 {
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
-                    var point0 = func(pointsData, pointsData[i], ticks);
-                    var point1 = func(pointsData, pointsData[i + 1], ticks);
-                    var point2 = func(pointsData, pointsData[i + 2], ticks);
+                    ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
+                    ref var point1 = ref getPoint(pointsData, pointsData[i + 1], ticks);
+                    ref var point2 = ref getPoint(pointsData, pointsData[i + 2], ticks);
 
                     if (Math.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
                     {
-                        pointsData.Remove(pointsData[i + 1]);
+                        pointsData.AddToRemove(pointsData[i + 1]);
 
                         if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
                         {
@@ -272,7 +272,7 @@ namespace Qualia.Controls
                     {
                         if (Math.Abs(point0.X - point1.X) < VANISH_AREA && Math.Abs(point0.Y - point1.Y) < VANISH_AREA)
                         {
-                            pointsData.Remove(pointsData[i + 1]);
+                            pointsData.AddToRemove(pointsData[i + 1]);
 
                             if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
                             {

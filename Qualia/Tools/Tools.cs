@@ -322,26 +322,26 @@ namespace Tools
                 return Count > 0;
             }
 
-            public new void Remove(PlotPoint point)
+            public void AddToRemove(PlotPoint point)
             {
                 _pointsToRemove.Add(point);
             }
 
             public bool CommitRemove()
             {
+                if (_pointsToRemove.Count == 0)
+                {
+                    return false;
+                }
+
                 for (int i = 0; i < _pointsToRemove.Count; ++i)
                 {
-                    base.Remove(_pointsToRemove[i]);
+                    Remove(_pointsToRemove[i]);
                 }
 
-                if (_pointsToRemove.Count > 0)
-                {
-                    _pointsToRemove.Clear();
-                    
-                    return true;
-                }
+                _pointsToRemove.Clear();
 
-                return false;
+                return true;
             }
 
             public PlotPoints Copy()
