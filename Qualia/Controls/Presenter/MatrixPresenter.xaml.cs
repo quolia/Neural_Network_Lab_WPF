@@ -15,7 +15,7 @@ namespace Qualia.Controls
 
         private readonly Dictionary<string, FormattedText> _classesFormatText = new Dictionary<string, FormattedText>();
 
-        private readonly Pen _penSilver = Tools.Draw.GetPen(Colors.Silver);
+        private readonly Pen _penSilver = Tools.Draw.GetPen(in QColors.Silver);
 
         private List<string> _classes;
 
@@ -153,7 +153,7 @@ namespace Qualia.Controls
                     if (matrix.Matrix[y, x] > 0)
                     {
                         var value = (double)matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
-                        var color = Tools.Draw.GetColorDradient(Colors.LightGray, x == y ? Colors.Green : Colors.Red, 255, value);
+                        var color = Tools.Draw.GetColorDradient(in QColors.LightGray, x == y ? QColors.Green : QColors.Red, 255, value);
                         var brush = Tools.Draw.GetBrush(in color);
 
                         CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
@@ -164,7 +164,7 @@ namespace Qualia.Controls
             long outputMax = matrix.MaxOutput();
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
-                var color = Tools.Draw.GetColorDradient(Colors.White, matrix.Output[x] > matrix.Input[x] ? Colors.Red : matrix.Output[x] < matrix.Input[x] ? Colors.Blue : Colors.Green, 100, (double)matrix.Output[x] / (double)outputMax);
+                var color = Tools.Draw.GetColorDradient(in QColors.White, matrix.Output[x] > matrix.Input[x] ? QColors.Red : matrix.Output[x] < matrix.Input[x] ? Colors.Blue : Colors.Green, 100, (double)matrix.Output[x] / (double)outputMax);
                 var brush = Tools.Draw.GetBrush(in color);
                 CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
             }
@@ -172,7 +172,7 @@ namespace Qualia.Controls
             long inputMax = matrix.MaxInput();
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
-                var color = Tools.Draw.GetColorDradient(Colors.White, Colors.Green, 100, (double)matrix.Input[y] / (double)inputMax);
+                var color = Tools.Draw.GetColorDradient(in QColors.White, in QColors.Green, 100, (double)matrix.Input[y] / (double)inputMax);
                 var brush = Tools.Draw.GetBrush(in color);
                 CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(11 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
             }

@@ -115,22 +115,14 @@ namespace Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _do(double x, double? a)
             {
-                if (!a.HasValue)
-                {
-                    a = 1;
-                }
-
+                a = a ?? 1;
                 return x > 0 ? x * a.Value : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _derivative(double x, double? a)
             {
-                if (!a.HasValue)
-                {
-                    a = 1;
-                }
-
+                a = a ?? 1;
                 return x > 0 ? a.Value : 0;
             }
         }
@@ -147,11 +139,7 @@ namespace Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _do(double x, double? a)
             {
-                if (!a.HasValue)
-                {
-                    a = 1;
-                }
-
+                a = a ?? 1;
                 return x > 0 ? a.Value : -a.Value;
             }
 

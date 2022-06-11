@@ -66,7 +66,7 @@ namespace Qualia.Controls
         {
             Background = IsBias 
                          ? Draw.GetBrush(Draw.GetRandomColor(20, Draw.GetColor(240, 250, 240)))
-                         : Draw.GetBrush(Draw.GetRandomColor(20, Colors.Lavender));
+                         : Draw.GetBrush(Draw.GetRandomColor(20, in QColors.Lavender));
         }
 
         public virtual string ActivationInitializer => throw new InvalidOperationException();

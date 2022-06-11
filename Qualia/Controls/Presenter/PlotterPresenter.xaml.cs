@@ -16,8 +16,8 @@ namespace Qualia.Controls
 
         private readonly Typeface _font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
-        private readonly Pen _penBlack = Tools.Draw.GetPen(Colors.Black);
-        private readonly Pen _penLightGray = Tools.Draw.GetPen(Colors.LightGray);
+        private readonly Pen _penBlack = Tools.Draw.GetPen(in QColors.Black);
+        private readonly Pen _penLightGray = Tools.Draw.GetPen(in QColors.LightGray);
 
 
         public PlotterPresenter()
@@ -210,7 +210,7 @@ namespace Qualia.Controls
                                          Tools.Draw.GetBrush(in color),
                                          Render.PixelsPerDip);
 
-            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, Colors.White)),
+            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, in QColors.White)),
                                        null,
                                        ref Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
                                                      ActualHeight - AXIS_OFFSET - 20,

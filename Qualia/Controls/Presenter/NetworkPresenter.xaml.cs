@@ -23,8 +23,8 @@ namespace Qualia.Controls
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new Dictionary<NeuronDataModel, Point>();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new Dictionary<WeightDataModel, double>();
 
-        private readonly Pen _penChange = Tools.Draw.GetPen(Colors.Lime);
-        private readonly Pen _biasPen = Tools.Draw.GetPen(Colors.Orange);
+        private readonly Pen _penChange = Tools.Draw.GetPen(in QColors.Lime);
+        private readonly Pen _biasPen = Tools.Draw.GetPen(in QColors.Orange);
 
         public NetworkPresenter()
         {

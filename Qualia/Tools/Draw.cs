@@ -54,6 +54,19 @@ namespace Tools
         }
     }
 
+    public static class QColors
+    {
+        public static readonly Color White = Colors.White;
+        public static readonly Color Green = Colors.Green;
+        public static readonly Color Red = Colors.Red;
+        public static readonly Color LightGray = Colors.LightGray;
+        public static readonly Color Silver = Colors.Silver;
+        public static readonly Color Lime = Colors.Lime;
+        public static readonly Color Orange = Colors.Orange;
+        public static readonly Color Lavender = Colors.Lavender;
+        public static readonly Color Black = Colors.Black;
+    }
+
     public static class Render
     {
         private static readonly double s_halfPixelSize;
@@ -80,7 +93,7 @@ namespace Tools
             value += s_halfPixelSize;
             var div = (value * 1000) / (PixelSize * 1000);
 
-            return (int)div * PixelSize;
+            return (int)div * PixelSize; // int?
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -138,10 +151,8 @@ namespace Tools
             {
                 return Color.FromArgb(alpha, (byte)(255 * v), (byte)(50 * v), (byte)(50 * v));
             }
-            else
-            {
-                return Color.FromArgb(alpha, (byte)(50 * v), (byte)(50 * v), (byte)(255 * v));
-            }
+
+            return Color.FromArgb(alpha, (byte)(50 * v), (byte)(50 * v), (byte)(255 * v));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -169,10 +180,8 @@ namespace Tools
             {
                 return GetColorDradient(in fromColor, in zeroColor, alpha, fraction * 2);
             }
-            else
-            {
-                return GetColorDradient(in zeroColor, in toColor, alpha, 2 * (fraction - 0.5));
-            }
+
+            return GetColorDradient(in zeroColor, in toColor, alpha, 2 * (fraction - 0.5));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
