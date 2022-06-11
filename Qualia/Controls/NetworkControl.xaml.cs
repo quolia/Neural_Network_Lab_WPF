@@ -231,7 +231,7 @@ namespace Qualia.Controls
             }
         }
 
-        public NetworkDataModel CreateNetworkDataModel(INetworkTask networkTask, bool isCopy)
+        unsafe public NetworkDataModel CreateNetworkDataModel(INetworkTask networkTask, bool isCopy)
         {
             ErrorMatrix matrix = null;
             if (networkTask != null)

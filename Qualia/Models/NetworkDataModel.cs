@@ -144,7 +144,7 @@ namespace Qualia
         }
         */
 
-        public void FeedForward()
+        unsafe public void FeedForward()
         {
             var layer = Layers.First;
             var lastLayer = Layers.Last;
@@ -171,7 +171,7 @@ namespace Qualia
             }
         }
 
-        public void BackPropagation()
+        unsafe public void BackPropagation()
         {
             var lastLayer = Layers.Last;
             var neuron = lastLayer.Neurons.First;

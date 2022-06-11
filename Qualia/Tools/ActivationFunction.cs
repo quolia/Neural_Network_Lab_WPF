@@ -7,12 +7,21 @@ namespace Tools
 {
     public delegate double ActivationFunctionDelegate(double x, double? a);
 
-    public class ActivationFunction
+    unsafe public class ActivationFunction
     {
-        public readonly ActivationFunctionDelegate Do;
-        public readonly ActivationFunctionDelegate Derivative;
+        public readonly ActivationFunctionDelegate _Do;
+        public readonly ActivationFunctionDelegate _Derivative;
+
+        unsafe public delegate*<double, double?, double> Do;
+        unsafe public delegate*<double, double?, double> Derivative;
 
         public ActivationFunction(ActivationFunctionDelegate doFunc, ActivationFunctionDelegate derivativeFunc)
+        {
+            _Do = doFunc;
+            _Derivative = derivativeFunc;
+        }
+
+        unsafe public ActivationFunction(delegate*<double, double?, double> doFunc, delegate*<double, double?, double> derivativeFunc)
         {
             Do = doFunc;
             Derivative = derivativeFunc;
@@ -21,12 +30,12 @@ namespace Tools
 
     public static class ActivationFunctionList
     {
-        sealed public class None : ActivationFunction
+        unsafe sealed public class None : ActivationFunction
         {
             public static readonly None Instance = new None();
 
             private None()
-                :base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
@@ -37,12 +46,12 @@ namespace Tools
             private static double _derivative(double x, double? a) => x;
         }
 
-        sealed public class LogisticSigmoid : ActivationFunction
+        unsafe sealed public class LogisticSigmoid : ActivationFunction
         {
             public static readonly LogisticSigmoid Instance = new LogisticSigmoid();
 
             private LogisticSigmoid()
-                : base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
@@ -54,12 +63,12 @@ namespace Tools
             private static double _derivative(double x, double? a) => x * (1 - x);
         }
 
-        sealed public class SymmetricSigmoid : ActivationFunction
+        unsafe sealed public class SymmetricSigmoid : ActivationFunction
         {
             public static readonly SymmetricSigmoid Instance = new SymmetricSigmoid();
 
             private SymmetricSigmoid()
-                : base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
@@ -71,12 +80,12 @@ namespace Tools
             private static double _derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
         }
 
-        sealed public class Softsign : ActivationFunction
+        unsafe sealed public class Softsign : ActivationFunction
         {
             public static readonly Softsign Instance = new Softsign();
 
             private Softsign()
-                : base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
@@ -87,12 +96,12 @@ namespace Tools
             private static double _derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
-        sealed public class Tanh : ActivationFunction
+        unsafe sealed public class Tanh : ActivationFunction
         {
             public static readonly Tanh Instance = new Tanh();
 
             private Tanh()
-                : base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
@@ -103,43 +112,43 @@ namespace Tools
             private static double _derivative(double x, double? a) => x * (2 - x);
         }
 
-        sealed public class ReLu : ActivationFunction
+        unsafe sealed public class ReLu : ActivationFunction
         {
             public static readonly ReLu Instance = new ReLu();
 
             private ReLu()
-                : base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _do(double x, double? a)
             {
-                a = a ?? 1;
+                a ??= 1;
                 return x > 0 ? x * a.Value : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _derivative(double x, double? a)
             {
-                a = a ?? 1;
+                a ??= 1;
                 return x > 0 ? a.Value : 0;
             }
         }
 
-        sealed public class StepConst : ActivationFunction
+        unsafe sealed public class StepConst : ActivationFunction
         {
             public static readonly StepConst Instance = new StepConst();
 
             private StepConst()
-                : base(_do, _derivative)
+                : base(&_do, &_derivative)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _do(double x, double? a)
             {
-                a = a ?? 1;
+                a ??= 1;
                 return x > 0 ? a.Value : -a.Value;
             }
 
