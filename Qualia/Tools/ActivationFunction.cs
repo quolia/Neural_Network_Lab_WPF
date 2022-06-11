@@ -21,7 +21,7 @@ namespace Tools
     {
         unsafe sealed public class None : ActivationFunction
         {
-            public static readonly None Instance = new None();
+            public static readonly None Instance = new();
 
             private None()
                 : base(&_do, &_derivative)
@@ -37,13 +37,12 @@ namespace Tools
 
         unsafe sealed public class LogisticSigmoid : ActivationFunction
         {
-            public static readonly LogisticSigmoid Instance = new LogisticSigmoid();
+            public static readonly LogisticSigmoid Instance = new();
 
             private LogisticSigmoid()
                 : base(&_do, &_derivative)
             {
             }
-
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
@@ -54,7 +53,7 @@ namespace Tools
 
         unsafe sealed public class SymmetricSigmoid : ActivationFunction
         {
-            public static readonly SymmetricSigmoid Instance = new SymmetricSigmoid();
+            public static readonly SymmetricSigmoid Instance = new();
 
             private SymmetricSigmoid()
                 : base(&_do, &_derivative)
@@ -70,7 +69,7 @@ namespace Tools
 
         unsafe sealed public class Softsign : ActivationFunction
         {
-            public static readonly Softsign Instance = new Softsign();
+            public static readonly Softsign Instance = new();
 
             private Softsign()
                 : base(&_do, &_derivative)
@@ -86,7 +85,7 @@ namespace Tools
 
         unsafe sealed public class Tanh : ActivationFunction
         {
-            public static readonly Tanh Instance = new Tanh();
+            public static readonly Tanh Instance = new();
 
             private Tanh()
                 : base(&_do, &_derivative)
@@ -102,7 +101,7 @@ namespace Tools
 
         unsafe sealed public class ReLu : ActivationFunction
         {
-            public static readonly ReLu Instance = new ReLu();
+            public static readonly ReLu Instance = new();
 
             private ReLu()
                 : base(&_do, &_derivative)
@@ -126,7 +125,7 @@ namespace Tools
 
         unsafe sealed public class StepConst : ActivationFunction
         {
-            public static readonly StepConst Instance = new StepConst();
+            public static readonly StepConst Instance = new();
 
             private StepConst()
                 : base(&_do, &_derivative)

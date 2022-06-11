@@ -22,7 +22,7 @@ namespace Tools
     {
         unsafe sealed public class MSE : CostFunction
         {
-            public static readonly MSE Instance = new MSE();
+            public static readonly MSE Instance = new();
 
             private MSE()
                 : base(&_do, &_derivative)
