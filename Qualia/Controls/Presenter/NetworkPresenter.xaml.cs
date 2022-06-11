@@ -20,8 +20,8 @@ namespace Qualia.Controls
 
         public long ResizeTicks;
 
-        private readonly Dictionary<NeuronDataModel, Point> _coordinator = new Dictionary<NeuronDataModel, Point>();
-        private readonly Dictionary<WeightDataModel, double> _prevWeights = new Dictionary<WeightDataModel, double>();
+        private readonly Dictionary<NeuronDataModel, Point> _coordinator = new();
+        private readonly Dictionary<WeightDataModel, double> _prevWeights = new();
 
         private readonly Pen _penChange = Tools.Draw.GetPen(in QColors.Lime);
         private readonly Pen _biasPen = Tools.Draw.GetPen(in QColors.Orange);
@@ -43,12 +43,9 @@ namespace Qualia.Controls
 
         public int LayerDistance(NetworkDataModel model)
         {
-            if (model is null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            return (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
+            return model == null
+                   ? throw new ArgumentNullException(nameof(model))
+                   : (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
         }
 
         private float VerticalDistance(int count)
@@ -83,7 +80,9 @@ namespace Qualia.Controls
             {
                 if (!_coordinator.ContainsKey(neuronModel1))
                 {
-                    _coordinator.Add(neuronModel1, Points.Get(LayerX(networkModel, layerModel1), TOP_OFFSET + VerticalShift(networkModel, layerModel1) + neuronModel1.Id * VerticalDistance(layerModel1.Neurons.Count)));
+                    _coordinator.Add(neuronModel1,
+                                     Points.Get(LayerX(networkModel, layerModel1),
+                                                TOP_OFFSET + VerticalShift(networkModel, layerModel1) + neuronModel1.Id * VerticalDistance(layerModel1.Neurons.Count)));
                 }
 
                 // Skip intersected neurons on first layer to improove performance.
@@ -297,7 +296,14 @@ namespace Qualia.Controls
                     var layerModel = networkModel.Layers.First;
                     while (layerModel != lastLayerModel)
                     {
-                        DrawLayersLinks(fullState, networkModel, layerModel, layerModel.Next, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
+                        DrawLayersLinks(fullState,
+                                        networkModel,
+                                        layerModel,
+                                        layerModel.Next,
+                                        isUseWeightsColors,
+                                        isOnlyChangedWeights,
+                                        isHighlightChangedWeights,
+                                        isShowOnlyUnchangedWeights);
                     
                         layerModel = layerModel.Next;
                     }
@@ -311,8 +317,6 @@ namespace Qualia.Controls
                     }
                 }
             }
-
-            CtlPresenter.Update();
         }
 
         public void ClearCache()

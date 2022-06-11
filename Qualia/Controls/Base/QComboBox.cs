@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Controls;
 using Tools;
 
@@ -15,8 +14,8 @@ namespace Qualia.Controls
 
         public QComboBox()
         {
-            Padding = new Thickness(2);
-            Margin = new Thickness(1);
+            Padding = new(2);
+            Margin = new(1);
             MinWidth = 60;
 
             SelectionChanged += SelectBox_SelectionChanged;

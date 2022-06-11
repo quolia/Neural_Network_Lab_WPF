@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Qualia.Controls;
 using System.Collections.Generic;
 using System.Windows.Media;
-using Qualia.Controls;
 using Tools;
 
 namespace Qualia
@@ -35,7 +34,7 @@ namespace Qualia
         public NetworkDataModel(long visualId, int[] layerSizes)
         {
             VisualId = visualId;
-            Layers = new ListX<LayerDataModel>(layerSizes.Length);
+            Layers = new(layerSizes.Length);
             Range.For(layerSizes.Length, i => CreateLayer(layerSizes[i], i < layerSizes.Length - 1 ? layerSizes[i + 1] : 0));
         }
 
@@ -46,7 +45,7 @@ namespace Qualia
 
         public void CreateLayer(int neuronCount, int weightsCount)
         {
-            Layers.Add(new LayerDataModel(Layers.Count, neuronCount, weightsCount));
+            Layers.Add(new(Layers.Count, neuronCount, weightsCount));
         }
 
         public double InputThreshold => (InputInitial0 + InputInitial1) / 2;

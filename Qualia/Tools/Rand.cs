@@ -5,8 +5,8 @@ namespace Tools
 {
     public static class Rand
     {
-        public static Random Flat = new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
-        public static GaussianRandom GaussianRand = new GaussianRandom(Flat);
+        public static Random Flat = new((int)(DateTime.UtcNow.Ticks % int.MaxValue));
+        public static GaussianRandom GaussianRand = new(Flat);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double GetFlatRandom(double upperBound = 1)
@@ -35,7 +35,7 @@ namespace Tools
 
         public GaussianRandom(Random random = null)
         {
-            _random = random ?? new Random((int)(DateTime.UtcNow.Ticks % int.MaxValue));
+            _random = random ?? new((int)(DateTime.UtcNow.Ticks % int.MaxValue));
         }
 
         /// <summary>

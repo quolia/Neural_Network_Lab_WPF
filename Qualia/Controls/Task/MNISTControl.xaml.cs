@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using Tools;
 
 namespace Qualia.Controls
 {
     sealed public partial class MNISTControl : UserControl, IConfigParam
     {
-        public List<MNISTImage> Images = new List<MNISTImage>();
+        public List<MNISTImage> Images = new();
 
         private event Action OnChange = delegate { };
 
@@ -121,79 +121,79 @@ namespace Qualia.Controls
             }
 
             var buffer = new byte[4];
-            using (var file = File.OpenRead(fileName))
+
+            using var file = File.OpenRead(fileName);
+
+            if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
             {
-                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            if (BitConverter.IsLittleEndian)
+            {
+                buffer = buffer.Reverse().ToArray();
+            }
+
+            int magicNumber = BitConverter.ToInt32(buffer, 0);
+            if (magicNumber != 2051)
+            {
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+            {
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            if (BitConverter.IsLittleEndian)
+            {
+                buffer = buffer.Reverse().ToArray();
+            }
+
+            int numberOfImages = BitConverter.ToInt32(buffer, 0);
+
+            if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+            {
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            if (BitConverter.IsLittleEndian)
+            {
+                buffer = buffer.Reverse().ToArray();
+            }
+
+            int numberOfRows = BitConverter.ToInt32(buffer, 0);
+            if (numberOfRows != 28)
+            {
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+            {
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            if (BitConverter.IsLittleEndian)
+            {
+                buffer = buffer.Reverse().ToArray();
+            }
+
+            int numberOfColumns = BitConverter.ToInt32(buffer, 0);
+            if (numberOfColumns != 28)
+            {
+                throw new Exception("Invalid MNIST images file format.");
+            }
+
+            for (int i = 0; i < numberOfImages; ++i)
+            {
+                MNISTImage image = new();
+                if (file.Read(image.Image, 0, image.Image.Length) != image.Image.Length)
                 {
+                    Images.Clear();
                     throw new Exception("Invalid MNIST images file format.");
                 }
-                    
-                if (BitConverter.IsLittleEndian)
-                {
-                    buffer = buffer.Reverse().ToArray();
-                }
 
-                int magicNumber = BitConverter.ToInt32(buffer, 0);
-                if (magicNumber != 2051)
-                {
-                    throw new Exception("Invalid MNIST images file format.");
-                }
-
-                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    throw new Exception("Invalid MNIST images file format.");
-                }
-
-                if (BitConverter.IsLittleEndian)
-                {
-                    buffer = buffer.Reverse().ToArray();
-                }
-
-                int numberOfImages = BitConverter.ToInt32(buffer, 0);
-
-                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    throw new Exception("Invalid MNIST images file format.");
-                }
-
-                if (BitConverter.IsLittleEndian)
-                {
-                    buffer = buffer.Reverse().ToArray();
-                }
-
-                int numberOfRows = BitConverter.ToInt32(buffer, 0);
-                if (numberOfRows != 28)
-                {
-                    throw new Exception("Invalid MNIST images file format.");
-                }
-
-                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    throw new Exception("Invalid MNIST images file format.");
-                }
-
-                if (BitConverter.IsLittleEndian)
-                {
-                    buffer = buffer.Reverse().ToArray();
-                }
-
-                int numberOfColumns = BitConverter.ToInt32(buffer, 0);
-                if (numberOfColumns != 28)
-                {
-                    throw new Exception("Invalid MNIST images file format.");
-                }
-
-                for (int i = 0; i < numberOfImages; ++i)
-                {
-                    var image = new MNISTImage();
-                    if (file.Read(image.Image, 0, image.Image.Length) != image.Image.Length)
-                    {
-                        Images.Clear();
-                        throw new Exception("Invalid MNIST images file format.");
-                    }
-
-                    Images.Add(image);
-                }
+                Images.Add(image);
             }
         }
 
@@ -205,45 +205,45 @@ namespace Qualia.Controls
             }
 
             var buffer = new byte[4];
-            using (var file = File.OpenRead(fileName))
+
+            using var file = File.OpenRead(fileName);
+
+            if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
             {
-                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    throw new Exception("Invalid MNIST labels file format.");
-                }
+                throw new Exception("Invalid MNIST labels file format.");
+            }
 
-                if (BitConverter.IsLittleEndian)
-                {
-                    buffer = buffer.Reverse().ToArray();
-                }
+            if (BitConverter.IsLittleEndian)
+            {
+                buffer = buffer.Reverse().ToArray();
+            }
 
-                int magicNumber = BitConverter.ToInt32(buffer, 0);
-                if (magicNumber != 2049)
-                {
-                    throw new Exception("Invalid MNIST labels file format.");
-                }
+            int magicNumber = BitConverter.ToInt32(buffer, 0);
+            if (magicNumber != 2049)
+            {
+                throw new Exception("Invalid MNIST labels file format.");
+            }
 
-                if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    throw new Exception("Invalid MNIST labels file format.");
-                }
+            if (file.Read(buffer, 0, buffer.Length) != buffer.Length)
+            {
+                throw new Exception("Invalid MNIST labels file format.");
+            }
 
-                if (BitConverter.IsLittleEndian)
-                {
-                    buffer = buffer.Reverse().ToArray();
-                }
+            if (BitConverter.IsLittleEndian)
+            {
+                buffer = buffer.Reverse().ToArray();
+            }
 
-                int numberOfImages = BitConverter.ToInt32(buffer, 0);
-                if (numberOfImages != Images.Count)
-                {
-                    throw new Exception("Invalid MNIST labels file format.");
-                }
+            int numberOfImages = BitConverter.ToInt32(buffer, 0);
+            if (numberOfImages != Images.Count)
+            {
+                throw new Exception("Invalid MNIST labels file format.");
+            }
 
-                for (int i = 0; i < numberOfImages; ++i)
-                {
-                    var image = Images[i];
-                    image.Label = (byte)file.ReadByte();
-                }
+            for (int i = 0; i < numberOfImages; ++i)
+            {
+                var image = Images[i];
+                image.Label = (byte)file.ReadByte();
             }
         }
 
@@ -304,7 +304,7 @@ namespace Qualia.Controls
 
         private string BrowseGzFile()
         {
-            var loadDialog = new OpenFileDialog
+            OpenFileDialog loadDialog = new()
             {
                 InitialDirectory = Path.GetFullPath("."),
                 DefaultExt = "gz",
@@ -323,12 +323,10 @@ namespace Qualia.Controls
 
         private void Decompress(string sourceGz, string destBin)
         {
-            using (var srcStream = File.OpenRead(sourceGz))
-            using (var targetStream = File.OpenWrite(destBin))
-            using (var decompressionStream = new GZipStream(srcStream, CompressionMode.Decompress, false))
-            {
-                decompressionStream.CopyTo(targetStream);
-            }
+            using var srcStream = File.OpenRead(sourceGz);
+            using var targetStream = File.OpenWrite(destBin);
+            using GZipStream decompressionStream = new(srcStream, CompressionMode.Decompress, false);
+            decompressionStream.CopyTo(targetStream);
         }
     }
 

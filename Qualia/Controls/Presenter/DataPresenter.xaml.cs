@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Tools;
 
 namespace Qualia.Controls
@@ -30,7 +28,7 @@ namespace Qualia.Controls
 
             _penBlack.Freeze();
 
-            _pointSize = (int)Config.Main.GetInt(Const.Param.PointSize, 7).Value;
+            _pointSize = (int)Config.Main.GetInt(Constants.Param.PointSize, 7).Value;
 
             SizeChanged += DataPresenter_SizeChanged;
             CtlTasks.SetChangeEvent(CtlTask_SelectedIndexChanged);
@@ -120,7 +118,7 @@ namespace Qualia.Controls
         }
         public void SetInputDataAndDraw(NetworkDataModel networkModel)
         {
-            if (networkModel is null)
+            if (networkModel == null)
             {
                 throw new ArgumentNullException(nameof(networkModel));
             }
@@ -195,8 +193,6 @@ namespace Qualia.Controls
                     DrawPoint(pointPosition.X, pointPosition.Y, maxStat > 0 ? _stat[i] / maxStat : 0, false);
                 }
             }
-
-            CtlPresenter.Update();
         }
 
         private double MaxStat()
@@ -234,7 +230,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (networkModel is null)
+            if (networkModel == null)
             {
                 throw new ArgumentNullException(nameof(networkModel));
             }

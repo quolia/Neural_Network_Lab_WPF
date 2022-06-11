@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Tools
@@ -30,7 +26,7 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double? param) => Const.SkipValue;
+            public static double _do(double? param) => Constants.SkipValue;
         }
 
         unsafe sealed public class Constant : InitializeMode

@@ -15,7 +15,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new List<IConfigParam>()
+            _configParams = new()
             {
                 CtlInputInitial0,
                 CtlInputInitial1,
@@ -27,7 +27,9 @@ namespace Qualia.Controls
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
+
             LoadConfig();
+
             _configParams.ForEach(param => param.SetChangeEvent(ParameterChanged));
         }
 
@@ -49,7 +51,7 @@ namespace Qualia.Controls
         public void OnTaskChanged(INetworkTask task)
         {
             var ctlNeurons = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
-            ctlNeurons.ForEach(ctlNeuron => NeuronsHolder.Children.Remove(ctlNeuron));
+            ctlNeurons.ForEach(NeuronsHolder.Children.Remove);
 
             if (task != null)
             {
@@ -64,7 +66,7 @@ namespace Qualia.Controls
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var neuronIds = Config.GetArray(Const.Param.Neurons);
+            var neuronIds = Config.GetArray(Constants.Param.Neurons);
             foreach (var biasNeuronId in neuronIds)
             {
                 AddBias(biasNeuronId);
@@ -73,7 +75,7 @@ namespace Qualia.Controls
 
         public new InputNeuronControl AddNeuron()
         {
-            var ctlNeuron = new InputNeuronControl(NeuronsHolder.Children.Count)
+            InputNeuronControl ctlNeuron = new(NeuronsHolder.Children.Count)
             {
                 ActivationFunc = CtlActivationFunc.SelectedItem.ToString(),
                 ActivationFuncParam = CtlActivationFuncParam.ValueOrNull
@@ -89,10 +91,10 @@ namespace Qualia.Controls
 
         public void AddBias(long biasNeuronId)
         {
-            var ctlNeuron = new InputBiasControl(biasNeuronId, Config, OnNetworkUIChanged);
+            InputBiasControl ctlNeuron = new(biasNeuronId, Config, OnNetworkUIChanged);
             NeuronsHolder.Children.Add(ctlNeuron);
 
-            if (biasNeuronId == Const.UnknownId)
+            if (biasNeuronId == Constants.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
@@ -111,13 +113,13 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SaveConfig());
 
             var ctlNeurons = GetNeuronsControls().Where(ctlNeuron => ctlNeuron.IsBias);
-            Config.Set(Const.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
+            Config.Set(Constants.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
             ctlNeurons.ToList().ForEach(neuron => neuron.SaveConfig());
         }
 
         public override void VanishConfig()
         {
-            Config.Remove(Const.Param.Neurons);
+            Config.Remove(Constants.Param.Neurons);
             _configParams.ForEach(param => param.VanishConfig());
             var ctlNeurons = GetNeuronsControls();
             ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
@@ -125,7 +127,7 @@ namespace Qualia.Controls
 
         private void CtlMenuAddBias_Click(object sender, EventArgs e)
         {
-            AddBias(Const.UnknownId);
+            AddBias(Constants.UnknownId);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Qualia.Controls
 
         private event Action Changed = delegate { };
 
-        private readonly object _locker = new object();
+        private readonly object _locker = new();
         private Settings _settings;
 
         public Settings Settings
@@ -77,7 +77,7 @@ namespace Qualia.Controls
 
         private void OnChanged()
         {
-            var settings = new Settings
+            Settings settings = new()
             {
                 SkipRoundsToDrawErrorMatrix = (int)CtlSkipRoundsToDrawErrorMatrix.Value,
                 SkipRoundsToDrawNetworks = (int)CtlSkipRoundsToDrawNetworks.Value,

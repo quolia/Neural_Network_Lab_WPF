@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
@@ -7,7 +6,7 @@ namespace Qualia.Controls
     {
         public QLabel()
         {
-            Padding = new Thickness(3);
+            Padding = new(3);
         }
     }
 }

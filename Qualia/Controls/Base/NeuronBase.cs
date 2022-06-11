@@ -18,14 +18,14 @@ namespace Qualia.Controls
 
         public NeuronBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
-            ContextMenu = new ContextMenu();
+            ContextMenu = new();
             ContextMenu.Opened += ContextMenu_Opened;
 
-            _menuAdd = new MenuItem() { Header = "Add" };
+            _menuAdd = new() { Header = "Add" };
             ContextMenu.Items.Add(_menuAdd);
             _menuAdd.Click += AddNeuron_Click;
 
-            _menuDelete = new MenuItem() { Header = "Delete..." };
+            _menuDelete = new() { Header = "Delete..." };
             ContextMenu.Items.Add(_menuDelete);
             _menuDelete.Click += DeleteNeuron_Click;
 

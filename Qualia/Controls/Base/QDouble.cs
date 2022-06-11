@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Tools;
@@ -24,8 +23,8 @@ namespace Qualia.Controls
 
         public QDouble()
         {
-            Padding = new Thickness(0);
-            Margin = new Thickness(3);
+            Padding = new(0);
+            Margin = new(3);
             MinWidth = 60;
 
             TextChanged += DoubleBox_TextChanged;

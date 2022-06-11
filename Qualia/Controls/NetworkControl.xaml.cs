@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Collections.Generic;
-using System.Linq;
 using Tools;
 
 namespace Qualia.Controls
@@ -31,7 +31,7 @@ namespace Qualia.Controls
             Id = UniqId.GetNextId(id);
             Config = config.Extend(Id);
 
-            _configParams = new List<IConfigParam>()
+            _configParams = new()
             {
                 CtlRandomizeModeParam,
                 CtlRandomizeMode,
@@ -53,20 +53,21 @@ namespace Qualia.Controls
 
         public void AddLayer()
         {
-            AddLayer(Const.UnknownId);
+            AddLayer(Constants.UnknownId);
         }
 
         private void AddLayer(long layerId)
         {
-            var ctlLayer = new HiddenLayerControl(layerId, Config, OnNetworkUIChanged);
-            var ctlScroll = new ScrollViewer
+            HiddenLayerControl ctlLayer = new(layerId, Config, OnNetworkUIChanged);
+
+            ScrollViewer ctlScroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Content = ctlLayer
             };
             ctlScroll.ScrollChanged += ctlLayer.OnScrollChanged;
 
-            var tabItem = new TabItem
+            TabItem tabItem = new()
             {
                 Content = ctlScroll
             };
@@ -75,7 +76,7 @@ namespace Qualia.Controls
             CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
 
-            if (layerId == Const.UnknownId)
+            if (layerId == Constants.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
@@ -115,13 +116,13 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Config.Set(Const.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
-            Config.Set(Const.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
+            Config.Set(Constants.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
+            Config.Set(Constants.Param.Color, $"{CtlColor.Foreground.GetColor().A},{CtlColor.Foreground.GetColor().R},{CtlColor.Foreground.GetColor().G},{CtlColor.Foreground.GetColor().B}");
             _configParams.ForEach(param => param.SaveConfig());
 
             var ctlLayers = GetLayersControls();
             ctlLayers.ForEach(ctlLayer => ctlLayer.SaveConfig());
-            Config.Set(Const.Param.Layers, ctlLayers.Select(ctlLayer => ctlLayer.Id));
+            Config.Set(Constants.Param.Layers, ctlLayers.Select(ctlLayer => ctlLayer.Id));
 
             //
 
@@ -136,18 +137,18 @@ namespace Qualia.Controls
 
         public void VanishConfig()
         {
-            Config.Remove(Const.Param.SelectedLayerIndex);
-            Config.Remove(Const.Param.Color);
+            Config.Remove(Constants.Param.SelectedLayerIndex);
+            Config.Remove(Constants.Param.Color);
 
             _configParams.ForEach(param => param.VanishConfig());
 
             GetLayersControls().ForEach(ctlLayer => ctlLayer.VanishConfig());
-            Config.Remove(Const.Param.Layers);
+            Config.Remove(Constants.Param.Layers);
         }
 
         private List<LayerBase> GetLayersControls()
         {
-            var ctlLayers = new List<LayerBase>(CtlTabsLayers.Items.Count);
+            List<LayerBase> ctlLayers = new(CtlTabsLayers.Items.Count);
             for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
                 ctlLayers.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
@@ -158,22 +159,25 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Tools.RandomizeModeList.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeModeList.FlatRandom));
-            Tools.CostFunctionList.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunctionList.MSE));
+            RandomizeModeList.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(RandomizeModeList.FlatRandom));
+            CostFunctionList.Helper.FillComboBox(CtlCostFunction, Config, nameof(CostFunctionList.MSE));
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var color = Config.GetArray(Const.Param.Color, "255,100,100,100");
-            CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0], (byte)color[1], (byte)color[2], (byte)color[3]));
+            var color = Config.GetArray(Constants.Param.Color, "255,100,100,100");
+            CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0],
+                                                                     (byte)color[1],
+                                                                     (byte)color[2],
+                                                                     (byte)color[3]));
 
             //
 
-            var layerIds = Config.GetArray(Const.Param.Layers);
-            var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Const.UnknownId;
-            var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Const.UnknownId;
+            var layerIds = Config.GetArray(Constants.Param.Layers);
+            var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Constants.UnknownId;
+            var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
-            InputLayer = new InputLayerControl(inputLayerId, Config, OnNetworkUIChanged);
-            var ctlScroll = new ScrollViewer
+            InputLayer = new(inputLayerId, Config, OnNetworkUIChanged);
+            ScrollViewer ctlScroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Content = InputLayer
@@ -182,8 +186,8 @@ namespace Qualia.Controls
             CtlTabInput.Content = ctlScroll;
             ctlScroll.ScrollChanged += InputLayer.OnScrollChanged;
 
-            _outputLayer = new OutputLayerControl(outputLayerId, Config, OnNetworkUIChanged);
-            ctlScroll = new ScrollViewer
+            _outputLayer = new(outputLayerId, Config, OnNetworkUIChanged);
+            ctlScroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Content = _outputLayer
@@ -202,7 +206,7 @@ namespace Qualia.Controls
                 }
             }
 
-            CtlTabsLayers.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedLayerIndex, 0).Value;
+            CtlTabsLayers.SelectedIndex = (int)Config.GetInt(Constants.Param.SelectedLayerIndex, 0).Value;
         }
 
         public int[] GetLayersSizes()
@@ -222,7 +226,9 @@ namespace Qualia.Controls
 
         public void DeleteLayer()
         {
-            if (System.Windows.MessageBox.Show($"Would you really like to delete layer L{CtlTabsLayers.SelectedIndex + 1}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBoxResult.OK == System.Windows.MessageBox.Show($"Would you really like to delete layer L{CtlTabsLayers.SelectedIndex + 1}?",
+                                                                      "Confirm",
+                                                                      MessageBoxButton.OKCancel))
             {
                 SelectedLayer.VanishConfig();
                 CtlTabsLayers.Items.Remove(CtlTabsLayers.SelectedTab());
@@ -236,13 +242,13 @@ namespace Qualia.Controls
             ErrorMatrix matrix = null;
             if (networkTask != null)
             {
-                matrix = new ErrorMatrix(networkTask.GetClasses());
-                var nextMatrix = new ErrorMatrix(networkTask.GetClasses());
+                matrix = new(networkTask.GetClasses());
+                ErrorMatrix nextMatrix = new(networkTask.GetClasses());
                 matrix.Next = nextMatrix;
                 nextMatrix.Next = matrix;
             }
 
-            var networkModel = new NetworkDataModel(Id, GetLayersSizes())
+            NetworkDataModel networkModel = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
                 Classes = networkTask?.GetClasses(),
@@ -251,10 +257,13 @@ namespace Qualia.Controls
                 RandomizeMode = RandomizeMode,
                 RandomizerParam = RandomizerParam,
                 LearningRate = LearningRate,
-                InputInitial0 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParam),
-                InputInitial1 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParam),
+                InputInitial0 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0,
+                                                                                                        InputLayer.ActivationFuncParam),
+
+                InputInitial1 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1,
+                                                                                                        InputLayer.ActivationFuncParam),
+
                 CostFunction = CostFunctionList.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
-                //CostFunctionDerivative = CostFunction.Helper.GetDerivative(CtlCostFunction.SelectedValue.ToString()),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
@@ -322,14 +331,14 @@ namespace Qualia.Controls
                     
                     if (!isCopy && prevLayerModel != null && prevLayerModel.Neurons.Count > 0)
                     {
-                        neuronModel.WeightsToNextLayer = new ListX<ForwardNeuron>(prevLayerModel.Neurons.Count);
+                        neuronModel.WeightsToNextLayer = new(prevLayerModel.Neurons.Count);
 
                         var prevNeuronModel = prevLayerModel.Neurons.First;
                         while (prevNeuronModel != null)
                         {
                             if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))
                             {
-                                neuronModel.WeightsToNextLayer.Add(new ForwardNeuron(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
+                                neuronModel.WeightsToNextLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
                             }
 
                             prevNeuronModel = prevNeuronModel.Next;
@@ -339,7 +348,7 @@ namespace Qualia.Controls
             }
 
             var lastLayer = networkModel.Layers.Last;
-            lastLayer.VisualId = Const.OutputLayerId;
+            lastLayer.VisualId = Constants.OutputLayerId;
             {
                 var ctlNeurons = _outputLayer.GetNeuronsControls().ToArray();
                 for (int i = 0; i < ctlNeurons.Length; ++i)
@@ -359,15 +368,14 @@ namespace Qualia.Controls
 
         private void CtlColor_Click(object sender, MouseButtonEventArgs e)
         {
-            using (var colorDialog = new ColorDialog())
+            using ColorDialog colorDialog = new();
+
+            var wpfColor = CtlColor.Foreground.GetColor();
+            colorDialog.Color = System.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B); ;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                var wpfColor = CtlColor.Foreground.GetColor();
-                colorDialog.Color = System.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B); ;
-                if (colorDialog.ShowDialog() == DialogResult.OK)
-                {
-                    CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A, colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B));
-                    OnNetworkUIChanged(Notification.ParameterChanged.Structure);
-                }
+                CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A, colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B));
+                OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -388,7 +396,7 @@ namespace Qualia.Controls
 
         private void CtlRandomizerButton_Click(object sender, RoutedEventArgs e)
         {
-            var viewer = new RandomizerViewer(RandomizeMode, RandomizerParam);
+            RandomizerViewer viewer = new(RandomizeMode, RandomizerParam);
             viewer.Show();
         }
     }

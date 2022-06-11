@@ -31,9 +31,9 @@ namespace Qualia
 
         public NeuronDataModel(int id, int weightsCount)
         {
-            Weights = new ListX<WeightDataModel>(weightsCount);
+            Weights = new(weightsCount);
             Id = id;
-            Range.For(weightsCount, i => Weights.Add(new WeightDataModel(i)));
+            Range.For(weightsCount, i => Weights.Add(new(i)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

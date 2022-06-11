@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Qualia;
+using Qualia.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using Qualia;
-using Qualia.Controls;
 
 namespace Tools
 {
@@ -42,9 +42,9 @@ namespace Tools
     {
         sealed public class CountDots : INetworkTask
         {
-            public static readonly CountDots Instance = new CountDots();
+            public static readonly CountDots Instance = new();
             
-            private static readonly CountDotsControl s_control = new CountDotsControl();
+            private static readonly CountDotsControl s_control = new();
 
             private bool _isGaussianDistribution;
             private int _minNumber;
@@ -97,7 +97,7 @@ namespace Tools
 
             public List<string> GetClasses()
             {
-                var classes = new List<string>();
+                List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
                     classes.Add(number.ToString());
@@ -189,9 +189,9 @@ namespace Tools
 
         sealed public class MNIST : INetworkTask
         {
-            public static readonly MNIST Instance = new MNIST();
+            public static readonly MNIST Instance = new();
             
-            private static readonly MNISTControl s_control = new MNISTControl();
+            private static readonly MNISTControl s_control = new();
 
             public Control GetVisualControl()
             {
@@ -236,7 +236,7 @@ namespace Tools
 
             public List<string> GetClasses()
             {
-                var classes = new List<string>();
+                List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
                     classes.Add(number.ToString());

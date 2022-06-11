@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Qualia.Controls;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Runtime;
 using System.Windows.Threading;
-using Microsoft.Win32;
-using Qualia.Controls;
 using Tools;
 using static Tools.Threads;
 
@@ -17,7 +17,7 @@ namespace Qualia
 {
     sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
     {
-        public static object ApplyChangesLocker = new object();
+        public static object ApplyChangesLocker = new();
 
         private Thread _timeThread;
         private Thread _runNetworksThread;
@@ -43,7 +43,7 @@ namespace Qualia
 
             WindowState = WindowState.Maximized;
 
-            _configParams = new List<IConfigParam>()
+            _configParams = new()
             {
                 CtlUseWeightsColors,
                 CtlOnlyChangedWeights,
@@ -100,18 +100,18 @@ namespace Qualia
 
         private void LoadConfig()
         {
-            Width = Config.Main.GetDouble(Const.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth).Value;
-            Height = Config.Main.GetDouble(Const.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight).Value;
-            Top = Config.Main.GetDouble(Const.Param.ScreenTop, 0).Value;
-            Left = Config.Main.GetDouble(Const.Param.ScreenLeft, 0).Value;
-            Topmost = Config.Main.GetBool(Const.Param.OnTop, false);
-            DataWidth.Width = new GridLength(Config.Main.GetDouble(Const.Param.DataWidth, 100).Value);
-            NetworkHeight.Height = new GridLength(Config.Main.GetDouble(Const.Param.NetworkHeight, 200).Value);
+            Width = Config.Main.GetDouble(Constants.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth).Value;
+            Height = Config.Main.GetDouble(Constants.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight).Value;
+            Top = Config.Main.GetDouble(Constants.Param.ScreenTop, 0).Value;
+            Left = Config.Main.GetDouble(Constants.Param.ScreenLeft, 0).Value;
+            Topmost = Config.Main.GetBool(Constants.Param.OnTop, false);
+            DataWidth.Width = new(Config.Main.GetDouble(Constants.Param.DataWidth, 100).Value);
+            NetworkHeight.Height = new(Config.Main.GetDouble(Constants.Param.NetworkHeight, 200).Value);
 
             _configParams.ForEach(p => p.SetConfig(Config.Main));
             _configParams.ForEach(p => p.LoadConfig());
 
-            var fileName = Config.Main.GetString(Const.Param.NetworksManagerName, null);
+            var fileName = Config.Main.GetString(Constants.Param.NetworksManagerName, null);
             LoadNetworksManager(fileName);
             LoadSettings();
         }
@@ -172,8 +172,8 @@ namespace Qualia
                     return;
                 }
 
-                _networksManager = new NetworksManager(CtlTabs, fileName, OnNetworkUIChanged);
-                Config.Main.Set(Const.Param.NetworksManagerName, fileName);
+                _networksManager = new(CtlTabs, fileName, OnNetworkUIChanged);
+                Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
                 CtlInputDataPresenter.LoadConfig(_networksManager.Config, this);
 
                 ReplaceNetworksManagerControl(_networksManager);
@@ -190,19 +190,19 @@ namespace Qualia
             else
             {
                 MessageBox.Show($"Network '{fileName}' is not found!", "Error", MessageBoxButton.OK);
-                Config.Main.Set(Const.Param.NetworksManagerName, string.Empty);
+                Config.Main.Set(Constants.Param.NetworksManagerName, string.Empty);
             }
         }
 
         private bool SaveConfig()
         {
-            Config.Main.Set(Const.Param.ScreenWidth, ActualWidth);
-            Config.Main.Set(Const.Param.ScreenHeight, ActualHeight);
-            Config.Main.Set(Const.Param.ScreenTop, Top);
-            Config.Main.Set(Const.Param.ScreenLeft, Left);
-            Config.Main.Set(Const.Param.OnTop, Topmost);
-            Config.Main.Set(Const.Param.DataWidth, DataWidth.ActualWidth);
-            Config.Main.Set(Const.Param.NetworkHeight, NetworkHeight.ActualHeight);
+            Config.Main.Set(Constants.Param.ScreenWidth, ActualWidth);
+            Config.Main.Set(Constants.Param.ScreenHeight, ActualHeight);
+            Config.Main.Set(Constants.Param.ScreenTop, Top);
+            Config.Main.Set(Constants.Param.ScreenLeft, Left);
+            Config.Main.Set(Constants.Param.OnTop, Topmost);
+            Config.Main.Set(Constants.Param.DataWidth, DataWidth.ActualWidth);
+            Config.Main.Set(Constants.Param.NetworkHeight, NetworkHeight.ActualHeight);
 
             _configParams.ForEach(p => p.SaveConfig());
 
@@ -249,9 +249,9 @@ namespace Qualia
             }
         }
 
-        private void ToggleApplyChanges(Const.Toggle state)
+        private void ToggleApplyChanges(Constants.Toggle state)
         {
-            if (state == Const.Toggle.On)
+            if (state == Constants.Toggle.On)
             {
                 CtlApplyChanges.Background = Brushes.Yellow;
                 CtlApplyChanges.IsEnabled = true;
@@ -265,7 +265,7 @@ namespace Qualia
 
         private void OnNetworkUIChanged(Notification.ParameterChanged param)
         {
-            ToggleApplyChanges(Const.Toggle.On);
+            ToggleApplyChanges(Constants.Toggle.On);
             CtlMenuStart.IsEnabled = false;
 
             if (param == Notification.ParameterChanged.NeuronsCount)
@@ -278,13 +278,13 @@ namespace Qualia
                     }
                     else
                     {
-                        ToggleApplyChanges(Const.Toggle.Off);
+                        ToggleApplyChanges(Constants.Toggle.Off);
                     }
                 }
 
                 if (CtlInputDataPresenter.NetworkTask != null && !CtlInputDataPresenter.NetworkTask.IsValid())
                 {
-                    ToggleApplyChanges(Const.Toggle.Off);
+                    ToggleApplyChanges(Constants.Toggle.Off);
                 }
             }
         }
@@ -306,7 +306,7 @@ namespace Qualia
                                                   CtlHighlightChangedWeights.IsOn,
                                                   CtlShowOnlyUnchangedWeights.IsOn);
 
-                ToggleApplyChanges(Const.Toggle.Off);
+                ToggleApplyChanges(Constants.Toggle.Off);
             }
         }
 
@@ -320,7 +320,7 @@ namespace Qualia
                 _networksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
-                ToggleApplyChanges(Const.Toggle.Off);
+                ToggleApplyChanges(Constants.Toggle.Off);
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuRun.IsEnabled = true;
@@ -344,7 +344,7 @@ namespace Qualia
 
             ApplyChangesToStandingNetworks();
 
-            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationTokenSource = new();
             _cancellationToken = _cancellationTokenSource.Token;
 
             CtlMenuStart.IsEnabled = false;
@@ -367,16 +367,16 @@ namespace Qualia
             _rounds = 0;
             _startTime = Stopwatch.StartNew();
 
-            _runNetworksThread = new Thread(new ParameterizedThreadStart(RunNetworks))
+            _runNetworksThread = new(new ParameterizedThreadStart(RunNetworks))
             {
                 Name = "RunNetworks",
                 Priority = ThreadPriority.Highest,
-                ApartmentState = ApartmentState.STA,
                 IsBackground = false
             };
+            _runNetworksThread.SetApartmentState(ApartmentState.STA);
             _runNetworksThread.Start(new object[] { Processor.Proc2 | Processor.Proc3 } );
 
-            _timeThread = new Thread(new ThreadStart(RunTimer))
+            _timeThread = new(new ThreadStart(RunTimer))
             {
                 Name = "RunTimer",
                 Priority = ThreadPriority.Normal,
@@ -396,9 +396,9 @@ namespace Qualia
 
             var loopLimits = new LoopsLimit[3]
             {
-                new LoopsLimit(Settings.SkipRoundsToDrawErrorMatrix),
-                new LoopsLimit(Settings.SkipRoundsToDrawNetworks),
-                new LoopsLimit(Settings.SkipRoundsToDrawStatistics)
+                new(Settings.SkipRoundsToDrawErrorMatrix),
+                new(Settings.SkipRoundsToDrawNetworks),
+                new(Settings.SkipRoundsToDrawStatistics)
 
             };
 
@@ -419,9 +419,9 @@ namespace Qualia
             NetworkDataModel networkModelToRender = null;
             Statistics statisticsToRender = null;
 
-            var swCurrentMiscCodeTime = new Stopwatch();
-            var swCurrentPureRoundsPerSecond = new Stopwatch();
-            var swRenderTime = new Stopwatch();
+            Stopwatch swCurrentMiscCodeTime = new();
+            Stopwatch swCurrentPureRoundsPerSecond = new();
+            Stopwatch swRenderTime = new();
             
             var currentMiscCodeTimeSpan = TimeSpan.FromTicks(0);
 
@@ -702,8 +702,8 @@ namespace Qualia
                 return null;
             }
 
-            //var stat = new Dictionary<string, string>(20);
-            var stat = new Dictionary<string, string>();
+            Dictionary<string, string> stat = new();
+
             stat.Add("Time", _startTime.Elapsed.ToString(Culture.TimeFormat));
 
             if (statistics.Percent > 0)
@@ -801,7 +801,8 @@ namespace Qualia
                 return;
             }
 
-            var networksManager = new NetworksManager(CtlTabs, null, OnNetworkUIChanged);
+            NetworksManager networksManager = new(CtlTabs, null, OnNetworkUIChanged);
+
             if (networksManager.Config != null)
             {
                 _networksManager = networksManager;
@@ -810,7 +811,7 @@ namespace Qualia
                 ReplaceNetworksManagerControl(_networksManager);
                 if (_networksManager.IsValid())
                 {
-                    var fileName = Config.Main.GetString(Const.Param.NetworksManagerName, null);
+                    var fileName = Config.Main.GetString(Constants.Param.NetworksManagerName, null);
                     SetTitle(fileName);
 
                     ApplyChangesToStandingNetworks();
@@ -824,7 +825,7 @@ namespace Qualia
 
         private void LoadNetworksManager()
         {
-            var loadDialog = new OpenFileDialog()
+            OpenFileDialog loadDialog = new()
             {
                 InitialDirectory = Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
@@ -846,7 +847,7 @@ namespace Qualia
 
         private void DeleteNetworksManager()
         {
-            var networksManagerName = Config.Main.GetString(Const.Param.NetworksManagerName);
+            var networksManagerName = Config.Main.GetString(Constants.Param.NetworksManagerName);
             if (string.IsNullOrEmpty(networksManagerName))
             {
                 return;
@@ -879,7 +880,7 @@ namespace Qualia
             }
             else
             {
-                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(Config.Main.GetString(Const.Param.NetworksManagerName).Replace("_", "__"));
+                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(Config.Main.GetString(Constants.Param.NetworksManagerName).Replace("_", "__"));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;
@@ -1014,7 +1015,7 @@ namespace Qualia
         {
             if (SaveConfig())
             {
-                _networksManager.SaveAs();
+                NetworksManager.SaveAs();
             }
         }
 

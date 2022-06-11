@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Tools;
+﻿using Tools;
 
 namespace Qualia
 {
@@ -12,9 +11,10 @@ namespace Qualia
         
         public LayerDataModel(int id, int neuronsCount, int weightsCountPerNeuron)
         {
-            Neurons = new ListX<NeuronDataModel>(neuronsCount);
+            Neurons = new(neuronsCount);
             Id = id;
-            Range.For(neuronsCount, neuronId => Neurons.Add(new NeuronDataModel(neuronId, weightsCountPerNeuron)));
+
+            Range.For(neuronsCount, neuronId => Neurons.Add(new(neuronId, weightsCountPerNeuron)));
         }
     }
 }

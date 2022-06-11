@@ -5,14 +5,12 @@ using System.Windows.Threading;
 
 namespace Qualia
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         public App()
         {
             Logger.LogFileName = WorkingDirectory + "log.txt";
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }

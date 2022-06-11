@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Qualia.Controls;
+using System;
 using System.Drawing;
 using System.Windows;
-using Qualia.Controls;
 using Tools;
 
 namespace Qualia
@@ -13,7 +13,7 @@ namespace Qualia
 
         private readonly Font _font = new("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
 
-        private readonly NetworkDataModel _model = new(Const.UnknownId, new int[] { 100, 100, 100, 100, 100, 100 });
+        private readonly NetworkDataModel _model = new(Constants.UnknownId, new[] { 100, 100, 100, 100, 100, 100 });
 
         public RandomizerViewer()
         {
@@ -24,7 +24,7 @@ namespace Qualia
         {
             InitializeComponent();
 
-            _randomizeMode = randomizeMode;
+            _randomizeMode = randomizeMode ?? throw new ArgumentNullException(nameof(randomizeMode));
             _param = param;
 
             CtlName.Text = _randomizeMode.GetType().ToString();
@@ -90,9 +90,9 @@ namespace Qualia
             int top = CtlPresenter.CtlPresenter.Height / 2 - _model.Layers.First.Neurons.Count / 2;
 
             byte alpha = 100;
-            int heightOf1 = (int)((CtlPresenter.CtlPresenter.Height - 250) / 2 / GetModelWeightsMaxValue());
+            int heightOf1 = (CtlPresenter.CtlPresenter.Height - 250) / 2 / GetModelWeightsMaxValue();
 
-            var zeroColor = new Pen(Color.FromArgb(alpha, Color.Gray)); // TODO using
+            Pen zeroColor = new(Color.FromArgb(alpha, Color.Gray)); // TODO using
 
             for (int layer = 0; layer < _model.Layers.Count - 1; ++layer)
             {
@@ -107,7 +107,7 @@ namespace Qualia
                         var hover = value == 0 ? 0 : 30 * QMath.Sign(value);
                         var p = Draw.GetPen(value, 0, alpha);
 
-                        using (var pen = new Pen(Draw.MediaColorToSystemColor(p.Brush.GetColor())))
+                        using (Pen pen = new(Draw.MediaColorToSystemColor(p.Brush.GetColor())))
                         {
                             CtlPresenter.CtlPresenter.G.DrawLine(pen,
                                                                  left - neuron + layer * layersDistance + weight,

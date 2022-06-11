@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using Tools;
 
 namespace Qualia.Controls
@@ -27,7 +27,7 @@ namespace Qualia.Controls
             _ctlTabs = tabs;
             _ctlTabs.SelectionChanged += CtlTabs_SelectionChanged;
 
-            Config = string.IsNullOrEmpty(fileName) ? CreateNewManager() : new Config(fileName);
+            Config = string.IsNullOrEmpty(fileName) ? CreateNewManager() : new(fileName);
             if (Config != null)
             {
                 ClearNetworks();
@@ -60,7 +60,7 @@ namespace Qualia.Controls
         {
             get
             {
-                var ctlNetworks = new List<NetworkControl>();
+                List<NetworkControl> ctlNetworks = new();
                 for (int i = 1; i < _ctlTabs.Items.Count; ++i)
                 {
                     ctlNetworks.Add(_ctlTabs.Tab(i).Content as NetworkControl);
@@ -70,9 +70,9 @@ namespace Qualia.Controls
             }
         }
 
-        public Config CreateNewManager()
+        public static Config CreateNewManager()
         {
-            var saveDialog = new SaveFileDialog
+            SaveFileDialog saveDialog = new()
             {
                 InitialDirectory = Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
@@ -90,8 +90,8 @@ namespace Qualia.Controls
                     File.Delete(fileName);
                 }
 
-                var config = new Config(fileName);
-                Config.Main.Set(Const.Param.NetworksManagerName, fileName);
+                Config config = new(fileName);
+                Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
                 Config.Main.FlushToDrive();
 
                 return config;
@@ -110,14 +110,14 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            var networkIds = Config.GetArray(Const.Param.Networks);
+            var networkIds = Config.GetArray(Constants.Param.Networks);
             if (networkIds.Length == 0)
             {
-                networkIds = new long[] { Const.UnknownId };
+                networkIds = new long[] { Constants.UnknownId };
             }
 
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
-            _ctlTabs.SelectedIndex = (int)Config.GetInt(Const.Param.SelectedNetworkIndex, 0).Value + 1;
+            _ctlTabs.SelectedIndex = (int)Config.GetInt(Constants.Param.SelectedNetworkIndex, 0).Value + 1;
 
             RefreshNetworksDataModels();
         }
@@ -132,13 +132,13 @@ namespace Qualia.Controls
 
         public void AddNetwork()
         {
-            AddNetwork(Const.UnknownId);
+            AddNetwork(Constants.UnknownId);
         }
 
         private void AddNetwork(long networkId)
         {
-            var ctlNetwork = new NetworkControl(networkId, Config, OnNetworkUIChanged);
-            var tabItem = new TabItem
+            NetworkControl ctlNetwork = new(networkId, Config, OnNetworkUIChanged);
+            TabItem tabItem = new()
             {
                 Header = $"Network {_ctlTabs.Items.Count}",
                 Content = ctlNetwork
@@ -147,7 +147,7 @@ namespace Qualia.Controls
             _ctlTabs.Items.Add(tabItem);
             _ctlTabs.SelectedItem = tabItem;
 
-            if (networkId == Const.UnknownId)
+            if (networkId == Constants.UnknownId)
             {
                 ctlNetwork.InputLayer.OnTaskChanged(_networkTask);
                 ctlNetwork.ResetLayersTabsNames();
@@ -156,7 +156,9 @@ namespace Qualia.Controls
 
         public void DeleteNetwork()
         {
-            if (MessageBox.Show($"Would you really like to delete Network {_ctlTabs.SelectedIndex}?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBoxResult.OK == MessageBox.Show($"Would you really like to delete Network {_ctlTabs.SelectedIndex}?",
+                                                       "Confirm",
+                                                       MessageBoxButton.OKCancel))
             {
                 SelectedNetworkControl.VanishConfig();
 
@@ -185,8 +187,8 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Config.Set(Const.Param.Networks, Networks.Select(ctlNetwork => ctlNetwork.Id));
-            Config.Set(Const.Param.SelectedNetworkIndex, _ctlTabs.SelectedIndex - 1);
+            Config.Set(Constants.Param.Networks, Networks.Select(ctlNetwork => ctlNetwork.Id));
+            Config.Set(Constants.Param.SelectedNetworkIndex, _ctlTabs.SelectedIndex - 1);
 
             Networks.ForEach(ctlNetwork => ctlNetwork.SaveConfig());
         }
@@ -196,9 +198,9 @@ namespace Qualia.Controls
             Networks.ForEach(ctlNetwork => ctlNetwork.ResetLayersTabsNames());
         }
 
-        public void SaveAs()
+        public static void SaveAs()
         {
-            var saveDialog = new SaveFileDialog
+            SaveFileDialog saveDialog = new()
             {
                 InitialDirectory = Path.GetFullPath("Networks\\"),
                 DefaultExt = "txt",
@@ -214,13 +216,13 @@ namespace Qualia.Controls
                     File.Delete(saveDialog.FileName);
                 }
 
-                File.Copy(Config.Main.GetString(Const.Param.NetworksManagerName), saveDialog.FileName);
+                File.Copy(Config.Main.GetString(Constants.Param.NetworksManagerName), saveDialog.FileName);
             }
         }
 
         public ListX<NetworkDataModel> CreateNetworksDataModels()
         {
-            var networkModels = new ListX<NetworkDataModel>(Networks.Count);
+            ListX<NetworkDataModel> networkModels = new(Networks.Count);
             Networks.ForEach(ctlNetwork => networkModels.Add(ctlNetwork.CreateNetworkDataModel(_networkTask, false)));
 
             return networkModels;
@@ -233,7 +235,7 @@ namespace Qualia.Controls
 
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {
-            var newModels = new ListX<NetworkDataModel>(networkModels.Count);
+            ListX<NetworkDataModel> newModels = new(networkModels.Count);
             var newNetworkModel = networkModels.First;
 
             while (newNetworkModel != null)
@@ -257,6 +259,7 @@ namespace Qualia.Controls
         public void PrepareModelsForRun()
         {
             NetworkModels.ForEach(model => model.ActivateFirstLayer());
+
             ResetModelsDynamicStatistics();
             ResetModelsStatistics();
             ResetErrorMatrix();
@@ -316,12 +319,12 @@ namespace Qualia.Controls
 
         public void ResetModelsStatistics()
         {
-            NetworkModels.ForEach(model => model.Statistics = new Statistics());
+            NetworkModels.ForEach(model => model.Statistics = new());
         }
 
         private void ResetModelsDynamicStatistics()
         {
-            NetworkModels.ForEach(model => model.DynamicStatistics = new DynamicStatistics());
+            NetworkModels.ForEach(model => model.DynamicStatistics = new());
         }
 
         public void ResetErrorMatrix()

@@ -15,7 +15,7 @@ namespace Qualia.Controls
 
         public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
-            if (config is null)
+            if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
@@ -30,6 +30,7 @@ namespace Qualia.Controls
         {
             int ordinalNumber = 0;
             var neurons = GetNeuronsControls();
+
             Range.ForEach(neurons, n => n.OrdinalNumberChanged(++ordinalNumber));
         }
 
@@ -38,9 +39,10 @@ namespace Qualia.Controls
         public virtual bool IsOutput => false;
         public virtual Panel NeuronsHolder => throw new InvalidOperationException();
         public virtual int NeuronsCount => GetNeuronsControls().Count();
+
         public IEnumerable<NeuronBase> GetNeuronsControls() => NeuronsHolder.Children.OfType<NeuronBase>();
 
-        public void AddNeuron() => AddNeuron(Const.UnknownId);
+        public void AddNeuron() => AddNeuron(Constants.UnknownId);
 
         public virtual void AddNeuron(long id) => throw new InvalidOperationException();
         public virtual bool IsValid() => throw new InvalidOperationException();
@@ -49,7 +51,7 @@ namespace Qualia.Controls
 
         public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (sender is null)
+            if (sender == null)
             {
                 throw new ArgumentNullException(nameof(sender));
             }

@@ -9,11 +9,28 @@ namespace Qualia.Controls
 {
     sealed public partial class MatrixPresenter : UserControl
     {
-        private static readonly Typeface s_font = new Typeface(new FontFamily("Tahoma"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-        private readonly FormattedText _textOutput = new FormattedText("Output", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
-        private readonly FormattedText _textInput = new FormattedText("Input", Culture.Current, FlowDirection.LeftToRight, s_font, 10, Brushes.Black, Render.PixelsPerDip);
+        private static readonly Typeface s_font = new(new("Tahoma"),
+                                                      FontStyles.Normal,
+                                                      FontWeights.Bold,
+                                                      FontStretches.Normal);
 
-        private readonly Dictionary<string, FormattedText> _classesFormatText = new Dictionary<string, FormattedText>();
+        private readonly FormattedText _textOutput = new("Output",
+                                                         Culture.Current,
+                                                         FlowDirection.LeftToRight,
+                                                         s_font,
+                                                         10,
+                                                         Brushes.Black,
+                                                         Render.PixelsPerDip);
+
+        private readonly FormattedText _textInput = new("Input",
+                                                         Culture.Current,
+                                                         FlowDirection.LeftToRight,
+                                                         s_font,
+                                                         10,
+                                                         Brushes.Black,
+                                                         Render.PixelsPerDip);
+
+        private readonly Dictionary<string, FormattedText> _classesFormatText = new();
 
         private readonly Pen _penSilver = Tools.Draw.GetPen(in QColors.Silver);
 
@@ -55,19 +72,19 @@ namespace Qualia.Controls
 
             for (int i = 0; i < classes.Count; ++i)
             {
-                _classesFormatText[classes[i]] = new FormattedText(classes[i],
-                                                                   Culture.Current,
-                                                                   FlowDirection.LeftToRight,
-                                                                   s_font,
-                                                                   7,
-                                                                   Brushes.Black,
-                                                                   Render.PixelsPerDip);
+                _classesFormatText[classes[i]] = new(classes[i],
+                                                     Culture.Current,
+                                                     FlowDirection.LeftToRight,
+                                                     s_font,
+                                                     7,
+                                                     Brushes.Black,
+                                                     Render.PixelsPerDip);
             }
         }
 
         public void DrawBase(ErrorMatrix matrix)
         {
-            if (matrix is null)
+            if (matrix == null)
             {
                 throw new ArgumentNullException(nameof(matrix));
             }
@@ -81,26 +98,39 @@ namespace Qualia.Controls
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    CtlBase.DrawRectangle(null, _penSilver, ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE, AXIS_OFFSET + y * POINTS_SIZE, POINTS_SIZE, POINTS_SIZE));
+                    CtlBase.DrawRectangle(null,
+                                          _penSilver,
+                                          ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE,
+                                                        AXIS_OFFSET + y * POINTS_SIZE,
+                                                        POINTS_SIZE,
+                                                        POINTS_SIZE));
                 }
             }
 
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
                 var text = _classesFormatText[matrix.Classes[x]];
-                CtlBase.DrawText(text, ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2, 1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
+                CtlBase.DrawText(text,
+                                 ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
+                                                1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
             }
 
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
                 var text = _classesFormatText[matrix.Classes[y]];
-                CtlBase.DrawText(text, ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2, AXIS_OFFSET + y * POINTS_SIZE));
+                CtlBase.DrawText(text,
+                                 ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
+                                                AXIS_OFFSET + y * POINTS_SIZE));
             }
         
-            CtlBase.DrawText(_textOutput, ref Points.Get(AXIS_OFFSET + (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2, AXIS_OFFSET - _textOutput.Height - 1));
-            CtlBase.DrawText(_textInput, ref Points.Get(-AXIS_OFFSET - (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2, AXIS_OFFSET - _textInput.Height - 1), -90);
+            CtlBase.DrawText(_textOutput,
+                             ref Points.Get(AXIS_OFFSET + (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2,
+                                            AXIS_OFFSET - _textOutput.Height - 1));
 
-            CtlBase.Update();
+            CtlBase.DrawText(_textInput,
+                             ref Points.Get(-AXIS_OFFSET - (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2,
+                                            AXIS_OFFSET - _textInput.Height - 1),
+                             -90);
         }
 
         public void Draw(ErrorMatrix matrix)
@@ -110,7 +140,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (matrix is null)
+            if (matrix == null)
             {
                 throw new ArgumentNullException(nameof(matrix));
             }
@@ -177,8 +207,6 @@ namespace Qualia.Controls
                 var brush = Tools.Draw.GetBrush(in color);
                 CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(11 + AXIS_OFFSET + matrix.Output.Length * POINT_SIZE, AXIS_OFFSET + y * POINT_SIZE, (int)(BOUND * (double)matrix.Input[y] / (double)inputMax), POINT_SIZE));
             }
-
-            CtlPresenter.Update();
         }
 
         public void Clear()
@@ -228,6 +256,7 @@ namespace Qualia.Controls
         private long MaxInArray(in long[] array)
         {
             long max = 0;
+
             for (int i = 0; i < array.Length; ++i)
             {
                 if (array[i] > max)

@@ -13,7 +13,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new List<IConfigParam>()
+            _configParams = new()
             {
                 CtlActivationFunc,
                 CtlActivationFuncParam

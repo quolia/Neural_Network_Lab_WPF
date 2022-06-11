@@ -52,7 +52,7 @@ namespace Qualia.Controls
                     _drawArea.Dispose();
                     G.Dispose();
                 }
-                _drawArea = new Bitmap(Width, Height);
+                _drawArea = new(Width, Height);
                 CtlBox.Image = _drawArea;
                 G = Graphics.FromImage(_drawArea);
                 //G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;

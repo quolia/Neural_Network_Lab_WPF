@@ -1,7 +1,7 @@
 ﻿
 namespace Tools
 {
-    public static class Const
+    public static class Constants
     {
         public const int UnknownId = -1;
         public const int NewId = UnknownId - 1;

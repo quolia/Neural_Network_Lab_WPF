@@ -18,15 +18,15 @@ namespace Tools
 
     sealed public class Config
     {
-        public static Config Main = new Config("config.txt");
+        public static Config Main = new("config.txt");
         public readonly string Name;
         public Config ParentConfig;
 
-        private static object s_locker = new object();
+        private static object s_locker = new();
         
         private string _extender;
 
-        private static readonly Dictionary<string, Dictionary<string, string>> s_cache = new Dictionary<string, Dictionary<string, string>>();
+        private static readonly Dictionary<string, Dictionary<string, string>> s_cache = new();
 
         public Config(string fileName, Config parentConfig = null)
         {
@@ -41,7 +41,7 @@ namespace Tools
 
         public Config Extend(long extender)
         {
-            var config = new Config(Name)
+            Config config = new(Name)
             {
                 ParentConfig = this,
                 _extender = "." + extender
@@ -50,7 +50,7 @@ namespace Tools
             return config;
         }
 
-        public string GetString(Const.Param paramName, string defaultValue = null)
+        public string GetString(Constants.Param paramName, string defaultValue = null)
         {
             return GetValue(paramName, defaultValue);
         }
@@ -60,7 +60,7 @@ namespace Tools
             return GetValue(paramName, defaultValue);
         }
 
-        public double? GetDouble(Const.Param paramName, double? defaultValue = null)
+        public double? GetDouble(Constants.Param paramName, double? defaultValue = null)
         {
             if (Converter.TryTextToDouble(GetValue(paramName, Converter.DoubleToText(defaultValue)), out double? value))
             {
@@ -86,7 +86,7 @@ namespace Tools
             }
         }
 
-        public long? GetInt(Const.Param paramName, long? defaultValue = null)
+        public long? GetInt(Constants.Param paramName, long? defaultValue = null)
         {
             if (Converter.TryTextToInt(GetValue(paramName, Converter.IntToText(defaultValue)), out long? value))
             {
@@ -112,7 +112,7 @@ namespace Tools
             }
         }
 
-        public bool GetBool(Const.Param paramName, bool defaultValue = false)
+        public bool GetBool(Constants.Param paramName, bool defaultValue = false)
         {
             return 1 == GetInt(paramName, defaultValue ? 1 : 0);
         }
@@ -122,7 +122,7 @@ namespace Tools
             return 1 == GetInt(paramName, defaultValue ? 1 : 0);
         }
 
-        public long[] GetArray(Const.Param paramName, string defaultValue = null)
+        public long[] GetArray(Constants.Param paramName, string defaultValue = null)
         {
             if (defaultValue == null)
             {
@@ -144,7 +144,7 @@ namespace Tools
             return string.IsNullOrEmpty(value) ? Array.Empty<long>() : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
-        public void Remove(Const.Param paramName)
+        public void Remove(Constants.Param paramName)
         {
             var values = GetValues();
             if (values.TryGetValue(paramName.ToString("G") + _extender, out _))
@@ -166,7 +166,7 @@ namespace Tools
             SaveValues(values);
         }
 
-        public void Set(Const.Param paramName, string value)
+        public void Set(Constants.Param paramName, string value)
         {
             var values = GetValues();
             values[paramName.ToString("G") + _extender] = value;
@@ -184,7 +184,7 @@ namespace Tools
             SaveValues(values);
         }
 
-        public void Set(Const.Param paramName, double? value)
+        public void Set(Constants.Param paramName, double? value)
         {
             Set(paramName, Converter.DoubleToText(value));
         }
@@ -194,7 +194,7 @@ namespace Tools
             Set(paramName, Converter.DoubleToText(value));
         }
 
-        public void Set(Const.Param paramName, long? value)
+        public void Set(Constants.Param paramName, long? value)
         {
             Set(paramName, Converter.IntToText(value));
         }
@@ -204,7 +204,7 @@ namespace Tools
             Set(paramName, Converter.IntToText(value));
         }
 
-        public void Set(Const.Param paramName, bool value)
+        public void Set(Constants.Param paramName, bool value)
         {
             Set(paramName, value ? 1 : 0);
         }
@@ -214,7 +214,7 @@ namespace Tools
             Set(paramName, value ? 1 : 0);
         }
 
-        public void Set<T>(Const.Param paramName, IEnumerable<T> list)
+        public void Set<T>(Constants.Param paramName, IEnumerable<T> list)
         {
             Set(paramName, string.Join(",", list.Select(l => l.ToString())));
         }
@@ -224,7 +224,7 @@ namespace Tools
             Set(paramName, string.Join(",", list.Select(l => l.ToString())));
         }
 
-        private string GetValue(Const.Param paramName, string defaultValue = null)
+        private string GetValue(Constants.Param paramName, string defaultValue = null)
         {
             var values = GetValues();
 
@@ -275,7 +275,7 @@ namespace Tools
                 return;
             }
 
-            var lines = new List<string>();
+            List<string> lines = new();
 
             var values = s_cache[Name];
             foreach (var pair in values)
@@ -296,7 +296,7 @@ namespace Tools
                 return s_cache[Name];
             }
 
-            var result = new Dictionary<string, string>();
+            Dictionary<string, string> result = new();
 
             if (!File.Exists(Name))
             {

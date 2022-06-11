@@ -14,7 +14,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new List<IConfigParam>()
+            _configParams = new()
             {
                 CtlActivationInitializerParam,
                 CtlActivationInitializer,
@@ -45,7 +45,7 @@ namespace Qualia.Controls
         private void CtlIsBias_CheckedChanged()
         {
             CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
-            CtlActivation.Height = CtlIsBias.IsOn ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
+            CtlActivation.Height = CtlIsBias.IsOn ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
             OnChanged();
@@ -70,7 +70,7 @@ namespace Qualia.Controls
 
             CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
             CtlIsBiasConnected.IsOn &= CtlIsBias.IsOn;
-            CtlActivation.Height = CtlIsBias.IsOn ? new GridLength(0, GridUnitType.Auto) : new GridLength(0, GridUnitType.Pixel);
+            CtlActivation.Height = CtlIsBias.IsOn ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
         }

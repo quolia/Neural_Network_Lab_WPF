@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Qualia;
 
 namespace Tools
 {
@@ -66,12 +64,12 @@ namespace Tools
 
         public static implicit operator Pointer<T>(void* v)
         {
-            return new Pointer<T>(v);
+            return new(v);
         }
 
         public static implicit operator Pointer<T>(IntPtr p)
         {
-            return new Pointer<T>(p.ToPointer());
+            return new(p.ToPointer());
         }
     }
 
@@ -217,7 +215,7 @@ namespace Tools
 
         public static long GetNextId(long existingId)
         {
-            if (existingId > Const.UnknownId)
+            if (existingId > Constants.UnknownId)
             {
                 return existingId;
             }
@@ -277,8 +275,8 @@ namespace Tools
 
         public DynamicStatistics()
         {
-            PercentData = new PlotPoints();
-            CostData = new PlotPoints();
+            PercentData = new();
+            CostData = new();
         }
 
         public DynamicStatistics(DynamicStatistics from)
@@ -290,8 +288,8 @@ namespace Tools
         public void Add(double percent, double cost)
         {
             var now = DateTime.UtcNow.Ticks;
-            PercentData.Add(new PlotPoint(percent, now));
-            CostData.Add(new PlotPoint(cost, now));
+            PercentData.Add(new(percent, now));
+            CostData.Add(new(cost, now));
         }
 
         sealed public class PlotPoint
@@ -308,7 +306,7 @@ namespace Tools
 
         public class PlotPoints : List<PlotPoint>
         {
-            private readonly List<PlotPoint> _pointsToRemove = new List<PlotPoint>();
+            private readonly List<PlotPoint> _pointsToRemove = new();
 
             public int PointsToRemoveCount => _pointsToRemove.Count;
 
@@ -360,7 +358,7 @@ namespace Tools
 
     sealed public class InvalidValueException : Exception
     {
-        public InvalidValueException(Const.Param paramName, string value)
+        public InvalidValueException(Constants.Param paramName, string value)
             : base($"Invalid value {paramName} = '{value}'.")
         {
             //

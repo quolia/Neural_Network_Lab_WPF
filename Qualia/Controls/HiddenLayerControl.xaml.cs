@@ -18,10 +18,10 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            var neuronsIds = Config.GetArray(Const.Param.Neurons);
+            var neuronsIds = Config.GetArray(Constants.Param.Neurons);
             if (neuronsIds.Length == 0)
             {
-                neuronsIds = new long[] { Const.UnknownId };
+                neuronsIds = new long[] { Constants.UnknownId };
             }
 
             foreach (var neuronId in neuronsIds)
@@ -36,10 +36,10 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long id)
         {
-            var neuron = new NeuronControl(id, Config, OnNetworkUIChanged);
+            NeuronControl neuron = new(id, Config, OnNetworkUIChanged);
             NeuronsHolder.Children.Add(neuron);
 
-            if (id == Const.UnknownId)
+            if (id == Constants.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
@@ -56,14 +56,14 @@ namespace Qualia.Controls
         {
             var ctlNeurons = GetNeuronsControls().ToList();
             var ids = ctlNeurons.Select(ctlNeuron => ctlNeuron.Id);
-            Config.Set(Const.Param.Neurons, ids);
+            Config.Set(Constants.Param.Neurons, ids);
 
             ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
         }
 
         public override void VanishConfig()
         {
-            Config.Remove(Const.Param.Neurons);
+            Config.Remove(Constants.Param.Neurons);
             var ctlNeurons = GetNeuronsControls().ToList();
             ctlNeurons.ForEach(ctlNeuron => ctlNeuron.VanishConfig());
         }

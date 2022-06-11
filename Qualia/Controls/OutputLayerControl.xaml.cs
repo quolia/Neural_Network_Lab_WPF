@@ -12,12 +12,12 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            var neuronIds = Config.GetArray(Const.Param.Neurons);
+            var neuronIds = Config.GetArray(Constants.Param.Neurons);
             neuronIds.ToList().ForEach(neuronId => AddNeuron(neuronId));
 
             if (neuronIds.Length == 0)
             {
-                Range.For(Const.DefaultOutputNeuronsCount, _ => AddNeuron(Const.UnknownId));
+                Range.For(Constants.DefaultOutputNeuronsCount, _ => AddNeuron(Constants.UnknownId));
             }
         }
 
@@ -27,15 +27,15 @@ namespace Qualia.Controls
 
         private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
         {
-            AddNeuron(Const.UnknownId);
+            AddNeuron(Constants.UnknownId);
         }
 
         public override void AddNeuron(long neuronId)
         {
-            var ctlNeuron = new OutputNeuronControl(neuronId, Config, OnNetworkUIChanged);
+            OutputNeuronControl ctlNeuron = new(neuronId, Config, OnNetworkUIChanged);
             NeuronsHolder.Children.Add(ctlNeuron);
 
-            if (neuronId == Const.UnknownId)
+            if (neuronId == Constants.UnknownId)
             {
                 OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
@@ -52,13 +52,13 @@ namespace Qualia.Controls
         public override void SaveConfig()
         {
             var ctlNeurons = GetNeuronsControls();
-            Config.Set(Const.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
+            Config.Set(Constants.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
             ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.SaveConfig());
         }
 
         public override void VanishConfig()
         {
-            Config.Remove(Const.Param.Neurons);
+            Config.Remove(Constants.Param.Neurons);
 
             var ctlNeurons = GetNeuronsControls();
             ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.VanishConfig());

@@ -8,7 +8,7 @@ namespace Qualia
 {
     internal static class Logger
     {
-        private static readonly object s_locker = new object();
+        private static readonly object s_locker = new();
         private static string s_logFileName = "log.txt";
 
         public static string LogFileName
@@ -48,9 +48,9 @@ namespace Qualia
 
         private static bool ShowErrorAndAskForSkip(string caption, string message)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.AppendLine()
-                .AppendLine("Skip next errors of this kind?");
+                   .AppendLine("Skip next errors of this kind?");
 
             return MessageBoxResult.Yes == MessageBox.Show(message + builder.ToString(), caption, MessageBoxButton.YesNo, MessageBoxImage.Error);
         }
@@ -91,10 +91,10 @@ namespace Qualia
 
         private static string GetLogMessage(Exception ex)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.AppendLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", Culture.Current))
-                .AppendLine(ex.GetType().ToString())
-                .AppendLine(ex.Message);
+                   .AppendLine(ex.GetType().ToString())
+                   .AppendLine(ex.Message);
 
 
             string additionalInfo = GetAdditionalInfo(ex);
@@ -112,8 +112,8 @@ namespace Qualia
             while (ex.InnerException != null)
             {
                 builder.AppendLine()
-                    .AppendLine(ex.InnerException.GetType().ToString())
-                    .AppendLine(ex.InnerException.Message);
+                       .AppendLine(ex.InnerException.GetType().ToString())
+                       .AppendLine(ex.InnerException.Message);
 
                 additionalInfo = GetAdditionalInfo(ex);
                 if (!string.IsNullOrEmpty(additionalInfo))
@@ -136,7 +136,7 @@ namespace Qualia
 
         private static string GetExceptionMessage(Exception ex, string hint)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.AppendLine(ex.Message);
 
             string additionalInfo = GetAdditionalInfo(ex);
@@ -180,7 +180,7 @@ namespace Qualia
                 return string.Empty;
             }
 
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
 
             foreach (object key in ex.Data.Keys)
             {
