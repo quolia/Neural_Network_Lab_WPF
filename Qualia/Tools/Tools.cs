@@ -18,7 +18,7 @@ namespace Tools
         public int CurrentLimit;
         public readonly int OriginalLimit;
 
-        public static int Min(ref LoopsLimit[] array)
+        public static int Min(in LoopsLimit[] array)
         {
             int min = int.MaxValue;
 

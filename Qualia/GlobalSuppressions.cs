@@ -16,3 +16,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Tools.ActivationFunctionList.Tanh")]
 [assembly: SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Tools.ActivationFunctionList.ReLu")]
 [assembly: SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Tools.ActivationFunctionList.StepConst")]
+[assembly: SuppressMessage("Performance", "CA1814:Prefer jagged arrays over multidimensional", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Controls.ErrorMatrix.Matrix")]
+[assembly: SuppressMessage("Performance", "CA1814:Prefer jagged arrays over multidimensional", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.ErrorMatrix.#ctor(System.Collections.Generic.List{System.String})")]

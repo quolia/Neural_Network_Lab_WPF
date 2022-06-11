@@ -74,31 +74,31 @@ namespace Qualia.Controls
 
             CtlBase.Clear();
 
-            int size = 9;
-            long axisOffset = 12;
+            const int POINTS_SIZE = 9;
+            const int AXIS_OFFSET = 12;
  
             for (int y = 0; y < matrix.Output.Length; ++y)
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    CtlBase.DrawRectangle(null, _penSilver, ref Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
+                    CtlBase.DrawRectangle(null, _penSilver, ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE, AXIS_OFFSET + y * POINTS_SIZE, POINTS_SIZE, POINTS_SIZE));
                 }
             }
 
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
                 var text = _classesFormatText[matrix.Classes[x]];
-                CtlBase.DrawText(text, ref Points.Get(axisOffset + x * size + (size - text.Width) / 2, 1 + axisOffset + matrix.Input.Length * size));
+                CtlBase.DrawText(text, ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2, 1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
             }
 
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
                 var text = _classesFormatText[matrix.Classes[y]];
-                CtlBase.DrawText(text, ref Points.Get(1 + axisOffset + matrix.Output.Length * size + (size - text.Width) / 2, axisOffset + y * size));
+                CtlBase.DrawText(text, ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2, AXIS_OFFSET + y * POINTS_SIZE));
             }
         
-            CtlBase.DrawText(_textOutput, ref Points.Get(axisOffset + (matrix.Output.Length * size - _textOutput.Width) / 2, axisOffset - _textOutput.Height - 1));
-            CtlBase.DrawText(_textInput, ref Points.Get(-axisOffset - (matrix.Input.Length * size + _textInput.Width) / 2, axisOffset - _textInput.Height - 1), -90);
+            CtlBase.DrawText(_textOutput, ref Points.Get(AXIS_OFFSET + (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2, AXIS_OFFSET - _textOutput.Height - 1));
+            CtlBase.DrawText(_textInput, ref Points.Get(-AXIS_OFFSET - (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2, AXIS_OFFSET - _textInput.Height - 1), -90);
 
             CtlBase.Update();
         }
@@ -124,13 +124,14 @@ namespace Qualia.Controls
             _classes = matrix.Classes;
             CtlPresenter.Clear();
             
-            int size = 9;
+            const int POINT_SIZE = 9;
+            const int AXIS_OFFSET = 12;
+            const int BOUND = 30;
+
             long goodMax = 1;
             long badMax = 1;
-            long axisOffset = 12;
-            long bound = 30;
 
-            
+
             for (int x = 0; x < matrix.Input.Length; ++x)
             {
                 for (int y = 0; y < matrix.Output.Length; ++y)
@@ -156,7 +157,7 @@ namespace Qualia.Controls
                         var color = Tools.Draw.GetColorDradient(in QColors.LightGray, x == y ? QColors.Green : QColors.Red, 255, value);
                         var brush = Tools.Draw.GetBrush(in color);
 
-                        CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(axisOffset + x * size, axisOffset + y * size, size, size));
+                        CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(AXIS_OFFSET + x * POINT_SIZE, AXIS_OFFSET + y * POINT_SIZE, POINT_SIZE, POINT_SIZE));
                     }
                 }
             }
@@ -166,7 +167,7 @@ namespace Qualia.Controls
             {
                 var color = Tools.Draw.GetColorDradient(in QColors.White, matrix.Output[x] > matrix.Input[x] ? QColors.Red : matrix.Output[x] < matrix.Input[x] ? Colors.Blue : Colors.Green, 100, (double)matrix.Output[x] / (double)outputMax);
                 var brush = Tools.Draw.GetBrush(in color);
-                CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(axisOffset + x * size, 10 + axisOffset + matrix.Input.Length * size, size, (int)(bound * (double)matrix.Output[x] / (double)outputMax)));
+                CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(AXIS_OFFSET + x * POINT_SIZE, 10 + AXIS_OFFSET + matrix.Input.Length * POINT_SIZE, POINT_SIZE, (int)(BOUND * (double)matrix.Output[x] / (double)outputMax)));
             }
 
             long inputMax = matrix.MaxInput();
@@ -174,7 +175,7 @@ namespace Qualia.Controls
             {
                 var color = Tools.Draw.GetColorDradient(in QColors.White, in QColors.Green, 100, (double)matrix.Input[y] / (double)inputMax);
                 var brush = Tools.Draw.GetBrush(in color);
-                CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(11 + axisOffset + matrix.Output.Length * size, axisOffset + y * size, (int)(bound * (double)matrix.Input[y] / (double)inputMax), size));
+                CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(11 + AXIS_OFFSET + matrix.Output.Length * POINT_SIZE, AXIS_OFFSET + y * POINT_SIZE, (int)(BOUND * (double)matrix.Input[y] / (double)inputMax), POINT_SIZE));
             }
 
             CtlPresenter.Update();
@@ -216,45 +217,33 @@ namespace Qualia.Controls
 
         public long MaxInput()
         {
-            long max = 0;
-            for (int i = 0; i < Input.Length; ++i)
-            {
-                if (Input[i] > max)
-                {
-                    max = Input[i];
-                }
-            }
-
-            return QMath.Max(max, (long)1);
+            return MaxInArray(in Input);
         }
 
         public long MaxOutput()
         {
+            return MaxInArray(in Output);
+        }
+
+        private long MaxInArray(in long[] array)
+        {
             long max = 0;
-            for (int i = 0; i < Output.Length; ++i)
+            for (int i = 0; i < array.Length; ++i)
             {
-                if (Output[i] > max)
+                if (array[i] > max)
                 {
-                    max = Output[i];
+                    max = array[i];
                 }
             }
 
-            return QMath.Max(max, (long)1);
+            return QMath.Max(max, 1);
         }
 
         public void ClearData()
         {
             Array.Clear(Input, 0, Input.Length);
             Array.Clear(Output, 0, Output.Length);
-            
-            for (int x = 0; x < Output.Length; ++x)
-            {
-                for (int y = 0; y < Input.Length; ++y)
-                {
-                    Matrix[x, y] = 0;
-                }
-            }
-
+            Array.Clear(Matrix, 0, Matrix.Length);
             Count = 0;
         }
     }

@@ -402,7 +402,7 @@ namespace Qualia
 
             };
 
-            var currentLoopLimit = LoopsLimit.Min(ref loopLimits);
+            var currentLoopLimit = LoopsLimit.Min(in loopLimits);
 
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
