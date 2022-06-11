@@ -15,13 +15,13 @@ namespace Qualia
         public bool IsBiasConnected;
 
         public string ActivationInitializer;
-        public double? ActivationInitializerParamA;
+        public double? ActivationInitializerParam;
 
         public string WeightsInitializer;
-        public double? WeightsInitializerParamA;
+        public double? WeightsInitializerParam;
 
         public ActivationFunction ActivationFunction;
-        public double? ActivationFuncParamA;
+        public double? ActivationFuncParam;
 
         public readonly ListX<WeightDataModel> Weights;
 

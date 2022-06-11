@@ -5,23 +5,12 @@ using System.Windows.Controls;
 
 namespace Tools
 {
-    public delegate double ActivationFunctionDelegate(double x, double? a);
-
     unsafe public class ActivationFunction
     {
-        public readonly ActivationFunctionDelegate _Do;
-        public readonly ActivationFunctionDelegate _Derivative;
+        public delegate*<double, double?, double> Do;
+        public delegate*<double, double?, double> Derivative;
 
-        unsafe public delegate*<double, double?, double> Do;
-        unsafe public delegate*<double, double?, double> Derivative;
-
-        public ActivationFunction(ActivationFunctionDelegate doFunc, ActivationFunctionDelegate derivativeFunc)
-        {
-            _Do = doFunc;
-            _Derivative = derivativeFunc;
-        }
-
-        unsafe public ActivationFunction(delegate*<double, double?, double> doFunc, delegate*<double, double?, double> derivativeFunc)
+        public ActivationFunction(delegate*<double, double?, double> doFunc, delegate*<double, double?, double> derivativeFunc)
         {
             Do = doFunc;
             Derivative = derivativeFunc;
@@ -71,7 +60,6 @@ namespace Tools
                 : base(&_do, &_derivative)
             {
             }
-
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;

@@ -16,14 +16,14 @@ namespace Qualia.Controls
 
             _configParams = new List<IConfigParam>()
             {
-                CtlActivationInitializerParamA,
+                CtlActivationInitializerParam,
                 CtlActivationInitializer,
-                CtlWeightsInitializerParamA,
+                CtlWeightsInitializerParam,
                 CtlWeightsInitializer,
                 CtlIsBias,
                 CtlIsBiasConnected,
                 CtlActivationFunc,
-                CtlActivationFuncParamA
+                CtlActivationFuncParam
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -52,13 +52,13 @@ namespace Qualia.Controls
         }
 
         public override string ActivationInitializer => (CtlIsBias.IsChecked == true ? CtlActivationInitializer.SelectedItem.ToString() : null);
-        public override double? ActivationInitializerParamA => (CtlIsBias.IsChecked == true ? CtlActivationInitializerParamA.ValueOrNull : null);
+        public override double? ActivationInitializerParam => (CtlIsBias.IsChecked == true ? CtlActivationInitializerParam.ValueOrNull : null);
         public override string WeightsInitializer => CtlWeightsInitializer.SelectedItem.ToString();
-        public override double? WeightsInitializerParamA => CtlWeightsInitializerParamA.ValueOrNull;
+        public override double? WeightsInitializerParam => CtlWeightsInitializerParam.ValueOrNull;
         public override bool IsBias => CtlIsBias.IsChecked == true;
         public override bool IsBiasConnected => CtlIsBiasConnected.IsChecked == true && IsBias;
         public override string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
-        public override double? ActivationFuncParamA => CtlActivationFuncParamA.ValueOrNull;
+        public override double? ActivationFuncParam => CtlActivationFuncParam.ValueOrNull;
 
         public void LoadConfig()
         {
@@ -75,14 +75,14 @@ namespace Qualia.Controls
             StateChanged();
         }
 
-        public bool IsValidActivationIniterParamA()
+        public bool IsValidActivationIniterParam()
         {
-            return !IsBias || Converter.TryTextToDouble(CtlActivationInitializerParamA.Text, out _);
+            return !IsBias || Converter.TryTextToDouble(CtlActivationInitializerParam.Text, out _);
         }
 
         public override bool IsValid()
         {
-            return CtlWeightsInitializerParamA.IsValid() && (!IsBias || CtlActivationInitializerParamA.IsValid());
+            return CtlWeightsInitializerParam.IsValid() && (!IsBias || CtlActivationInitializerParam.IsValid());
         }
 
         public override void SaveConfig()
@@ -92,7 +92,7 @@ namespace Qualia.Controls
             if (!CtlIsBias.IsOn)
             {
                 CtlActivationInitializer.VanishConfig();
-                CtlActivationInitializerParamA.VanishConfig();
+                CtlActivationInitializerParam.VanishConfig();
             }
         }
 

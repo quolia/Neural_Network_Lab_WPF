@@ -29,12 +29,12 @@
                 <local:QLabel Content="Activation func:" />
                 <local:QComboBox Grid.Column="1" x:Name="CtlActivationFunc" />
                 <local:QLabel Grid.Column="2" Content="a:" />
-                <local:QDouble Grid.Column="3" x:Name="CtlActivationFuncParamA" MinimumValue="-100" MaximumValue="100" IsNullAllowed="True" />
+                <local:QDouble Grid.Column="3" x:Name="CtlActivationFuncParam" MinimumValue="-100" MaximumValue="100" IsNullAllowed="True" />
 
                 <local:QLabel Grid.Row="1" Content="Weights init-er:" />
                 <local:QComboBox Grid.Column="1" Grid.Row="1" x:Name="CtlWeightsInitializer" />
                 <local:QLabel Grid.Column="2" Grid.Row="1" Content="a:" />
-                <local:QDouble Grid.Column="3" Grid.Row="1" x:Name="CtlWeightsInitializerParamA" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+                <local:QDouble Grid.Column="3" Grid.Row="1" x:Name="CtlWeightsInitializerParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
             </Grid>
             <StackPanel Orientation="Horizontal">
                 <local:QCheckBox x:Name="CtlAdjustFirstLayerWeights" Margin="5" Content="Adjust first layer weights" DefaultValue="True" />

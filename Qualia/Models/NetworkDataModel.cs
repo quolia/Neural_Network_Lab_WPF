@@ -18,13 +18,10 @@ namespace Qualia
         public Color Color;
         public double LearningRate;
         public string RandomizeMode;
-        public double? RandomizerParamA;
+        public double? RandomizerParam;
         public double InputInitial0;
         public double InputInitial1;
         public bool IsAdjustFirstLayerWeights;
-
-        //public CostFunctionDoDelegate CostFunctionDo;
-        //public CostFunctionDerivativeDelegate CostFunctionDerivative;
 
         public ICostFunction CostFunction;
 
@@ -75,13 +72,13 @@ namespace Qualia
         public void ActivateFirstLayer()
         {
             Layers.First.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1);
-            Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
+            Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParam);
         }
 
         public void ActivateNetwork()
         {
             Layers.ForEach(layer => layer.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1));
-            Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParamA);
+            Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParam);
         }
 
         /*
@@ -107,7 +104,7 @@ namespace Qualia
                             neuron = neuron.Next;
                         }
 
-                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParamA);
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParam);
                     }
 
                     if (!nextNeuron.IsBias)
@@ -131,7 +128,7 @@ namespace Qualia
                             neuron = neuron.Next;
                         }
 
-                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParamA);
+                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParam);
                     }
 
                     nextNeuron = nextNeuron.Next;
@@ -163,7 +160,7 @@ namespace Qualia
                         AxW = AxW.Next;
                     }
 
-                    neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParamA);
+                    neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParam);
                     neuron = neuron.Next;
                 }
 
@@ -178,7 +175,7 @@ namespace Qualia
 
             while (neuron != null)
             {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParam);
                 neuron = neuron.Next;
             }
 
@@ -196,7 +193,7 @@ namespace Qualia
                         var prevNeuron = AxW.Neuron;
                         if (prevNeuron.Activation != 0)
                         {
-                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParamA);
+                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParam);
                         }
 
                         AxW = AxW.Next;
@@ -236,7 +233,7 @@ namespace Qualia
 
             while (neuron != null)
             {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParamA);
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParam);
                 neuron = neuron.Next;
             }
 
@@ -257,12 +254,12 @@ namespace Qualia
                         {
                             if (neuron.IsBiasConnected)
                             {
-                                neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                                neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParam);
                             }
                         }
                         else
                         {
-                            neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParamA);
+                            neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParam);
                         }
 
                         neuron = neuron.Next;
@@ -325,7 +322,7 @@ namespace Qualia
                         var neuronModel = layerModel.Neurons.Find(n => n.VisualId == newNeuronModel.VisualId);
                         if (neuronModel == null)
                         {
-                            double initValue = InitializeMode.Helper.Invoke(newNeuronModel.WeightsInitializer, newNeuronModel.WeightsInitializerParamA);
+                            double initValue = InitializeMode.Helper.Invoke(newNeuronModel.WeightsInitializer, newNeuronModel.WeightsInitializerParam);
                             if (!InitializeMode.Helper.IsSkipValue(initValue))
                             {
                                 var newWeightModel = newNeuronModel.Weights.First;
@@ -352,7 +349,7 @@ namespace Qualia
 
                             if (newNeuronModel.IsBias)
                             {
-                                double initValue = InitializeMode.Helper.Invoke(newNeuronModel.ActivationInitializer, newNeuronModel.ActivationInitializerParamA);
+                                double initValue = InitializeMode.Helper.Invoke(newNeuronModel.ActivationInitializer, newNeuronModel.ActivationInitializerParam);
                                 if (InitializeMode.Helper.IsSkipValue(initValue))
                                 {
                                     newNeuronModel.Activation = neuronModel.Activation;

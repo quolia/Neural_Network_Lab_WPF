@@ -16,7 +16,7 @@ namespace Qualia.Controls
             _configParams = new List<IConfigParam>()
             {
                 CtlActivationFunc,
-                CtlActivationFuncParamA
+                CtlActivationFuncParam
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -26,11 +26,11 @@ namespace Qualia.Controls
         }
 
         public override string WeightsInitializer => nameof(InitializeMode.None);
-        public override double? WeightsInitializerParamA => null;
+        public override double? WeightsInitializerParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
         public override string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
-        public override double? ActivationFuncParamA => CtlActivationFuncParamA.ValueOrNull;
+        public override double? ActivationFuncParam => CtlActivationFuncParam.ValueOrNull;
 
         public void LoadConfig()
         {
@@ -52,7 +52,7 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return CtlActivationFuncParamA.IsValid();
+            return CtlActivationFuncParam.IsValid();
         }
 
         public override void SaveConfig()

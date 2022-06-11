@@ -13,11 +13,11 @@ namespace Qualia.Controls
         }
 
         public override string WeightsInitializer => nameof(InitializeMode.None);
-        public override double? WeightsInitializerParamA => null;
+        public override double? WeightsInitializerParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
         public override string ActivationFunc { get; set; }
-        public override double? ActivationFuncParamA { get; set; }
+        public override double? ActivationFuncParam { get; set; }
 
         public override void OrdinalNumberChanged(int number)
         {
