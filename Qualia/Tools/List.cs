@@ -8,7 +8,6 @@ namespace Tools
         public T Last;
 
         private T[] _array = Array.Empty<T>();
-        private int _removeCount;
 
         public ListX(int capacity)
         {
@@ -32,40 +31,6 @@ namespace Tools
 
             First = _array[0];
             Last = node;
-        }
-
-        internal void Remove(T node)
-        {
-            if (node.Previous != null)
-            {
-                node.Previous.Next = node.Next;
-            }
-
-            if (node.Next != null)
-            {
-                node.Next.Previous = node.Previous;
-            }
-
-            ++_removeCount;
-        }
-
-        internal void CommitRemove()
-        {
-            if (_removeCount == 0)
-            {
-                return;
-            }
-
-            var node = First;
-            Array.Resize(ref _array, Count - _removeCount);
-            
-            for (int i = 0; i < Count; ++i)
-            {
-                _array[i] = node;
-                node = node.Next;
-            }
-
-            _removeCount = 0;
         }
 
         internal T FirstOrDefault(Predicate<T> match)
