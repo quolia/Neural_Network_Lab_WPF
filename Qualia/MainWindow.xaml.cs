@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-//using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -57,10 +56,6 @@ namespace Qualia
 
         private void Main_Load(object sender, EventArgs e)
         {
-            //Dispatcher.BeginInvoke((Action)(() =>
-            //{
-            //    SetProcessorAffinity(Processor.Proc0);
-            //}));
 
             CreateDirectories();
 
@@ -101,7 +96,6 @@ namespace Qualia
                 }
 
             }, DispatcherPriority.Render);
-            //}, DispatcherPriority.Background);
         }
 
         private void LoadConfig()
@@ -549,7 +543,7 @@ namespace Qualia
                 int currentLimit = int.MaxValue;
                 for (int i = 0; i < loopLimits.Length; ++i)
                 {
-                    ref var loopLimit = ref loopLimits[i];
+                    var loopLimit = loopLimits[i];
                     loopLimit.CurrentLimit -= currentLoopLimit;
                     if (loopLimit.CurrentLimit <= 0)
                     {
@@ -708,7 +702,8 @@ namespace Qualia
                 return null;
             }
 
-            var stat = new Dictionary<string, string>(20);
+            //var stat = new Dictionary<string, string>(20);
+            var stat = new Dictionary<string, string>();
             stat.Add("Time", _startTime.Elapsed.ToString(Culture.TimeFormat));
 
             if (statistics.Percent > 0)

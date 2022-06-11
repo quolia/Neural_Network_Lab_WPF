@@ -13,7 +13,7 @@ using Qualia;
 
 namespace Tools
 {
-    public struct LoopsLimit
+    sealed public class LoopsLimit
     {
         public int CurrentLimit;
         public readonly int OriginalLimit;
@@ -24,7 +24,7 @@ namespace Tools
 
             for (int i = 0; i < array.Length; ++i)
             {
-                ref var loop = ref array[i];
+                var loop = array[i];
                 if (loop.CurrentLimit < min)
                 {
                     min = loop.CurrentLimit;
