@@ -308,6 +308,10 @@ namespace Tools
 
         public class PlotPoints : List<PlotPoint>
         {
+            private readonly List<PlotPoint> _pointsToRemove = new List<PlotPoint>();
+
+            public int PointsToRemoveCount => _pointsToRemove.Count;
+
             public PlotPoint Last()
             {
                 return base[Count - 1];
@@ -316,6 +320,28 @@ namespace Tools
             public bool Any()
             {
                 return Count > 0;
+            }
+
+            public new void Remove(PlotPoint point)
+            {
+                _pointsToRemove.Add(point);
+            }
+
+            public bool CommitRemove()
+            {
+                for (int i = 0; i < _pointsToRemove.Count; ++i)
+                {
+                    base.Remove(_pointsToRemove[i]);
+                }
+
+                if (_pointsToRemove.Count > 0)
+                {
+                    _pointsToRemove.Clear();
+                    
+                    return true;
+                }
+
+                return false;
             }
 
             public PlotPoints Copy()

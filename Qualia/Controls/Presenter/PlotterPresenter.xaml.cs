@@ -250,8 +250,6 @@ namespace Qualia.Controls
                     return;
                 }
 
-                List<DynamicStatistics.PlotPoint> pointsDataToRemove = null;
-
                 for (int i = 0; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
                 {
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
@@ -261,14 +259,9 @@ namespace Qualia.Controls
 
                     if (Math.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
                     {
-                        if (pointsDataToRemove == null)
-                        {
-                            pointsDataToRemove = new List<DynamicStatistics.PlotPoint>();
-                        }
+                        pointsData.Remove(pointsData[i + 1]);
 
-                        pointsDataToRemove.Add(pointsData[i + 1]);
-
-                        if (pointsData.Count - pointsDataToRemove.Count < MIN_POINTS_COUNT)
+                        if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
                         {
                             break;
                         }
@@ -279,14 +272,9 @@ namespace Qualia.Controls
                     {
                         if (Math.Abs(point0.X - point1.X) < VANISH_AREA && Math.Abs(point0.Y - point1.Y) < VANISH_AREA)
                         {
-                            if (pointsDataToRemove == null)
-                            {
-                                pointsDataToRemove = new List<DynamicStatistics.PlotPoint>();
-                            }
+                            pointsData.Remove(pointsData[i + 1]);
 
-                            pointsDataToRemove.Add(pointsData[i + 1]);
-
-                            if (pointsData.Count - pointsDataToRemove.Count < MIN_POINTS_COUNT)
+                            if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
                             {
                                 break;
                             }
@@ -296,12 +284,12 @@ namespace Qualia.Controls
                     }
                 }
 
-                if (pointsDataToRemove == null)
+                if (pointsData.PointsToRemoveCount == 0)
                 {
                     return;
                 }
 
-                pointsDataToRemove.ForEach(pointData => pointsData.Remove(pointData));
+                pointsData.CommitRemove();
             }
         }
 
