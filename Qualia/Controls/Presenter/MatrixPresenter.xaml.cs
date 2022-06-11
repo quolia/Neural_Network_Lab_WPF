@@ -137,11 +137,11 @@ namespace Qualia.Controls
                 {
                     if (x == y)
                     {
-                        goodMax = Math.Max(goodMax, matrix.Matrix[x, y]);
+                        goodMax = QMath.Max(goodMax, matrix.Matrix[x, y]);
                     }
                     else
                     {
-                        badMax = Math.Max(badMax, matrix.Matrix[x, y]);
+                        badMax = QMath.Max(badMax, matrix.Matrix[x, y]);
                     }
                 }
             }
@@ -225,7 +225,7 @@ namespace Qualia.Controls
                 }
             }
 
-            return Math.Max(max, 1);
+            return QMath.Max(max, (long)1);
         }
 
         public long MaxOutput()
@@ -239,7 +239,7 @@ namespace Qualia.Controls
                 }
             }
 
-            return Math.Max(max, 1);
+            return QMath.Max(max, (long)1);
         }
 
         public void ClearData()

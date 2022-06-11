@@ -50,7 +50,7 @@ namespace Qualia.Controls
 
             CtlPresenter.DrawText(formattedText, ref Points.Get(10, 0));
 
-            Width = Math.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
+            Width = QMath.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
 
             CtlPresenter.Update();
         }

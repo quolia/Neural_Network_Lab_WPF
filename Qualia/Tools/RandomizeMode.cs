@@ -68,7 +68,7 @@ namespace Tools
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        weight.Weight = Math.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
+                        weight.Weight = QMath.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
                         weight = weight.Next;
                     }
 

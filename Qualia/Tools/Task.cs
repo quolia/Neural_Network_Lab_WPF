@@ -117,7 +117,7 @@ namespace Tools
                 }
                 else
                 {
-                    randNumber = (int)Math.Round(Rand.GaussianRand.NextGaussian(_median, (_median - 2) / 2));
+                    randNumber = (int)QMath.Round(Rand.GaussianRand.NextGaussian(_median, (_median - 2) / 2));
 
                     if (randNumber < _minNumber)
                     {

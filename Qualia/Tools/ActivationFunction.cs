@@ -81,7 +81,7 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => x / (1 + Math.Abs(x));
+            private static double _do(double x, double? a) => x / (1 + QMath.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double _derivative(double x, double? a) => throw new InvalidOperationException();

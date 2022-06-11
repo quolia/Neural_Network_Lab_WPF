@@ -73,7 +73,7 @@ namespace Tools
             while (squared >= 1 || squared == 0);
 
             // calculate polar tranformation for each deviate
-            var polar = Math.Sqrt(-2 * Math.Log(squared) / squared);
+            var polar = Math.Sqrt(-2 * System.Math.Log(squared) / squared);
             // store first deviate
             _storedDeviate = v2 * polar;
             _hasDeviate = true;

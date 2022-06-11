@@ -499,4 +499,61 @@ namespace Tools
             return result;
         }
     }
+
+    public static class QMath
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static double Abs(double a)
+        {
+            return a < 0 ? -a : a;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static int Ceiling(double a)
+        {
+            return 1 + (int)a;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static double Max(double a, double b)
+        {
+            return a > b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static long Max(long a, long b)
+        {
+            return a > b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static int Max(int a, int b)
+        {
+            return a > b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static float Min(float a, float b)
+        {
+            return a < b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static double Min(double a, double b)
+        {
+            return a < b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static int Round(double a)
+        {
+            return (int)Math.Round(a);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static int Sign(double a)
+        {
+            return a < 0 ? -1 : 1;
+        }
+    }
 }

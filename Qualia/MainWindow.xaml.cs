@@ -68,7 +68,7 @@ namespace Qualia
 
         private void NetworkPresenter_SizeChanged(object sender, EventArgs e)
         {
-            //CtlNetworkPresenter.Height = Math.Max(CtlNetworkPresenter.Height, 400);
+            //CtlNetworkPresenter.Height = QMath.Max(CtlNetworkPresenter.Height, 400);
 
             if (_networksManager == null)
             {

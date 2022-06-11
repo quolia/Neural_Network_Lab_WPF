@@ -125,9 +125,9 @@ namespace Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetColor(double v, byte alpha = 255)
         {
-            int s = Math.Sign(v);
+            int s = QMath.Sign(v);
 
-            v = Math.Abs(2 / (1 + Math.Exp(-v * 4)) - 1);
+            v = QMath.Abs(2 / (1 + Math.Exp(-v * 4)) - 1);
 
             if (v > 1)
             {
@@ -195,7 +195,7 @@ namespace Tools
 
             if (width == 0)
             {
-                width = Math.Abs(v) <= 1 ? 1 : (double)Math.Abs(v);
+                width = QMath.Abs(v) <= 1 ? 1 : (double)QMath.Abs(v);
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
@@ -213,9 +213,9 @@ namespace Tools
         {
             var rand = (byte)Rand.Flat.Next(offsetFromTop);
             return Color.FromArgb(255,
-                                  (byte)(Math.Max(baseColor.R - offsetFromTop, 0) + rand),
-                                  (byte)(Math.Max(baseColor.G - offsetFromTop, 0) + rand),
-                                  (byte)(Math.Max(baseColor.B - offsetFromTop, 0) + rand));
+                                  (byte)(QMath.Max(baseColor.R - offsetFromTop, 0) + rand),
+                                  (byte)(QMath.Max(baseColor.G - offsetFromTop, 0) + rand),
+                                  (byte)(QMath.Max(baseColor.B - offsetFromTop, 0) + rand));
         }
     }
 }

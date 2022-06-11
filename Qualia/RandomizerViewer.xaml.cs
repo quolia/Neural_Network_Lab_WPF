@@ -64,9 +64,9 @@ namespace Qualia
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        if (Math.Abs(weight.Weight) > max)
+                        if (QMath.Abs(weight.Weight) > max)
                         {
-                            max = Math.Abs(weight.Weight);
+                            max = QMath.Abs(weight.Weight);
                         }
 
                         weight = weight.Next;
@@ -78,7 +78,7 @@ namespace Qualia
                 layer = layer.Next;
             }
 
-            return (int)Math.Ceiling(Math.Max(1, max));
+            return (int)QMath.Ceiling(QMath.Max(1, max));
         }
 
         private void Render()
@@ -105,7 +105,7 @@ namespace Qualia
                     for (int weight = 0; weight < _model.Layers[layer].Neurons[neuron].Weights.Count; ++weight)
                     {
                         var value = _model.Layers[layer].Neurons[neuron].Weights[weight].Weight;
-                        var hover = value == 0 ? 0 : 30 * Math.Sign(value);
+                        var hover = value == 0 ? 0 : 30 * QMath.Sign(value);
                         var p = Draw.GetPen(value, 0, alpha);
 
                         using (var pen = new Pen(Draw.MediaColorToSystemColor(p.Brush.GetColor())))

@@ -158,7 +158,7 @@ namespace Qualia.Controls
 
         private int GetSnaps()
         {
-            int width = (int)Math.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
+            int width = (int)QMath.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
             return NetworkTask.IsGridSnapAdjustmentAllowed()
                    ? width / (_pointsRearrangeSnap * _pointSize)
@@ -221,7 +221,7 @@ namespace Qualia.Controls
         private ref Point GetPointPosition(int pointNumber)
         {
             int snaps = GetSnaps();
-            int y = (int)Math.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
+            int y = (int)QMath.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
             int x = pointNumber - (y * snaps * _pointsRearrangeSnap);
 
             return ref Points.Get(x, y);
