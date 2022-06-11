@@ -296,12 +296,10 @@ namespace Qualia.Controls
                     }
                 }
 
-                if (pointsDataToRemove == null)
+                if (pointsDataToRemove != null)
                 {
-                    return;
+                    pointsDataToRemove.ForEach(pointData => pointsData.Remove(pointData));
                 }
-
-                pointsDataToRemove.ForEach(pointData => pointsData.Remove(pointData));
             }
         }
 
