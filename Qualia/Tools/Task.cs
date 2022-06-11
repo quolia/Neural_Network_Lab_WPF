@@ -51,20 +51,11 @@ namespace Tools
             private int _maxNumber;
             private double _median;
 
-            public Control GetVisualControl()
-            {
-                return s_control;
-            }
+            public Control GetVisualControl() => s_control;
 
-            public int GetPointsRearrangeSnap()
-            {
-                return 10;
-            }
+            public int GetPointsRearrangeSnap() => 10;
 
-            public bool IsGridSnapAdjustmentAllowed()
-            {
-                return true;
-            }
+            public bool IsGridSnapAdjustmentAllowed() => true;
 
             public void ApplyChanges()
             {
@@ -85,15 +76,9 @@ namespace Tools
                 ApplyChanges();
             }
 
-            public void SaveConfig()
-            {
-                s_control.SaveConfig();
-            }
+            public int GetInputCount() => s_control.InputCount;
 
-            public int GetInputCount()
-            {
-                return s_control.InputCount;
-            }
+            public void SaveConfig() => s_control.SaveConfig();
 
             public List<string> GetClasses()
             {
@@ -169,20 +154,11 @@ namespace Tools
                 }
             }
 
-            public void VanishConfig()
-            {
-                s_control.VanishConfig();
-            }
+            public void VanishConfig() => s_control.VanishConfig();
 
-            public bool IsValid()
-            {
-                return s_control.IsValid();
-            }
+            public bool IsValid() => s_control.IsValid();
 
-            public void SetChangeEvent(Action onChanged)
-            {
-                s_control.SetChangeEvent(onChanged);
-            }
+            public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
@@ -193,30 +169,18 @@ namespace Tools
             
             private static readonly MNISTControl s_control = new();
 
-            public Control GetVisualControl()
-            {
-                return s_control;
-            }
+            public Control GetVisualControl() => s_control;
 
-            public int GetPointsRearrangeSnap()
-            {
-                return 28;
-            }
+            public int GetPointsRearrangeSnap() => 28;
 
-            public bool IsGridSnapAdjustmentAllowed()
-            {
-                return false;
-            }
+            public bool IsGridSnapAdjustmentAllowed() => false;
 
             public void ApplyChanges()
             {
                 //
             }
 
-            public void SetConfig(Config config)
-            {
-                s_control.SetConfig(config);
-            }
+            public void SetConfig(Config config) => s_control.SetConfig(config);
 
             public void LoadConfig()
             {
@@ -224,15 +188,9 @@ namespace Tools
                 ApplyChanges();
             }
 
-            public void SaveConfig()
-            {
-                s_control.SaveConfig();
-            }
+            public void SaveConfig() => s_control.SaveConfig();
 
-            public int GetInputCount()
-            {
-                return 28 * 28;
-            }
+            public int GetInputCount() => 28 * 28;
 
             public List<string> GetClasses()
             {
@@ -266,17 +224,11 @@ namespace Tools
                 networkModel.TargetOutput = image.Label;
             }
 
-            public void VanishConfig()
-            {
-                s_control.VanishConfig();
-            }
+            public void VanishConfig() => s_control.VanishConfig();
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetChangeEvent(Action onChanged)
-            {
-                s_control.SetChangeEvent(onChanged);
-            }
+            public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
