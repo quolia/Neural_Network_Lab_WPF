@@ -23,7 +23,7 @@ namespace Qualia
         public double InputInitial1;
         public bool IsAdjustFirstLayerWeights;
 
-        public ICostFunction CostFunction;
+        public CostFunction CostFunction;
 
         public Statistics Statistics;
         public DynamicStatistics DynamicStatistics;

@@ -46,10 +46,10 @@ namespace Tools
 
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
+            public static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => x * (1 - x);
+            public static double _derivative(double x, double? a) => x * (1 - x);
         }
 
         unsafe sealed public class SymmetricSigmoid : ActivationFunction
@@ -62,10 +62,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
+            public static double _do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
+            public static double _derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
         }
 
         unsafe sealed public class Softsign : ActivationFunction
@@ -78,10 +78,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => x / (1 + QMath.Abs(x));
+            public static double _do(double x, double? a) => x / (1 + QMath.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => throw new InvalidOperationException();
+            public static double _derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
         unsafe sealed public class Tanh : ActivationFunction
@@ -94,10 +94,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+            public static double _do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => x * (2 - x);
+            public static double _derivative(double x, double? a) => x * (2 - x);
         }
 
         unsafe sealed public class ReLu : ActivationFunction
@@ -110,14 +110,14 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a)
+            public static double _do(double x, double? a)
             {
                 a ??= 1;
                 return x > 0 ? x * a.Value : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a)
+            public static double _derivative(double x, double? a)
             {
                 a ??= 1;
                 return x > 0 ? a.Value : 0;
@@ -134,14 +134,14 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a)
+            public static double _do(double x, double? a)
             {
                 a ??= 1;
                 return x > 0 ? a.Value : -a.Value;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => 0;
+            public static double _derivative(double x, double? a) => 0;
         }
 
         internal static class Helper

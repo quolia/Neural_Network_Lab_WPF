@@ -385,7 +385,7 @@ namespace Qualia
             _timeThread.Start();
         }
 
-        private void RunNetworks(object args)
+        unsafe private void RunNetworks(object args)
         {
             var arr = (object[])args;
             var processors = (Processor)arr[0];

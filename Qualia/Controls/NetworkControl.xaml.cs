@@ -159,7 +159,7 @@ namespace Qualia.Controls
         private void LoadConfig()
         {
             Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.FlatRandom));
-            Tools.CostFunction.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunction.MSE));
+            Tools.CostFunctionList.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunctionList.MSE));
 
             _configParams.ForEach(param => param.LoadConfig());
 
@@ -253,7 +253,7 @@ namespace Qualia.Controls
                 LearningRate = LearningRate,
                 InputInitial0 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0, InputLayer.ActivationFuncParam),
                 InputInitial1 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1, InputLayer.ActivationFuncParam),
-                CostFunction = CostFunction.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
+                CostFunction = CostFunctionList.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
                 //CostFunctionDerivative = CostFunction.Helper.GetDerivative(CtlCostFunction.SelectedValue.ToString()),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
