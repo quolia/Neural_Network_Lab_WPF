@@ -6,30 +6,29 @@ using Tools;
 
 namespace Qualia
 {
-    sealed public partial class RandomizerViewer : WindowResizeControl
+    unsafe sealed public partial class RandomizerViewer : WindowResizeControl
     {
-        private readonly string _randomizer;
-        private readonly double? _A;
+        private readonly RandomizeMode _randomizeMode;
+        private readonly double? _param;
 
-        private readonly Font _font = new Font("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
+        private readonly Font _font = new("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
 
-        private readonly NetworkDataModel _model = new NetworkDataModel(Const.UnknownId, new int[] { 100, 100, 100, 100, 100, 100 });
+        private readonly NetworkDataModel _model = new(Const.UnknownId, new int[] { 100, 100, 100, 100, 100, 100 });
 
         public RandomizerViewer()
         {
             InitializeComponent();
         }
 
-        public RandomizerViewer(string randomizer, double? a)
+        public RandomizerViewer(RandomizeMode randomizeMode, double? param)
         {
             InitializeComponent();
 
-            CtlName.Text = randomizer;
+            _randomizeMode = randomizeMode;
+            _param = param;
 
-            _randomizer = randomizer;
-            _A = a;
-
-            RandomizeMode.Helper.Invoke(_randomizer, _model, _A);
+            CtlName.Text = _randomizeMode.GetType().ToString();
+            _randomizeMode.Do(_model, _param);
 
             CtlPresenter.Width = SystemParameters.PrimaryScreenWidth;
             CtlPresenter.Height = SystemParameters.PrimaryScreenHeight;

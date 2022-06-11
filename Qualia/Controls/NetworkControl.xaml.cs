@@ -158,7 +158,7 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Tools.RandomizeMode.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeMode.FlatRandom));
+            Tools.RandomizeModeList.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(Tools.RandomizeModeList.FlatRandom));
             Tools.CostFunctionList.Helper.FillComboBox(CtlCostFunction, Config, nameof(Tools.CostFunctionList.MSE));
 
             _configParams.ForEach(param => param.LoadConfig());
@@ -216,7 +216,7 @@ namespace Qualia.Controls
 
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
-        private string RandomizeMode => CtlRandomizeMode.SelectedItem.ToString();
+        private RandomizeMode RandomizeMode => RandomizeModeList.Helper.GetInstance(CtlRandomizeMode.SelectedItem.ToString());
         private double? RandomizerParam => CtlRandomizeModeParam.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
 
@@ -290,10 +290,10 @@ namespace Qualia.Controls
                         neuronModel.WeightsInitializer = InputLayer.WeightsInitializer;
                         neuronModel.WeightsInitializerParam = InputLayer.WeightsInitializerParam;
 
-                        double initValue = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParam);
-                        if (!InitializeMode.Helper.IsSkipValue(initValue))
+                        double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
+                        if (!InitializeModeList.Helper.IsSkipValue(initValue))
                         {
-                            neuronModel.Weights.ForEach(w => w.Weight = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParam));
+                            neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
                         }
                     }
                     else
@@ -301,10 +301,10 @@ namespace Qualia.Controls
                         neuronModel.WeightsInitializer = ctlNeurons[neuronInd].WeightsInitializer;
                         neuronModel.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializerParam;
 
-                        double initValue = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParam);
-                        if (!InitializeMode.Helper.IsSkipValue(initValue))
+                        double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
+                        if (!InitializeModeList.Helper.IsSkipValue(initValue))
                         {
-                            neuronModel.Weights.ForEach(w => w.Weight = InitializeMode.Helper.Invoke(neuronModel.WeightsInitializer, neuronModel.WeightsInitializerParam));
+                            neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
                         }
                     }
 
@@ -312,9 +312,9 @@ namespace Qualia.Controls
                     {
                         neuronModel.ActivationInitializer = ctlNeurons[neuronInd].ActivationInitializer;
                         neuronModel.ActivationInitializerParam = ctlNeurons[neuronInd].ActivationInitializerParam;
-                        double initValue = InitializeMode.Helper.Invoke(ctlNeurons[neuronInd].ActivationInitializer, ctlNeurons[neuronInd].ActivationInitializerParam);
+                        double initValue = ctlNeurons[neuronInd].ActivationInitializer.Do(ctlNeurons[neuronInd].ActivationInitializerParam);
 
-                        if (!InitializeMode.Helper.IsSkipValue(initValue))
+                        if (!InitializeModeList.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Activation = initValue;
                         }

@@ -6,7 +6,7 @@ using Tools;
 
 namespace Qualia
 {
-    sealed public class NetworkDataModel : ListXNode<NetworkDataModel>
+    unsafe sealed public class NetworkDataModel : ListXNode<NetworkDataModel>
     {
         public readonly long VisualId;
         public readonly ListX<LayerDataModel> Layers;
@@ -17,7 +17,7 @@ namespace Qualia
 
         public Color Color;
         public double LearningRate;
-        public string RandomizeMode;
+        public RandomizeMode RandomizeMode;
         public double? RandomizerParam;
         public double InputInitial0;
         public double InputInitial1;
@@ -72,13 +72,13 @@ namespace Qualia
         public void ActivateFirstLayer()
         {
             Layers.First.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1);
-            Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParam);
+            RandomizeMode.Do(this, RandomizerParam);
         }
 
         public void ActivateNetwork()
         {
             Layers.ForEach(layer => layer.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1));
-            Tools.RandomizeMode.Helper.Invoke(RandomizeMode, this, RandomizerParam);
+            RandomizeMode.Do(this, RandomizerParam);
         }
 
         /*
@@ -322,8 +322,8 @@ namespace Qualia
                         var neuronModel = layerModel.Neurons.Find(n => n.VisualId == newNeuronModel.VisualId);
                         if (neuronModel == null)
                         {
-                            double initValue = InitializeMode.Helper.Invoke(newNeuronModel.WeightsInitializer, newNeuronModel.WeightsInitializerParam);
-                            if (!InitializeMode.Helper.IsSkipValue(initValue))
+                            double initValue = newNeuronModel.WeightsInitializer.Do(newNeuronModel.WeightsInitializerParam);
+                            if (!InitializeModeList.Helper.IsSkipValue(initValue))
                             {
                                 var newWeightModel = newNeuronModel.Weights.First;
                                 while (newWeightModel != null)
@@ -349,8 +349,8 @@ namespace Qualia
 
                             if (newNeuronModel.IsBias)
                             {
-                                double initValue = InitializeMode.Helper.Invoke(newNeuronModel.ActivationInitializer, newNeuronModel.ActivationInitializerParam);
-                                if (InitializeMode.Helper.IsSkipValue(initValue))
+                                double initValue = newNeuronModel.ActivationInitializer.Do(newNeuronModel.ActivationInitializerParam);
+                                if (InitializeModeList.Helper.IsSkipValue(initValue))
                                 {
                                     newNeuronModel.Activation = neuronModel.Activation;
                                 }

@@ -29,10 +29,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _do(double x, double? a) => x;
+            private static double _do(double x, double? param) => x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double _derivative(double x, double? a) => x;
+            private static double _derivative(double x, double? param) => x;
         }
 
         unsafe sealed public class LogisticSigmoid : ActivationFunction
@@ -45,10 +45,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? a) => 1 / (1 + Math.Exp(-x));
+            public static double _do(double x, double? param) => 1 / (1 + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _derivative(double x, double? a) => x * (1 - x);
+            public static double _derivative(double x, double? param) => x * (1 - x);
         }
 
         unsafe sealed public class SymmetricSigmoid : ActivationFunction
@@ -61,10 +61,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
+            public static double _do(double x, double? param) => 2 / (1 + Math.Exp(-x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
+            public static double _derivative(double x, double? param) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
         }
 
         unsafe sealed public class Softsign : ActivationFunction
@@ -77,10 +77,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? a) => x / (1 + QMath.Abs(x));
+            public static double _do(double x, double? param) => x / (1 + QMath.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _derivative(double x, double? a) => throw new InvalidOperationException();
+            public static double _derivative(double x, double? param) => throw new InvalidOperationException();
         }
 
         unsafe sealed public class Tanh : ActivationFunction
@@ -93,10 +93,10 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+            public static double _do(double x, double? param) => 2 / (1 + Math.Exp(-2 * x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _derivative(double x, double? a) => x * (2 - x);
+            public static double _derivative(double x, double? param) => x * (2 - x);
         }
 
         unsafe sealed public class ReLu : ActivationFunction
@@ -109,17 +109,17 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? a)
+            public static double _do(double x, double? param)
             {
-                a ??= 1;
-                return x > 0 ? x * a.Value : 0;
+                param ??= 1;
+                return x > 0 ? x * param.Value : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _derivative(double x, double? a)
+            public static double _derivative(double x, double? param)
             {
-                a ??= 1;
-                return x > 0 ? a.Value : 0;
+                param ??= 1;
+                return x > 0 ? param.Value : 0;
             }
         }
 
@@ -133,26 +133,35 @@ namespace Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? a)
+            public static double _do(double x, double? param)
             {
-                a ??= 1;
-                return x > 0 ? a.Value : -a.Value;
+                param ??= 1;
+                return x > 0 ? param.Value : -param.Value;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _derivative(double x, double? a) => 0;
+            public static double _derivative(double x, double? param) => 0;
         }
 
         internal static class Helper
         {
             public static string[] GetItems()
             {
-                return typeof(ActivationFunctionList).GetNestedTypes().Where(c => typeof(ActivationFunction).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
+                return typeof(ActivationFunctionList)
+                    .GetNestedTypes()
+                    .Where(type => typeof(ActivationFunction).IsAssignableFrom(type))
+                    .Select(type => type.Name)
+                    .ToArray();
             }
 
-            public static ActivationFunction GetInstance(string activationFunctionName)
+            public static ActivationFunction GetInstance(string functionName)
             {
-                return (ActivationFunction)typeof(ActivationFunctionList).GetNestedTypes().Where(c => c.Name == activationFunctionName).First().GetField("Instance").GetValue(null);
+                return (ActivationFunction)typeof(ActivationFunctionList)
+                    .GetNestedTypes()
+                    .Where(type => type.Name == functionName)
+                    .First()
+                    .GetField("Instance")
+                    .GetValue(null);
             }
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)

@@ -57,12 +57,21 @@ namespace Tools
         {
             public static string[] GetItems()
             {
-                return typeof(CostFunctionList).GetNestedTypes().Where(c => typeof(CostFunction).IsAssignableFrom(c)).Select(c => c.Name).ToArray();
+                return typeof(CostFunctionList)
+                    .GetNestedTypes()
+                    .Where(type => typeof(CostFunction).IsAssignableFrom(type))
+                    .Select(type => type.Name)
+                    .ToArray();
             }
 
-            public static CostFunction GetInstance(string costFunctionName)
+            public static CostFunction GetInstance(string functionName)
             {
-                return (CostFunction)typeof(CostFunctionList).GetNestedTypes().Where(c => c.Name == costFunctionName).First().GetField("Instance").GetValue(null);
+                return (CostFunction)typeof(CostFunctionList)
+                    .GetNestedTypes()
+                    .Where(type => type.Name == functionName)
+                    .First()
+                    .GetField("Instance")
+                    .GetValue(null);
             }
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)

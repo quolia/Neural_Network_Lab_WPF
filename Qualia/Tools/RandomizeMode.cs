@@ -1,285 +1,406 @@
 ﻿using Qualia;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
 namespace Tools
 {
-    public static class RandomizeMode
+    unsafe public class RandomizeMode
     {
-        public static void FlatRandom(NetworkDataModel networkModel, double? param)
+        public delegate*<NetworkDataModel, double?, void> Do;
+
+        public RandomizeMode(delegate*<NetworkDataModel, double?, void> doFunc)
         {
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
-            {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
-                {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
-                    {
-                        weight.Weight = Rand.GetFlatRandom(param.Value);
-                        weight = weight.Next;
-                    }
-
-                    neuron = neuron.Next;
-                }
-
-                layer = layer.Next;
-            }
+            Do = doFunc;
         }
+    }
 
-        public static void GaussRandom(NetworkDataModel networkModel, double? param)
+    public static class RandomizeModeList
+    {
+        unsafe sealed public class FlatRandom : RandomizeMode
         {
-            param = param ?? 1;
+            public static readonly FlatRandom Instance = new();
 
-            var layer = networkModel.Layers.First;
-            while (layer != null)
+            private FlatRandom()
+                : base(&_do)
             {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
-                {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
-                    {
-                        weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
-                        weight = weight.Next;
-                    }
-
-                    neuron = neuron.Next;
-                }
-
-                layer = layer.Next;
             }
-        }
 
-        public static void AbsGaussRandom(NetworkDataModel networkModel, double? param)
-        {
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
             {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
                 {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
                     {
-                        weight.Weight = QMath.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
-                        weight = weight.Next;
-                    }
-
-                    neuron = neuron.Next;
-                }
-
-                layer = layer.Next;
-            }
-        }
-
-        public static void Centered(NetworkDataModel networkModel, double? param)
-        {
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
-            {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
-                {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
-                    {
-                        weight.Weight = -param.Value / 2 + param.Value * Rand.GetFlatRandom();
-                        weight = weight.Next;
-                    }
-
-                    neuron = neuron.Next;
-                }
-
-                layer = layer.Next;
-            }
-        }
-
-        public static void WaveProgress(NetworkDataModel networkModel, double? param)
-        {
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
-            {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
-                {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
-                    {
-                        weight.Weight = param.Value * InitializeMode.Centered(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
-                        weight = weight.Next;
-                    }
-
-                    neuron = neuron.Next;
-                }
-
-                layer = layer.Next;
-            }
-        }
-
-        public static void Xavier(NetworkDataModel networkModel, double? param)
-        {
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
-            {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
-                {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
-                    {
-                        if (layer.Previous == null)
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
                         {
-                            weight.Weight = Rand.GetFlatRandom();
-                        }
-                        else
-                        {
-                            weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = Rand.GetFlatRandom(param.Value);
+                            weight = weight.Next;
                         }
 
-                        weight = weight.Next;
+                        neuron = neuron.Next;
                     }
 
-                    neuron = neuron.Next;
+                    layer = layer.Next;
                 }
-
-                layer = layer.Next;
             }
         }
 
-        public static void GaussXavier(NetworkDataModel networkModel, double? param)
+        unsafe sealed public class GaussRandom : RandomizeMode
         {
-            // Xavier initialization works better for layers with sigmoid activation.
+            public static readonly GaussRandom Instance = new();
 
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
+            private GaussRandom()
+                : base(&_do)
             {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
                 {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
                     {
-                        if (layer.Previous == null)
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
                         {
                             weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
-                        }
-                        else
-                        {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                            weight = weight.Next;
                         }
 
-                        weight = weight.Next;
+                        neuron = neuron.Next;
                     }
 
-                    neuron = neuron.Next;
+                    layer = layer.Next;
                 }
-
-                layer = layer.Next;
             }
         }
 
-        public static void HeEtAl(NetworkDataModel networkModel, double? param)
+        unsafe sealed public class AbsGaussRandom : RandomizeMode
         {
-            param = param ?? 1;
+            public static readonly AbsGaussRandom Instance = new();
 
-            var layer = networkModel.Layers.First;
-            while (layer != null)
+            private AbsGaussRandom()
+                : base(&_do)
             {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
                 {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
                     {
-                        if (layer.Previous == null)
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
                         {
-                            weight.Weight = Rand.GetFlatRandom();
-                        }
-                        else
-                        {
-                            weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = QMath.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
+                            weight = weight.Next;
                         }
 
-                        weight = weight.Next;
+                        neuron = neuron.Next;
                     }
 
-                    neuron = neuron.Next;
+                    layer = layer.Next;
                 }
-
-                layer = layer.Next;
             }
         }
 
-        public static void GaussHeEtAl(NetworkDataModel networkModel, double? param)
+        unsafe sealed public class Centered : RandomizeMode
         {
-            // He initialization works better for layers with ReLu(s) activation.
+            public static readonly Centered Instance = new();
 
-            param = param ?? 1;
-
-            var layer = networkModel.Layers.First;
-            while (layer != null)
+            private Centered()
+                : base(&_do)
             {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
                 {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
                     {
-                        if (layer.Previous == null)
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
                         {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
-                        }
-                        else
-                        {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                            weight.Weight = -param.Value / 2 + param.Value * Rand.GetFlatRandom();
+                            weight = weight.Next;
                         }
 
-                        weight = weight.Next;
+                        neuron = neuron.Next;
                     }
 
-                    neuron = neuron.Next;
+                    layer = layer.Next;
                 }
-
-                layer = layer.Next;
             }
         }
 
-        public static void Constant(NetworkDataModel networkModel, double? param)
+        unsafe sealed public class WaveProgress : RandomizeMode
         {
-            param = param ?? 0;
+            public static readonly WaveProgress Instance = new();
 
-            var layer = networkModel.Layers.First;
-            while (layer != null)
+            private WaveProgress()
+                : base(&_do)
             {
-                var neuron = layer.Neurons.First;
-                while (neuron != null)
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
                 {
-                    var weight = neuron.Weights.First;
-                    while (weight != null)
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
                     {
-                        weight.Weight = param.Value;
-                        weight = weight.Next;
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            weight.Weight = param.Value * InitializeModeList.Centered.Instance.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
                     }
 
-                    neuron = neuron.Next;
+                    layer = layer.Next;
                 }
+            }
+        }
 
-                layer = layer.Next;
+        unsafe sealed public class Xavier : RandomizeMode
+        {
+            public static readonly Xavier Instance = new();
+
+            private Xavier()
+                : base(&_do)
+            {
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
+                {
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
+                    {
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            if (layer.Previous == null)
+                            {
+                                weight.Weight = Rand.GetFlatRandom();
+                            }
+                            else
+                            {
+                                weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                            }
+
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
+                    }
+
+                    layer = layer.Next;
+                }
+            }
+        }
+
+        unsafe sealed public class GaussXavier : RandomizeMode
+        {
+            public static readonly GaussXavier Instance = new();
+
+            private GaussXavier()
+                : base(&_do)
+            {
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                // Xavier initialization works better for layers with sigmoid activation.
+
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
+                {
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
+                    {
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            if (layer.Previous == null)
+                            {
+                                weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
+                            }
+                            else
+                            {
+                                weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                            }
+
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
+                    }
+
+                    layer = layer.Next;
+                }
+            }
+        }
+
+        unsafe sealed public class HeEtAl : RandomizeMode
+        {
+            public static readonly HeEtAl Instance = new();
+
+            private HeEtAl()
+                : base(&_do)
+            {
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
+                {
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
+                    {
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            if (layer.Previous == null)
+                            {
+                                weight.Weight = Rand.GetFlatRandom();
+                            }
+                            else
+                            {
+                                weight.Weight = Rand.GetFlatRandom(param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                            }
+
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
+                    }
+
+                    layer = layer.Next;
+                }
+            }
+        }
+
+        unsafe sealed public class GaussHeEtAl : RandomizeMode
+        {
+            public static readonly GaussHeEtAl Instance = new();
+
+            private GaussHeEtAl()
+                : base(&_do)
+            {
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                // He initialization works better for layers with ReLu(s) activation.
+
+                param ??= 1;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
+                {
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
+                    {
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            if (layer.Previous == null)
+                            {
+                                weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value);
+                            }
+                            else
+                            {
+                                weight.Weight = Rand.GaussianRand.NextGaussian(0, param.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                            }
+
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
+                    }
+
+                    layer = layer.Next;
+                }
+            }
+        }
+
+        unsafe sealed public class Constant : RandomizeMode
+        {
+            public static readonly Constant Instance = new();
+
+            private Constant()
+                : base(&_do)
+            {
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void _do(NetworkDataModel networkModel, double? param)
+            {
+                param ??= 0;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
+                {
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
+                    {
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            weight.Weight = param.Value;
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
+                    }
+
+                    layer = layer.Next;
+                }
             }
         }
 
@@ -287,13 +408,21 @@ namespace Tools
         {
             public static string[] GetItems()
             {
-                return typeof(RandomizeMode).GetMethods().Where(methodInfo => methodInfo.IsStatic).Select(methodInfo => methodInfo.Name).ToArray();
+                return typeof(RandomizeModeList)
+                    .GetNestedTypes()
+                    .Where(type => typeof(RandomizeMode).IsAssignableFrom(type))
+                    .Select(type => type.Name)
+                    .ToArray();
             }
 
-            public static void Invoke(string methodName, NetworkDataModel networkModel, double? param)
+            public static RandomizeMode GetInstance(string functionName)
             {
-                var method = typeof(RandomizeMode).GetMethod(methodName);
-                method.Invoke(null, new object[] { networkModel, param });
+                return (RandomizeMode)typeof(RandomizeModeList)
+                    .GetNestedTypes()
+                    .Where(type => type.Name == functionName)
+                    .First()
+                    .GetField("Instance")
+                    .GetValue(null);
             }
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)

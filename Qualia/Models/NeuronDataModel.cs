@@ -14,10 +14,10 @@ namespace Qualia
         public bool IsBias;
         public bool IsBiasConnected;
 
-        public string ActivationInitializer;
+        public InitializeMode ActivationInitializer;
         public double? ActivationInitializerParam;
 
-        public string WeightsInitializer;
+        public InitializeMode WeightsInitializer;
         public double? WeightsInitializerParam;
 
         public ActivationFunction ActivationFunction;
