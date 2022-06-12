@@ -509,11 +509,13 @@ namespace Qualia
                             statistics.TotalTicksElapsed = totalTicksElapsed;
                             statistics.CostSumTotal += statistics.CostSum;
 
-                            statistics.CurrentPureRoundsPerSecond = currentLoopLimit / swCurrentPureRoundsPerSecond.Elapsed.TotalSeconds;
+                            var pureElapsed = swCurrentPureRoundsPerSecond.Elapsed;
+                            statistics.CurrentPureRoundsPerSecond = currentLoopLimit / pureElapsed.TotalSeconds;
                             if (statistics.CurrentPureRoundsPerSecond > statistics.MaxPureRoundsPerSecond)
                             {
                                 statistics.MaxPureRoundsPerSecond = statistics.CurrentPureRoundsPerSecond;
                             }
+                            statistics.MicroSecondsPerPureRound = pureElapsed.TotalMicroseconds() / currentLoopLimit;
 
                             statistics.CurrentLostRoundsPerSecond = statistics.CurrentPureRoundsPerSecond * currentMiscCodeTimeSpan.TotalSeconds;
                             if (statistics.CurrentLostRoundsPerSecond > statistics.MaxLostRoundsPerSecond)
@@ -702,24 +704,34 @@ namespace Qualia
                 return null;
             }
 
-            Dictionary<string, string> stat = new();
+            Dictionary<string, string> stat = new(24);
 
-            stat.Add("Time", _startTime.Elapsed.ToString(Culture.TimeFormat));
+            stat.Add("Time",
+                     _startTime.Elapsed.ToString(Culture.TimeFormat));
 
             if (statistics.Percent > 0)
             {
                 var linerRemains = (long)((double)statistics.TotalTicksElapsed * 100 / statistics.Percent) - statistics.TotalTicksElapsed;
-                stat.Add("Leaner time remaining", TimeSpan.FromTicks(linerRemains).ToString(Culture.TimeFormat));
+                stat.Add("Leaner time remaining",
+                         TimeSpan.FromTicks(linerRemains).ToString(Culture.TimeFormat));
             }
             else
             {
                 stat.Add("Time remaining", "N/A");
             }
 
+            stat.Add("Learning rate",
+                     Converter.DoubleToText(learningRate));
+
+            stat.Add("1", null);
+
             if (statistics.LastGoodOutput != null)
             {
-                stat.Add("Last good output", $"{statistics.LastGoodInput}={statistics.LastGoodOutput} ({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N4")} %)");
-                stat.Add("Last good cost", Converter.DoubleToText(statistics.LastGoodCost, "N6"));
+                stat.Add("Last good output",
+                         $"{statistics.LastGoodInput}={statistics.LastGoodOutput} ({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N4")} %)");
+
+                stat.Add("Last good cost",
+                         Converter.DoubleToText(statistics.LastGoodCost, "N6"));
             }
             else
             {
@@ -727,10 +739,15 @@ namespace Qualia
                 stat.Add("Last good cost", "none");
             }
 
+            stat.Add("2", null);
+
             if (statistics.LastBadOutput != null)
             {
-                stat.Add("Last bad output", $"{statistics.LastBadInput}={statistics.LastBadOutput} ({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N4")} %)");
-                stat.Add("Last bad cost", Converter.DoubleToText(statistics.LastBadCost, "N6"));
+                stat.Add("Last bad output",
+                         $"{statistics.LastBadInput}={statistics.LastBadOutput} ({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N4")} %)");
+
+                stat.Add("Last bad cost",
+                         Converter.DoubleToText(statistics.LastBadCost, "N6"));
             }
             else
             {
@@ -738,19 +755,41 @@ namespace Qualia
                 stat.Add("Last bad cost", "none");
             }
 
-            stat.Add("Average cost", Converter.DoubleToText(statistics.CostAvg, "N6"));
-            stat.Add("Percent", Converter.DoubleToText(statistics.Percent, "N6") + " %");
-            stat.Add("Learning rate", Converter.DoubleToText(learningRate));
-            stat.Add("Rounds", statistics.Rounds.ToString());
+            stat.Add("3", null);
 
-            stat.Add("Current / Max pure rounds/sec", string.Format($"{(int)statistics.CurrentPureRoundsPerSecond} / {(int)statistics.MaxPureRoundsPerSecond}"));
-            stat.Add("Current / Max lost rounds/sec", string.Format($"{(int)statistics.CurrentLostRoundsPerSecond} / {(int)statistics.MaxLostRoundsPerSecond}"));
+            stat.Add("Average cost",
+                     Converter.DoubleToText(statistics.CostAvg, "N6"));
 
-            stat.Add(string.Empty, string.Empty);
+            stat.Add("4", null);
+
+            stat.Add("Rounds",
+                     statistics.Rounds.ToString());
+
+            stat.Add("Percent",
+                     Converter.DoubleToText(statistics.Percent, "N6") + " %");
+
+            stat.Add("5", null);
+
+            stat.Add("Microseconds / pure round",
+                     statistics.MicroSecondsPerPureRound.ToString());
+
+            stat.Add("Current / Max pure rounds/sec",
+                     string.Format($"{(int)statistics.CurrentPureRoundsPerSecond} / {(int)statistics.MaxPureRoundsPerSecond}"));
+
+            stat.Add("Current / Max lost rounds/sec",
+                     string.Format($"{(int)statistics.CurrentLostRoundsPerSecond} / {(int)statistics.MaxLostRoundsPerSecond}"));
+
+            stat.Add("6", null);
+
             stat.Add("Render time, mcs", string.Empty);
-            stat.Add("Network", ((int)TimeSpan.FromTicks(RenderTime.Network).TotalMicroseconds()).ToString());
-            stat.Add("Error matrix", ((int)TimeSpan.FromTicks(RenderTime.ErrorMatrix).TotalMicroseconds()).ToString());
-            stat.Add("Statistics", ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
+            stat.Add("Network",
+                     ((int)TimeSpan.FromTicks(RenderTime.Network).TotalMicroseconds()).ToString());
+
+            stat.Add("Error matrix",
+                     ((int)TimeSpan.FromTicks(RenderTime.ErrorMatrix).TotalMicroseconds()).ToString());
+
+            stat.Add("Statistics",
+                     ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
                 
             CtlStatisticsPresenter.Draw(stat);
 

@@ -33,7 +33,7 @@ namespace Qualia.Controls
             s_stringBuilder.Clear();
             foreach (var item in stats)
             {
-                if (item.Key.Length == 0)
+                if (item.Value == null)
                 {
                     s_stringBuilder.AppendLine();
                     continue;
