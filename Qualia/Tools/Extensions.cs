@@ -132,24 +132,18 @@ namespace Qualia.Tools
             return name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase) ? name.Substring(prefix.Length) : name;
         }
 
-        private static void FillComboBox(Type listType, ComboBox comboBox, Config config, string defaultValue)
+        public static void FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue)
         {
-            var items = listType.GetNestedTypes()
-                                .Where(type => type.Name == "Helper")
-                                .First()
-                                .GetMethod("GetItems")
-                                .Invoke(null, null);
-
-
+            var items = typeof(T).GetMethod("GetItems").Invoke(null, null);
             FillComboBox(items as string[], comboBox, config, defaultValue);
         }
 
-        public static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue)
+        private static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue)
         {
             FillComboBox(getItemsFunc(), comboBox, config, defaultValue);
         }
 
-        public static void FillComboBox(in string[] items, ComboBox cb, Config config, string defaultValue)
+        private static void FillComboBox(in string[] items, ComboBox cb, Config config, string defaultValue)
         {
             var paramName = CutName(cb.Name);
 

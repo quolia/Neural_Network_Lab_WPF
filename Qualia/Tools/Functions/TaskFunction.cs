@@ -38,11 +38,18 @@ namespace Qualia.Tools
         void TaskParameterChanged();
     }
 
-    public static class TaskFunctionList
+    unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
+        public delegate*<NetworkDataModel, void> Do;
+
+        public TaskFunction(delegate*<NetworkDataModel, void> doFunc)
+        {
+            Do = doFunc;
+        }
+
         sealed public class CountDots : INetworkTask
         {
-            public static readonly CountDots Instance = new();
+            public static readonly TaskFunction Instance = new(&Do);
             
             private static readonly CountDotsControl s_control = new();
 

@@ -25,16 +25,16 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
         }
 
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunctionList.None.Instance;
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.None.Instance;
         public override double? WeightsInitializeFunctionParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
-        public override ActivationFunction ActivationFunction => ActivationFunctionList.GetInstance(CtlActivationFunction.SelectedItem.ToString());
+        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
         public override double? ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull;
 
         public void LoadConfig()
         {
-            Initializer.FillComboBox(ActivationFunctionList.GetItems, CtlActivationFunction, Config, nameof(ActivationFunctionList.LogisticSigmoid));
+            Initializer.FillComboBox<ActivationFunction>(CtlActivationFunction, Config, nameof(ActivationFunction.LogisticSigmoid));
             _configParams.ForEach(param => param.LoadConfig());
 
             StateChanged();

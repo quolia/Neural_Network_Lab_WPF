@@ -12,7 +12,7 @@ namespace Qualia.Controls
             Visibility = Visibility.Collapsed; // do not show it
         }
 
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunctionList.None.Instance;
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.None.Instance;
         public override double? WeightsInitializeFunctionParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;

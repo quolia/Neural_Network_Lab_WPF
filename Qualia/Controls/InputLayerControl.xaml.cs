@@ -42,9 +42,9 @@ namespace Qualia.Controls
         public override Panel NeuronsHolder => CtlNeuronsHolder;
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
-        public string ActivationFunc => CtlActivationFunction.SelectedItem.ToString();
-        public double? ActivationFuncParam => CtlActivationFunctionParam.ValueOrNull;
-        public InitializeFunction WeightsInitializeFunction => InitializeFunctionList.GetInstance(CtlWeightsInitializeFunction.SelectedItem.ToString());
+        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
+        public double? ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull;
+        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction.SelectedItem);
         public double? WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull;
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
 
@@ -61,8 +61,8 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Initializer.FillComboBox(ActivationFunctionList.GetItems, CtlActivationFunction, Config, nameof(ActivationFunctionList.None));
-            Initializer.FillComboBox(InitializeFunctionList.GetItems, CtlWeightsInitializeFunction, Config, nameof(InitializeFunctionList.None));
+            Initializer.FillComboBox<ActivationFunction>(CtlActivationFunction, Config, nameof(ActivationFunction.None));
+            Initializer.FillComboBox<InitializeFunction>(CtlWeightsInitializeFunction, Config, nameof(InitializeFunction.None));
 
             _configParams.ForEach(param => param.LoadConfig());
 
@@ -77,7 +77,7 @@ namespace Qualia.Controls
         {
             InputNeuronControl ctlNeuron = new(NeuronsHolder.Children.Count)
             {
-                ActivationFunction = ActivationFunctionList.GetInstance(CtlActivationFunction.SelectedItem.ToString()),
+                ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem),
                 ActivationFunctionParam = CtlActivationFunctionParam.ValueOrNull
             };
 

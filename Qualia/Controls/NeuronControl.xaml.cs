@@ -51,20 +51,20 @@ namespace Qualia.Controls
             OnChanged();
         }
 
-        public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunctionList.GetInstance(CtlActivationInitializeFunction.SelectedItem.ToString()) : null);
+        public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunction.GetInstance(CtlActivationInitializeFunction.SelectedItem) : null);
         public override double? ActivationInitializeFunctionParam => (CtlIsBias.IsChecked == true ? CtlActivationInitializeFunctionParam.ValueOrNull : null);
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunctionList.GetInstance(CtlWeightsInitializeFunction.SelectedItem.ToString());
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction.SelectedItem);
         public override double? WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull;
         public override bool IsBias => CtlIsBias.IsChecked == true;
         public override bool IsBiasConnected => CtlIsBiasConnected.IsChecked == true && IsBias;
-        public override ActivationFunction ActivationFunction => ActivationFunctionList.GetInstance(CtlActivationFunction.SelectedItem.ToString());
+        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
         public override double? ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull;
 
         public void LoadConfig()
         {
-            Initializer.FillComboBox(InitializeFunctionList.GetItems, CtlWeightsInitializeFunction, Config, nameof(InitializeFunctionList.None));
-            Initializer.FillComboBox(InitializeFunctionList.GetItems, CtlActivationInitializeFunction, Config, nameof(InitializeFunctionList.Constant));
-            Initializer.FillComboBox(ActivationFunctionList.GetItems, CtlActivationFunction, Config, nameof(ActivationFunctionList.LogisticSigmoid));
+            Initializer.FillComboBox<InitializeFunction>(CtlWeightsInitializeFunction, Config, nameof(InitializeFunction.None));
+            Initializer.FillComboBox<InitializeFunction>(CtlActivationInitializeFunction, Config, nameof(InitializeFunction.Constant));
+            Initializer.FillComboBox<ActivationFunction>(CtlActivationFunction, Config, nameof(ActivationFunction.LogisticSigmoid));
 
             _configParams.ForEach(param => param.LoadConfig());
 

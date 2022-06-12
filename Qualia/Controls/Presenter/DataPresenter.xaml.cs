@@ -68,7 +68,7 @@ namespace Qualia.Controls
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            Initializer.FillComboBox(TaskFunctionList.GetItems, CtlTaskFunction, config, null);
+            Initializer.FillComboBox<TaskFunction>(CtlTaskFunction, config, null);
             TaskFunction = TaskFunctionList.GetInstance(CtlTaskFunction.SelectedItem.ToString());
             _pointsRearrangeSnap = TaskFunction.GetPointsRearrangeSnap();
 

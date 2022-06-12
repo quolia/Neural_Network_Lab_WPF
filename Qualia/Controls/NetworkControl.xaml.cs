@@ -160,8 +160,8 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Initializer.FillComboBox(RandomizeFunctionList.GetItems, CtlRandomizeFunction, Config, nameof(RandomizeFunctionList.FlatRandom));
-            Initializer.FillComboBox(CostFunctionList.GetItems, CtlCostFunction, Config, nameof(CostFunctionList.MSE));
+            Initializer.FillComboBox<RandomizeFunction>(CtlRandomizeFunction, Config, nameof(RandomizeFunction.FlatRandom));
+            Initializer.FillComboBox<CostFunction>(CtlCostFunction, Config, nameof(CostFunction.MSE));
 
             _configParams.ForEach(param => param.LoadConfig());
 
@@ -221,7 +221,7 @@ namespace Qualia.Controls
 
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
-        private RandomizeFunction RandomizeMode => RandomizeFunctionList.GetInstance(CtlRandomizeFunction.SelectedItem.ToString());
+        private RandomizeFunction RandomizeMode => RandomizeFunction.GetInstance(CtlRandomizeFunction.SelectedItem);
         private double? RandomizerParam => CtlRandomizeFunctionParam.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
 
@@ -258,13 +258,13 @@ namespace Qualia.Controls
                 RandomizeMode = RandomizeMode,
                 RandomizerParam = RandomizerParam,
                 LearningRate = LearningRate,
-                InputInitial0 = ActivationFunctionList.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0,
-                                                                                                 InputLayer.ActivationFuncParam),
+                InputInitial0 = InputLayer.ActivationFunction.Do(InputLayer.Initial0,
+                                                                 InputLayer.ActivationFunctionParam),
 
-                InputInitial1 = ActivationFunctionList.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1,
-                                                                                                 InputLayer.ActivationFuncParam),
+                InputInitial1 = InputLayer.ActivationFunction.Do(InputLayer.Initial1,
+                                                                 InputLayer.ActivationFunctionParam),
 
-                CostFunction = CostFunctionList.GetInstance(CtlCostFunction.SelectedValue.ToString()),
+                CostFunction = CostFunction.GetInstance(CtlCostFunction.SelectedValue),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 

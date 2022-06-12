@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Controls;
+﻿using System.Runtime.CompilerServices;
 
 namespace Qualia.Tools
 {
-    unsafe public class InitializeFunction
+    unsafe public class InitializeFunction : BaseFunction<InitializeFunction>
     {
         public delegate*<double?, double> Do;
 
@@ -17,83 +15,41 @@ namespace Qualia.Tools
         {
             return double.IsNaN(value);
         }
-    }
 
-    public static class InitializeFunctionList
-    {
-        unsafe sealed public class None : InitializeFunction
+        unsafe sealed public class None
         {
-            public static readonly None Instance = new();
-
-            private None()
-                : base(&_do)
-            {
-            }
+            public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double? param) => Constants.SkipValue;
+            public static double Do(double? param) => Constants.SkipValue;
         }
 
-        unsafe sealed public class Constant : InitializeFunction
+        unsafe sealed public class Constant
         {
-            public static readonly Constant Instance = new();
-
-            private Constant()
-                : base(&_do)
-            {
-            }
+            public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double? param) => param ?? 0;
+            public static double Do(double? param) => param ?? 0;
         }
 
-        unsafe sealed public class SimpleRandom : InitializeFunction
+        unsafe sealed public class SimpleRandom
         {
-            public static readonly SimpleRandom Instance = new();
-
-            private SimpleRandom()
-                : base(&_do)
-            {
-            }
+            public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double? param) => (param ?? 1) * Rand.GetFlatRandom();
+            public static double Do(double? param) => (param ?? 1) * Rand.GetFlatRandom();
         }
 
-        unsafe sealed public class Centered : InitializeFunction
+        unsafe sealed public class Centered
         {
-            public static readonly Centered Instance = new();
-
-            private Centered()
-                : base(&_do)
-            {
-            }
+            public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double? param)
+            public static double Do(double? param)
             {
                 param ??= 1;
                 return -param.Value / 2 + param.Value * Rand.GetFlatRandom();
             }
-        }
-
-        public static string[] GetItems()
-        {
-            return typeof(InitializeFunctionList)
-                .GetNestedTypes()
-                .Where(type => typeof(InitializeFunction).IsAssignableFrom(type))
-                .Select(type => type.Name)
-                .ToArray();
-        }
-
-        public static InitializeFunction GetInstance(string functionName)
-        {
-            return (InitializeFunction)typeof(InitializeFunctionList)
-                .GetNestedTypes()
-                .Where(type => type.Name == functionName)
-                .First()
-                .GetField("Instance")
-                .GetValue(null);
         }
     }
 }

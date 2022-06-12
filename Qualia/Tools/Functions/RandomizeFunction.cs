@@ -1,12 +1,10 @@
 ﻿using Qualia.Model;
 using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
 
 namespace Qualia.Tools
 {
-    unsafe public class RandomizeFunction
+    unsafe public class RandomizeFunction : BaseFunction<RandomizeFunction>
     {
         public delegate*<NetworkDataModel, double?, void> Do;
 
@@ -14,21 +12,13 @@ namespace Qualia.Tools
         {
             Do = doFunc;
         }
-    }
 
-    public static class RandomizeFunctionList
-    {
-        unsafe sealed public class FlatRandom : RandomizeFunction
+        unsafe sealed public class FlatRandom
         {
-            public static readonly FlatRandom Instance = new();
-
-            private FlatRandom()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -53,17 +43,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussRandom : RandomizeFunction
+        unsafe sealed public class GaussRandom
         {
-            public static readonly GaussRandom Instance = new();
-
-            private GaussRandom()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -88,17 +73,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class AbsGaussRandom : RandomizeFunction
+        unsafe sealed public class AbsGaussRandom
         {
-            public static readonly AbsGaussRandom Instance = new();
-
-            private AbsGaussRandom()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -123,17 +103,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class Centered : RandomizeFunction
+        unsafe sealed public class Centered
         {
-            public static readonly Centered Instance = new();
-
-            private Centered()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -158,17 +133,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class WaveProgress : RandomizeFunction
+        unsafe sealed public class WaveProgress
         {
-            public static readonly WaveProgress Instance = new();
-
-            private WaveProgress()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -181,7 +151,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = param.Value * InitializeFunctionList.Centered.Instance.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                            weight.Weight = param.Value * InitializeFunction.Centered.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
                             weight = weight.Next;
                         }
 
@@ -193,17 +163,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class Xavier : RandomizeFunction
+        unsafe sealed public class Xavier
         {
-            public static readonly Xavier Instance = new();
-
-            private Xavier()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -236,17 +201,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussXavier : RandomizeFunction
+        unsafe sealed public class GaussXavier
         {
-            public static readonly GaussXavier Instance = new();
-
-            private GaussXavier()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 // Xavier initialization works better for layers with sigmoid activation.
 
@@ -281,17 +241,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class HeEtAl : RandomizeFunction
+        unsafe sealed public class HeEtAl
         {
-            public static readonly HeEtAl Instance = new();
-
-            private HeEtAl()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 1;
 
@@ -324,17 +279,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussHeEtAl : RandomizeFunction
+        unsafe sealed public class GaussHeEtAl
         {
-            public static readonly GaussHeEtAl Instance = new();
-
-            private GaussHeEtAl()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 // He initialization works better for layers with ReLu(s) activation.
 
@@ -369,17 +319,12 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class Constant : RandomizeFunction
+        unsafe sealed public class Constant
         {
-            public static readonly Constant Instance = new();
-
-            private Constant()
-                : base(&_do)
-            {
-            }
+            public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void _do(NetworkDataModel networkModel, double? param)
+            public static void Do(NetworkDataModel networkModel, double? param)
             {
                 param ??= 0;
 
@@ -402,25 +347,6 @@ namespace Qualia.Tools
                     layer = layer.Next;
                 }
             }
-        }
-
-        public static string[] GetItems()
-        {
-            return typeof(RandomizeFunctionList)
-                .GetNestedTypes()
-                .Where(type => typeof(RandomizeFunction).IsAssignableFrom(type))
-                .Select(type => type.Name)
-                .ToArray();
-        }
-
-        public static RandomizeFunction GetInstance(string functionName)
-        {
-            return (RandomizeFunction)typeof(RandomizeFunctionList)
-                .GetNestedTypes()
-                .Where(type => type.Name == functionName)
-                .First()
-                .GetField("Instance")
-                .GetValue(null);
         }
     }
 }
