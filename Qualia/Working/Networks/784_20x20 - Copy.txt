@@ -5,7 +5,7 @@ Task_CountDots_MaxNumber:20
 Task_CountDots_IsGaussianDistribution:0
 Networks:637015441499727363
 SelectedNetworkIndex:0
-SelectedLayerIndex.637015441499727363:3
+SelectedLayerIndex.637015441499727363:0
 Color.637015441499727363:255,100,100,100
 RandomizeFunctionParam.637015441499727363:
 RandomizeFunction.637015441499727363:Centered

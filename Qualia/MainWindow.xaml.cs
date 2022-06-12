@@ -706,19 +706,16 @@ namespace Qualia.Controls
 
             Dictionary<string, string> stat = new(24);
 
-            stat.Add("Time",
-                     _startTime.Elapsed.ToString(Culture.TimeFormat));
+            var remainingTime = "Unknown";
 
             if (statistics.Percent > 0)
             {
                 var linerRemains = (long)((double)statistics.TotalTicksElapsed * 100 / statistics.Percent) - statistics.TotalTicksElapsed;
-                stat.Add("Leaner time remaining",
-                         TimeSpan.FromTicks(linerRemains).ToString(Culture.TimeFormat));
+                remainingTime = TimeSpan.FromTicks(linerRemains).ToString(Culture.TimeFormat);
             }
-            else
-            {
-                stat.Add("Time remaining", "N/A");
-            }
+
+            stat.Add("Time / remaining",
+                     _startTime.Elapsed.ToString(Culture.TimeFormat) + " / " + remainingTime);
 
             stat.Add("Learning rate",
                      Converter.DoubleToText(learningRate));
