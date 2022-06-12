@@ -507,10 +507,14 @@ namespace Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int Ceiling(double a)
+        internal static double Ceiling(double a)
         {
-            return (int)Math.Ceiling(a);
-            //return 1 + (int)a;
+            if (a == (int)a)
+            {
+                return a;
+            }
+
+            return Math.Ceiling(a);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
