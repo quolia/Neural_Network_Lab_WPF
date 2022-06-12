@@ -162,7 +162,7 @@ namespace Qualia.Controls
 
             if (!File.Exists(fileName))
             {
-                fileName = "\\Networks\\" + Path.GetFileName(fileName);
+                fileName = App.WorkingDirectory + Path.DirectorySeparatorChar + "Networks" + Path.DirectorySeparatorChar + Path.GetFileName(fileName);
             }
 
             if (File.Exists(fileName))
@@ -190,7 +190,8 @@ namespace Qualia.Controls
             else
             {
                 MessageBox.Show($"Network '{fileName}' is not found!", "Error", MessageBoxButton.OK);
-                Config.Main.Set(Constants.Param.NetworksManagerName, string.Empty);
+                Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
+                //Config.Main.Set(Constants.Param.NetworksManagerName, string.Empty);
             }
         }
 
