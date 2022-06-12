@@ -51,9 +51,9 @@ namespace Qualia.Controls
             OnChanged();
         }
 
-        public override InitializeMode ActivationInitializer => (CtlIsBias.IsChecked == true ? InitializeModeList.Helper.GetInstance(CtlActivationInitializer.SelectedItem.ToString()) : null);
+        public override InitializeFunction ActivationInitializer => (CtlIsBias.IsChecked == true ? InitializeFunctionList.Helper.GetInstance(CtlActivationInitializer.SelectedItem.ToString()) : null);
         public override double? ActivationInitializerParam => (CtlIsBias.IsChecked == true ? CtlActivationInitializerParam.ValueOrNull : null);
-        public override InitializeMode WeightsInitializer => InitializeModeList.Helper.GetInstance(CtlWeightsInitializer.SelectedItem.ToString());
+        public override InitializeFunction WeightsInitializer => InitializeFunctionList.Helper.GetInstance(CtlWeightsInitializer.SelectedItem.ToString());
         public override double? WeightsInitializerParam => CtlWeightsInitializerParam.ValueOrNull;
         public override bool IsBias => CtlIsBias.IsChecked == true;
         public override bool IsBiasConnected => CtlIsBiasConnected.IsChecked == true && IsBias;
@@ -62,8 +62,8 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            InitializeModeList.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeModeList.None));
-            InitializeModeList.Helper.FillComboBox(CtlActivationInitializer, Config, nameof(InitializeModeList.Constant));
+            InitializeFunctionList.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeFunctionList.None));
+            InitializeFunctionList.Helper.FillComboBox(CtlActivationInitializer, Config, nameof(InitializeFunctionList.Constant));
             ActivationFunctionList.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunctionList.LogisticSigmoid));
 
             _configParams.ForEach(param => param.LoadConfig());

@@ -8,7 +8,7 @@ namespace Qualia.Controls
 {
     unsafe sealed public partial class RandomizerViewer : WindowResizeControl
     {
-        private readonly RandomizeMode _randomizeMode;
+        private readonly RandomizeFunction _randomizeMode;
         private readonly double? _param;
 
         private readonly Font _font = new("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
@@ -20,7 +20,7 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public RandomizerViewer(RandomizeMode randomizeMode, double? param)
+        public RandomizerViewer(RandomizeFunction randomizeMode, double? param)
         {
             InitializeComponent();
 
@@ -63,9 +63,9 @@ namespace Qualia.Controls
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        if (QMath.Abs(weight.Weight) > max)
+                        if (MathX.Abs(weight.Weight) > max)
                         {
-                            max = QMath.Abs(weight.Weight);
+                            max = MathX.Abs(weight.Weight);
                         }
 
                         weight = weight.Next;
@@ -77,7 +77,7 @@ namespace Qualia.Controls
                 layer = layer.Next;
             }
 
-            return (int)QMath.Ceiling(QMath.Max(1, max));
+            return (int)MathX.Ceiling(MathX.Max(1, max));
         }
 
         private void Render()
@@ -104,7 +104,7 @@ namespace Qualia.Controls
                     for (int weight = 0; weight < _model.Layers[layer].Neurons[neuron].Weights.Count; ++weight)
                     {
                         var value = _model.Layers[layer].Neurons[neuron].Weights[weight].Weight;
-                        var hover = value == 0 ? 0 : 30 * QMath.Sign(value);
+                        var hover = value == 0 ? 0 : 30 * MathX.Sign(value);
                         var p = Draw.GetPen(value, 0, alpha);
 
                         using (Pen pen = new(Draw.MediaColorToSystemColor(p.Brush.GetColor())))

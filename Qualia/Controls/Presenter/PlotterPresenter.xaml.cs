@@ -194,7 +194,7 @@ namespace Qualia.Controls
             {
                 ref var point = ref getPoint(pointsData, pointData, ticks);
 
-                if ((point.X - prevPoint.X) > 10 || QMath.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
+                if ((point.X - prevPoint.X) > 10 || MathX.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
                 {
                     ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
                     CtlPresenter.DrawLine(pen, ref fromPoint, ref point);
@@ -263,7 +263,7 @@ namespace Qualia.Controls
                          ? AXIS_OFFSET
                          : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
 
-            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - QMath.Min(1, plotPoint.Value));
+            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - MathX.Min(1, plotPoint.Value));
 
             return ref Points.Get((int)pointX, (int)pointY);
         }
@@ -288,7 +288,7 @@ namespace Qualia.Controls
                     ref var point1 = ref getPoint(pointsData, pointsData[i + 1], ticks);
                     ref var point2 = ref getPoint(pointsData, pointsData[i + 2], ticks);
 
-                    if (QMath.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
+                    if (MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
                     {
                         pointsData.AddToRemove(pointsData[i + 1]);
 
@@ -301,7 +301,7 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        if (QMath.Abs(point0.X - point1.X) < VANISH_AREA && QMath.Abs(point0.Y - point1.Y) < VANISH_AREA)
+                        if (MathX.Abs(point0.X - point1.X) < VANISH_AREA && MathX.Abs(point0.Y - point1.Y) < VANISH_AREA)
                         {
                             pointsData.AddToRemove(pointsData[i + 1]);
 

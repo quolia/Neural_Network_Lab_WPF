@@ -160,7 +160,7 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            RandomizeModeList.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(RandomizeModeList.FlatRandom));
+            RandomizeFunctionList.Helper.FillComboBox(CtlRandomizeMode, Config, nameof(RandomizeFunctionList.FlatRandom));
             CostFunctionList.Helper.FillComboBox(CtlCostFunction, Config, nameof(CostFunctionList.MSE));
 
             _configParams.ForEach(param => param.LoadConfig());
@@ -221,7 +221,7 @@ namespace Qualia.Controls
 
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
-        private RandomizeMode RandomizeMode => RandomizeModeList.Helper.GetInstance(CtlRandomizeMode.SelectedItem.ToString());
+        private RandomizeFunction RandomizeMode => RandomizeFunctionList.Helper.GetInstance(CtlRandomizeMode.SelectedItem.ToString());
         private double? RandomizerParam => CtlRandomizeModeParam.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
 
@@ -301,7 +301,7 @@ namespace Qualia.Controls
                         neuronModel.WeightsInitializerParam = InputLayer.WeightsInitializerParam;
 
                         double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
-                        if (!InitializeModeList.Helper.IsSkipValue(initValue))
+                        if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
                         }
@@ -312,7 +312,7 @@ namespace Qualia.Controls
                         neuronModel.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializerParam;
 
                         double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
-                        if (!InitializeModeList.Helper.IsSkipValue(initValue))
+                        if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
                         }
@@ -324,7 +324,7 @@ namespace Qualia.Controls
                         neuronModel.ActivationInitializerParam = ctlNeurons[neuronInd].ActivationInitializerParam;
                         double initValue = ctlNeurons[neuronInd].ActivationInitializer.Do(ctlNeurons[neuronInd].ActivationInitializerParam);
 
-                        if (!InitializeModeList.Helper.IsSkipValue(initValue))
+                        if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
                         {
                             neuronModel.Activation = initValue;
                         }

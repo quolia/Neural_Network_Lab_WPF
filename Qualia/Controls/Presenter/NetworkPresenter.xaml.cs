@@ -51,7 +51,7 @@ namespace Qualia.Controls
 
         private float VerticalDistance(int count)
         {
-            return QMath.Min(((float)ActualHeight - TOP_OFFSET - BOTTOM_OFFSET) / count, NEURON_MAX_DIST);
+            return MathX.Min(((float)ActualHeight - TOP_OFFSET - BOTTOM_OFFSET) / count, NEURON_MAX_DIST);
         }
 
         private int LayerX(NetworkDataModel networkModel, LayerDataModel layerModel)

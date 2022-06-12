@@ -43,7 +43,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            NetworkTask = Tools.NetworkTask.Helper.GetInstance(CtlTasks.SelectedItem.ToString());
+            NetworkTask = Tools.TaskFunctionList.Helper.GetInstance(CtlTasks.SelectedItem.ToString());
             _pointsRearrangeSnap = NetworkTask.GetPointsRearrangeSnap();
             NetworkTask.SetChangeEvent(TaskParameterChanged);
 
@@ -68,8 +68,8 @@ namespace Qualia.Controls
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            Tools.NetworkTask.Helper.FillComboBox(CtlTasks, config, null);
-            NetworkTask = Tools.NetworkTask.Helper.GetInstance(CtlTasks.SelectedItem.ToString());
+            Tools.TaskFunctionList.Helper.FillComboBox(CtlTasks, config, null);
+            NetworkTask = Tools.TaskFunctionList.Helper.GetInstance(CtlTasks.SelectedItem.ToString());
             _pointsRearrangeSnap = NetworkTask.GetPointsRearrangeSnap();
 
             CtlHolder.Children.Clear();
@@ -158,7 +158,7 @@ namespace Qualia.Controls
 
         private int GetSnaps()
         {
-            int width = (int)QMath.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
+            int width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
             return NetworkTask.IsGridSnapAdjustmentAllowed()
                    ? width / (_pointsRearrangeSnap * _pointSize)
@@ -219,7 +219,7 @@ namespace Qualia.Controls
         private ref Point GetPointPosition(int pointNumber)
         {
             int snaps = GetSnaps();
-            int y = (int)QMath.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
+            int y = (int)MathX.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
             int x = pointNumber - (y * snaps * _pointsRearrangeSnap);
 
             return ref Points.Get(x, y);

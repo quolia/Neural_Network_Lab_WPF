@@ -91,8 +91,8 @@ namespace Qualia.Controls
                         {
                             Point p = GetMousePosition();
 
-                            double diffWidth = QMath.Min(QMath.Abs(p.X - pos.x), QMath.Abs(p.X - pos.x - pos.cx));
-                            double diffHeight = QMath.Min(QMath.Abs(p.Y - pos.y), QMath.Abs(p.Y - pos.y - pos.cy));
+                            double diffWidth = MathX.Min(MathX.Abs(p.X - pos.x), MathX.Abs(p.X - pos.x - pos.cx));
+                            double diffHeight = MathX.Min(MathX.Abs(p.Y - pos.y), MathX.Abs(p.Y - pos.y - pos.cy));
 
                             _adjustingHeight = diffHeight > diffWidth;
                         }

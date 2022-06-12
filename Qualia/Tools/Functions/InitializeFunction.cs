@@ -4,19 +4,19 @@ using System.Windows.Controls;
 
 namespace Qualia.Tools
 {
-    unsafe public class InitializeMode
+    unsafe public class InitializeFunction
     {
         public delegate*<double?, double> Do;
 
-        public InitializeMode(delegate*<double?, double> doFunc)
+        public InitializeFunction(delegate*<double?, double> doFunc)
         {
             Do = doFunc;
         }
     }
 
-    public static class InitializeModeList
+    public static class InitializeFunctionList
     {
-        unsafe sealed public class None : InitializeMode
+        unsafe sealed public class None : InitializeFunction
         {
             public static readonly None Instance = new();
 
@@ -29,7 +29,7 @@ namespace Qualia.Tools
             public static double _do(double? param) => Constants.SkipValue;
         }
 
-        unsafe sealed public class Constant : InitializeMode
+        unsafe sealed public class Constant : InitializeFunction
         {
             public static readonly Constant Instance = new();
 
@@ -42,7 +42,7 @@ namespace Qualia.Tools
             public static double _do(double? param) => param ?? 0;
         }
 
-        unsafe sealed public class SimpleRandom : InitializeMode
+        unsafe sealed public class SimpleRandom : InitializeFunction
         {
             public static readonly SimpleRandom Instance = new();
 
@@ -55,7 +55,7 @@ namespace Qualia.Tools
             public static double _do(double? param) => (param ?? 1) * Rand.GetFlatRandom();
         }
 
-        unsafe sealed public class Centered : InitializeMode
+        unsafe sealed public class Centered : InitializeFunction
         {
             public static readonly Centered Instance = new();
 
@@ -81,16 +81,16 @@ namespace Qualia.Tools
 
             public static string[] GetItems()
             {
-                return typeof(InitializeModeList)
+                return typeof(InitializeFunctionList)
                     .GetNestedTypes()
-                    .Where(type => typeof(InitializeMode).IsAssignableFrom(type))
+                    .Where(type => typeof(InitializeFunction).IsAssignableFrom(type))
                     .Select(type => type.Name)
                     .ToArray();
             }
 
-            public static InitializeMode GetInstance(string functionName)
+            public static InitializeFunction GetInstance(string functionName)
             {
-                return (InitializeMode)typeof(InitializeModeList)
+                return (InitializeFunction)typeof(InitializeFunctionList)
                     .GetNestedTypes()
                     .Where(type => type.Name == functionName)
                     .First()

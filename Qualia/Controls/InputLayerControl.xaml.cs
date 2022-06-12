@@ -44,7 +44,7 @@ namespace Qualia.Controls
         public double Initial1 => CtlInputInitial1.Value;
         public string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
         public double? ActivationFuncParam => CtlActivationFuncParam.ValueOrNull;
-        public InitializeMode WeightsInitializer => InitializeModeList.Helper.GetInstance(CtlWeightsInitializer.SelectedItem.ToString());
+        public InitializeFunction WeightsInitializer => InitializeFunctionList.Helper.GetInstance(CtlWeightsInitializer.SelectedItem.ToString());
         public double? WeightsInitializerParam => CtlWeightsInitializerParam.ValueOrNull;
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
 
@@ -62,7 +62,7 @@ namespace Qualia.Controls
         private void LoadConfig()
         {
             ActivationFunctionList.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunctionList.None));
-            InitializeModeList.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeModeList.None));
+            InitializeFunctionList.Helper.FillComboBox(CtlWeightsInitializer, Config, nameof(InitializeFunctionList.None));
 
             _configParams.ForEach(param => param.LoadConfig());
 

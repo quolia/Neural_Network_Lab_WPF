@@ -38,7 +38,7 @@ namespace Qualia.Tools
         void TaskParameterChanged();
     }
 
-    public static class NetworkTask
+    public static class TaskFunctionList
     {
         sealed public class CountDots : INetworkTask
         {
@@ -102,7 +102,7 @@ namespace Qualia.Tools
                 }
                 else
                 {
-                    randNumber = (int)QMath.Round(Rand.GaussianRand.NextGaussian(_median, (_median - 2) / 2));
+                    randNumber = (int)MathX.Round(Rand.GaussianRand.NextGaussian(_median, (_median - 2) / 2));
 
                     if (randNumber < _minNumber)
                     {
@@ -236,12 +236,12 @@ namespace Qualia.Tools
         {
             public static string[] GetItems()
             {
-                return typeof(NetworkTask).GetNestedTypes().Where(task => typeof(INetworkTask).IsAssignableFrom(task)).Select(task => task.Name).ToArray();
+                return typeof(TaskFunctionList).GetNestedTypes().Where(task => typeof(INetworkTask).IsAssignableFrom(task)).Select(task => task.Name).ToArray();
             }
 
             public static INetworkTask GetInstance(string taskName)
             {
-                return (INetworkTask)typeof(NetworkTask).GetNestedTypes().Where(c => c.Name == taskName).First().GetField("Instance").GetValue(null);
+                return (INetworkTask)typeof(TaskFunctionList).GetNestedTypes().Where(c => c.Name == taskName).First().GetField("Instance").GetValue(null);
             }
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)

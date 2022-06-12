@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Qualia.Tools
 {
-    public static class QMath
+    public static class MathX
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static double Abs(double a)

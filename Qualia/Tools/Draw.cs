@@ -138,9 +138,9 @@ namespace Qualia.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetColor(double v, byte alpha = 255)
         {
-            int s = QMath.Sign(v);
+            int s = MathX.Sign(v);
 
-            v = QMath.Abs(2 / (1 + Math.Exp(-v * 4)) - 1);
+            v = MathX.Abs(2 / (1 + Math.Exp(-v * 4)) - 1);
 
             if (v > 1)
             {
@@ -204,7 +204,7 @@ namespace Qualia.Tools
 
             if (width == 0)
             {
-                width = QMath.Abs(v) <= 1 ? 1 : (double)QMath.Abs(v);
+                width = MathX.Abs(v) <= 1 ? 1 : (double)MathX.Abs(v);
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
@@ -222,9 +222,9 @@ namespace Qualia.Tools
         {
             var rand = (byte)Rand.Flat.Next(offsetFromTop);
             return Color.FromArgb(255,
-                                  (byte)(QMath.Max(baseColor.R - offsetFromTop, 0) + rand),
-                                  (byte)(QMath.Max(baseColor.G - offsetFromTop, 0) + rand),
-                                  (byte)(QMath.Max(baseColor.B - offsetFromTop, 0) + rand));
+                                  (byte)(MathX.Max(baseColor.R - offsetFromTop, 0) + rand),
+                                  (byte)(MathX.Max(baseColor.G - offsetFromTop, 0) + rand),
+                                  (byte)(MathX.Max(baseColor.B - offsetFromTop, 0) + rand));
         }
     }
 }

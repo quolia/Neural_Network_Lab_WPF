@@ -16,7 +16,7 @@ namespace Qualia.Model
 
         public Color Color;
         public double LearningRate;
-        public RandomizeMode RandomizeMode;
+        public RandomizeFunction RandomizeMode;
         public double? RandomizerParam;
         public double InputInitial0;
         public double InputInitial1;
@@ -322,7 +322,7 @@ namespace Qualia.Model
                         if (neuronModel == null)
                         {
                             double initValue = newNeuronModel.WeightsInitializer.Do(newNeuronModel.WeightsInitializerParam);
-                            if (!InitializeModeList.Helper.IsSkipValue(initValue))
+                            if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
                             {
                                 var newWeightModel = newNeuronModel.Weights.First;
                                 while (newWeightModel != null)
@@ -349,7 +349,7 @@ namespace Qualia.Model
                             if (newNeuronModel.IsBias)
                             {
                                 double initValue = newNeuronModel.ActivationInitializer.Do(newNeuronModel.ActivationInitializerParam);
-                                if (InitializeModeList.Helper.IsSkipValue(initValue))
+                                if (InitializeFunctionList.Helper.IsSkipValue(initValue))
                                 {
                                     newNeuronModel.Activation = neuronModel.Activation;
                                 }

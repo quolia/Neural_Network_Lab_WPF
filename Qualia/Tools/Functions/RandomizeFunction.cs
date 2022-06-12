@@ -6,19 +6,19 @@ using System.Windows.Controls;
 
 namespace Qualia.Tools
 {
-    unsafe public class RandomizeMode
+    unsafe public class RandomizeFunction
     {
         public delegate*<NetworkDataModel, double?, void> Do;
 
-        public RandomizeMode(delegate*<NetworkDataModel, double?, void> doFunc)
+        public RandomizeFunction(delegate*<NetworkDataModel, double?, void> doFunc)
         {
             Do = doFunc;
         }
     }
 
-    public static class RandomizeModeList
+    public static class RandomizeFunctionList
     {
-        unsafe sealed public class FlatRandom : RandomizeMode
+        unsafe sealed public class FlatRandom : RandomizeFunction
         {
             public static readonly FlatRandom Instance = new();
 
@@ -53,7 +53,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussRandom : RandomizeMode
+        unsafe sealed public class GaussRandom : RandomizeFunction
         {
             public static readonly GaussRandom Instance = new();
 
@@ -88,7 +88,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class AbsGaussRandom : RandomizeMode
+        unsafe sealed public class AbsGaussRandom : RandomizeFunction
         {
             public static readonly AbsGaussRandom Instance = new();
 
@@ -111,7 +111,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = QMath.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
+                            weight.Weight = MathX.Abs(Rand.GaussianRand.NextGaussian(0, param.Value));
                             weight = weight.Next;
                         }
 
@@ -123,7 +123,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class Centered : RandomizeMode
+        unsafe sealed public class Centered : RandomizeFunction
         {
             public static readonly Centered Instance = new();
 
@@ -158,7 +158,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class WaveProgress : RandomizeMode
+        unsafe sealed public class WaveProgress : RandomizeFunction
         {
             public static readonly WaveProgress Instance = new();
 
@@ -181,7 +181,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = param.Value * InitializeModeList.Centered.Instance.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                            weight.Weight = param.Value * InitializeFunctionList.Centered.Instance.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
                             weight = weight.Next;
                         }
 
@@ -193,7 +193,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class Xavier : RandomizeMode
+        unsafe sealed public class Xavier : RandomizeFunction
         {
             public static readonly Xavier Instance = new();
 
@@ -236,7 +236,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussXavier : RandomizeMode
+        unsafe sealed public class GaussXavier : RandomizeFunction
         {
             public static readonly GaussXavier Instance = new();
 
@@ -281,7 +281,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class HeEtAl : RandomizeMode
+        unsafe sealed public class HeEtAl : RandomizeFunction
         {
             public static readonly HeEtAl Instance = new();
 
@@ -324,7 +324,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussHeEtAl : RandomizeMode
+        unsafe sealed public class GaussHeEtAl : RandomizeFunction
         {
             public static readonly GaussHeEtAl Instance = new();
 
@@ -369,7 +369,7 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class Constant : RandomizeMode
+        unsafe sealed public class Constant : RandomizeFunction
         {
             public static readonly Constant Instance = new();
 
@@ -408,16 +408,16 @@ namespace Qualia.Tools
         {
             public static string[] GetItems()
             {
-                return typeof(RandomizeModeList)
+                return typeof(RandomizeFunctionList)
                     .GetNestedTypes()
-                    .Where(type => typeof(RandomizeMode).IsAssignableFrom(type))
+                    .Where(type => typeof(RandomizeFunction).IsAssignableFrom(type))
                     .Select(type => type.Name)
                     .ToArray();
             }
 
-            public static RandomizeMode GetInstance(string functionName)
+            public static RandomizeFunction GetInstance(string functionName)
             {
-                return (RandomizeMode)typeof(RandomizeModeList)
+                return (RandomizeFunction)typeof(RandomizeFunctionList)
                     .GetNestedTypes()
                     .Where(type => type.Name == functionName)
                     .First()

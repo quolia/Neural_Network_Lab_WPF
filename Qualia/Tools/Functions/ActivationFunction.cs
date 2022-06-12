@@ -77,7 +77,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double _do(double x, double? param) => x / (1 + QMath.Abs(x));
+            public static double _do(double x, double? param) => x / (1 + MathX.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double _derivative(double x, double? param) => throw new InvalidOperationException();
