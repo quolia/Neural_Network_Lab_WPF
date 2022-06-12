@@ -15,8 +15,8 @@ namespace Qualia.Controls
 
             _configParams = new()
             {
-                CtlActivationFunc,
-                CtlActivationFuncParam
+                CtlActivationFunction,
+                CtlActivationFunctionParam
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -25,16 +25,16 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
         }
 
-        public override InitializeFunction WeightsInitializer => InitializeFunctionList.None.Instance;
-        public override double? WeightsInitializerParam => null;
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunctionList.None.Instance;
+        public override double? WeightsInitializeFunctionParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
-        public override string ActivationFunc => CtlActivationFunc.SelectedItem.ToString();
-        public override double? ActivationFuncParam => CtlActivationFuncParam.ValueOrNull;
+        public override ActivationFunction ActivationFunction => ActivationFunctionList.Helper.GetInstance(CtlActivationFunction.SelectedItem.ToString());
+        public override double? ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull;
 
         public void LoadConfig()
         {
-            ActivationFunctionList.Helper.FillComboBox(CtlActivationFunc, Config, nameof(ActivationFunctionList.LogisticSigmoid));
+            ActivationFunctionList.Helper.FillComboBox(CtlActivationFunction, Config, nameof(ActivationFunctionList.LogisticSigmoid));
             _configParams.ForEach(param => param.LoadConfig());
 
             StateChanged();
@@ -52,7 +52,7 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return CtlActivationFuncParam.IsValid();
+            return CtlActivationFunctionParam.IsValid();
         }
 
         public override void SaveConfig()

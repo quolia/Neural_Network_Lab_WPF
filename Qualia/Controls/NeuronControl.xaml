@@ -31,18 +31,18 @@
         <local:QLabel Grid.Column="3" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
 
         <local:QLabel Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
-        <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializer" />
+        <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializeFunction" />
         <local:QLabel Grid.Row="1" Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializerParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializeFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
 
         <local:QLabel Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
-        <local:QComboBox Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializer" />
+        <local:QComboBox Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializeFunction" />
         <local:QLabel Grid.Row="2" Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializerParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializeFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
 
         <local:QLabel Grid.Row="3" Grid.Column="0" Content="Activation func:" />
-        <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunc" />
+        <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunction" />
         <local:QLabel Grid.Row="3" Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFuncParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
     </Grid>
 </local:NeuronBase>

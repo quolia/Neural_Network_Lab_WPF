@@ -41,7 +41,9 @@ namespace Qualia.Controls
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
-            var fileNameImagesBin = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
+            var fileNameImagesBin = Extension.GetDirectoryName(CtlMNISTImagesPath.Text,
+                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "images.bin";
+            
             if (!File.Exists(fileNameImagesBin))
             {
                 if (!File.Exists(CtlMNISTImagesPath.Text))
@@ -49,7 +51,9 @@ namespace Qualia.Controls
                     CtlMNISTImagesPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
                 }
 
-                fileNameImagesBin = Path.GetDirectoryName(CtlMNISTImagesPath.Text) + Path.DirectorySeparatorChar + "images.bin";
+                fileNameImagesBin = Extension.GetDirectoryName(CtlMNISTImagesPath.Text,
+                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "images.bin";
+
                 if (!File.Exists(fileNameImagesBin))
                 {
                     fileNameImagesBin = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "images.bin";
@@ -74,9 +78,17 @@ namespace Qualia.Controls
             }
 
             LoadImages(fileNameImagesBin);
+            var fileNameImagesGz = Extension.GetDirectoryName(fileNameImagesBin,
+                                                              App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
+
+            CtlMNISTImagesPath.Text = fileNameImagesGz;
+
+            //
 
 
-            var fileNameLabelsBin = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
+            var fileNameLabelsBin = Extension.GetDirectoryName(CtlMNISTLabelsPath.Text,
+                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "labels.bin";
+
             if (!File.Exists(fileNameLabelsBin))
             {
                 if (!File.Exists(CtlMNISTLabelsPath.Text))
@@ -84,7 +96,9 @@ namespace Qualia.Controls
                     CtlMNISTLabelsPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
                 }
 
-                fileNameLabelsBin = Path.GetDirectoryName(CtlMNISTLabelsPath.Text) + Path.DirectorySeparatorChar + "labels.bin";
+                fileNameLabelsBin = Extension.GetDirectoryName(CtlMNISTLabelsPath.Text,
+                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "labels.bin";
+
                 if (!File.Exists(fileNameLabelsBin))
                 {
                     fileNameLabelsBin = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "labels.bin";
@@ -109,6 +123,10 @@ namespace Qualia.Controls
             }
 
             LoadLabels(fileNameLabelsBin);
+            var fileNameLabelsGz = Extension.GetDirectoryName(fileNameLabelsBin,
+                                                              App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
+
+            CtlMNISTLabelsPath.Text = fileNameLabelsGz;
         }
 
         private void LoadImages(string fileName)

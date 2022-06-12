@@ -21,9 +21,9 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:QLabel Content="Weights randomizer:" />
-                <local:QComboBox x:Name="CtlRandomizeMode" />
+                <local:QComboBox x:Name="CtlRandomizeFunction" />
                 <local:QLabel Content="a:" />
-                <local:QDouble x:Name="CtlRandomizeModeParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
+                <local:QDouble x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="CtlRandomizerButton_Click" />

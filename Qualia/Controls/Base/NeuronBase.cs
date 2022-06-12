@@ -69,18 +69,18 @@ namespace Qualia.Controls
                          : Draw.GetBrush(Draw.GetRandomColor(20, in QColors.Lavender));
         }
 
-        public virtual InitializeFunction ActivationInitializer => throw new InvalidOperationException();
-        public virtual double? ActivationInitializerParam => throw new InvalidOperationException();
-        public virtual InitializeFunction WeightsInitializer => throw new InvalidOperationException();
-        public virtual double? WeightsInitializerParam => throw new InvalidOperationException();
+        public virtual InitializeFunction ActivationInitializeFunction => throw new InvalidOperationException();
+        public virtual double? ActivationInitializeFunctionParam => throw new InvalidOperationException();
+        public virtual InitializeFunction WeightsInitializeFunction => throw new InvalidOperationException();
+        public virtual double? WeightsInitializeFunctionParam => throw new InvalidOperationException();
 
-        public virtual string ActivationFunc
+        public virtual ActivationFunction ActivationFunction
         {
             get => throw new InvalidOperationException();
             set => throw new InvalidOperationException();
         }
 
-        public virtual double? ActivationFuncParam
+        public virtual double? ActivationFunctionParam
         {
             get => throw new InvalidOperationException();
             set => throw new InvalidOperationException();

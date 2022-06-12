@@ -242,10 +242,9 @@ namespace Qualia.Controls
                 Directory.CreateDirectory("Networks");
             }
 
-            var MNISTDirectory = "Networks" + Path.DirectorySeparatorChar + "MNIST";
-            if (!Directory.Exists(MNISTDirectory))
+            if (!Directory.Exists("MNIST"))
             {
-                Directory.CreateDirectory(MNISTDirectory);
+                Directory.CreateDirectory("MNIST");
             }
         }
 

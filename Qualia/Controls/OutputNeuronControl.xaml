@@ -20,9 +20,9 @@
         </Grid.ColumnDefinitions>
 
         <local:QLabel Content="Activation func:" />
-        <local:QComboBox Grid.Column="1" x:Name="CtlActivationFunc" />
+        <local:QComboBox Grid.Column="1" x:Name="CtlActivationFunction" />
         <Label Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Column="3" x:Name="CtlActivationFuncParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:QDouble Grid.Column="3" x:Name="CtlActivationFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
         <local:QLabel  Grid.Column="4" x:Name="CtlNumber" Content="1" />
 
     </Grid>

@@ -12,12 +12,12 @@ namespace Qualia.Controls
             Visibility = Visibility.Collapsed; // do not show it
         }
 
-        public override InitializeFunction WeightsInitializer => InitializeFunctionList.None.Instance;
-        public override double? WeightsInitializerParam => null;
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunctionList.None.Instance;
+        public override double? WeightsInitializeFunctionParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
-        public override string ActivationFunc { get; set; }
-        public override double? ActivationFuncParam { get; set; }
+        public override ActivationFunction ActivationFunction { get; set; }
+        public override double? ActivationFunctionParam { get; set; }
 
         public override void OrdinalNumberChanged(int number)
         {

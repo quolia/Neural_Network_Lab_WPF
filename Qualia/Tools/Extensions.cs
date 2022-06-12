@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -108,6 +109,18 @@ namespace Qualia.Tools
         public static long TotalMicroseconds(this TimeSpan span)
         {
             return (long)(span.TotalMilliseconds * 1000);
+        }
+
+        public static string GetDirectoryName(string path, string defaultePath)
+        {
+            try
+            {
+                return Path.GetDirectoryName(path);
+            }
+            catch
+            {
+                return defaultePath;
+            }
         }
     }
 
