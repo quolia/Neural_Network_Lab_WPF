@@ -236,12 +236,21 @@ namespace Qualia.Tools
         {
             public static string[] GetItems()
             {
-                return typeof(TaskFunctionList).GetNestedTypes().Where(task => typeof(INetworkTask).IsAssignableFrom(task)).Select(task => task.Name).ToArray();
+                return typeof(TaskFunctionList)
+                    .GetNestedTypes()
+                    .Where(type => typeof(INetworkTask).IsAssignableFrom(type))
+                    .Select(type => type.Name)
+                    .ToArray();
             }
 
             public static INetworkTask GetInstance(string taskName)
             {
-                return (INetworkTask)typeof(TaskFunctionList).GetNestedTypes().Where(c => c.Name == taskName).First().GetField("Instance").GetValue(null);
+                return (INetworkTask)typeof(TaskFunctionList)
+                    .GetNestedTypes()
+                    .Where(type => type.Name == taskName)
+                    .First()
+                    .GetField("Instance")
+                    .GetValue(null);
             }
 
             public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)

@@ -12,7 +12,7 @@ namespace Qualia.Controls
 {
     sealed public partial class MNISTControl : UserControl, IConfigParam
     {
-        public List<MNISTImage> Images = new();
+        public readonly List<MNISTImage> Images = new();
 
         private event Action OnChange = delegate { };
 

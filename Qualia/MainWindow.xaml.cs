@@ -16,7 +16,7 @@ namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
     {
-        public static object ApplyChangesLocker = new();
+        public static readonly object ApplyChangesLocker = new();
 
         private Thread _timeThread;
         private Thread _runNetworksThread;

@@ -41,8 +41,8 @@ namespace Qualia.Tools
     {
         public DynamicStatistics CopyForRender;
 
-        public PlotPointsList PercentData;
-        public PlotPointsList CostData;
+        public readonly PlotPointsList PercentData;
+        public readonly PlotPointsList CostData;
 
         public DynamicStatistics()
         {

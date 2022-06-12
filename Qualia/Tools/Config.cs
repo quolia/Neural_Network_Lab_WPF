@@ -23,7 +23,7 @@ namespace Qualia.Tools
         public readonly string Name;
         public Config ParentConfig;
 
-        private static object s_locker = new();
+        private static readonly object s_locker = new();
         
         private string _extender;
 
