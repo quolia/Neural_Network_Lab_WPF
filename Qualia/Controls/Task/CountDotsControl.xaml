@@ -18,11 +18,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:QLabel Content="Input count:" />
-        <local:QInt Grid.Column="1" x:Name="CtlTaskInputCount" IsNullAllowed="False" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:QInt Grid.Column="1" x:Name="CtlTask_CountDots_InputCount" IsNullAllowed="False" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
         <local:QLabel Grid.Row="1" Content="Min number:" />
-        <local:QInt Grid.Row="1" Grid.Column="1" x:Name="CtlTaskMinNumber" IsNullAllowed="False" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
+        <local:QInt Grid.Row="1" Grid.Column="1" x:Name="CtlTask_CountDots_MinNumber" IsNullAllowed="False" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
         <local:QLabel Grid.Row="2" Content="Max number:" />
-        <local:QInt Grid.Row="2" Grid.Column="1" x:Name="CtlTaskMaxNumber" IsNullAllowed="False" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
-        <local:QCheckBox Grid.Row="3" Grid.ColumnSpan="2" x:Name="CtlIsGaussianDistribution" Content="Gaussian distribution" />
+        <local:QInt Grid.Row="2" Grid.Column="1" x:Name="CtlTask_CountDots_MaxNumber" IsNullAllowed="False" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:QCheckBox Grid.Row="3" Grid.ColumnSpan="2" x:Name="CtlTask_CountDots_IsGaussianDistribution" Content="Gaussian distribution" />
     </Grid>
 </UserControl>

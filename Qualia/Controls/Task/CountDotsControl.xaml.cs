@@ -14,10 +14,10 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public int InputCount => (int)CtlTaskInputCount.Value;
-        public bool IsGaussianDistribution => CtlIsGaussianDistribution.IsOn;
-        public int MaxNumber => (int)CtlTaskMaxNumber.Value;
-        public int MinNumber => (int)CtlTaskMinNumber.Value;
+        public int InputCount => (int)CtlTask_CountDots_InputCount.Value;
+        public bool IsGaussianDistribution => CtlTask_CountDots_IsGaussianDistribution.IsOn;
+        public int MaxNumber => (int)CtlTask_CountDots_MaxNumber.Value;
+        public int MinNumber => (int)CtlTask_CountDots_MinNumber.Value;
 
         private void Changed()
         {
@@ -51,12 +51,12 @@ namespace Qualia.Controls
         {
             if (this.FindVisualChildren<IConfigParam>().All(param => param.IsValid()))
             {
-                if (CtlTaskInputCount.Value >= CtlTaskMaxNumber.Value)
+                if (CtlTask_CountDots_InputCount.Value >= CtlTask_CountDots_MaxNumber.Value)
                 {
                     return true;
                 }
 
-                CtlTaskInputCount.InvalidateValue();
+                CtlTask_CountDots_InputCount.InvalidateValue();
             }
 
             return false;

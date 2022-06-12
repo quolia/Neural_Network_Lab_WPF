@@ -281,7 +281,7 @@ namespace Qualia.Controls
                     }
                 }
 
-                if (CtlInputDataPresenter.NetworkTask != null && !CtlInputDataPresenter.NetworkTask.IsValid())
+                if (CtlInputDataPresenter.TaskFunction != null && !CtlInputDataPresenter.TaskFunction.IsValid())
                 {
                     ToggleApplyChanges(Constants.Toggle.Off);
                 }
@@ -292,7 +292,7 @@ namespace Qualia.Controls
         {
             lock (ApplyChangesLocker)
             {
-                CtlInputDataPresenter.NetworkTask.ApplyChanges();
+                CtlInputDataPresenter.TaskFunction.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 var newModels = _networksManager.CreateNetworksDataModels();
@@ -313,7 +313,7 @@ namespace Qualia.Controls
         {
             lock (ApplyChangesLocker)
             {
-                CtlInputDataPresenter.NetworkTask.ApplyChanges();
+                CtlInputDataPresenter.TaskFunction.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RefreshNetworksDataModels();
@@ -1120,15 +1120,15 @@ namespace Qualia.Controls
 
         public void TaskChanged()
         {
-            CtlInputDataPresenter.NetworkTask.SetConfig(_networksManager.Config);
-            CtlInputDataPresenter.NetworkTask.LoadConfig();
+            CtlInputDataPresenter.TaskFunction.SetConfig(_networksManager.Config);
+            CtlInputDataPresenter.TaskFunction.LoadConfig();
 
             TaskParameterChanged();
         }
 
         public void TaskParameterChanged()
         {
-            _networksManager.RebuildNetworksForTask(CtlInputDataPresenter.NetworkTask);
+            _networksManager.RebuildNetworksForTask(CtlInputDataPresenter.TaskFunction);
             _networksManager.ResetLayersTabsNames();
 
             CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);

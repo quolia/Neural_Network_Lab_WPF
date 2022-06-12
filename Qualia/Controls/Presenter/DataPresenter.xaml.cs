@@ -11,7 +11,7 @@ namespace Qualia.Controls
     {
         private const int CURRENT_POINTS_COUNT = -1;
 
-        public INetworkTask NetworkTask;
+        public INetworkTask TaskFunction;
         
         private readonly int _pointSize;
         private int _pointsRearrangeSnap;
@@ -33,23 +33,23 @@ namespace Qualia.Controls
             _pointSize = (int)Config.Main.GetInt(Constants.Param.PointSize, 7).Value;
 
             SizeChanged += DataPresenter_SizeChanged;
-            CtlTasks.SetChangeEvent(CtlTask_SelectedIndexChanged);
+            CtlTaskFunction.SetChangeEvent(CtlTask_SelectedIndexChanged);
         }
 
         private void CtlTask_SelectedIndexChanged()
         {
-            if (CtlTasks.SelectedItem == null)
+            if (CtlTaskFunction.SelectedItem == null)
             {
                 return;
             }
 
-            NetworkTask = Tools.TaskFunctionList.Helper.GetInstance(CtlTasks.SelectedItem.ToString());
-            _pointsRearrangeSnap = NetworkTask.GetPointsRearrangeSnap();
-            NetworkTask.SetChangeEvent(TaskParameterChanged);
+            TaskFunction = Tools.TaskFunctionList.Helper.GetInstance(CtlTaskFunction.SelectedItem.ToString());
+            _pointsRearrangeSnap = TaskFunction.GetPointsRearrangeSnap();
+            TaskFunction.SetChangeEvent(TaskParameterChanged);
 
             CtlHolder.Children.Clear();
 
-            var controls = NetworkTask.GetVisualControl();
+            var controls = TaskFunction.GetVisualControl();
             CtlHolder.Children.Add(controls);
 
             if (_onTaskChanged != null)
@@ -60,7 +60,7 @@ namespace Qualia.Controls
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
         {
-            if (NetworkTask != null && NetworkTask.IsGridSnapAdjustmentAllowed())
+            if (TaskFunction != null && TaskFunction.IsGridSnapAdjustmentAllowed())
             {
                 Rearrange(CURRENT_POINTS_COUNT);
             }
@@ -68,16 +68,16 @@ namespace Qualia.Controls
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            Tools.TaskFunctionList.Helper.FillComboBox(CtlTasks, config, null);
-            NetworkTask = Tools.TaskFunctionList.Helper.GetInstance(CtlTasks.SelectedItem.ToString());
-            _pointsRearrangeSnap = NetworkTask.GetPointsRearrangeSnap();
+            Tools.TaskFunctionList.Helper.FillComboBox(CtlTaskFunction, config, null);
+            TaskFunction = Tools.TaskFunctionList.Helper.GetInstance(CtlTaskFunction.SelectedItem.ToString());
+            _pointsRearrangeSnap = TaskFunction.GetPointsRearrangeSnap();
 
             CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(NetworkTask.GetVisualControl());
+            CtlHolder.Children.Add(TaskFunction.GetVisualControl());
 
-            NetworkTask.SetConfig(config);
-            NetworkTask.LoadConfig();
-            NetworkTask.SetChangeEvent(TaskParameterChanged);
+            TaskFunction.SetConfig(config);
+            TaskFunction.LoadConfig();
+            TaskFunction.SetChangeEvent(TaskParameterChanged);
 
             _onTaskChanged = taskChanged;
             TaskParameterChanged();
@@ -101,11 +101,11 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(config));   
             }
 
-            CtlTasks.SetConfig(config);
-            NetworkTask.SetConfig(config);
+            CtlTaskFunction.SetConfig(config);
+            TaskFunction.SetConfig(config);
 
-            CtlTasks.SaveConfig();
-            NetworkTask.SaveConfig();
+            CtlTaskFunction.SaveConfig();
+            TaskFunction.SaveConfig();
 
             config.FlushToDrive();
         }
@@ -153,14 +153,14 @@ namespace Qualia.Controls
         public void RearrangeWithNewPointsCount()
         {
             _data = null;
-            Rearrange(NetworkTask.GetInputCount());
+            Rearrange(TaskFunction.GetInputCount());
         }
 
         private int GetSnaps()
         {
             int width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
-            return NetworkTask.IsGridSnapAdjustmentAllowed()
+            return TaskFunction.IsGridSnapAdjustmentAllowed()
                    ? width / (_pointsRearrangeSnap * _pointSize)
                    : 1;
         }
