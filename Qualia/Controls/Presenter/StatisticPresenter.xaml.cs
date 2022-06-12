@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Qualia.Tools;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Tools;
 
 namespace Qualia.Controls
 {

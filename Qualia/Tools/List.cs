@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tools
+namespace Qualia.Tools
 {
     sealed public class ListX<T> where T : ListXNode<T>
     {

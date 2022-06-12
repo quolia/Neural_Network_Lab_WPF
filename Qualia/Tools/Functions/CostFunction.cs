@@ -1,9 +1,9 @@
-﻿using Qualia;
+﻿using Qualia.Model;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
-namespace Tools
+namespace Qualia.Tools
 {
     unsafe public class CostFunction
     {

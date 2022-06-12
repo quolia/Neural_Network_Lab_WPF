@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Qualia.Tools;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Tools;
 
 namespace Qualia.Controls
 {

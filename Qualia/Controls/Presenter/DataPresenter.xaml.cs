@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Qualia.Model;
+using Qualia.Tools;
+using System;
 using System.Windows.Controls;
-using Tools;
 
 namespace Qualia.Controls
 {
     using Point = System.Windows.Point;
+
     sealed public partial class DataPresenter : UserControl
     {
         private const int CURRENT_POINTS_COUNT = -1;

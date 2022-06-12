@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Qualia.Tools;
+using System;
 using System.Linq;
 using System.Windows.Controls;
-using Tools;
 
 namespace Qualia.Controls
 {

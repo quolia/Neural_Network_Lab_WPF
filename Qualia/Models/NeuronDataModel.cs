@@ -1,7 +1,7 @@
-﻿using System.Runtime.CompilerServices;
-using Tools;
+﻿using Qualia.Tools;
+using System.Runtime.CompilerServices;
 
-namespace Qualia
+namespace Qualia.Model
 {
     sealed public class NeuronDataModel : ListXNode<NeuronDataModel>
     {

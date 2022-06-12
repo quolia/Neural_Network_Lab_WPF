@@ -1,6 +1,6 @@
-﻿using Tools;
+﻿using Qualia.Tools;
 
-namespace Qualia
+namespace Qualia.Model
 {
     sealed public class LayerDataModel : ListXNode<LayerDataModel>
     {

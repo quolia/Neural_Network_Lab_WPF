@@ -1,10 +1,10 @@
-﻿using Qualia;
+﻿using Qualia.Model;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
-namespace Tools
+namespace Qualia.Tools
 {
     unsafe public class RandomizeMode
     {

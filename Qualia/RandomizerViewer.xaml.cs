@@ -1,10 +1,10 @@
-﻿using Qualia.Controls;
+﻿using Qualia.Model;
+using Qualia.Tools;
 using System;
 using System.Drawing;
 using System.Windows;
-using Tools;
 
-namespace Qualia
+namespace Qualia.Controls
 {
     unsafe sealed public partial class RandomizerViewer : WindowResizeControl
     {

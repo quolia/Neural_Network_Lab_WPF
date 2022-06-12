@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Tools
+namespace Qualia.Tools
 {
     public static class Rects
     {

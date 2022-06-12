@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Qualia.Tools;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using Tools;
 
 namespace Qualia.Controls
 {

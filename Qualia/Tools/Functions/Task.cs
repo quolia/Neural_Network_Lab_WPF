@@ -1,12 +1,12 @@
-﻿using Qualia;
-using Qualia.Controls;
+﻿using Qualia.Controls;
+using Qualia.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
-namespace Tools
+namespace Qualia.Tools
 {
     public interface INetworkTask : IConfigParam
     {

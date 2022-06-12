@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
-namespace Tools
+namespace Qualia.Tools
 {
     public static class Rand
     {
@@ -27,7 +28,7 @@ namespace Tools
         }
     }
 
-    public sealed class GaussianRandom
+    sealed public class GaussianRandom
     {
         private bool _hasDeviate;
         private double _storedDeviate;
@@ -80,6 +81,30 @@ namespace Tools
 
             // return second deviate
             return v1 * polar * sigma + mu;
+        }
+    }
+
+    public static class UniqId
+    {
+        private static long s_prevId;
+
+        public static long GetNextId(long existingId)
+        {
+            if (existingId > Constants.UnknownId)
+            {
+                return existingId;
+            }
+
+            long id;
+            do
+            {
+                id = DateTime.UtcNow.Ticks;
+                Thread.Sleep(0);
+            }
+            while (id <= s_prevId);
+
+            s_prevId = id;
+            return id;
         }
     }
 }

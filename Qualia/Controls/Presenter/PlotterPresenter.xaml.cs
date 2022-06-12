@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Qualia.Model;
+using Qualia.Tools;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Tools;
 
 namespace Qualia.Controls
 {
-    public delegate ref Point GetPointDelegate(DynamicStatistics.PlotPoints plotPoints, DynamicStatistics.PlotPoint plotPoint, long timeTicks);
+    public delegate ref Point GetPointDelegate(DynamicStatistics.PlotPointsList plotPoints, DynamicStatistics.PlotPoint plotPoint, long timeTicks);
 
     sealed public partial class PlotterPresenter : UserControl
     {
@@ -172,7 +173,7 @@ namespace Qualia.Controls
                              ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
-        private void DrawData(DynamicStatistics.PlotPoints pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
+        private void DrawData(DynamicStatistics.PlotPointsList pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
         {
             if (pointsData == null || !pointsData.Any())
             {
@@ -219,7 +220,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPoints pointsData, in Color color)
+        private void DrawLabel(DynamicStatistics.PlotPointsList pointsData, in Color color)
         {
             FormattedText text = new(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks).ToString(Culture.TimeFormat)
                                       + " / " + Converter.DoubleToText(pointsData.Last().Value, "N6", true) + " %",
@@ -242,7 +243,7 @@ namespace Qualia.Controls
                                                   ActualHeight - AXIS_OFFSET - 20));
         }
 
-        private ref Point GetPointPercentData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
+        private ref Point GetPointPercentData(DynamicStatistics.PlotPointsList pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
         {
             var pointData0 = pointsData[0];
 
@@ -255,7 +256,7 @@ namespace Qualia.Controls
             return ref Points.Get((int)pointX, (int)pointY);
         }
 
-        private ref Point GetPointCostData(DynamicStatistics.PlotPoints pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
+        private ref Point GetPointCostData(DynamicStatistics.PlotPointsList pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
         {
             var pointData0 = pointsData[0];
             var pointX = ticks == 0
@@ -267,7 +268,7 @@ namespace Qualia.Controls
             return ref Points.Get((int)pointX, (int)pointY);
         }
 
-        private void Vanish(DynamicStatistics.PlotPoints pointsData, GetPointDelegate getPoint)
+        private void Vanish(DynamicStatistics.PlotPointsList pointsData, GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 14;
             const int MIN_POINTS_COUNT = 10;

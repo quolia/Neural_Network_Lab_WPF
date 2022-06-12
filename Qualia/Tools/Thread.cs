@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Tools
+namespace Qualia.Tools
 {
     public static class Threads
     {

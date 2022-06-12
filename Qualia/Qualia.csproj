@@ -154,20 +154,25 @@
     <Compile Include="RandomizerViewer.xaml.cs">
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tools\ActivationFunction.cs" />
+    <Compile Include="Tools\Converter.cs" />
+    <Compile Include="Tools\Functions\ActivationFunction.cs" />
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Const.cs" />
-    <Compile Include="Tools\CostFunction.cs" />
+    <Compile Include="Tools\Functions\CostFunction.cs" />
     <Compile Include="Tools\Draw.cs" />
-    <Compile Include="Tools\InitializeMode.cs" />
+    <Compile Include="Tools\Extensions.cs" />
+    <Compile Include="Tools\Functions\InitializeMode.cs" />
     <Compile Include="Tools\List.cs" />
     <Compile Include="Tools\Logger.cs" />
+    <Compile Include="Tools\Math.cs" />
     <Compile Include="Tools\Rand.cs" />
-    <Compile Include="Tools\RandomizeMode.cs" />
+    <Compile Include="Tools\Functions\RandomizeMode.cs" />
     <Compile Include="Tools\Range.cs" />
-    <Compile Include="Tools\Task.cs" />
+    <Compile Include="Tools\Functions\Task.cs" />
+    <Compile Include="Tools\Statistic.cs" />
     <Compile Include="Tools\Thread.cs" />
     <Compile Include="Tools\Tools.cs" />
+    <Compile Include="Tools\Unsafe.cs" />
     <Page Include="Controls\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

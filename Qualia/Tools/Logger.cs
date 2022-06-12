@@ -2,9 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Windows;
-using Tools;
 
-namespace Qualia
+namespace Qualia.Tools
 {
     internal static class Logger
     {

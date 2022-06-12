@@ -1,9 +1,9 @@
 ﻿using Qualia.Controls;
+using Qualia.Tools;
 using System.Collections.Generic;
 using System.Windows.Media;
-using Tools;
 
-namespace Qualia
+namespace Qualia.Model
 {
     unsafe sealed public class NetworkDataModel : ListXNode<NetworkDataModel>
     {

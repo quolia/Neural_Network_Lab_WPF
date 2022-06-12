@@ -1,5 +1,5 @@
 ﻿
-namespace Tools
+namespace Qualia.Tools
 {
     public static class Constants
     {

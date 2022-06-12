@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
-using Qualia.Controls;
+using Qualia.Model;
+using Qualia.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,10 +11,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Tools;
-using static Tools.Threads;
+using static Qualia.Tools.Threads;
 
-namespace Qualia
+namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
     {
