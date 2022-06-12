@@ -509,7 +509,8 @@ namespace Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int Ceiling(double a)
         {
-            return 1 + (int)a;
+            return (int)Math.Ceiling(a);
+            //return 1 + (int)a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
