@@ -197,7 +197,7 @@ namespace Qualia.Controls
             CtlTabOutput.Content = ctlScroll;
             ctlScroll.ScrollChanged += _outputLayer.OnScrollChanged;
 
-            var lastLayerId = layerIds.Last();
+            var lastLayerId = layerIds.Length > 0 ? layerIds.Last() : Constants.UnknownId;
 
             foreach (var layerId in layerIds)
             {

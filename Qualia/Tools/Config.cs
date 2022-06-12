@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace Qualia.Tools
 {
@@ -26,7 +27,8 @@ namespace Qualia.Tools
         
         private string _extender;
 
-        private static readonly Dictionary<string, Dictionary<string, string>> s_cache = new();
+        private static readonly Dictionary<string, Dictionary<string, string>> s_cacheLoad = new();
+        private static readonly Dictionary<string, Dictionary<string, string>> s_cacheSave = new();
 
         public Config(string fileName, Config parentConfig = null)
         {
@@ -146,42 +148,54 @@ namespace Qualia.Tools
 
         public void Remove(Constants.Param paramName)
         {
-            var values = GetValues();
+            var values = GetValuesSave();
             if (values.TryGetValue(paramName.ToString("G") + _extender, out _))
             {
                 values.Remove(paramName.ToString("G") + _extender);
             }
 
             SaveValues(values);
+
+            values = GetValuesLoad();
+            values.Remove(paramName.ToString("G") + _extender);
         }
 
         public void Remove(string paramName)
         {
-            var values = GetValues();
+            var values = GetValuesSave();
             if (values.TryGetValue(paramName + _extender, out _))
             {
                 values.Remove(paramName + _extender);
             }
 
             SaveValues(values);
+
+            values = GetValuesLoad();
+            values.Remove(paramName + _extender);
         }
 
         public void Set(Constants.Param paramName, string value)
         {
-            var values = GetValues();
+            var values = GetValuesSave();
             values[paramName.ToString("G") + _extender] = value;
 
             SaveValues(values);
+
+            values = GetValuesLoad();
+            values[paramName.ToString("G") + _extender] = value;
         }
 
         public void Set(string paramName, string value)
         {
             paramName = CutName(paramName);
 
-            var values = GetValues();
+            var values = GetValuesSave();
             values[paramName + _extender] = value;
 
             SaveValues(values);
+
+            values = GetValuesLoad();
+            values[paramName + _extender] = value;
         }
 
         public void Set(Constants.Param paramName, double? value)
@@ -226,7 +240,7 @@ namespace Qualia.Tools
 
         private string GetValue(Constants.Param paramName, string defaultValue = null)
         {
-            var values = GetValues();
+            var values = GetValuesLoad();
 
             if (values.TryGetValue(paramName.ToString("G") + _extender, out string value))
             {
@@ -243,7 +257,7 @@ namespace Qualia.Tools
         {
             paramName = CutName(paramName);
 
-            var values = GetValues();
+            var values = GetValuesLoad();
 
             if (values.TryGetValue(paramName + _extender, out string value))
             {
@@ -258,26 +272,26 @@ namespace Qualia.Tools
 
         private void SaveValues(Dictionary<string, string> values)
         {
-            if (s_cache.ContainsKey(Name))
+            if (s_cacheSave.ContainsKey(Name))
             {
-                s_cache[Name] = values;
+                s_cacheSave[Name] = values;
             }
             else
             {
-                s_cache.Add(Name, values);
+                s_cacheSave.Add(Name, values);
             }
         }
 
         public void FlushToDrive()
         {
-            if (!s_cache.ContainsKey(Name))
+            if (!s_cacheSave.ContainsKey(Name))
             {
                 return;
             }
 
             List<string> lines = new();
 
-            var values = s_cache[Name];
+            var values = s_cacheSave[Name];
             foreach (var pair in values)
             {
                 lines.Add(pair.Key + ":" + pair.Value);
@@ -289,11 +303,11 @@ namespace Qualia.Tools
             }
         }
 
-        private Dictionary<string, string> GetValues()
+        private Dictionary<string, string> GetValuesLoad()
         {
-            if (s_cache.ContainsKey(Name))
+            if (s_cacheLoad.ContainsKey(Name))
             {
-                return s_cache[Name];
+                return s_cacheLoad[Name];
             }
 
             Dictionary<string, string> result = new();
@@ -307,19 +321,37 @@ namespace Qualia.Tools
 
             foreach (var line in lines)
             {
-                if (line.Contains(":"))
+                if (!line.Contains(":"))
                 {
-                    var parts = line.Split(new[] { ':' });
-                    if (parts.Length > 1)
-                    {
-                        result[parts[0]] = string.Join(":", parts.Except(parts.Take(1)));
-                    }
+                    continue;
+                }
+
+                var parts = line.Split(new[] { ':' });
+                if (Name != "config.txt" && !parts[0].Contains("."))
+                {
+                    //continue;                        
+                }
+
+                if (parts.Length > 1)
+                {
+                    result[parts[0]] = string.Join(":", parts.Except(parts.Take(1)));
                 }
             }
 
-            s_cache.Add(Name, result);
+            s_cacheLoad.Add(Name, result);
 
             return result;
+        }
+
+        private Dictionary<string, string> GetValuesSave()
+        {
+            if (s_cacheSave.ContainsKey(Name))
+            {
+                return s_cacheSave[Name];
+            }
+            
+            s_cacheSave[Name] = new();
+            return s_cacheSave[Name];
         }
 
         public void Clear()
@@ -329,7 +361,8 @@ namespace Qualia.Tools
                 File.WriteAllLines(Name, Array.Empty<string>());
             }
 
-            s_cache.Clear();
+            s_cacheLoad.Clear();
+            s_cacheSave.Clear();
         }
     }
 }
