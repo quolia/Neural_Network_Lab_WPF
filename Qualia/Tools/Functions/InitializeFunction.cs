@@ -12,6 +12,11 @@ namespace Qualia.Tools
         {
             Do = doFunc;
         }
+
+        public static bool IsSkipValue(double value)
+        {
+            return double.IsNaN(value);
+        }
     }
 
     public static class InitializeFunctionList
@@ -72,36 +77,23 @@ namespace Qualia.Tools
             }
         }
 
-        internal static class Helper
+        public static string[] GetItems()
         {
-            public static bool IsSkipValue(double value)
-            {
-                return double.IsNaN(value);
-            }
+            return typeof(InitializeFunctionList)
+                .GetNestedTypes()
+                .Where(type => typeof(InitializeFunction).IsAssignableFrom(type))
+                .Select(type => type.Name)
+                .ToArray();
+        }
 
-            public static string[] GetItems()
-            {
-                return typeof(InitializeFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => typeof(InitializeFunction).IsAssignableFrom(type))
-                    .Select(type => type.Name)
-                    .ToArray();
-            }
-
-            public static InitializeFunction GetInstance(string functionName)
-            {
-                return (InitializeFunction)typeof(InitializeFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => type.Name == functionName)
-                    .First()
-                    .GetField("Instance")
-                    .GetValue(null);
-            }
-
-            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
-            {
-                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
-            }
+        public static InitializeFunction GetInstance(string functionName)
+        {
+            return (InitializeFunction)typeof(InitializeFunctionList)
+                .GetNestedTypes()
+                .Where(type => type.Name == functionName)
+                .First()
+                .GetField("Instance")
+                .GetValue(null);
         }
     }
 }

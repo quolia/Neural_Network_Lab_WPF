@@ -322,7 +322,7 @@ namespace Qualia.Model
                         if (neuronModel == null)
                         {
                             double initValue = newNeuronModel.WeightsInitializer.Do(newNeuronModel.WeightsInitializerParam);
-                            if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
+                            if (!InitializeFunction.IsSkipValue(initValue))
                             {
                                 var newWeightModel = newNeuronModel.Weights.First;
                                 while (newWeightModel != null)
@@ -349,7 +349,7 @@ namespace Qualia.Model
                             if (newNeuronModel.IsBias)
                             {
                                 double initValue = newNeuronModel.ActivationInitializer.Do(newNeuronModel.ActivationInitializerParam);
-                                if (InitializeFunctionList.Helper.IsSkipValue(initValue))
+                                if (InitializeFunction.IsSkipValue(initValue))
                                 {
                                     newNeuronModel.Activation = neuronModel.Activation;
                                 }

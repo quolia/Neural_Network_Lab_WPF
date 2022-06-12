@@ -232,31 +232,24 @@ namespace Qualia.Tools
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
-        public static class Helper
+
+        public static string[] GetItems()
         {
-            public static string[] GetItems()
-            {
-                return typeof(TaskFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => typeof(INetworkTask).IsAssignableFrom(type))
-                    .Select(type => type.Name)
-                    .ToArray();
-            }
+            return typeof(TaskFunctionList)
+                .GetNestedTypes()
+                .Where(type => typeof(INetworkTask).IsAssignableFrom(type))
+                .Select(type => type.Name)
+                .ToArray();
+        }
 
-            public static INetworkTask GetInstance(string taskName)
-            {
-                return (INetworkTask)typeof(TaskFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => type.Name == taskName)
-                    .First()
-                    .GetField("Instance")
-                    .GetValue(null);
-            }
-
-            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
-            {
-                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
-            }
+        public static INetworkTask GetInstance(string taskName)
+        {
+            return (INetworkTask)typeof(TaskFunctionList)
+                .GetNestedTypes()
+                .Where(type => type.Name == taskName)
+                .First()
+                .GetField("Instance")
+                .GetValue(null);
         }
     }
 

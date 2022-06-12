@@ -404,31 +404,23 @@ namespace Qualia.Tools
             }
         }
 
-        public static class Helper
+        public static string[] GetItems()
         {
-            public static string[] GetItems()
-            {
-                return typeof(RandomizeFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => typeof(RandomizeFunction).IsAssignableFrom(type))
-                    .Select(type => type.Name)
-                    .ToArray();
-            }
+            return typeof(RandomizeFunctionList)
+                .GetNestedTypes()
+                .Where(type => typeof(RandomizeFunction).IsAssignableFrom(type))
+                .Select(type => type.Name)
+                .ToArray();
+        }
 
-            public static RandomizeFunction GetInstance(string functionName)
-            {
-                return (RandomizeFunction)typeof(RandomizeFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => type.Name == functionName)
-                    .First()
-                    .GetField("Instance")
-                    .GetValue(null);
-            }
-
-            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
-            {
-                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
-            }
+        public static RandomizeFunction GetInstance(string functionName)
+        {
+            return (RandomizeFunction)typeof(RandomizeFunctionList)
+                .GetNestedTypes()
+                .Where(type => type.Name == functionName)
+                .First()
+                .GetField("Instance")
+                .GetValue(null);
         }
     }
 }

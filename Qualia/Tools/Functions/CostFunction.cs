@@ -52,31 +52,23 @@ namespace Qualia.Tools
             }
         }
 
-        public static class Helper
+        public static string[] GetItems()
         {
-            public static string[] GetItems()
-            {
-                return typeof(CostFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => typeof(CostFunction).IsAssignableFrom(type))
-                    .Select(type => type.Name)
-                    .ToArray();
-            }
+            return typeof(CostFunctionList)
+                .GetNestedTypes()
+                .Where(type => typeof(CostFunction).IsAssignableFrom(type))
+                .Select(type => type.Name)
+                .ToArray();
+        }
 
-            public static CostFunction GetInstance(string functionName)
-            {
-                return (CostFunction)typeof(CostFunctionList)
-                    .GetNestedTypes()
-                    .Where(type => type.Name == functionName)
-                    .First()
-                    .GetField("Instance")
-                    .GetValue(null);
-            }
-
-            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
-            {
-                Initializer.FillComboBox(typeof(Helper), comboBox, config, comboBox.Name, defaultValue);
-            }
+        public static CostFunction GetInstance(string functionName)
+        {
+            return (CostFunction)typeof(CostFunctionList)
+                .GetNestedTypes()
+                .Where(type => type.Name == functionName)
+                .First()
+                .GetField("Instance")
+                .GetValue(null);
         }
     }
 }

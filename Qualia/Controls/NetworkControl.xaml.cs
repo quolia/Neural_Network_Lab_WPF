@@ -160,8 +160,8 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            RandomizeFunctionList.Helper.FillComboBox(CtlRandomizeFunction, Config, nameof(RandomizeFunctionList.FlatRandom));
-            CostFunctionList.Helper.FillComboBox(CtlCostFunction, Config, nameof(CostFunctionList.MSE));
+            Initializer.FillComboBox(RandomizeFunctionList.GetItems, CtlRandomizeFunction, Config, nameof(RandomizeFunctionList.FlatRandom));
+            Initializer.FillComboBox(CostFunctionList.GetItems, CtlCostFunction, Config, nameof(CostFunctionList.MSE));
 
             _configParams.ForEach(param => param.LoadConfig());
 
@@ -221,7 +221,7 @@ namespace Qualia.Controls
 
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
-        private RandomizeFunction RandomizeMode => RandomizeFunctionList.Helper.GetInstance(CtlRandomizeFunction.SelectedItem.ToString());
+        private RandomizeFunction RandomizeMode => RandomizeFunctionList.GetInstance(CtlRandomizeFunction.SelectedItem.ToString());
         private double? RandomizerParam => CtlRandomizeFunctionParam.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
 
@@ -258,13 +258,13 @@ namespace Qualia.Controls
                 RandomizeMode = RandomizeMode,
                 RandomizerParam = RandomizerParam,
                 LearningRate = LearningRate,
-                InputInitial0 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0,
-                                                                                                        InputLayer.ActivationFuncParam),
+                InputInitial0 = ActivationFunctionList.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial0,
+                                                                                                 InputLayer.ActivationFuncParam),
 
-                InputInitial1 = ActivationFunctionList.Helper.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1,
-                                                                                                        InputLayer.ActivationFuncParam),
+                InputInitial1 = ActivationFunctionList.GetInstance(InputLayer.ActivationFunc).Do(InputLayer.Initial1,
+                                                                                                 InputLayer.ActivationFuncParam),
 
-                CostFunction = CostFunctionList.Helper.GetInstance(CtlCostFunction.SelectedValue.ToString()),
+                CostFunction = CostFunctionList.GetInstance(CtlCostFunction.SelectedValue.ToString()),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
@@ -301,7 +301,7 @@ namespace Qualia.Controls
                         neuronModel.WeightsInitializerParam = InputLayer.WeightsInitializeFunctionParam;
 
                         double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
-                        if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
+                        if (!InitializeFunction.IsSkipValue(initValue))
                         {
                             neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
                         }
@@ -312,7 +312,7 @@ namespace Qualia.Controls
                         neuronModel.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializeFunctionParam;
 
                         double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
-                        if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
+                        if (!InitializeFunction.IsSkipValue(initValue))
                         {
                             neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
                         }
@@ -324,7 +324,7 @@ namespace Qualia.Controls
                         neuronModel.ActivationInitializerParam = ctlNeurons[neuronInd].ActivationInitializeFunctionParam;
                         double initValue = ctlNeurons[neuronInd].ActivationInitializeFunction.Do(ctlNeurons[neuronInd].ActivationInitializeFunctionParam);
 
-                        if (!InitializeFunctionList.Helper.IsSkipValue(initValue))
+                        if (!InitializeFunction.IsSkipValue(initValue))
                         {
                             neuronModel.Activation = initValue;
                         }
