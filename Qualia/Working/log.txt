@@ -1868,3 +1868,26 @@ Application started.
 2022-06-12 05:54:23
 Application started.
 
+2022-06-12 05:59:02
+Application started.
+
+2022-06-12 06:17:20
+Application started.
+
+2022-06-12 06:18:36
+System.ArgumentOutOfRangeException
+Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at Qualia.Tools.TaskFunctionList.MNIST.Do(NetworkDataModel networkModel) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 209
+   at Qualia.Controls.NetworksManager.PrepareModelsForRound() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\NetworksManager.cs:line 272
+   at Qualia.Controls.Main.RunNetworks(Object args) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 441
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-06-12 06:33:59
+Application started.
+

@@ -19,8 +19,8 @@ namespace Qualia.Controls
                                               FontWeights.Bold,
                                               FontStretches.Normal);
 
-        private readonly Pen _penBlack = Tools.Draw.GetPen(in QColors.Black);
-        private readonly Pen _penLightGray = Tools.Draw.GetPen(in QColors.LightGray);
+        private readonly Pen _penBlack = Draw.GetPen(in QColors.Black);
+        private readonly Pen _penLightGray = Draw.GetPen(in QColors.LightGray);
 
 
         public PlotterPresenter()
@@ -73,11 +73,11 @@ namespace Qualia.Controls
             }
         }
 
-        public void Draw(ListX<NetworkDataModel> networkModels, NetworkDataModel selectedNetworkModel)
+        public void Render(ListX<NetworkDataModel> networkModels, NetworkDataModel selectedNetworkModel)
         {
             if (_isBaseRedrawNeeded)
             {
-                DrawPlotter();
+                RenderPlotter();
                 _isBaseRedrawNeeded = false;
             }
 
@@ -103,13 +103,13 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                DrawData(networkModel.DynamicStatistics.CopyForRender.PercentData,
-                         Tools.Draw.GetColor(220, networkModel.Color),
+                RenderData(networkModel.DynamicStatistics.CopyForRender.PercentData,
+                         Draw.GetColor(220, networkModel.Color),
                          GetPointPercentData,
                          false);
 
-                DrawData(networkModel.DynamicStatistics.CopyForRender.CostData,
-                         Tools.Draw.GetColor(150, networkModel.Color),
+                RenderData(networkModel.DynamicStatistics.CopyForRender.CostData,
+                         Draw.GetColor(150, networkModel.Color),
                          GetPointCostData,
                          true);
 
@@ -123,7 +123,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawPlotter()
+        private void RenderPlotter()
         {
             CtlBase.Clear();
 
@@ -173,14 +173,14 @@ namespace Qualia.Controls
                              ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
-        private void DrawData(DynamicStatistics.PlotPointsList pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
+        private void RenderData(DynamicStatistics.PlotPointsList pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
         {
             if (pointsData == null || !pointsData.Any())
             {
                 return;
             }
 
-            var pen = Tools.Draw.GetPen(in color);
+            var pen = Draw.GetPen(in color);
             
             var firstPointData = pointsData[0];
             var lastPointData = pointsData.Last();
@@ -228,10 +228,10 @@ namespace Qualia.Controls
                                       FlowDirection.LeftToRight,
                                       _font,
                                       10,
-                                      Tools.Draw.GetBrush(in color),
-                                      Render.PixelsPerDip);
+                                      Draw.GetBrush(in color),
+                                      RenderSettings.PixelsPerDip);
 
-            CtlPresenter.DrawRectangle(Tools.Draw.GetBrush(Tools.Draw.GetColor(150, in QColors.White)),
+            CtlPresenter.DrawRectangle(Draw.GetBrush(Draw.GetColor(150, in QColors.White)),
                                        null,
                                        ref Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
                                                      ActualHeight - AXIS_OFFSET - 20,
@@ -331,7 +331,7 @@ namespace Qualia.Controls
 
         public void Clear()
         {
-            Draw(null, null);
+            Render(null, null);
         }
     }
 }

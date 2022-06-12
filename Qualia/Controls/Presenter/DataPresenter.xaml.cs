@@ -43,7 +43,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            TaskFunction = Tools.TaskFunctionList.Helper.GetInstance(CtlTaskFunction.SelectedItem.ToString());
+            TaskFunction = TaskFunctionList.Helper.GetInstance(CtlTaskFunction.SelectedItem.ToString());
             _pointsRearrangeSnap = TaskFunction.GetPointsRearrangeSnap();
             TaskFunction.SetChangeEvent(TaskParameterChanged);
 
@@ -68,8 +68,8 @@ namespace Qualia.Controls
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            Tools.TaskFunctionList.Helper.FillComboBox(CtlTaskFunction, config, null);
-            TaskFunction = Tools.TaskFunctionList.Helper.GetInstance(CtlTaskFunction.SelectedItem.ToString());
+            TaskFunctionList.Helper.FillComboBox(CtlTaskFunction, config, null);
+            TaskFunction = TaskFunctionList.Helper.GetInstance(CtlTaskFunction.SelectedItem.ToString());
             _pointsRearrangeSnap = TaskFunction.GetPointsRearrangeSnap();
 
             CtlHolder.Children.Clear();

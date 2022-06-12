@@ -24,8 +24,8 @@ namespace Qualia.Controls
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new();
 
-        private readonly Pen _penChange = Tools.Draw.GetPen(in QColors.Lime);
-        private readonly Pen _biasPen = Tools.Draw.GetPen(in QColors.Orange);
+        private readonly Pen _penChange = Draw.GetPen(in QColors.Lime);
+        private readonly Pen _biasPen = Draw.GetPen(in QColors.Orange);
 
         public NetworkPresenter()
         {
@@ -148,11 +148,11 @@ namespace Qualia.Controls
                                             {
                                                 if (isUseColorOfWeight)
                                                 {
-                                                    pen = Tools.Draw.GetPen(weightModel.Weight, 1);
+                                                    pen = Draw.GetPen(weightModel.Weight, 1);
                                                 }
                                                 else
                                                 {
-                                                    pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
+                                                    pen = Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                                 }
                                             }
                                         }
@@ -161,11 +161,11 @@ namespace Qualia.Controls
                                     {
                                         if (isUseColorOfWeight)
                                         {
-                                            pen = Tools.Draw.GetPen(weightModel.Weight, 1);
+                                            pen = Draw.GetPen(weightModel.Weight, 1);
                                         }
                                         else
                                         {
-                                            pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
+                                            pen = Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                         }
                                     }
                                 }
@@ -177,11 +177,11 @@ namespace Qualia.Controls
                                         {
                                             if (isUseColorOfWeight)
                                             {
-                                                pen = Tools.Draw.GetPen(weightModel.Weight, 1);
+                                                pen = Draw.GetPen(weightModel.Weight, 1);
                                             }
                                             else
                                             {
-                                                pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
+                                                pen = Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                             }
                                         }
                                     }
@@ -199,11 +199,11 @@ namespace Qualia.Controls
                                         {
                                             if (isUseColorOfWeight)
                                             {
-                                                pen = Tools.Draw.GetPen(weightModel.Weight, 1);
+                                                pen = Draw.GetPen(weightModel.Weight, 1);
                                             }
                                             else
                                             {
-                                                pen = Tools.Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
+                                                pen = Draw.GetPen(neuronModel1.AxW(neuronModel2), 1);
                                             }
                                         }
                                     }
@@ -213,7 +213,8 @@ namespace Qualia.Controls
                                 {
                                     if (!_coordinator.ContainsKey(neuronModel2))
                                     {
-                                        _coordinator.Add(neuronModel2, Points.Get(LayerX(networkModel, layerModel2), TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuronModel2.Id * VerticalDistance(layerModel2.Neurons.Count)));
+                                        _coordinator.Add(neuronModel2, Points.Get(LayerX(networkModel, layerModel2),
+                                                                                  TOP_OFFSET + VerticalShift(networkModel, layerModel2) + neuronModel2.Id * VerticalDistance(layerModel2.Neurons.Count)));
                                     }
 
                                     var point1 = _coordinator[neuronModel1];
@@ -262,7 +263,7 @@ namespace Qualia.Controls
                     }
                     prevNeuron = neuronModel;
 
-                    var pen = Tools.Draw.GetPen(neuronModel.Activation);
+                    var pen = Draw.GetPen(neuronModel.Activation);
                     var brush = pen.Brush;
 
                     var centerPoint = _coordinator[neuronModel];
@@ -279,7 +280,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void Draw(bool fullState, NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
+        private void Render(bool fullState, NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
             CtlPresenter.Clear();
 
@@ -328,12 +329,12 @@ namespace Qualia.Controls
         public void RenderStanding(NetworkDataModel networkModel)
         {
             ClearCache();
-            Draw(false, networkModel, false, false, false, false);
+            Render(false, networkModel, false, false, false, false);
         }
 
         public void RenderRunning(NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
-            Draw(false, networkModel, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
+            Render(false, networkModel, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
         }
     }
 }

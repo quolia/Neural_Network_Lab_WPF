@@ -10,7 +10,7 @@ namespace Qualia.Controls
     {
         private readonly VisualCollection _visuals;
 
-        public Func<double, double> Scale = Render.Scale;
+        public Func<double, double> Scale = RenderSettings.Scale;
 
         public QPresenter()
         {

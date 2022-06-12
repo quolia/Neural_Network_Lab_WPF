@@ -48,7 +48,7 @@ namespace Qualia.Controls
                                               s_font,
                                               10,
                                               Brushes.Black,
-                                              Render.PixelsPerDip);
+                                              RenderSettings.PixelsPerDip);
 
             CtlPresenter.DrawText(formattedText, ref Points.Get(10, 0));
 

@@ -67,11 +67,11 @@ namespace Qualia.Tools
         public static readonly Color Black = Colors.Black;
     }
 
-    public static class Render
+    public static class RenderSettings
     {
         private static readonly double s_halfPixelSize;
 
-        static Render()
+        static RenderSettings()
         {
             var flags = BindingFlags.NonPublic | BindingFlags.Static;
             var dpiProperty = typeof(SystemParameters).GetProperty("Dpi", flags);
@@ -200,7 +200,7 @@ namespace Qualia.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Pen GetPen(double v, double width = 1, byte alpha = 255)
         {
-            width *= Render.PixelSize;
+            width *= RenderSettings.PixelSize;
 
             if (width == 0)
             {
@@ -208,13 +208,13 @@ namespace Qualia.Tools
                 alpha = alpha == 255 ? (byte)(alpha / (1 + (width - 1) / 2)) : alpha;
             }
 
-            return new(GetBrush(v, alpha), Render.ScaleThickness(width));
+            return new(GetBrush(v, alpha), RenderSettings.ScaleThickness(width));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Pen GetPen(in Color color, double width = 1)
         {
-            return new(GetBrush(in color), Render.ScaleThickness(width * Render.PixelSize));
+            return new(GetBrush(in color), RenderSettings.ScaleThickness(width * RenderSettings.PixelSize));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

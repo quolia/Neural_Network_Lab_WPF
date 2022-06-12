@@ -166,10 +166,10 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.LoadConfig());
 
             var color = Config.GetArray(Constants.Param.Color, "255,100,100,100");
-            CtlColor.Foreground = Tools.Draw.GetBrush(Color.FromArgb((byte)color[0],
-                                                                     (byte)color[1],
-                                                                     (byte)color[2],
-                                                                     (byte)color[3]));
+            CtlColor.Foreground = Draw.GetBrush(Color.FromArgb((byte)color[0],
+                                                               (byte)color[1],
+                                                               (byte)color[2],
+                                                               (byte)color[3]));
 
             //
 
