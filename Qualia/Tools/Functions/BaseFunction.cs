@@ -9,6 +9,11 @@ namespace Qualia.Tools
         {
             var funcName = name.ToString();
 
+            if (!GetItems().Contains(name))
+            {
+                throw new InvalidOperationException($"Unknown function name: {funcName}.");
+            }
+
             var type = typeof(T).GetNestedTypes()
                                 .Where(type => type.Name == funcName)
                                 .FirstOrDefault();

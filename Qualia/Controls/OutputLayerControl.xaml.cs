@@ -64,16 +64,16 @@ namespace Qualia.Controls
             ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
         }
 
-        public void OnTaskChanged(INetworkTask networkTask)
+        public void OnTaskChanged(TaskFunction taskFunction)
         {
             var ctlNeurons = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
 
-            for (int i = ctlNeurons.Count; i < networkTask.GetClasses().Count; ++i)
+            for (int i = ctlNeurons.Count; i < taskFunction.NetworkTask.GetClasses().Count; ++i)
             {
                 AddNeuron();
             }
 
-            for (int i = networkTask.GetClasses().Count; i < ctlNeurons.Count; ++i)
+            for (int i = taskFunction.NetworkTask.GetClasses().Count; i < ctlNeurons.Count; ++i)
             {
                 NeuronsHolder.Children.RemoveAt(NeuronsHolder.Children.Count - 1);
             }

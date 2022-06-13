@@ -10,8 +10,8 @@ namespace Qualia.Tools
 {
     public interface INetworkTask : IConfigParam
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void Do(NetworkDataModel networkModel);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //void Do(NetworkDataModel networkModel);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Control GetVisualControl();
@@ -41,22 +41,24 @@ namespace Qualia.Tools
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
         public delegate*<NetworkDataModel, void> Do;
+        public INetworkTask NetworkTask;
 
-        public TaskFunction(delegate*<NetworkDataModel, void> doFunc)
+        public TaskFunction(delegate*<NetworkDataModel, void> doFunc, INetworkTask networkTask)
         {
             Do = doFunc;
+            NetworkTask = networkTask;
         }
 
         sealed public class CountDots : INetworkTask
         {
-            public static readonly TaskFunction Instance = new(&Do);
+            public static readonly TaskFunction Instance = new(&Do_, new CountDots());
             
             private static readonly CountDotsControl s_control = new();
 
-            private bool _isGaussianDistribution;
-            private int _minNumber;
-            private int _maxNumber;
-            private double _median;
+            private static bool _isGaussianDistribution;
+            private static int _minNumber;
+            private static int _maxNumber;
+            private static double _median;
 
             public Control GetVisualControl() => s_control;
 
@@ -100,6 +102,12 @@ namespace Qualia.Tools
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Do(NetworkDataModel networkModel)
+            {
+                Do_(networkModel);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do_(NetworkDataModel networkModel)
             {
                 int randNumber;
 
@@ -172,7 +180,7 @@ namespace Qualia.Tools
 
         sealed public class MNIST : INetworkTask
         {
-            public static readonly MNIST Instance = new();
+            public static readonly TaskFunction Instance = new(&Do_, new MNIST());
             
             private static readonly MNISTControl s_control = new();
 
@@ -213,6 +221,12 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Do(NetworkDataModel networkModel)
             {
+                Do_(networkModel);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do_(NetworkDataModel networkModel)
+            {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;
 
@@ -238,37 +252,6 @@ namespace Qualia.Tools
             public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
-        }
-
-        public static string[] GetItems()
-        {
-            return typeof(TaskFunctionList)
-                .GetNestedTypes()
-                .Where(type => typeof(INetworkTask).IsAssignableFrom(type))
-                .Select(type => type.Name)
-                .ToArray();
-        }
-
-        public static INetworkTask GetInstance(string taskName)
-        {
-            return (INetworkTask)typeof(TaskFunctionList)
-                .GetNestedTypes()
-                .Where(type => type.Name == taskName)
-                .First()
-                .GetField("Instance")
-                .GetValue(null);
-        }
-    }
-
-    public static class NetworkTaskResult
-    {
-        public static class Helper
-        {
-            public static double Invoke(string methodName, double param)
-            {
-                var method = typeof(NetworkTaskResult).GetMethod(methodName);
-                return (double)method.Invoke(null, new object[] { param });
-            }
         }
     }
 }

@@ -130,10 +130,10 @@ namespace Qualia.Controls
             ResetLayersTabsNames();
         }
 
-        public void OnTaskChanged(INetworkTask networkTask)
+        public void OnTaskChanged(TaskFunction taskFunction)
         {
-            InputLayer.OnTaskChanged(networkTask);
-            _outputLayer.OnTaskChanged(networkTask);
+            InputLayer.OnTaskChanged(taskFunction);
+            _outputLayer.OnTaskChanged(taskFunction);
         }
 
         public void VanishConfig()
@@ -238,13 +238,13 @@ namespace Qualia.Controls
             }
         }
 
-        unsafe public NetworkDataModel CreateNetworkDataModel(INetworkTask networkTask, bool isCopy)
+        unsafe public NetworkDataModel CreateNetworkDataModel(TaskFunction taskFunction, bool isCopy)
         {
             ErrorMatrix matrix = null;
-            if (networkTask != null)
+            if (taskFunction != null)
             {
-                matrix = new(networkTask.GetClasses());
-                ErrorMatrix nextMatrix = new(networkTask.GetClasses());
+                matrix = new(taskFunction.NetworkTask.GetClasses());
+                ErrorMatrix nextMatrix = new(taskFunction.NetworkTask.GetClasses());
                 matrix.Next = nextMatrix;
                 nextMatrix.Next = matrix;
             }
@@ -252,7 +252,7 @@ namespace Qualia.Controls
             NetworkDataModel networkModel = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
-                Classes = networkTask?.GetClasses(),
+                Classes = taskFunction?.NetworkTask.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = RandomizeMode,
@@ -360,7 +360,7 @@ namespace Qualia.Controls
 
             if (!isCopy)
             {
-                var copy = CreateNetworkDataModel(networkTask, true);
+                var copy = CreateNetworkDataModel(taskFunction, true);
                 networkModel.SetCopy(copy);
             }
 

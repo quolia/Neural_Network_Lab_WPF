@@ -132,9 +132,9 @@ namespace Qualia.Tools
             return name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase) ? name.Substring(prefix.Length) : name;
         }
 
-        public static void FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue)
+        public static void FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue) where T : class
         {
-            var items = typeof(T).GetMethod("GetItems").Invoke(null, null);
+            var items = typeof(BaseFunction<T>).GetMethod("GetItems").Invoke(null, null);
             FillComboBox(items as string[], comboBox, config, defaultValue);
         }
 

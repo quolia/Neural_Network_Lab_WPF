@@ -18,7 +18,7 @@ namespace Qualia.Controls
         private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
         private readonly TabControl _ctlTabs;
-        private INetworkTask _networkTask;
+        private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
         private NetworkDataModel _prevSelectedNetworkModel;
 
@@ -123,9 +123,9 @@ namespace Qualia.Controls
             RefreshNetworksDataModels();
         }
 
-        public void RebuildNetworksForTask(INetworkTask task)
+        public void RebuildNetworksForTask(TaskFunction task)
         {
-            _networkTask = task;
+            _taskFunction = task;
             Networks.ForEach(ctlNetwork => ctlNetwork.OnTaskChanged(task));
 
             OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
@@ -150,7 +150,7 @@ namespace Qualia.Controls
 
             if (networkId == Constants.UnknownId)
             {
-                ctlNetwork.InputLayer.OnTaskChanged(_networkTask);
+                ctlNetwork.InputLayer.OnTaskChanged(_taskFunction);
                 ctlNetwork.ResetLayersTabsNames();
             }
         }
@@ -224,7 +224,7 @@ namespace Qualia.Controls
         public ListX<NetworkDataModel> CreateNetworksDataModels()
         {
             ListX<NetworkDataModel> networkModels = new(Networks.Count);
-            Networks.ForEach(ctlNetwork => networkModels.Add(ctlNetwork.CreateNetworkDataModel(_networkTask, false)));
+            Networks.ForEach(ctlNetwork => networkModels.Add(ctlNetwork.CreateNetworkDataModel(_taskFunction, false)));
 
             return networkModels;
         }
@@ -266,10 +266,10 @@ namespace Qualia.Controls
             ResetErrorMatrix();
         }
 
-        public void PrepareModelsForRound()
+        unsafe public void PrepareModelsForRound()
         {
             var baseNetwork = NetworkModels.First;
-            _networkTask.Do(baseNetwork);
+            _taskFunction.Do(baseNetwork);
 
             // copy first layer state and last layer targets to other networks
 
