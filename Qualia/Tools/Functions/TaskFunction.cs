@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Qualia.Controls;
+using Qualia.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using Qualia;
-using Qualia.Controls;
-using Qualia.Model;
 
 namespace Qualia.Tools
 {
     public interface INetworkTask : IConfigParam
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void Do(NetworkDataModel networkModel);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //void Do(NetworkDataModel networkModel);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Control GetVisualControl();
@@ -39,33 +38,33 @@ namespace Qualia.Tools
         void TaskParameterChanged();
     }
 
-    public static class NetworkTask
+    unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
+        public delegate*<NetworkDataModel, void> Do;
+        public INetworkTask NetworkTask;
+
+        public TaskFunction(delegate*<NetworkDataModel, void> doFunc, INetworkTask networkTask)
+        {
+            Do = doFunc;
+            NetworkTask = networkTask;
+        }
+
         sealed public class CountDots : INetworkTask
         {
-            public static readonly CountDots Instance = new CountDots();
-            
-            private static readonly CountDotsControl s_control = new CountDotsControl();
+            public static readonly TaskFunction Instance = new(&Do_, new CountDots());
 
-            private bool _isGaussianDistribution;
-            private int _minNumber;
-            private int _maxNumber;
-            private double _median;
+            private static readonly CountDotsControl s_control = new();
 
-            public Control GetVisualControl()
-            {
-                return s_control;
-            }
+            private static bool _isGaussianDistribution;
+            private static int _minNumber;
+            private static int _maxNumber;
+            private static double _median;
 
-            public int GetPointsRearrangeSnap()
-            {
-                return 10;
-            }
+            public Control GetVisualControl() => s_control;
 
-            public bool IsGridSnapAdjustmentAllowed()
-            {
-                return true;
-            }
+            public int GetPointsRearrangeSnap() => 10;
+
+            public bool IsGridSnapAdjustmentAllowed() => true;
 
             public void ApplyChanges()
             {
@@ -86,19 +85,13 @@ namespace Qualia.Tools
                 ApplyChanges();
             }
 
-            public void SaveConfig()
-            {
-                s_control.SaveConfig();
-            }
+            public int GetInputCount() => s_control.InputCount;
 
-            public int GetInputCount()
-            {
-                return s_control.InputCount;
-            }
+            public void SaveConfig() => s_control.SaveConfig();
 
             public List<string> GetClasses()
             {
-                var classes = new List<string>();
+                List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
                     classes.Add(number.ToString());
@@ -109,6 +102,12 @@ namespace Qualia.Tools
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Do(NetworkDataModel networkModel)
+            {
+                Do_(networkModel);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do_(NetworkDataModel networkModel)
             {
                 int randNumber;
 
@@ -170,54 +169,33 @@ namespace Qualia.Tools
                 }
             }
 
-            public void VanishConfig()
-            {
-                s_control.VanishConfig();
-            }
+            public void VanishConfig() => s_control.VanishConfig();
 
-            public bool IsValid()
-            {
-                return s_control.IsValid();
-            }
+            public bool IsValid() => s_control.IsValid();
 
-            public void SetChangeEvent(Action onChanged)
-            {
-                s_control.SetChangeEvent(onChanged);
-            }
+            public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
 
         sealed public class MNIST : INetworkTask
         {
-            public static readonly MNIST Instance = new MNIST();
-            
-            private static readonly MNISTControl s_control = new MNISTControl();
+            public static readonly TaskFunction Instance = new(&Do_, new MNIST());
 
-            public Control GetVisualControl()
-            {
-                return s_control;
-            }
+            private static readonly MNISTControl s_control = new();
 
-            public int GetPointsRearrangeSnap()
-            {
-                return 28;
-            }
+            public Control GetVisualControl() => s_control;
 
-            public bool IsGridSnapAdjustmentAllowed()
-            {
-                return false;
-            }
+            public int GetPointsRearrangeSnap() => 28;
+
+            public bool IsGridSnapAdjustmentAllowed() => false;
 
             public void ApplyChanges()
             {
                 //
             }
 
-            public void SetConfig(Config config)
-            {
-                s_control.SetConfig(config);
-            }
+            public void SetConfig(Config config) => s_control.SetConfig(config);
 
             public void LoadConfig()
             {
@@ -225,19 +203,13 @@ namespace Qualia.Tools
                 ApplyChanges();
             }
 
-            public void SaveConfig()
-            {
-                s_control.SaveConfig();
-            }
+            public void SaveConfig() => s_control.SaveConfig();
 
-            public int GetInputCount()
-            {
-                return 28 * 28;
-            }
+            public int GetInputCount() => 28 * 28;
 
             public List<string> GetClasses()
             {
-                var classes = new List<string>();
+                List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
                     classes.Add(number.ToString());
@@ -248,6 +220,12 @@ namespace Qualia.Tools
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Do(NetworkDataModel networkModel)
+            {
+                Do_(networkModel);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do_(NetworkDataModel networkModel)
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;
@@ -267,48 +245,13 @@ namespace Qualia.Tools
                 networkModel.TargetOutput = image.Label;
             }
 
-            public void VanishConfig()
-            {
-                s_control.VanishConfig();
-            }
+            public void VanishConfig() => s_control.VanishConfig();
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetChangeEvent(Action onChanged)
-            {
-                s_control.SetChangeEvent(onChanged);
-            }
+            public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
-        }
-        public static class Helper
-        {
-            public static string[] GetItems()
-            {
-                return typeof(NetworkTask).GetNestedTypes().Where(task => typeof(INetworkTask).IsAssignableFrom(task)).Select(task => task.Name).ToArray();
-            }
-
-            public static INetworkTask GetInstance(string taskName)
-            {
-                return (INetworkTask)typeof(NetworkTask).GetNestedTypes().Where(c => c.Name == taskName).First().GetField("Instance").GetValue(null);
-            }
-
-            public static void FillComboBox(ComboBox comboBox, Config config, string defaultValue)
-            {
-                Initializer.FillComboBox(Helper.GetItems, comboBox, config, defaultValue);
-            }
-        }
-    }
-
-    public static class NetworkTaskResult
-    {
-        public static class Helper
-        {
-            public static double Invoke(string methodName, double param)
-            {
-                var method = typeof(NetworkTaskResult).GetMethod(methodName);
-                return (double)method.Invoke(null, new object[] { param });
-            }
         }
     }
 }

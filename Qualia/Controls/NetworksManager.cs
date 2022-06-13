@@ -18,7 +18,7 @@ namespace Qualia.Controls
         private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
         private readonly TabControl _ctlTabs;
-        private INetworkTask _taskFunction;
+        private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
         private NetworkDataModel _prevSelectedNetworkModel;
 
@@ -123,7 +123,7 @@ namespace Qualia.Controls
             RefreshNetworksDataModels();
         }
 
-        public void RebuildNetworksForTask(INetworkTask task)
+        public void RebuildNetworksForTask(TaskFunction task)
         {
             _taskFunction = task;
             Networks.ForEach(ctlNetwork => ctlNetwork.OnTaskChanged(task));

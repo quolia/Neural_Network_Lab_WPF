@@ -130,7 +130,7 @@ namespace Qualia.Controls
             ResetLayersTabsNames();
         }
 
-        public void OnTaskChanged(INetworkTask taskFunction)
+        public void OnTaskChanged(TaskFunction taskFunction)
         {
             InputLayer.OnTaskChanged(taskFunction);
             _outputLayer.OnTaskChanged(taskFunction);
@@ -238,13 +238,13 @@ namespace Qualia.Controls
             }
         }
 
-        unsafe public NetworkDataModel CreateNetworkDataModel(INetworkTask taskFunction, bool isCopy)
+        unsafe public NetworkDataModel CreateNetworkDataModel(TaskFunction taskFunction, bool isCopy)
         {
             ErrorMatrix matrix = null;
             if (taskFunction != null)
             {
-                matrix = new(taskFunction.GetClasses());
-                ErrorMatrix nextMatrix = new(taskFunction.GetClasses());
+                matrix = new(taskFunction.NetworkTask.GetClasses());
+                ErrorMatrix nextMatrix = new(taskFunction.NetworkTask.GetClasses());
                 matrix.Next = nextMatrix;
                 nextMatrix.Next = matrix;
             }
@@ -252,7 +252,7 @@ namespace Qualia.Controls
             NetworkDataModel networkModel = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
-                Classes = taskFunction?.GetClasses(),
+                Classes = taskFunction?.NetworkTask.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.IsOn,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = RandomizeMode,
