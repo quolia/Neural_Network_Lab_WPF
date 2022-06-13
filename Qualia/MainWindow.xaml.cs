@@ -430,15 +430,17 @@ namespace Qualia.Controls
             const double K1 = 1;
             const double K2 = 0;
 
+            var isBackPropagationNeeded = true;
+
             while (!_cancellationToken.IsCancellationRequested)
             {
                 swCurrentPureRoundsPerSecond.Restart();
 
-                var isBackPropagationNeeded = false;
-
                 lock (ApplyChangesLocker)
                 {
                     //swCurrentPureRoundsPerSecond.Restart();
+
+                    var isError = false;
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
@@ -479,14 +481,15 @@ namespace Qualia.Controls
                                 statistics.LastBadCost = cost;
                                 statistics.LastBadTick = _startTime.Elapsed.Ticks;
 
-                                isBackPropagationNeeded = true;
+                                //isBackPropagationNeeded = true;
+                                isError = true;
                             }
 
                             statistics.CostSum += cost;
                             networkModel.ErrorMatrix.AddData(input, outputId);
 
                             //if (input != outputId)
-                            //if (isBackPropagationNeeded)
+                            if (isBackPropagationNeeded)
                             {
                                 networkModel.BackPropagation();
                             }
@@ -494,6 +497,8 @@ namespace Qualia.Controls
                             networkModel = networkModel.Next;
                         }
                     }
+
+                    isBackPropagationNeeded = isError; 
 
                     swCurrentPureRoundsPerSecond.Stop();
                     swCurrentMiscCodeTime.Restart();
@@ -541,6 +546,18 @@ namespace Qualia.Controls
                             var costAvg = statistics.CostSum / Settings.SkipRoundsToDrawStatistics;
                             var costAvgTotal = statistics.CostSumTotal / statistics.Rounds;
                             statistics.CostAvg = costAvg * K1 + costAvgTotal * K2;
+
+                            if (statistics.CorrectRounds == currentLoopLimit)
+                            {
+                                if (statistics.First100PercentOnTicks == 0)
+                                {
+                                    statistics.First100PercentOnTicks = totalTicksElapsed;
+                                }
+                                else
+                                {
+                                    statistics.Last100PercentOnTicks = totalTicksElapsed;
+                                }
+                            }
 
                             networkModel.DynamicStatistics.Add(statistics.Percent, statistics.CostAvg);
 
@@ -774,6 +791,18 @@ namespace Qualia.Controls
 
             stat.Add("Percent",
                      Converter.DoubleToText(statistics.Percent, "N6") + " %");
+
+            stat.Add("4.5", null);
+
+            stat.Add("First 100%, time",
+                      statistics.First100PercentOnTicks > 0
+                      ? TimeSpan.FromTicks(statistics.First100PercentOnTicks).ToString(Culture.TimeFormat)
+                      : "Unknown");
+
+            stat.Add("Last 100%, time ago",
+                      statistics.Last100PercentOnTicks > 0
+                      ? TimeSpan.FromTicks(statistics.TotalTicksElapsed - statistics.Last100PercentOnTicks).ToString(Culture.TimeFormat)
+                      : "Unknown");
 
             stat.Add("5", null);
 

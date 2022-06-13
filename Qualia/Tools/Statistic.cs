@@ -31,6 +31,9 @@ namespace Qualia.Tools
         public string LastGoodInput;
         public double LastGoodCost;
 
+        public long First100PercentOnTicks;
+        public long Last100PercentOnTicks;
+
         public Statistics Copy()
         {
             return (Statistics)MemberwiseClone();
