@@ -75,7 +75,7 @@ namespace Qualia.Controls
         {
             SaveFileDialog saveDialog = new()
             {
-                InitialDirectory = Path.GetFullPath("Networks\\"),
+                InitialDirectory = App.WorkingDirectory + "Networks",
                 DefaultExt = "txt",
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 FilterIndex = 2,
@@ -203,7 +203,7 @@ namespace Qualia.Controls
         {
             SaveFileDialog saveDialog = new()
             {
-                InitialDirectory = Path.GetFullPath("Networks\\"),
+                InitialDirectory = App.WorkingDirectory + "Networks",
                 DefaultExt = "txt",
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 FilterIndex = 2,

@@ -161,7 +161,7 @@ namespace Qualia.Controls
 
             if (!File.Exists(fileName))
             {
-                fileName = App.WorkingDirectory + Path.DirectorySeparatorChar + "Networks" + Path.DirectorySeparatorChar + Path.GetFileName(fileName);
+                fileName = App.WorkingDirectory + "Networks" + Path.DirectorySeparatorChar + Path.GetFileName(fileName);
             }
 
             if (File.Exists(fileName))
@@ -236,14 +236,18 @@ namespace Qualia.Controls
 
         private void CreateDirectories()
         {
-            if (!Directory.Exists("Networks"))
+            var networksPath = App.WorkingDirectory + "Networks";
+
+            if (!Directory.Exists(networksPath))
             {
-                Directory.CreateDirectory("Networks");
+                Directory.CreateDirectory(networksPath);
             }
 
-            if (!Directory.Exists("MNIST"))
+            var mnistPath = App.WorkingDirectory + "MNIST";
+
+            if (!Directory.Exists(mnistPath))
             {
-                Directory.CreateDirectory("MNIST");
+                Directory.CreateDirectory(mnistPath);
             }
         }
 
@@ -861,7 +865,7 @@ namespace Qualia.Controls
         {
             OpenFileDialog loadDialog = new()
             {
-                InitialDirectory = Path.GetFullPath("Networks\\"),
+                InitialDirectory = App.WorkingDirectory + "Networks",
                 DefaultExt = "txt",
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 FilterIndex = 2,

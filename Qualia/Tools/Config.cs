@@ -19,7 +19,7 @@ namespace Qualia.Tools
 
     sealed public class Config
     {
-        public static Config Main = new("config.txt");
+        public static Config Main = new(App.WorkingDirectory + "config.txt");
         public readonly string Name;
         public Config ParentConfig;
 

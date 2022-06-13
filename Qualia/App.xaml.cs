@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -16,7 +17,7 @@ namespace Qualia
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
 
-        public static string WorkingDirectory => AppDomain.CurrentDomain.BaseDirectory;
+        public static string WorkingDirectory => Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;// AppDomain.CurrentDomain.BaseDirectory;
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
