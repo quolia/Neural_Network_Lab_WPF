@@ -138,7 +138,7 @@
     <Compile Include="Controls\Base\QCheckBox.cs" />
     <Compile Include="Controls\Base\QComboBox.cs" />
     <Compile Include="Controls\Base\QTextBox.cs" />
-    <Compile Include="Controls\InputBiasControl.cs" />
+    <Compile Include="Network\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -154,9 +154,9 @@
     <Compile Include="Controls\Task\MNISTControl.xaml.cs">
       <DependentUpon>MNISTControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\WindowResizeControl.cs" />
+    <Compile Include="Controls\Misc\WindowResizeControl.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RandomizerViewer.xaml.cs">
+    <Compile Include="Controls\Viewer\RandomizerViewer.xaml.cs">
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\Converter.cs" />
@@ -179,31 +179,31 @@
     <Compile Include="Tools\Thread.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="Tools\Unsafe.cs" />
-    <Page Include="Controls\HiddenLayerControl.xaml">
+    <Page Include="Network\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\InputLayerControl.xaml">
+    <Page Include="Network\InputLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\InputNeuronControl.xaml">
+    <Page Include="Network\InputNeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\NetworkControl.xaml">
+    <Page Include="Network\NetworkControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\NeuronControl.xaml">
+    <Page Include="Network\NeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\OutputLayerControl.xaml">
+    <Page Include="Network\OutputLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\OutputNeuronControl.xaml">
+    <Page Include="Network\OutputNeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -231,7 +231,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SettingsControl.xaml">
+    <Page Include="Network\SettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -255,26 +255,26 @@
     <Compile Include="Controls\Base\QInt.cs" />
     <Compile Include="Controls\Base\LayerBase.cs" />
     <Compile Include="Controls\Base\NeuronBase.cs" />
-    <Compile Include="Controls\HiddenLayerControl.xaml.cs">
+    <Compile Include="Network\HiddenLayerControl.xaml.cs">
       <DependentUpon>HiddenLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InputLayerControl.xaml.cs">
+    <Compile Include="Network\InputLayerControl.xaml.cs">
       <DependentUpon>InputLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InputNeuronControl.xaml.cs">
+    <Compile Include="Network\InputNeuronControl.xaml.cs">
       <DependentUpon>InputNeuronControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NetworkControl.xaml.cs">
+    <Compile Include="Network\NetworkControl.xaml.cs">
       <DependentUpon>NetworkControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NetworksManager.cs" />
-    <Compile Include="Controls\NeuronControl.xaml.cs">
+    <Compile Include="Network\NetworksManager.cs" />
+    <Compile Include="Network\NeuronControl.xaml.cs">
       <DependentUpon>NeuronControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\OutputLayerControl.xaml.cs">
+    <Compile Include="Network\OutputLayerControl.xaml.cs">
       <DependentUpon>OutputLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\OutputNeuronControl.xaml.cs">
+    <Compile Include="Network\OutputNeuronControl.xaml.cs">
       <DependentUpon>OutputNeuronControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Presenter\DataPresenter.xaml.cs">
@@ -292,14 +292,14 @@
     <Compile Include="Controls\Presenter\StatisticPresenter.xaml.cs">
       <DependentUpon>StatisticPresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SettingsControl.xaml.cs">
+    <Compile Include="Network\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RandomizerViewer.xaml">
+    <Page Include="Controls\Viewer\RandomizerViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
