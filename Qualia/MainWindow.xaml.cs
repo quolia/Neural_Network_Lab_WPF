@@ -434,6 +434,8 @@ namespace Qualia.Controls
             {
                 swCurrentPureRoundsPerSecond.Restart();
 
+                var isBackPropagationNeeded = false;
+
                 lock (ApplyChangesLocker)
                 {
                     //swCurrentPureRoundsPerSecond.Restart();
@@ -476,12 +478,18 @@ namespace Qualia.Controls
                                 statistics.LastBadOutputActivation = output.Activation;
                                 statistics.LastBadCost = cost;
                                 statistics.LastBadTick = _startTime.Elapsed.Ticks;
+
+                                isBackPropagationNeeded = true;
                             }
 
                             statistics.CostSum += cost;
                             networkModel.ErrorMatrix.AddData(input, outputId);
 
-                            networkModel.BackPropagation();
+                            //if (input != outputId)
+                            //if (isBackPropagationNeeded)
+                            {
+                                networkModel.BackPropagation();
+                            }
 
                             networkModel = networkModel.Next;
                         }

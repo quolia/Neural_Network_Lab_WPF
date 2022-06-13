@@ -2,7 +2,6 @@
 using Qualia.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
@@ -10,9 +9,6 @@ namespace Qualia.Tools
 {
     public interface INetworkTask : IConfigParam
     {
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //void Do(NetworkDataModel networkModel);
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Control GetVisualControl();
 
@@ -51,7 +47,7 @@ namespace Qualia.Tools
 
         sealed public class CountDots : INetworkTask
         {
-            public static readonly TaskFunction Instance = new(&Do_, new CountDots());
+            public static readonly TaskFunction Instance = new(&Do, new CountDots());
 
             private static readonly CountDotsControl s_control = new();
 
@@ -101,13 +97,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Do(NetworkDataModel networkModel)
-            {
-                Do_(networkModel);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do_(NetworkDataModel networkModel)
+            public static void Do(NetworkDataModel networkModel)
             {
                 int randNumber;
 
@@ -180,7 +170,7 @@ namespace Qualia.Tools
 
         sealed public class MNIST : INetworkTask
         {
-            public static readonly TaskFunction Instance = new(&Do_, new MNIST());
+            public static readonly TaskFunction Instance = new(&Do, new MNIST());
 
             private static readonly MNISTControl s_control = new();
 
@@ -219,13 +209,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Do(NetworkDataModel networkModel)
-            {
-                Do_(networkModel);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do_(NetworkDataModel networkModel)
+            public static void Do(NetworkDataModel networkModel)
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;

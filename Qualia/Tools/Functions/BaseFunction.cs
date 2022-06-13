@@ -9,7 +9,7 @@ namespace Qualia.Tools
         {
             var funcName = name.ToString();
 
-            if (!GetItems().Contains(funcName)) // Call it just to tell compiler to compile GetItems, but not to eclude it.
+            if (!GetItems().Contains(funcName)) // Call it just to tell compiler to compile GetItems, but not to exclude it.
             {
                 throw new InvalidOperationException($"Unknown function name: {funcName}.");
             }
