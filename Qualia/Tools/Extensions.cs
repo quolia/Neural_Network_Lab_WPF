@@ -138,12 +138,12 @@ namespace Qualia.Tools
             FillComboBox(items as string[], comboBox, config, defaultValue);
         }
 
-        private static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue)
+        public static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue)
         {
             FillComboBox(getItemsFunc(), comboBox, config, defaultValue);
         }
 
-        private static void FillComboBox(in string[] items, ComboBox cb, Config config, string defaultValue)
+        public static void FillComboBox(in string[] items, ComboBox cb, Config config, string defaultValue)
         {
             var paramName = CutName(cb.Name);
 

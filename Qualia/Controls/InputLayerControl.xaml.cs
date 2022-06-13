@@ -48,14 +48,14 @@ namespace Qualia.Controls
         public double? WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull;
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
 
-        public void OnTaskChanged(TaskFunction taskFunction)
+        public void OnTaskChanged(INetworkTask taskFunction)
         {
             var ctlNeurons = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
             ctlNeurons.ForEach(NeuronsHolder.Children.Remove);
 
             if (taskFunction != null)
             {
-                Range.For(taskFunction.NetworkTask.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
+                Range.For(taskFunction.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
             }
         }
 
