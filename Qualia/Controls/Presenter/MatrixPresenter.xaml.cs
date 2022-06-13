@@ -133,7 +133,7 @@ namespace Qualia.Controls
                              -90);
         }
 
-        public void Render(ErrorMatrix matrix)
+        public void DrawErrorMatrix(ErrorMatrix matrix)
         {
             if (!IsLoaded)
             {

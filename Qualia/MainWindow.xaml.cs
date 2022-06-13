@@ -551,12 +551,16 @@ namespace Qualia.Controls
                             {
                                 if (statistics.First100PercentOnTicks == 0)
                                 {
-                                    statistics.First100PercentOnTicks = totalTicksElapsed;
+                                    statistics.First100PercentOnTicks = statistics.TotalTicksElapsed;
                                 }
                                 else
                                 {
-                                    statistics.Last100PercentOnTicks = totalTicksElapsed;
+                                    statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
                                 }
+                            }
+                            else
+                            {
+                                statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
                             }
 
                             networkModel.DynamicStatistics.Add(statistics.Percent, statistics.CostAvg);
@@ -624,7 +628,7 @@ namespace Qualia.Controls
 
                         //lock (ApplyChangesLocker)
                         {
-                            networkModelToRender = selectedNetworkModel.GetCopyForRender();
+                            networkModelToRender = selectedNetworkModel.GetCopyToDraw();
                             CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
                         }
                     }
@@ -635,7 +639,7 @@ namespace Qualia.Controls
 
                         //lock (ApplyChangesLocker)
                         {
-                            CtlPlotPresenter.Vanish(_networksManager.NetworkModels);
+                            CtlPlotPresenter.OptimizePlotPointCount(_networksManager.NetworkModels);
                             {
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
@@ -654,7 +658,7 @@ namespace Qualia.Controls
                         {
                             swRenderTime.Restart();
 
-                            CtlMatrixPresenter.Render(errorMatrixToRender);
+                            CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender);
                             errorMatrixToRender.ClearData();
 
                             swRenderTime.Stop();
@@ -674,7 +678,7 @@ namespace Qualia.Controls
                         if (isStatisticsRendering)
                         {
                             swRenderTime.Restart();
-                            CtlPlotPresenter.Render(_networksManager.NetworkModels, selectedNetworkModel);
+                            CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, selectedNetworkModel);
 
                             var lastStats = DrawStatistics(statisticsToRender, learningRate);
                             selectedNetworkModel.LastStatistics = lastStats;
@@ -799,10 +803,23 @@ namespace Qualia.Controls
                       ? TimeSpan.FromTicks(statistics.First100PercentOnTicks).ToString(Culture.TimeFormat)
                       : "Unknown");
 
-            stat.Add("Last 100%, time ago",
-                      statistics.Last100PercentOnTicks > 0
-                      ? TimeSpan.FromTicks(statistics.TotalTicksElapsed - statistics.Last100PercentOnTicks).ToString(Culture.TimeFormat)
-                      : "Unknown");
+            string currentPeriod;
+            var current100PercentPeriodTicks = statistics.TotalTicksElapsed - statistics.Last100PercentOnTicks;
+
+            if (current100PercentPeriodTicks == 0)
+            {
+                currentPeriod = "Unknown";
+            }
+            else if (current100PercentPeriodTicks < TimeSpan.FromSeconds(1).Ticks)
+            {
+                currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).Milliseconds.ToString() + " msec";
+            }
+            else
+            {
+                currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).ToString(Culture.TimeFormat);
+            }
+
+            stat.Add("Current 100% period, time", currentPeriod);
 
             stat.Add("5", null);
 
@@ -1046,7 +1063,7 @@ namespace Qualia.Controls
                     CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels.First);
                     CtlNetworkPresenter.ClearCache();
                     CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn, CtlShowOnlyUnchangedWeights.IsOn);
-                    CtlPlotPresenter.Render(_networksManager.NetworkModels, _networksManager.SelectedNetworkModel);
+                    CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, _networksManager.SelectedNetworkModel);
                     CtlStatisticsPresenter.Draw(_networksManager.SelectedNetworkModel.LastStatistics);
                 }
             }

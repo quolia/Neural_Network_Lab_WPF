@@ -32,7 +32,7 @@ namespace Qualia.Tools
             public static double Do(double? param) => param ?? 0;
         }
 
-        unsafe sealed public class SimpleRandom
+        unsafe sealed public class FlatRandom
         {
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -49,6 +49,43 @@ namespace Qualia.Tools
             {
                 param ??= 1;
                 return -param.Value / 2 + param.Value * Rand.GetFlatRandom();
+            }
+        }
+
+        unsafe sealed public class Gaussian
+        {
+            public static readonly InitializeFunction Instance = new(&Do);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double? param)
+            {
+                param ??= 1;
+
+                var median = 0.5;
+
+                var randNumber = Rand.GaussianRand.NextGaussian(median, (median - 2) / 2);
+
+                if (randNumber < 0)
+                {
+                    randNumber = 0;
+                }
+                else if (randNumber > 1)
+                {
+                    randNumber = 1;
+                }
+
+                return randNumber * param.Value;
+            }
+        }
+
+        unsafe sealed public class GaussianRevert
+        {
+            public static readonly InitializeFunction Instance = new(&Do);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double? param)
+            {
+                return 1 - Gaussian.Do(param);
             }
         }
     }

@@ -366,7 +366,7 @@ namespace Qualia.Model
             return newNetworkModel;
         }
 
-        public NetworkDataModel GetCopyForRender()
+        public NetworkDataModel GetCopyToDraw()
         {
             var layerModel = Layers.First;
             var layerModelCopy = _copy.Layers.First;

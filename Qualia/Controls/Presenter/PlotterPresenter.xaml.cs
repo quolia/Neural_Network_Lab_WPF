@@ -42,7 +42,7 @@ namespace Qualia.Controls
             _isBaseRedrawNeeded = true;
         }
 
-        public void Vanish(ListX<NetworkDataModel> networkModels)
+        public void OptimizePlotPointCount(ListX<NetworkDataModel> networkModels)
         {
             if (networkModels == null)
             {
@@ -73,7 +73,7 @@ namespace Qualia.Controls
             }
         }
 
-        public void Render(ListX<NetworkDataModel> networkModels, NetworkDataModel selectedNetworkModel)
+        public void DrawPlot(ListX<NetworkDataModel> networkModels, NetworkDataModel selectedNetworkModel)
         {
             if (_isBaseRedrawNeeded)
             {
@@ -331,7 +331,7 @@ namespace Qualia.Controls
 
         public void Clear()
         {
-            Render(null, null);
+            DrawPlot(null, null);
         }
     }
 }
