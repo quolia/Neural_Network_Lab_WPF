@@ -552,16 +552,16 @@ namespace Qualia.Controls
                                 if (statistics.First100PercentOnTicks == 0)
                                 {
                                     statistics.First100PercentOnTicks = statistics.TotalTicksElapsed;
-                                    statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
                                 }
-                                else
+
+                                if (statistics.Last100PercentOnTicks == 0)
                                 {
                                     statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
                                 }
                             }
                             else
                             {
-                                statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
+                                statistics.Last100PercentOnTicks = 0;
                             }
 
                             networkModel.DynamicStatistics.Add(statistics.Percent, statistics.CostAvg);
@@ -805,19 +805,23 @@ namespace Qualia.Controls
                       : "Unknown");
 
             string currentPeriod;
-            var current100PercentPeriodTicks = statistics.TotalTicksElapsed - statistics.Last100PercentOnTicks;
 
-            if (current100PercentPeriodTicks == 0)
+            if (statistics.Last100PercentOnTicks == 0)
             {
                 currentPeriod = "Unknown";
             }
-            else if (current100PercentPeriodTicks < TimeSpan.FromSeconds(1).Ticks)
-            {
-                currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).Milliseconds.ToString() + " msec";
-            }
             else
             {
-                currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).ToString(Culture.TimeFormat);
+                var current100PercentPeriodTicks = statistics.TotalTicksElapsed - statistics.Last100PercentOnTicks;
+
+                if (current100PercentPeriodTicks < TimeSpan.FromSeconds(1).Ticks)
+                {
+                    currentPeriod = (int)TimeSpan.FromTicks(current100PercentPeriodTicks).TotalMilliseconds + " msec";
+                }
+                else
+                {
+                    currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).ToString(Culture.TimeFormat);
+                }
             }
 
             stat.Add("Current 100% period, time", currentPeriod);

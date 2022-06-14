@@ -65,11 +65,11 @@ namespace Qualia.Tools
 
                 if (randNumber < 0)
                 {
-                    randNumber = 0.5 - randNumber ;
+                    randNumber += 0.5;
                 }
                 else if (randNumber > Constants.LessThan1)
                 {
-                    randNumber -= 0.5;
+                    randNumber += 0.5 - Constants.LessThan1;
                 }
 
                 return randNumber * param.Value;
@@ -86,6 +86,20 @@ namespace Qualia.Tools
                 var s = Rand.Flat.Next() % 2;
                 var x = Rand.GaussianRand.NextGaussian(0, 0.17);
                 x = s == 0 ? MathX.Abs(x) : Constants.LessThan1 - MathX.Abs(x);
+
+                return x;
+            }
+        }
+
+        unsafe sealed public class GaussianInverted2
+        {
+            public static readonly InitializeFunction Instance = new(&Do);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double? param)
+            {
+                var x = Rand.GaussianRand.NextGaussian(0, 0.17);
+                x = x < 0 ? -x : Constants.LessThan1 - x;
 
                 return x;
             }
