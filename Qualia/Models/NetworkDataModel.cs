@@ -23,6 +23,7 @@ namespace Qualia.Model
         public bool IsAdjustFirstLayerWeights;
 
         public CostFunction CostFunction;
+        public BackPropagationStrategy BackPropagationStrategy;
 
         public Statistics Statistics;
         public DynamicStatistics DynamicStatistics;

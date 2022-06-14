@@ -355,8 +355,8 @@ namespace Qualia.Controls
             CtlMenuDeleteNetwork.IsEnabled = false;
 
             _networksManager.PrepareModelsForRun();
-
             _networksManager.PrepareModelsForRound();
+
             CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.SelectedNetworkModel);
             _networksManager.FeedForward(); // initialize state
 
@@ -430,7 +430,7 @@ namespace Qualia.Controls
             const double K1 = 1;
             const double K2 = 0;
 
-            var isBackPropagationNeeded = true;
+            NetworkDataModel networkModel;
 
             while (!_cancellationToken.IsCancellationRequested)
             {
@@ -440,13 +440,13 @@ namespace Qualia.Controls
                 {
                     //swCurrentPureRoundsPerSecond.Restart();
 
-                    var isError = false;
+                    _networksManager.PrepareModelsForLoop();
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
                         _networksManager.PrepareModelsForRound();
 
-                        var networkModel = _networksManager.NetworkModels.First;
+                        networkModel = _networksManager.NetworkModels.First;
                         while (networkModel != null)
                         {
                             if (!networkModel.IsEnabled)
@@ -481,15 +481,13 @@ namespace Qualia.Controls
                                 statistics.LastBadCost = cost;
                                 statistics.LastBadTick = _startTime.Elapsed.Ticks;
 
-                                //isBackPropagationNeeded = true;
-                                isError = true;
+                                networkModel.BackPropagationStrategy.OnError(networkModel, true);
                             }
 
                             statistics.CostSum += cost;
                             networkModel.ErrorMatrix.AddData(input, outputId);
 
-                            //if (input != outputId)
-                            if (isBackPropagationNeeded)
+                            if (networkModel.BackPropagationStrategy.IsBackPropagationNeeded(networkModel))
                             {
                                 networkModel.BackPropagation();
                             }
@@ -498,7 +496,18 @@ namespace Qualia.Controls
                         }
                     }
 
-                    isBackPropagationNeeded = isError; 
+                    networkModel = _networksManager.NetworkModels.First;
+                    while (networkModel != null)
+                    {
+                        if (!networkModel.IsEnabled)
+                        {
+                            networkModel = networkModel.Next;
+                            continue;
+                        }
+
+                        networkModel.BackPropagationStrategy.OnAfterLoopFinished(networkModel);
+                        networkModel = networkModel.Next;
+                    }
 
                     swCurrentPureRoundsPerSecond.Stop();
                     swCurrentMiscCodeTime.Restart();
@@ -509,7 +518,7 @@ namespace Qualia.Controls
                     {
                         var totalTicksElapsed = _startTime.Elapsed.Ticks;
 
-                        var networkModel = _networksManager.NetworkModels.First;
+                        networkModel = _networksManager.NetworkModels.First;
                         while (networkModel != null)
                         {
                             if (!networkModel.IsEnabled)

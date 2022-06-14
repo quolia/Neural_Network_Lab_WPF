@@ -257,9 +257,10 @@ namespace Qualia.Controls
             NetworkModels = newModels;
         }
 
-        public void PrepareModelsForRun()
+        unsafe public void PrepareModelsForRun()
         {
             NetworkModels.ForEach(model => model.ActivateFirstLayer());
+            NetworkModels.ForEach(model => model.BackPropagationStrategy.PrepareForRun(model));
 
             ResetModelsDynamicStatistics();
             ResetModelsStatistics();
@@ -281,6 +282,8 @@ namespace Qualia.Controls
                     network = network.Next;
                     continue;
                 }
+
+                network.BackPropagationStrategy.PrepareForRound(network);
 
                 var baseNeuron = baseNetwork.Layers.First.Neurons.First;
                 var neuron = network.Layers.First.Neurons.First;
@@ -313,6 +316,10 @@ namespace Qualia.Controls
             }
         }
 
+        unsafe public void PrepareModelsForLoop()
+        {
+            NetworkModels.ForEach(model => model.BackPropagationStrategy.PrepareForLoop(model));
+        }
         public void FeedForward()
         {
             NetworkModels.ForEach(model => model.FeedForward());

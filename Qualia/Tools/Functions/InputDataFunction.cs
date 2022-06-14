@@ -13,7 +13,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Constant
         {
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.Centered.Do);
+            public static readonly InputDataFunction Instance = new(&InitializeFunction.Constant.Do);
         }
 
         unsafe sealed public class FlatRandom

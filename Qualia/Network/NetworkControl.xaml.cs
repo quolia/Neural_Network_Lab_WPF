@@ -38,7 +38,8 @@ namespace Qualia.Controls
                 CtlRandomizeFunction,
                 CtlLearningRate,
                 CtlIsNetworkEnabled,
-                CtlCostFunction
+                CtlCostFunction,
+                CtlBackPropogationStrategy
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -162,6 +163,7 @@ namespace Qualia.Controls
         {
             Initializer.FillComboBox<RandomizeFunction>(CtlRandomizeFunction, Config);
             Initializer.FillComboBox<CostFunction>(CtlCostFunction, Config);
+            Initializer.FillComboBox<BackPropagationStrategy>(CtlBackPropogationStrategy, Config);
 
             _configParams.ForEach(param => param.LoadConfig());
 
@@ -265,6 +267,7 @@ namespace Qualia.Controls
                                                                  InputLayer.ActivationFunctionParam),
 
                 CostFunction = CostFunction.GetInstance(CtlCostFunction.SelectedValue),
+                BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropogationStrategy.SelectedValue),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
