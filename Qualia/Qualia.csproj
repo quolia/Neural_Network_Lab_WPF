@@ -168,6 +168,7 @@
     <Compile Include="Tools\Draw.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\Functions\InitializeFunction.cs" />
+    <Compile Include="Tools\Functions\InputDataFunction.cs" />
     <Compile Include="Tools\List.cs" />
     <Compile Include="Tools\Logger.cs" />
     <Compile Include="Tools\Math.cs" />

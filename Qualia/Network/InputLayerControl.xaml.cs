@@ -55,7 +55,7 @@ namespace Qualia.Controls
 
             if (taskFunction != null)
             {
-                Range.For(taskFunction.NetworkTask.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
+                Range.For(taskFunction.VisualControl.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
             }
         }
 

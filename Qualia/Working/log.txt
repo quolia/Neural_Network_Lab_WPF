@@ -139,3 +139,200 @@ Application started.
 2022-06-14 00:26:40
 Application started.
 
+2022-06-14 01:03:58
+Application started.
+
+2022-06-14 01:21:34
+Application started.
+
+2022-06-14 01:22:07
+Application started.
+
+2022-06-14 01:40:02
+Application started.
+
+2022-06-14 01:40:11
+System.ArgumentOutOfRangeException
+Must be greater than zero.
+Parameter name: sigma
+   at Qualia.Tools.InitializeFunction.Gaussian.Do(Nullable`1 param) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\InitializeFunction.cs:line 62
+   at Qualia.Tools.TaskFunction.CountDots.Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 105
+   at Qualia.Controls.NetworksManager.PrepareModelsForRound() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 276
+   at Qualia.Controls.Main.RunNetworks(Object args) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 449
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-06-14 01:41:18
+Application started.
+
+2022-06-14 01:41:55
+Application started.
+
+2022-06-14 01:43:34
+Application started.
+
+2022-06-14 01:44:08
+Application started.
+
+2022-06-14 01:44:11
+System.ArgumentOutOfRangeException
+Must be greater than zero.
+Parameter name: sigma
+   at Qualia.Tools.GaussianRandom.NextGaussian(Double mu, Double sigma) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Rand.cs:line 59
+   at Qualia.Tools.InitializeFunction.Gaussian.Do(Nullable`1 param) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\InitializeFunction.cs:line 66
+   at Qualia.Tools.TaskFunction.CountDots.Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 103
+   at Qualia.Controls.NetworksManager.PrepareModelsForRound() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 272
+   at Qualia.Controls.Main.CtlMenuStart_Click(Object sender, RoutedEventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 359
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.MenuItem.InvokeClickAfterRender(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at MS.Internal.CulturePreservingExecutionContext.CallbackWrapper(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at MS.Internal.CulturePreservingExecutionContext.Run(CulturePreservingExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+
+2022-06-14 01:50:21
+Application started.
+
+2022-06-14 01:51:08
+Application started.
+
+2022-06-14 01:58:59
+Application started.
+
+2022-06-14 01:59:03
+System.ArgumentOutOfRangeException
+Must be greater than zero.
+Parameter name: sigma
+   at Qualia.Tools.GaussianRandom.NextGaussian(Double mu, Double sigma) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Rand.cs:line 59
+   at Qualia.Tools.InitializeFunction.Gaussian.Do(Nullable`1 param) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\InitializeFunction.cs:line 66
+   at Qualia.Tools.TaskFunction.CountDots.Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 103
+   at Qualia.Controls.NetworksManager.PrepareModelsForRound() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 272
+   at Qualia.Controls.Main.CtlMenuStart_Click(Object sender, RoutedEventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 359
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.MenuItem.InvokeClickAfterRender(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at MS.Internal.CulturePreservingExecutionContext.CallbackWrapper(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at MS.Internal.CulturePreservingExecutionContext.Run(CulturePreservingExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+
+2022-06-14 02:02:33
+Application started.
+
+2022-06-14 02:02:49
+Application started.
+
+2022-06-14 02:03:05
+Application started.
+
+2022-06-14 02:03:20
+Application started.
+
+2022-06-14 02:03:36
+Application started.
+
+2022-06-14 02:03:51
+Application started.
+
+2022-06-14 02:04:12
+Application started.
+
+2022-06-14 02:04:37
+Application started.
+
+2022-06-14 02:08:39
+Application started.
+
+2022-06-14 02:10:34
+Application started.
+
+2022-06-14 02:10:51
+Application started.
+
+2022-06-14 02:11:28
+Application started.
+
+2022-06-14 02:11:47
+Application started.
+
+2022-06-14 02:13:07
+Application started.
+
+2022-06-14 02:16:13
+Application started.
+
+2022-06-14 02:16:28
+Application started.
+
+2022-06-14 02:16:34
+Application started.
+
+2022-06-14 02:16:58
+Application started.
+
+2022-06-14 02:17:18
+Application started.
+
+2022-06-14 02:18:49
+Application started.
+
+2022-06-14 02:19:04
+Application started.
+
+2022-06-14 02:20:10
+Application started.
+
+2022-06-14 02:20:33
+Application started.
+
+2022-06-14 02:20:50
+Application started.
+
+2022-06-14 02:21:20
+Application started.
+
+2022-06-14 02:21:59
+Application started.
+
+2022-06-14 02:24:06
+Application started.
+

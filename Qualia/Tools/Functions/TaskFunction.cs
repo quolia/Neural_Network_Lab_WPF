@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Tools
 {
-    public interface INetworkTask : IConfigParam
+    public interface ITaskControl : IConfigParam
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Control GetVisualControl();
@@ -36,25 +36,24 @@ namespace Qualia.Tools
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
-        public delegate*<NetworkDataModel, void> Do;
-        public INetworkTask NetworkTask;
+        public delegate*<NetworkDataModel, InitializeFunction, void> Do;
+        public ITaskControl VisualControl;
+        public InitializeFunction InputDataFunction;
 
-        public TaskFunction(delegate*<NetworkDataModel, void> doFunc, INetworkTask networkTask)
+        public TaskFunction(delegate*<NetworkDataModel, InitializeFunction, void> doFunc, ITaskControl visualControl)
         {
             Do = doFunc;
-            NetworkTask = networkTask;
+            VisualControl = visualControl;
         }
 
-        sealed public class CountDots : INetworkTask
+        sealed public class CountDots : ITaskControl
         {
             public static readonly TaskFunction Instance = new(&Do, new CountDots());
 
             private static readonly CountDotsControl s_control = new();
 
-            private static bool _isGaussianDistribution;
             private static int _minNumber;
             private static int _maxNumber;
-            private static double _median;
 
             public Control GetVisualControl() => s_control;
 
@@ -64,10 +63,8 @@ namespace Qualia.Tools
 
             public void ApplyChanges()
             {
-                _isGaussianDistribution = s_control.IsGaussianDistribution;
                 _minNumber = s_control.MinNumber;
                 _maxNumber = s_control.MaxNumber;
-                _median = ((double)_maxNumber + _minNumber) / 2;
             }
 
             public void SetConfig(Config config)
@@ -97,48 +94,30 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel)
+            public static void Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction)
             {
-                int randNumber;
+                double randNumber = inputDataFunction.Do(null);
 
-                if (!_isGaussianDistribution)
-                {
-                    randNumber = Rand.Flat.Next(0, _maxNumber + 1 - _minNumber);
-                }
-                else
-                {
-                    randNumber = (int)MathX.Round(Rand.GaussianRand.NextGaussian(_median, (_median - 2) / 2));
+                randNumber = _minNumber + randNumber * (1 + _maxNumber - _minNumber);
 
-                    if (randNumber < _minNumber)
-                    {
-                        randNumber = _minNumber;
-                    }
-                    else if (randNumber > _maxNumber)
-                    {
-                        randNumber = _maxNumber;
-                    }
-                }
+                var intNumber = (int)randNumber;
 
-                networkModel.TargetOutput = randNumber;
+                networkModel.TargetOutput = intNumber;
 
                 var neurons = networkModel.Layers.First.Neurons;
                 var neuron = neurons.First;
 
                 while (neuron != null)
                 {
-                    if (!neuron.IsBias)
-                    {
-                        neuron.Activation = networkModel.InputInitial0;
-                    }
-
+                    neuron.Activation = networkModel.InputInitial0;
                     neuron = neuron.Next;
                 }
 
-                while (randNumber > 0)
+                while (intNumber > 0)
                 {
                     var active = neurons[Rand.Flat.Next(neurons.Count)];
 
-                    while (active.Activation == networkModel.InputInitial1 || active.IsBias)
+                    while (active.Activation == networkModel.InputInitial1)
                     {
                         active = active.Next;
                         if (active == null)
@@ -148,7 +127,7 @@ namespace Qualia.Tools
                     }
 
                     active.Activation = networkModel.InputInitial1;
-                    --randNumber;
+                    --intNumber;
                 }
 
                 neuron = networkModel.Layers.Last.Neurons.First;
@@ -168,7 +147,7 @@ namespace Qualia.Tools
             public void InvalidateValue() => throw new InvalidOperationException();
         }
 
-        sealed public class MNIST : INetworkTask
+        sealed public class MNIST : ITaskControl
         {
             public static readonly TaskFunction Instance = new(&Do, new MNIST());
 
@@ -209,7 +188,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel)
+            public static void Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction)
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;

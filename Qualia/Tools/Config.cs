@@ -41,7 +41,7 @@ namespace Qualia.Tools
             return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name;
         }
 
-        public Config Extend(long extender)
+        public Config Extend(object extender)
         {
             Config config = new(Name)
             {

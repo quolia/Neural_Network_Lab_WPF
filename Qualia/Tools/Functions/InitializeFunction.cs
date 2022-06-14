@@ -61,31 +61,30 @@ namespace Qualia.Tools
             {
                 param ??= 1;
 
-                var median = 0.5;
-
-                var randNumber = Rand.GaussianRand.NextGaussian(median, (median - 2) / 2);
+                var randNumber = Rand.GaussianRand.NextGaussian(0.5, 0.25);
 
                 if (randNumber < 0)
                 {
                     randNumber = 0;
                 }
-                else if (randNumber > 1)
+                else if (randNumber >= 1)
                 {
-                    randNumber = 1;
+                    randNumber = (double)1 - 0.000000000000001D;
                 }
 
                 return randNumber * param.Value;
             }
         }
 
-        unsafe sealed public class GaussianRevert
+        unsafe sealed public class GaussianInvert
         {
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Do(double? param)
             {
-                return 1 - Gaussian.Do(param);
+                param ??= 1;
+                return (1 - Gaussian.Do(null)) * param.Value;
             }
         }
     }

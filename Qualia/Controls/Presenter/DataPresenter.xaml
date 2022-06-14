@@ -17,7 +17,16 @@
 
         <StackPanel  Orientation="Vertical" >
             <local:QLabel Content="Task:" />
-            <local:QComboBox x:Name="CtlTaskFunction" />    
+            <local:QComboBox x:Name="CtlTaskFunction" />
+            
+            <local:QLabel Content="Input data function:" />
+            <local:QComboBox x:Name="CtlInputDataFunction" />
+
+            <StackPanel Orientation="Horizontal">
+                <local:QLabel Content="a:" />
+                <local:QDouble x:Name="CtlInputDataFunctionParam" IsNullAllowed="True" />
+            </StackPanel>
+
             <Grid Name="CtlHolder">
             </Grid>
         </StackPanel>

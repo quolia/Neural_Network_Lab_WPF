@@ -68,12 +68,12 @@ namespace Qualia.Controls
         {
             var ctlNeurons = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
 
-            for (int i = ctlNeurons.Count; i < taskFunction.NetworkTask.GetClasses().Count; ++i)
+            for (int i = ctlNeurons.Count; i < taskFunction.VisualControl.GetClasses().Count; ++i)
             {
                 AddNeuron();
             }
 
-            for (int i = taskFunction.NetworkTask.GetClasses().Count; i < ctlNeurons.Count; ++i)
+            for (int i = taskFunction.VisualControl.GetClasses().Count; i < ctlNeurons.Count; ++i)
             {
                 NeuronsHolder.Children.RemoveAt(NeuronsHolder.Children.Count - 1);
             }
