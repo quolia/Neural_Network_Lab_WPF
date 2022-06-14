@@ -42,7 +42,7 @@ namespace Qualia.Controls
             _isBaseRedrawNeeded = true;
         }
 
-        public void OptimizePlotPointCount(ListX<NetworkDataModel> networkModels)
+        public void OptimizePlotPointsCount(ListX<NetworkDataModel> networkModels)
         {
             if (networkModels == null)
             {

@@ -67,7 +67,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            TaskFunction.InputDataFunction = InitializeFunction.GetInstance(CtlInputDataFunction.SelectedItem);
+            TaskFunction.InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction.SelectedItem);
         }
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
@@ -84,8 +84,8 @@ namespace Qualia.Controls
             TaskFunction = TaskFunction.GetInstance(CtlTaskFunction.SelectedItem);
 
             var parametersConfig = config.Extend(CtlTaskFunction.SelectedItem);
-            Initializer.FillComboBox<InitializeFunction>(CtlInputDataFunction, parametersConfig, null);
-            TaskFunction.InputDataFunction = InitializeFunction.GetInstance(CtlInputDataFunction.SelectedItem);
+            Initializer.FillComboBox<InputDataFunction>(CtlInputDataFunction, parametersConfig, nameof(InputDataFunction.FlatRandom));
+            TaskFunction.InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction.SelectedItem);
 
             _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();
 

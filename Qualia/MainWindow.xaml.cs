@@ -640,7 +640,7 @@ namespace Qualia.Controls
 
                         //lock (ApplyChangesLocker)
                         {
-                            CtlPlotPresenter.OptimizePlotPointCount(_networksManager.NetworkModels);
+                            CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
                             {
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
@@ -648,7 +648,7 @@ namespace Qualia.Controls
                         }
                     }
 
-                    Dispatcher.BeginInvoke(DispatcherPriority.Render, (Action)(() =>
+                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
                     {
                         if (_cancellationToken.IsCancellationRequested)
                         {
@@ -693,7 +693,7 @@ namespace Qualia.Controls
                         isNetworksRendering = false;
 
                         isRendering = false;
-                    }));
+                    });
 
                     Thread.Sleep(1);
                 }

@@ -29,7 +29,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? param) => param ?? 0;
+            public static double Do(double? param) => param ?? 1;
         }
 
         unsafe sealed public class FlatRandom

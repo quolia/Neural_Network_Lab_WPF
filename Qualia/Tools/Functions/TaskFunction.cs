@@ -36,11 +36,11 @@ namespace Qualia.Tools
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
-        public delegate*<NetworkDataModel, InitializeFunction, void> Do;
+        public delegate*<NetworkDataModel, InputDataFunction, void> Do;
         public ITaskControl VisualControl;
-        public InitializeFunction InputDataFunction;
+        public InputDataFunction InputDataFunction;
 
-        public TaskFunction(delegate*<NetworkDataModel, InitializeFunction, void> doFunc, ITaskControl visualControl)
+        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, void> doFunc, ITaskControl visualControl)
         {
             Do = doFunc;
             VisualControl = visualControl;
@@ -94,7 +94,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction)
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
                 double randNumber = inputDataFunction.Do(null);
 
@@ -188,7 +188,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InitializeFunction inputDataFunction)
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
                 var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;
