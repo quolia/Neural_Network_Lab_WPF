@@ -4,8 +4,6 @@ namespace Qualia.Tools
 {
     unsafe public class InitializeFunction : BaseFunction<InitializeFunction>
     {
-        private const double LESS_THAN_1 = 1 - 0.000000000000001D;
-
         public delegate*<double?, double> Do;
 
         public InitializeFunction(delegate*<double?, double> doFunc)
@@ -69,16 +67,16 @@ namespace Qualia.Tools
                 {
                     randNumber = 0.5 - randNumber ;
                 }
-                else if (randNumber > LESS_THAN_1)
+                else if (randNumber > Constants.LessThan1)
                 {
-                    randNumber = randNumber - 0.5;
+                    randNumber -= 0.5;
                 }
 
                 return randNumber * param.Value;
             }
         }
 
-        unsafe sealed public class GaussianInvert
+        unsafe sealed public class GaussianInverted
         {
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -87,7 +85,7 @@ namespace Qualia.Tools
             {
                 var s = Rand.Flat.Next() % 2;
                 var x = Rand.GaussianRand.NextGaussian(0, 0.17);
-                x = s == 0 ? MathX.Abs(x) : LESS_THAN_1 - MathX.Abs(x);
+                x = s == 0 ? MathX.Abs(x) : Constants.LessThan1 - MathX.Abs(x);
 
                 return x;
             }
