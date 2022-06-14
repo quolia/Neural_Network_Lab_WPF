@@ -342,3 +342,441 @@ Application started.
 2022-06-14 02:47:49
 Application started.
 
+2022-06-14 02:50:55
+Application started.
+
+2022-06-14 02:51:26
+Application started.
+
+2022-06-14 02:51:49
+Application started.
+
+2022-06-14 02:53:30
+Application started.
+
+2022-06-14 02:55:19
+Application started.
+
+2022-06-14 02:56:43
+Application started.
+
+2022-06-14 02:57:04
+Application started.
+
+2022-06-14 02:58:20
+Application started.
+
+2022-06-14 02:59:26
+Application started.
+
+2022-06-14 03:00:49
+Application started.
+
+2022-06-14 03:04:15
+Application started.
+
+2022-06-14 03:05:15
+Application started.
+
+2022-06-14 03:06:27
+Application started.
+
+2022-06-14 03:06:49
+Application started.
+
+2022-06-14 03:08:35
+Application started.
+
+2022-06-14 03:09:02
+Application started.
+
+2022-06-14 03:12:33
+Application started.
+
+2022-06-14 03:12:59
+Application started.
+
+2022-06-14 03:14:15
+Application started.
+
+2022-06-14 03:20:08
+Application started.
+
+2022-06-14 03:20:54
+Application started.
+
+2022-06-14 03:21:10
+Application started.
+
+2022-06-14 03:22:04
+Application started.
+
+2022-06-14 03:23:45
+Application started.
+
+2022-06-14 03:25:16
+Application started.
+
+2022-06-14 03:26:05
+Application started.
+
+2022-06-14 03:26:27
+Application started.
+
+2022-06-14 03:27:35
+System.ArgumentOutOfRangeException
+Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at Qualia.Controls.Main.RunNetworks(Object args)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-06-14 03:27:51
+Application started.
+
+2022-06-14 03:29:12
+Application started.
+
+2022-06-14 03:29:36
+Application started.
+
+2022-06-14 03:32:21
+Application started.
+
+2022-06-14 03:32:34
+Application started.
+
+2022-06-14 03:33:02
+Application started.
+
+2022-06-14 03:33:47
+Application started.
+
+2022-06-14 03:34:58
+Application started.
+
+2022-06-14 03:36:25
+Application started.
+
+2022-06-14 03:37:09
+Application started.
+
+2022-06-14 03:37:20
+Application started.
+
+2022-06-14 03:38:15
+Application started.
+
+2022-06-14 03:39:05
+Application started.
+
+2022-06-14 03:39:44
+Application started.
+
+2022-06-14 03:40:29
+Application started.
+
+2022-06-14 03:40:54
+Application started.
+
+2022-06-14 03:41:41
+Application started.
+
+2022-06-14 03:42:10
+Application started.
+
+2022-06-14 03:43:23
+Application started.
+
+2022-06-14 03:44:44
+Application started.
+
+2022-06-14 03:44:57
+Application started.
+
+2022-06-14 03:45:31
+Application started.
+
+2022-06-14 03:46:28
+Application started.
+
+2022-06-14 03:46:53
+Application started.
+
+2022-06-14 03:47:29
+Application started.
+
+2022-06-14 03:48:14
+System.ArgumentOutOfRangeException
+Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at Qualia.Controls.Main.RunNetworks(Object args)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-06-14 03:48:26
+Application started.
+
+2022-06-14 03:48:42
+Application started.
+
+2022-06-14 03:49:22
+Application started.
+
+2022-06-14 03:49:54
+Application started.
+
+2022-06-14 03:50:01
+Application started.
+
+2022-06-14 03:51:05
+Application started.
+
+2022-06-14 03:51:48
+Application started.
+
+2022-06-14 03:53:12
+Application started.
+
+2022-06-14 03:53:58
+Application started.
+
+2022-06-14 03:54:11
+Application started.
+
+2022-06-14 03:55:35
+Application started.
+
+2022-06-14 03:55:52
+Application started.
+
+2022-06-14 03:56:15
+Application started.
+
+2022-06-14 03:57:29
+Application started.
+
+2022-06-14 03:58:44
+Application started.
+
+2022-06-14 03:59:33
+Application started.
+
+2022-06-14 03:59:48
+Application started.
+
+2022-06-14 03:59:57
+Application started.
+
+2022-06-14 04:00:40
+Application started.
+
+2022-06-14 04:01:58
+Application started.
+
+2022-06-14 04:02:36
+Application started.
+
+2022-06-14 04:03:22
+Application started.
+
+2022-06-14 04:05:07
+Application started.
+
+2022-06-14 04:07:50
+Application started.
+
+2022-06-14 04:09:25
+Application started.
+
+2022-06-14 04:10:45
+System.ArgumentOutOfRangeException
+Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at Qualia.Controls.Main.RunNetworks(Object args)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-06-14 04:11:33
+Application started.
+
+2022-06-14 04:12:09
+Application started.
+
+2022-06-14 04:14:00
+Application started.
+
+2022-06-14 04:14:48
+Application started.
+
+2022-06-14 04:17:07
+Application started.
+
+2022-06-14 04:17:25
+Application started.
+
+2022-06-14 04:19:04
+Application started.
+
+2022-06-14 04:19:57
+Application started.
+
+2022-06-14 04:22:03
+Application started.
+
+2022-06-14 04:31:51
+Application started.
+
+2022-06-14 04:33:02
+Application started.
+
+2022-06-14 04:47:29
+Application started.
+
+2022-06-14 04:47:52
+Application started.
+
+2022-06-14 04:50:46
+Application started.
+
+2022-06-14 05:05:17
+Application started.
+
+2022-06-14 05:16:41
+Application started.
+
+2022-06-14 05:17:52
+Application started.
+
+2022-06-14 05:18:19
+Application started.
+
+2022-06-14 05:23:21
+Application started.
+
+2022-06-14 05:30:05
+Application started.
+
+2022-06-14 05:31:02
+Application started.
+
+2022-06-14 05:43:17
+Application started.
+
+2022-06-14 05:44:19
+Application started.
+
+2022-06-14 05:45:15
+Application started.
+
+2022-06-14 05:47:53
+Application started.
+
+2022-06-14 05:51:12
+Application started.
+
+2022-06-14 05:57:17
+Application started.
+
+2022-06-14 06:01:32
+Application started.
+
+2022-06-14 06:03:16
+Application started.
+
+2022-06-14 06:03:52
+Application started.
+
+2022-06-14 06:09:15
+Application started.
+
+2022-06-14 06:10:44
+Application started.
+
+2022-06-14 06:11:24
+Application started.
+
+2022-06-14 06:11:45
+Application started.
+
+2022-06-14 06:13:56
+Application started.
+
+2022-06-14 06:14:48
+Application started.
+
+2022-06-14 06:17:37
+Application started.
+
+2022-06-14 06:18:06
+Application started.
+
+2022-06-14 06:19:40
+Application started.
+
+2022-06-14 06:24:11
+Application started.
+
+2022-06-14 06:24:35
+Application started.
+
+2022-06-14 06:27:38
+System.ArgumentOutOfRangeException
+Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at Qualia.Controls.Main.RunNetworks(Object args)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-06-14 06:27:42
+Application started.
+
+2022-06-14 06:29:37
+Application started.
+
+2022-06-14 06:32:40
+Application started.
+
+2022-06-14 06:33:53
+Application started.
+
+2022-06-14 06:36:14
+Application started.
+
+2022-06-14 06:41:35
+Application started.
+
+2022-06-14 06:41:55
+Application started.
+
+2022-06-14 06:44:15
+Application started.
+
+2022-06-14 06:46:40
+Application started.
+
+2022-06-14 06:47:59
+Application started.
+
+2022-06-14 06:49:04
+Application started.
+
+2022-06-14 06:49:58
+Application started.
+

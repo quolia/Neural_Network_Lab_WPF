@@ -19,7 +19,7 @@ namespace Qualia.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double GetSpreadRandom(double lowerBound, double upperBound)
         {
-            return -lowerBound + upperBound * Flat.NextDouble();
+            return (upperBound - lowerBound) * Flat.NextDouble() + lowerBound;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

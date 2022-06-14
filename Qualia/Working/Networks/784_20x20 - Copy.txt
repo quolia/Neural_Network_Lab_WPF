@@ -2,7 +2,7 @@ TaskFunction:CountDots
 Task_CountDots_InputCount:784
 Task_CountDots_MinNumber:0
 Task_CountDots_MaxNumber:20
-InputDataFunction.CountDots:FlatRandom
+InputDataFunction.CountDots:GaussianInvert
 Networks:637015441499727363
 SelectedNetworkIndex:0
 SelectedLayerIndex.637015441499727363:1

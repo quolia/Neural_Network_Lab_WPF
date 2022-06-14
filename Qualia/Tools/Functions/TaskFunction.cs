@@ -98,7 +98,7 @@ namespace Qualia.Tools
             {
                 double randNumber = inputDataFunction.Do(null);
 
-                randNumber = _minNumber + randNumber * (1 + _maxNumber - _minNumber);
+                randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
 
                 var intNumber = (int)randNumber;
 
