@@ -1,4 +1,4 @@
-I've found some strange effect. Even a 100% learned NN could "go crazy" at some moment and made a row of mistakes without any visible reson. It doesn't depend on if it continues learning or not. Be carefull with your Tesla car :) Someday it could kill you just out of nothing. I've not found an explanation of this. Yet.
+I've found some strange effects. Even a 100% learned NN could "go crazy" at some moment and make a row of mistakes without any visible reason. It doesn't depend on if it continues learning or not. Be careful with your Tesla car :) Someday it could kill you just out of nothing. I've not found an explanation of this. Yet.
 
 1 <img width="1280" alt="2022-06-12 (5)" src="https://user-images.githubusercontent.com/53271533/173506921-d082039b-3816-4401-a03a-49ac8b2a4926.png">
 2 <img width="1280" alt="2022-06-12 (6)" src="https://user-images.githubusercontent.com/53271533/173506925-d721c70a-c37a-49d3-9cb3-5359af7d1f5d.png">
@@ -6,8 +6,7 @@ I've found some strange effect. Even a 100% learned NN could "go crazy" at some 
 
 
 
-
-Another one strange effect is that after some time of learning a NN gots some stable weights which don't change. But they should change, because all weights on a previous layer are changed. And the pattern of these weights looks like this. Outcoming weights are grouped at some neurons and incoming weights are most often belong to some first and some last neurons of the output layer.
+Another one strange effect is that after some time of learning a NN gots some stable weights which don't change. But they should change, because all weights on a previous layer are changed. And the pattern of these weights looks like this. Outcoming weights are grouped at some neurons and incoming weights most often belong to some first and some last neurons of the output layer.
 
 
 34 <img width="1280" alt="2022-06-12 (1)" src="https://user-images.githubusercontent.com/53271533/173506908-20448b8a-4fe6-4943-a301-8f903ffc6efd.png">
