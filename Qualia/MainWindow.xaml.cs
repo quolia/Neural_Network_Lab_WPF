@@ -552,6 +552,7 @@ namespace Qualia.Controls
                                 if (statistics.First100PercentOnTicks == 0)
                                 {
                                     statistics.First100PercentOnTicks = statistics.TotalTicksElapsed;
+                                    statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
                                 }
                                 else
                                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -105,6 +106,90 @@ namespace Qualia.Tools
 
             s_prevId = id;
             return id;
+        }
+    }
+
+    public static class RandomExtensions
+    {
+        /// <summary>
+        ///   Generates normally distributed numbers. Each operation makes two Gaussians for the price of one, and apparently they can be cached or something for better performance, but who cares.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double NextGaussian(this Random rand, double meanValue = 0, double standardDeviation = 1)
+        {
+            var u1 = rand.NextDouble();
+            var u2 = rand.NextDouble();
+
+            var rand_std_normal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                  Math.Sin(2.0 * Math.PI * u2);
+
+            var rand_normal = meanValue + standardDeviation * rand_std_normal;
+
+            return rand_normal;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double NextTriangular(this Random rand, double min, double max, double mostFrequentValue)
+        {
+            var u = rand.NextDouble();
+
+            return u < (mostFrequentValue - min) / (max - min)
+                       ? min + Math.Sqrt(u * (max - min) * (mostFrequentValue - min))
+                       : max - Math.Sqrt((1 - u) * (max - min) * (max - mostFrequentValue));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool NextBoolean(this Random rand)
+        {
+            return rand.Next(2) > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle(this Random rand, IList list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                var j = rand.Next(0, i + 1);
+                (list[i], list[j]) = (list[j], list[i]);
+            }
+        }
+    }
+
+    public class Gaussian
+    {
+        private bool _available;
+        private double _nextGauss;
+        private Random _rand;
+
+        public Gaussian()
+        {
+            _rand = new Random();
+        }
+
+        public double RandomGauss()
+        {
+            if (_available)
+            {
+                _available = false;
+                return _nextGauss;
+            }
+
+            double temp1 = Math.Sqrt(-2.0 * Math.Log(_rand.NextDouble()));
+            double temp2 = 2.0 * Math.PI * _rand.NextDouble();
+
+            _nextGauss = temp1 * Math.Sin(temp2);
+            _available = true;
+            return temp1 * Math.Cos(temp2);
+        }
+
+        public double RandomGauss(double mu, double sigma)
+        {
+            return mu + sigma * RandomGauss();
+        }
+
+        public double RandomGauss(double sigma)
+        {
+            return sigma * RandomGauss();
         }
     }
 }

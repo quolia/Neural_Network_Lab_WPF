@@ -69,7 +69,7 @@ namespace Qualia.Tools
                 }
                 else if (randNumber >= 1)
                 {
-                    randNumber = (double)1 - 0.000000000000001D;
+                    randNumber = 1 - 0.000000000000001D;
                 }
 
                 return randNumber * param.Value;

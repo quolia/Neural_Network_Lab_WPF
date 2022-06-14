@@ -15,7 +15,6 @@ namespace Qualia.Controls
         }
 
         public int InputCount => (int)CtlTask_CountDots_InputCount.Value;
-        public bool IsGaussianDistribution => CtlTask_CountDots_IsGaussianDistribution.IsOn;
         public int MaxNumber => (int)CtlTask_CountDots_MaxNumber.Value;
         public int MinNumber => (int)CtlTask_CountDots_MinNumber.Value;
 
