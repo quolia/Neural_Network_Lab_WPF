@@ -64,7 +64,7 @@ namespace Qualia.Controls
         {
             Initializer.FillComboBox<InitializeFunction>(CtlWeightsInitializeFunction, Config, nameof(InitializeFunction.None));
             Initializer.FillComboBox<InitializeFunction>(CtlActivationInitializeFunction, Config, nameof(InitializeFunction.Constant));
-            Initializer.FillComboBox<ActivationFunction>(CtlActivationFunction, Config, nameof(ActivationFunction.LogisticSigmoid));
+            Initializer.FillComboBox<ActivationFunction>(CtlActivationFunction, Config);
 
             _configParams.ForEach(param => param.LoadConfig());
 

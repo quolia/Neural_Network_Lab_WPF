@@ -9,6 +9,7 @@ namespace Qualia.Tools
         public delegate*<NetworkDataModel, NeuronDataModel, double> Derivative;
 
         public CostFunction(delegate*<NetworkDataModel, double> doFunc, delegate*<NetworkDataModel, NeuronDataModel, double> doDerivative)
+            : base(nameof(MSE))
         {
             Do = doFunc;
             Derivative = doDerivative;

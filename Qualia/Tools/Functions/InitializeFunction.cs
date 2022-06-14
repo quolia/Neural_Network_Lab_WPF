@@ -7,6 +7,7 @@ namespace Qualia.Tools
         public delegate*<double?, double> Do;
 
         public InitializeFunction(delegate*<double?, double> doFunc)
+            : base(nameof(FlatRandom))
         {
             Do = doFunc;
         }

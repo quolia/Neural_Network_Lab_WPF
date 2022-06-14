@@ -9,6 +9,7 @@ namespace Qualia.Tools
         public delegate*<double, double?, double> Derivative;
 
         public ActivationFunction(delegate*<double, double?, double> doFunc, delegate*<double, double?, double> derivativeFunc)
+            : base(nameof(LogisticSigmoid))
         {
             Do = doFunc;
             Derivative = derivativeFunc;

@@ -5,6 +5,13 @@ namespace Qualia.Tools
 {
     unsafe public class BaseFunction<T> where T : class
     {
+        public static string DefaultValue = null;
+
+        public BaseFunction(string defaultValue)
+        {
+            DefaultValue = defaultValue;
+        }
+
         public static T GetInstance(object name)
         {
             var funcName = name.ToString();

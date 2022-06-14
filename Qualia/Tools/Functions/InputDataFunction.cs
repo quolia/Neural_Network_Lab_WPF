@@ -1,10 +1,12 @@
-﻿namespace Qualia.Tools
+﻿
+namespace Qualia.Tools
 {
     unsafe public class InputDataFunction : BaseFunction<InputDataFunction>
     {
         public delegate*<double?, double> Do;
 
         public InputDataFunction(delegate*<double?, double> doFunc)
+            : base(nameof(FlatRandom))
         {
             Do = doFunc;
         }

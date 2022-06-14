@@ -41,6 +41,7 @@ namespace Qualia.Tools
         public InputDataFunction InputDataFunction;
 
         public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, void> doFunc, ITaskControl visualControl)
+            : base(nameof(CountDots))
         {
             Do = doFunc;
             VisualControl = visualControl;

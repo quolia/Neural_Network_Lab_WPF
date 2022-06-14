@@ -160,8 +160,8 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Initializer.FillComboBox<RandomizeFunction>(CtlRandomizeFunction, Config, nameof(RandomizeFunction.FlatRandom));
-            Initializer.FillComboBox<CostFunction>(CtlCostFunction, Config, nameof(CostFunction.MSE));
+            Initializer.FillComboBox<RandomizeFunction>(CtlRandomizeFunction, Config);
+            Initializer.FillComboBox<CostFunction>(CtlCostFunction, Config);
 
             _configParams.ForEach(param => param.LoadConfig());
 
