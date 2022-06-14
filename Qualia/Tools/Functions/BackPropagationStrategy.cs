@@ -21,7 +21,7 @@ namespace Qualia.Tools
                                        delegate*<NetworkDataModel, void> onAfterLoopFinished,
                                        delegate*<NetworkDataModel, bool, void> onError,
                                        delegate*<NetworkDataModel, bool> isBackPropagationNeeded)
-            : base(nameof(EveryRound))
+            : base(nameof(Always))
         {
             PrepareForRun = prepareForRun;
             PrepareForRound = prepareForRound;
@@ -31,49 +31,17 @@ namespace Qualia.Tools
             IsBackPropagationNeeded = isBackPropagationNeeded;
         }
 
-        public static void Stub(NetworkDataModel network)
+        public static void Stub1(NetworkDataModel network) {}
+        public static void Stub2(NetworkDataModel network, bool isError) {}
+
+        unsafe sealed public class Always
         {
-
-        }
-
-
-        unsafe sealed public class EveryRound
-        {
-            public static readonly BackPropagationStrategy Instance = new(&PrepareForRun,
-                                                                          &PrepareForRound,
-                                                                          &PrepareForLoop,
-                                                                          &OnAfterLoopFinished,
-                                                                          &OnError,
+            public static readonly BackPropagationStrategy Instance = new(&Stub1,
+                                                                          &Stub1,
+                                                                          &Stub1,
+                                                                          &Stub1,
+                                                                          &Stub2,
                                                                           &IsBackPropagationNeeded);
-
-
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void PrepareForRun(NetworkDataModel network)
-            {
-                
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void PrepareForRound(NetworkDataModel network)
-            {
-
-            }
-
-            public static void PrepareForLoop(NetworkDataModel model)
-            {
-                
-            }
-
-            public static void OnAfterLoopFinished(NetworkDataModel networkModel)
-            {
-                
-            }
-
-            public static void OnError(NetworkDataModel networkModel, bool v)
-            {
-                
-            }
 
             public static bool IsBackPropagationNeeded(NetworkDataModel networkModel)
             {
@@ -81,27 +49,88 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class IfErrorInLoop
+        unsafe sealed public class Never
+        {
+            public static readonly BackPropagationStrategy Instance = new(&Stub1,
+                                                                          &Stub1,
+                                                                          &Stub1,
+                                                                          &Stub1,
+                                                                          &Stub2,
+                                                                          &IsBackPropagationNeeded);
+
+            public static bool IsBackPropagationNeeded(NetworkDataModel networkModel)
+            {
+                return false;
+            }
+        }
+
+        unsafe sealed public class InErrorRound
+        {
+            public static readonly BackPropagationStrategy Instance = new(&Stub1,
+                                                                          &PrepareForRound,
+                                                                          &Stub1,
+                                                                          &Stub1,
+                                                                          &OnError,
+                                                                          &IsBackPropagationNeeded);
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void PrepareForRound(NetworkDataModel network)
+            {
+                Instance._isBackPropagationNeeded = false;
+            }
+
+            public static void OnError(NetworkDataModel networkModel, bool isError)
+            {
+                Instance._isBackPropagationNeeded = isError;
+            }
+
+            public static bool IsBackPropagationNeeded(NetworkDataModel networkModel)
+            {
+                return Instance._isBackPropagationNeeded;
+            }
+        }
+
+        unsafe sealed public class InCorrectRound
+        {
+            public static readonly BackPropagationStrategy Instance = new(&Stub1,
+                                                                          &PrepareForRound,
+                                                                          &Stub1,
+                                                                          &Stub1,
+                                                                          &OnError,
+                                                                          &IsBackPropagationNeeded);
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void PrepareForRound(NetworkDataModel network)
+            {
+                Instance._isBackPropagationNeeded = false;
+            }
+
+            public static void OnError(NetworkDataModel networkModel, bool isError)
+            {
+                Instance._isBackPropagationNeeded = !isError;
+            }
+
+            public static bool IsBackPropagationNeeded(NetworkDataModel networkModel)
+            {
+                return Instance._isBackPropagationNeeded;
+            }
+        }
+
+        unsafe sealed public class UntilNoErrorInLoop
         {
             public static readonly BackPropagationStrategy Instance = new(&PrepareForRun,
-                                                                          &PrepareForRound,
+                                                                          &Stub1,
                                                                           &PrepareForLoop,
                                                                           &OnAfterLoopFinished,
                                                                           &OnError,
                                                                           &IsBackPropagationNeeded);
 
-
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void PrepareForRun(NetworkDataModel network)
+            public static void PrepareForRun(NetworkDataModel model)
             {
-                Instance._isBackPropagationNeeded = false;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void PrepareForRound(NetworkDataModel network)
-            {
-
+                Instance._isBackPropagationNeeded = true;
+                Instance._isError = false;
             }
 
             public static void PrepareForLoop(NetworkDataModel model)
@@ -109,19 +138,19 @@ namespace Qualia.Tools
                 Instance._isError = false;
             }
 
-            public static void OnAfterLoopFinished(NetworkDataModel networkModel)
+            public static void OnError(NetworkDataModel networkModel, bool isError)
             {
-                Instance._isBackPropagationNeeded = Instance._isError;
+                Instance._isError = Instance._isError || isError;
             }
 
-            public static void OnError(NetworkDataModel networkModel, bool v)
-            {
-                Instance._isError = true;
-            }
-
-            public static bool IsBackPropagationNeeded(NetworkDataModel networkModel)
+            public static bool IsBackPropagationNeeded(NetworkDataModel network)
             {
                 return Instance._isBackPropagationNeeded;
+            }
+
+            public static void OnAfterLoopFinished(NetworkDataModel network)
+            {
+                Instance._isBackPropagationNeeded = Instance._isError;
             }
         }
     }

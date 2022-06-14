@@ -480,12 +480,12 @@ namespace Qualia.Controls
                                 statistics.LastBadOutputActivation = output.Activation;
                                 statistics.LastBadCost = cost;
                                 statistics.LastBadTick = _startTime.Elapsed.Ticks;
-
-                                networkModel.BackPropagationStrategy.OnError(networkModel, true);
                             }
 
                             statistics.CostSum += cost;
                             networkModel.ErrorMatrix.AddData(input, outputId);
+
+                            networkModel.BackPropagationStrategy.OnError(networkModel, input != outputId);
 
                             if (networkModel.BackPropagationStrategy.IsBackPropagationNeeded(networkModel))
                             {
