@@ -12,7 +12,7 @@ I've found some strange effects. Even a 100% learned NN could "go crazy" at some
 
 <h4> Stable weights</h4>
 
-Another one strange effect is that after some time of learning a NN gots some stable weights which don't change. But they should change, because all weights on a previous layer are changed. And the pattern of these weights looks like this. Outcoming weights are grouped at some neurons and incoming weights most often belong to some first and some last neurons of the output layer.
+Another one strange effect is that after some time of learning a NN gets some stable weights which don't change. But they should change, because all weights on a previous layer are changed. And the pattern of these weights looks like this. Outcoming weights are grouped at some neurons and incoming weights most often belong to some first and some last neurons of the output layer.
 
 
 34 <img width="1280" alt="2022-06-12 (1)" src="https://user-images.githubusercontent.com/53271533/173506908-20448b8a-4fe6-4943-a301-8f903ffc6efd.png">
