@@ -4,10 +4,10 @@ namespace Qualia.Tools
 {
     unsafe public class InitializeFunction : BaseFunction<InitializeFunction>
     {
-        public delegate*<double?, double> Do;
+        public readonly delegate*<double?, double> Do;
 
         public InitializeFunction(delegate*<double?, double> doFunc)
-            : base(nameof(FlatRandom))
+            : base(defaultValue: nameof(FlatRandom))
         {
             Do = doFunc;
         }
@@ -19,6 +19,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class None
         {
+            public static readonly string Description = "Output = none, the value is skipped.";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -27,6 +29,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Constant
         {
+            public static readonly string Description = "Output = a, (a = 1)";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,6 +39,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class FlatRandom
         {
+            public static readonly string Description = "Output = a * random[0, 1), (a = 1)";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -43,6 +49,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Centered
         {
+            public static readonly string Description = "Output = -a / 2 + a * random[0, 1), (a = 1)";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -57,6 +65,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Gaussian
         {
+            public static readonly string Description = "Output = gaussian.random(a, 0.17), (a = mean_value = 0.5, sigma = 0.17)";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,6 +91,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted
         {
+            public static readonly string Description = "Output = gaussian.random.inverted(a), (a = sigma = 0.17)";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -98,6 +110,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted2
         {
+            public static readonly string Description = "Output = gaussian.random.inverted(a), (a = sigma = 0.17)";
+
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

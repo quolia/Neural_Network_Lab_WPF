@@ -27,7 +27,7 @@ namespace Qualia.Model
 
         public double Target;
 
-        public ListX<ForwardNeuron> WeightsToNextLayer;
+        public ListX<ForwardNeuron> WeightsToPreviousLayer;
 
         public NeuronDataModel(int id, int weightsCount)
         {
@@ -47,7 +47,7 @@ namespace Qualia.Model
     {
         public readonly int Id;
         public double Weight;
-
+        
         public WeightDataModel(int id)
         {
             Id = id;

@@ -39,5 +39,24 @@ namespace Qualia.Tools
                             .Select(type => type.Name)
                             .ToArray();
         }
+
+        public static string GetDescription(object name)
+        {
+            var funcName = name.ToString();
+
+            var type = typeof(T).GetNestedTypes()
+                                .Where(type => type.Name == funcName)
+                                .FirstOrDefault();
+
+            string description = null;
+            var fieldInfo = type.GetField("Description");
+            if (fieldInfo != null)
+            {
+                description = (string)fieldInfo.GetValue(null);
+                description = string.IsNullOrEmpty(description) ? null : description;
+            }
+            
+            return description ?? "No description.";
+        }
     }
 }

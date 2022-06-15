@@ -5,11 +5,11 @@ namespace Qualia.Tools
 {
     unsafe public class CostFunction : BaseFunction<CostFunction>
     {
-        public delegate*<NetworkDataModel, double> Do;
-        public delegate*<NetworkDataModel, NeuronDataModel, double> Derivative;
+        public readonly delegate*<NetworkDataModel, double> Do;
+        public readonly delegate*<NetworkDataModel, NeuronDataModel, double> Derivative;
 
         public CostFunction(delegate*<NetworkDataModel, double> doFunc, delegate*<NetworkDataModel, NeuronDataModel, double> doDerivative)
-            : base(nameof(MSE))
+            : base(defaultValue: nameof(MSE))
         {
             Do = doFunc;
             Derivative = doDerivative;
@@ -17,6 +17,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class MSE
         {
+            public static readonly string Description = "Output = neurons.sum(target - activation)";
+
             public static readonly CostFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

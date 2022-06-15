@@ -6,16 +6,18 @@ namespace Qualia.Tools
 {
     unsafe public class RandomizeFunction : BaseFunction<RandomizeFunction>
     {
-        public delegate*<NetworkDataModel, double?, void> Do;
+        public readonly delegate*<NetworkDataModel, double?, void> Do;
 
         public RandomizeFunction(delegate*<NetworkDataModel, double?, void> doFunc)
-            : base(nameof(FlatRandom))
+            : base(defaultValue: nameof(FlatRandom))
         {
             Do = doFunc;
         }
 
         unsafe sealed public class FlatRandom
         {
+            public static readonly string Description = "Weigth = random[0, a), (a = 1)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -46,6 +48,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussRandom
         {
+            public static readonly string Description = "Weigth = gaussian.random(0, a), (a = sigma = 0.17)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -76,6 +80,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class AbsGaussRandom
         {
+            public static readonly string Description = "Weigth = |gaussian.random(0, a)|, (a = sigma = 0.17)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -106,6 +112,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Centered
         {
+            public static readonly string Description = "Weight = -a / 2 + a * random[0, 1), (a = 1)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -136,6 +144,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class WaveProgress
         {
+            public static readonly string Description = "Weight = a * (centered(layerId + 1) * cos(weightId / pi) * cos(neuronId / pi)), (a = 1)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -166,6 +176,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Xavier
         {
+            public static readonly string Description = "Weight = random[0, a) * sqrt(1 / layer.Previous.Neurons.Count), (a = 1)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -204,6 +216,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussXavier
         {
+            public static readonly string Description = "Weight = gaussian.random(0, a) * sqrt(1 / layer.Previous.Neurons.Count), (a = sigms = 0.17)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -244,6 +258,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class HeEtAl
         {
+            public static readonly string Description = "Weight = random[0, a) * sqrt(2 / layer.Previous.Neurons.Count), (a = 1)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -282,6 +298,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussHeEtAl
         {
+            public static readonly string Description = "Weight = gaussian.random[0, a) * sqrt(2 / layer.Previous.Neurons.Count), (a = sigma = 0.17)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -322,12 +340,14 @@ namespace Qualia.Tools
 
         unsafe sealed public class Constant
         {
+            public static readonly string Description = "Weight = a, (a = 1)";
+
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, double? value = 1)
             {
-                value ??= 0;
+                value ??= 1;
 
                 var layer = networkModel.Layers.First;
                 while (layer != null)

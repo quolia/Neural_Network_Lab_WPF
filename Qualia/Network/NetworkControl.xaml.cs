@@ -39,7 +39,7 @@ namespace Qualia.Controls
                 CtlLearningRate,
                 CtlIsNetworkEnabled,
                 CtlCostFunction,
-                CtlBackPropogationStrategy
+                CtlBackPropagationStrategy
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -51,6 +51,9 @@ namespace Qualia.Controls
         private void OnChanged()
         {
             OnNetworkUIChanged(Notification.ParameterChanged.Structure);
+
+            //var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy.SelectedItem);
+            //CtlBackPropagationStrategyDescription.Text = description;
         }
 
         public void AddLayer()
@@ -163,7 +166,8 @@ namespace Qualia.Controls
         {
             Initializer.FillComboBox<RandomizeFunction>(CtlRandomizeFunction, Config);
             Initializer.FillComboBox<CostFunction>(CtlCostFunction, Config);
-            Initializer.FillComboBox<BackPropagationStrategy>(CtlBackPropogationStrategy, Config);
+            var description = Initializer.FillComboBox<BackPropagationStrategy>(CtlBackPropagationStrategy, Config);
+            CtlBackPropagationStrategyDescription.Text = description;
 
             _configParams.ForEach(param => param.LoadConfig());
 
@@ -267,7 +271,7 @@ namespace Qualia.Controls
                                                                  InputLayer.ActivationFunctionParam),
 
                 CostFunction = CostFunction.GetInstance(CtlCostFunction.SelectedValue),
-                BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropogationStrategy.SelectedValue),
+                BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropagationStrategy.SelectedValue),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
@@ -335,14 +339,14 @@ namespace Qualia.Controls
                     
                     if (!isCopy && prevLayerModel != null && prevLayerModel.Neurons.Count > 0)
                     {
-                        neuronModel.WeightsToNextLayer = new(prevLayerModel.Neurons.Count);
+                        neuronModel.WeightsToPreviousLayer = new(prevLayerModel.Neurons.Count);
 
                         var prevNeuronModel = prevLayerModel.Neurons.First;
                         while (prevNeuronModel != null)
                         {
                             if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))
                             {
-                                neuronModel.WeightsToNextLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
+                                neuronModel.WeightsToPreviousLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
                             }
 
                             prevNeuronModel = prevNeuronModel.Next;

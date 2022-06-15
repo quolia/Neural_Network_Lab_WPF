@@ -638,6 +638,8 @@ namespace Qualia.Controls
 
                         //lock (ApplyChangesLocker)
                         {
+                            //selectedNetworkModel.BlockWeights(networkModelToRender);
+
                             networkModelToRender = selectedNetworkModel.GetCopyToDraw();
                             CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
                         }
@@ -747,7 +749,7 @@ namespace Qualia.Controls
 
             Dictionary<string, string> stat = new(24);
 
-            var remainingTime = "Unknown";
+            var remainingTime = "...";
 
             if (statistics.Percent > 0)
             {
@@ -811,13 +813,13 @@ namespace Qualia.Controls
             stat.Add("First 100%, time",
                       statistics.First100PercentOnTicks > 0
                       ? TimeSpan.FromTicks(statistics.First100PercentOnTicks).ToString(Culture.TimeFormat)
-                      : "Unknown");
+                      : "...");
 
             string currentPeriod;
 
             if (statistics.Last100PercentOnTicks == 0)
             {
-                currentPeriod = "Unknown";
+                currentPeriod = "0 msec";
             }
             else
             {
@@ -848,7 +850,7 @@ namespace Qualia.Controls
 
             stat.Add("6", null);
 
-            stat.Add("Render time, mcs", string.Empty);
+            stat.Add("Render time, mcsec", string.Empty);
             stat.Add("Network",
                      ((int)TimeSpan.FromTicks(RenderTime.Network).TotalMicroseconds()).ToString());
 
@@ -857,7 +859,12 @@ namespace Qualia.Controls
 
             stat.Add("Statistics",
                      ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
-                
+
+            stat.Add("7", null);
+
+            stat.Add("Blocked weights count",
+                     statistics.BlockedWeights.ToString());
+
             CtlStatisticsPresenter.Draw(stat);
 
             return stat;
@@ -959,10 +966,6 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (!File.Exists(networksManagerName))
-            {
-                networksManagerName = "\\Networks\\" + Path.GetFileName(networksManagerName);
-            }
 
             if (File.Exists(networksManagerName))
             {

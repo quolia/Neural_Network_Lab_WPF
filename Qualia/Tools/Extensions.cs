@@ -132,15 +132,17 @@ namespace Qualia.Tools
             return name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase) ? name.Substring(prefix.Length) : name;
         }
 
-        public static void FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue = null) where T : class
+        public static string FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue = null) where T : class
         {
             if (defaultValue == null)
             {
-                defaultValue = (string)typeof(BaseFunction<T>).GetField("DefaultValue").GetValue(null);
+                defaultValue = BaseFunction<T>.DefaultValue;
             }
 
-            var items = typeof(BaseFunction<T>).GetMethod("GetItems").Invoke(null, null);
-            FillComboBox(items as string[], comboBox, config, defaultValue);
+            var items = BaseFunction<T>.GetItems();
+            FillComboBox(items, comboBox, config, defaultValue);
+
+            return BaseFunction<T>.GetDescription(comboBox.SelectedItem);
         }
 
         private static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue = null)
@@ -148,15 +150,15 @@ namespace Qualia.Tools
             FillComboBox(getItemsFunc(), comboBox, config, defaultValue);
         }
 
-        private static void FillComboBox(in string[] items, ComboBox cb, Config config, string defaultValue = null)
+        private static void FillComboBox(in string[] items, ComboBox comboBox, Config config, string defaultValue = null)
         {
-            var paramName = CutName(cb.Name);
+            var paramName = CutName(comboBox.Name);
 
-            cb.Items.Clear();
+            comboBox.Items.Clear();
 
             foreach (var i in items)
             {
-                cb.Items.Add(i);
+                comboBox.Items.Add(i);
             }
 
             var item = config.GetString(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
@@ -174,7 +176,7 @@ namespace Qualia.Tools
 
             if (!string.IsNullOrEmpty(item))
             {
-                cb.SelectedItem = item;
+                comboBox.SelectedItem = item;
             }
         }
     }

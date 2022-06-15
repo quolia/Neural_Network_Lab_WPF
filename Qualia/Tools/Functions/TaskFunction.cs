@@ -36,12 +36,12 @@ namespace Qualia.Tools
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
-        public delegate*<NetworkDataModel, InputDataFunction, void> Do;
+        public readonly delegate*<NetworkDataModel, InputDataFunction, void> Do;
         public ITaskControl VisualControl;
         public InputDataFunction InputDataFunction;
 
         public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, void> doFunc, ITaskControl visualControl)
-            : base(nameof(CountDots))
+            : base(defaultValue: nameof(CountDots))
         {
             Do = doFunc;
             VisualControl = visualControl;
@@ -49,6 +49,8 @@ namespace Qualia.Tools
 
         sealed public class CountDots : ITaskControl
         {
+            public static readonly string Description = "Counts red dots amount.";
+
             public static readonly TaskFunction Instance = new(&Do, new CountDots());
 
             private static readonly CountDotsControl s_control = new();
@@ -150,6 +152,8 @@ namespace Qualia.Tools
 
         sealed public class MNIST : ITaskControl
         {
+            public static readonly string Description = "Recognizes hand-written numbers.";
+
             public static readonly TaskFunction Instance = new(&Do, new MNIST());
 
             private static readonly MNISTControl s_control = new();

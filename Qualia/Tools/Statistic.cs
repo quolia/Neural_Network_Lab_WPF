@@ -34,6 +34,8 @@ namespace Qualia.Tools
         public long First100PercentOnTicks;
         public long Last100PercentOnTicks;
 
+        public long BlockedWeights;
+
         public Statistics Copy()
         {
             return (Statistics)MemberwiseClone();

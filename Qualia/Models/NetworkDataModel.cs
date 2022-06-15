@@ -143,29 +143,41 @@ namespace Qualia.Model
 
         unsafe public void FeedForward()
         {
+            //long blocked = 0;
+
             var layer = Layers.First;
             var lastLayer = Layers.Last;
             double sum;
 
             while (layer != lastLayer)
             {
-                var neuron = layer.Next.Neurons.First;
-                while (neuron != null)
+                var nextLayerNeuron = layer.Next.Neurons.First;
+                while (nextLayerNeuron != null)
                 {
                     sum = 0;
-                    var AxW = neuron.WeightsToNextLayer.First;
+                    var AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
-                        sum += AxW.AxW;
+                        //if (AxW.WeightModel.IsBlocked)
+                        {
+                          //  ++blocked;
+                        }
+                        
+                        {
+                            sum += AxW.AxW;
+                        }
+
                         AxW = AxW.Next;
                     }
 
-                    neuron.Activation = neuron.ActivationFunction.Do(sum, neuron.ActivationFuncParam);
-                    neuron = neuron.Next;
+                    nextLayerNeuron.Activation = nextLayerNeuron.ActivationFunction.Do(sum, nextLayerNeuron.ActivationFuncParam);
+                    nextLayerNeuron = nextLayerNeuron.Next;
                 }
 
                 layer = layer.Next;
             }
+
+            //Statistics.BlockedWeights = blocked;
         }
 
         unsafe public void BackPropagation()
@@ -187,7 +199,7 @@ namespace Qualia.Model
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var AxW = neuron.WeightsToNextLayer.First;
+                    var AxW = neuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
                         var prevNeuron = AxW.Neuron;
@@ -207,14 +219,14 @@ namespace Qualia.Model
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var AxW = neuron.WeightsToNextLayer.First;
+                    var AxW = neuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
                         if (AxW.Neuron.Activation != 0)
                         {
                             AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
                         }
-
+                        
                         AxW = AxW.Next;
                     }
 
@@ -389,7 +401,7 @@ namespace Qualia.Model
                         while (weightModel != null)
                         {
                             weightModelCopy.Weight = weightModel.Weight;
-
+                           
                             weightModel = weightModel.Next;
                             weightModelCopy = weightModelCopy.Next;
                         }
@@ -404,6 +416,49 @@ namespace Qualia.Model
             }
 
             return _copy;
+        }
+
+        public void BlockWeights__(NetworkDataModel prev)
+        {
+            if (prev == null)
+            {
+                return;
+            }
+
+            Statistics.BlockedWeights = 0;
+
+            var layerModel = Layers.First;
+            var layerModelCopy = prev.Layers.First;
+
+            while (layerModel != null)
+            {
+                var neuronModel = layerModel.Neurons.First;
+                var neuronModelCopy = layerModelCopy.Neurons.First;
+
+                while (neuronModel != null)
+                {
+                    var weightModel = neuronModel.Weights.First;
+                    var weightModelCopy = neuronModelCopy.Weights.First;
+
+                    while (weightModel != null)
+                    {
+                        if (weightModelCopy.Weight == weightModel.Weight)
+                        {
+                            //weightModel.IsBlocked = true;
+                            Statistics.BlockedWeights++;
+                        }
+
+                        weightModel = weightModel.Next;
+                        weightModelCopy = weightModelCopy.Next;
+                    }
+
+                    neuronModel = neuronModel.Next;
+                    neuronModelCopy = neuronModelCopy.Next;
+                }
+
+                layerModel = layerModel.Next;
+                layerModelCopy = layerModelCopy.Next;
+            }
         }
     }
 }

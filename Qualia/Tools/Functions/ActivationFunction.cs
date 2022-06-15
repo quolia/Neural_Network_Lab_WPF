@@ -5,8 +5,8 @@ namespace Qualia.Tools
 {
     unsafe public class ActivationFunction : BaseFunction<ActivationFunction>
     {
-        public delegate*<double, double?, double> Do;
-        public delegate*<double, double?, double> Derivative;
+        public readonly delegate*<double, double?, double> Do;
+        public readonly delegate*<double, double?, double> Derivative;
 
         public ActivationFunction(delegate*<double, double?, double> doFunc, delegate*<double, double?, double> derivativeFunc)
             : base(nameof(LogisticSigmoid))
@@ -17,17 +17,21 @@ namespace Qualia.Tools
 
         unsafe sealed public class None
         {
+            public static readonly string Description = "Output = x * a, (a == 1)";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Do(double x, double? param) => x;
+            private static double Do(double x, double? param = 1) => (param ?? 1) * x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Derivative(double x, double? param) => x;
+            private static double Derivative(double x, double? param = 1) => param ?? 1;
         }
 
         unsafe sealed public class LogisticSigmoid
         {
+            public static readonly string Description = "Output = 1 / (1 + Exp(-x))";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -39,6 +43,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class SymmetricSigmoid
         {
+            public static readonly string Description = "Output = 2 / (1 + Exp(-x)) - 1";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,6 +56,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Softsign
         {
+            public static readonly string Description = "Output = x / (1 + |x|)";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -61,6 +69,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Tanh
         {
+            public static readonly string Description = "Output = 2 / (1 + Exp(-2 * x)) - 1";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -72,6 +82,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class ReLu
         {
+            public static readonly string Description = "Output = x > 0 ? x * a : 0, (a = 1)";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -91,6 +103,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class StepConst
         {
+            public static readonly string Description = "Output = x > 0 ? a : -a, (a = 1)";
+
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

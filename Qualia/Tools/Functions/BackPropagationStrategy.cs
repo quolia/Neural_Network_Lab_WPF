@@ -1,16 +1,17 @@
 ﻿using Qualia.Model;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Qualia.Tools
 {
     unsafe public class BackPropagationStrategy : BaseFunction<BackPropagationStrategy>
     {
-        public delegate*<NetworkDataModel, void> PrepareForRun;
-        public delegate*<NetworkDataModel, void> PrepareForRound;
-        public delegate*<NetworkDataModel, void> PrepareForLoop;
-        public delegate*<NetworkDataModel, void> OnAfterLoopFinished;
-        public delegate*<NetworkDataModel, bool, void> OnError;
-        public delegate*<NetworkDataModel, bool> IsBackPropagationNeeded;
+        public readonly delegate*<NetworkDataModel, void> PrepareForRun;
+        public readonly delegate*<NetworkDataModel, void> PrepareForRound;
+        public readonly delegate*<NetworkDataModel, void> PrepareForLoop;
+        public readonly delegate*<NetworkDataModel, void> OnAfterLoopFinished;
+        public readonly delegate*<NetworkDataModel, bool, void> OnError;
+        public readonly delegate*<NetworkDataModel, bool> IsBackPropagationNeeded;
 
         protected bool _isError;
         protected bool _isBackPropagationNeeded;
@@ -21,7 +22,7 @@ namespace Qualia.Tools
                                        delegate*<NetworkDataModel, void> onAfterLoopFinished,
                                        delegate*<NetworkDataModel, bool, void> onError,
                                        delegate*<NetworkDataModel, bool> isBackPropagationNeeded)
-            : base(nameof(Always))
+            : base(defaultValue: nameof(Always))
         {
             PrepareForRun = prepareForRun;
             PrepareForRound = prepareForRound;
@@ -36,6 +37,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Always
         {
+            public static readonly string Description = "BP executes every round.";
+
             public static readonly BackPropagationStrategy Instance = new(&Stub1,
                                                                           &Stub1,
                                                                           &Stub1,
@@ -51,6 +54,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Never
         {
+            public static readonly string Description = "BP never executes.";
+
             public static readonly BackPropagationStrategy Instance = new(&Stub1,
                                                                           &Stub1,
                                                                           &Stub1,
@@ -66,6 +71,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class InErrorRound
         {
+            public static readonly string Description = "BP executes only in error round.";
+
             public static readonly BackPropagationStrategy Instance = new(&Stub1,
                                                                           &PrepareForRound,
                                                                           &Stub1,
@@ -93,6 +100,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class InCorrectRound
         {
+            public static readonly string Description = "BP executes only on correct round.";
+
             public static readonly BackPropagationStrategy Instance = new(&Stub1,
                                                                           &PrepareForRound,
                                                                           &Stub1,
@@ -120,6 +129,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class UntilNoErrorInLoop
         {
+            public static readonly string Description = "BP executes in every round until all rounds in a loop are correct. BP does not executes until the next error round.";
+
             public static readonly BackPropagationStrategy Instance = new(&PrepareForRun,
                                                                           &Stub1,
                                                                           &PrepareForLoop,

@@ -121,7 +121,8 @@ namespace Qualia.Controls
                                 else
                                 {
                                     prevWeight = 0;
-                                    _prevWeights.Add(weightModel, weightModel.Weight);
+                                    //_prevWeights.Add(weightModel, weightModel.Weight);
+                                    _prevWeights.Add(weightModel, 0);
                                     isWeightChanged = true;
                                 }
 
@@ -207,6 +208,11 @@ namespace Qualia.Controls
                                             }
                                         }
                                     }
+                                }
+
+                                if (isShowOnlyUnchangedWeights && weightModel.Weight == prevWeight)
+                                {
+                                    pen = new Pen(Brushes.Purple, 2);
                                 }
 
                                 if (pen != null)
