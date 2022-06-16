@@ -25,25 +25,18 @@ namespace Qualia.Tools
             public static readonly InputDataFunction Instance = new(&InitializeFunction.FlatRandom.Do);
         }
 
-        unsafe sealed public class Gaussian
+        unsafe sealed public class GaussNormal
         {
-            public static readonly string Description = InitializeFunction.Gaussian.Description;
+            public static readonly string Description = InitializeFunction.GaussNormal.Description;
 
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.Gaussian.Do);
+            public static readonly InputDataFunction Instance = new(&InitializeFunction.GaussNormal.Do);
         }
 
-        unsafe sealed public class GaussianInverted
+        unsafe sealed public class GaussNormalInverted
         {
-            public static readonly string Description = InitializeFunction.GaussianInverted.Description;
+            public static readonly string Description = InitializeFunction.GaussNormalInverted.Description;
 
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.GaussianInverted.Do);
-        }
-
-        unsafe sealed public class GaussianInverted2
-        {
-            public static readonly string Description = InitializeFunction.GaussianInverted2.Description;
-
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.GaussianInverted2.Do);
+            public static readonly InputDataFunction Instance = new(&InitializeFunction.GaussNormalInverted.Do);
         }
     }
 }

@@ -95,11 +95,11 @@ RandomizeFunctionParam.637015441499727363:
 RandomizeFunction.637015441499727363:Centered
 LearningRate.637015441499727363:0.03
 IsNetworkEnabled.637015441499727363:1
-CostFunction.637015441499727363:MSE
+CostFunction.637015441499727363:MeanSquaredError
 BackPropagationStrategy.637015441499727363:UntilNoErrorInLoop
 InputInitial0.637056097209864164:0
 InputInitial1.637056097209864164:1
-ActivationFunction.637056097209864164:None
+ActivationFunction.637056097209864164:Liner
 ActivationFunctionParam.637056097209864164:
 AdjustFirstLayerWeights.637056097209864164:1
 WeightsInitializeFunction.637056097209864164:None

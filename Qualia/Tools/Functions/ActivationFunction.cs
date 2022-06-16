@@ -15,9 +15,10 @@ namespace Qualia.Tools
             Derivative = derivativeFunc;
         }
 
-        unsafe sealed public class None
+        unsafe sealed public class Liner
         {
-            public static readonly string Description = "f(x, a) = x * a, (a=1 -> max value)";
+            public static readonly string Description = "f(x, a) = a * x, (a=1 -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = a, (a=1 -> multiplier)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -30,7 +31,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class LogisticSigmoid
         {
-            public static readonly string Description = "f(x, a) = 1 / (1 + Exp(-x)), (a -> not used)";
+            public static readonly string Description = "f(x, a) = 1 / (1 + exp(-x)), (a -> not used)";
+            public static readonly string DerivativeDescription = "f(x, a)' = x * (1 - x), (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -43,7 +45,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class SymmetricSigmoid
         {
-            public static readonly string Description = "f(x, a) = 2 / (1 + Exp(-x)) - 1, (a -> not used)";
+            public static readonly string Description = "f(x, a) = 2 / (1 + exp(-x)) - 1, (a -> not used)";
+            public static readonly string DerivativeDescription = "f(x, a)' = 2 * LogisticSigmoid(x) * (1 - LogisticSigmoid(x)), (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -57,6 +60,7 @@ namespace Qualia.Tools
         unsafe sealed public class Softsign
         {
             public static readonly string Description = "f(x, a) = x / (1 + |x|), (a -> not used)";
+            public static readonly string DerivativeDescription = "f(x, a)' = not implemented";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -69,7 +73,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Tanh
         {
-            public static readonly string Description = "f(x, a) = 2 / (1 + Exp(-2 * x)) - 1, (a -> not used)";
+            public static readonly string Description = "f(x, a) = 2 / (1 + exp(-2 * x)) - 1, (a -> not used)";
+            public static readonly string DerivativeDescription = "f(x, a)' = x * (2 - x), (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -82,7 +87,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class ReLu
         {
-            public static readonly string Description = "f(x, a) = x > 0 ? x * a : 0, (a=1)";
+            public static readonly string Description = "f(x, a) = if (x > 0) => (a * x) else => (0), (a=1 -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = if (x > 0) => (a) else => (0), (a=1 -> multiplier)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -90,7 +96,7 @@ namespace Qualia.Tools
             public static double Do(double x, double? a)
             {
                 a ??= 1;
-                return x > 0 ? x * a.Value : 0;
+                return x > 0 ? a.Value * x : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -103,7 +109,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class StepConst
         {
-            public static readonly string Description = "f(x, a) = x > 0 ? a : -a, (a=1)";
+            public static readonly string Description = "f(x, a) = if (x > 0) => (a) else => (-a), (a=1 => multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = 0, (a => not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 

@@ -9,15 +9,16 @@ namespace Qualia.Tools
         public readonly delegate*<NetworkDataModel, NeuronDataModel, double> Derivative;
 
         public CostFunction(delegate*<NetworkDataModel, double> doFunc, delegate*<NetworkDataModel, NeuronDataModel, double> doDerivative)
-            : base(defaultValue: nameof(MSE))
+            : base(defaultValue: nameof(MeanSquaredError))
         {
             Do = doFunc;
             Derivative = doDerivative;
         }
 
-        unsafe sealed public class MSE
+        unsafe sealed public class MeanSquaredError
         {
-            public static readonly string Description = "f(network) = network.layers.last.neurons.sum(neuron.target - neuron.activation)";
+            public static readonly string Description = "f(network) = network.layers.last.neurons.sum((neuron.target - neuron.activation) ^ 2)";
+            public static readonly string DerivativeDescription = "f(network)' = network.layers.last.neurons(neuron.target - neuron.activation)";
 
             public static readonly CostFunction Instance = new(&Do, &Derivative);
 

@@ -16,7 +16,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class FlatRandom
         {
-            public static readonly string Description = "weigth(a) = random[0, a), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = random.flat[0, a), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -34,7 +34,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = Rand.GetFlatRandom(a.Value);
+                            weight.Weight = Rand.Flat.Get(a.Value);
                             weight = weight.Next;
                         }
 
@@ -46,9 +46,41 @@ namespace Qualia.Tools
             }
         }
 
-        unsafe sealed public class GaussRandom
+        unsafe sealed public class GaussNormal
         {
-            public static readonly string Description = "weigth(a) = random.gaussian(0, a), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) => " + InitializeFunction.GaussNormal.Description;
+
+            public static readonly RandomizeFunction Instance = new(&Do);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do(NetworkDataModel networkModel, double? a)
+            {
+                a ??= 0.5;
+
+                var layer = networkModel.Layers.First;
+                while (layer != null)
+                {
+                    var neuron = layer.Neurons.First;
+                    while (neuron != null)
+                    {
+                        var weight = neuron.Weights.First;
+                        while (weight != null)
+                        {
+                            weight.Weight = InitializeFunction.GaussNormal.Do(a.Value);
+                            weight = weight.Next;
+                        }
+
+                        neuron = neuron.Next;
+                    }
+
+                    layer = layer.Next;
+                }
+            }
+        }
+
+        unsafe sealed public class GaussNormalModule
+        {
+            public static readonly string Description = "weigth(a) = |random.gauss.normal(0, a)|, (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -66,39 +98,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value);
-                            weight = weight.Next;
-                        }
-
-                        neuron = neuron.Next;
-                    }
-
-                    layer = layer.Next;
-                }
-            }
-        }
-
-        unsafe sealed public class AbsGaussRandom
-        {
-            public static readonly string Description = "weigth(a) = |random.gaussian(0, a)|, (a=0.17 -> sigma)";
-
-            public static readonly RandomizeFunction Instance = new(&Do);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
-            {
-                a ??= 0.17;
-
-                var layer = networkModel.Layers.First;
-                while (layer != null)
-                {
-                    var neuron = layer.Neurons.First;
-                    while (neuron != null)
-                    {
-                        var weight = neuron.Weights.First;
-                        while (weight != null)
-                        {
-                            weight.Weight = MathX.Abs(Rand.GaussianRand.NextGaussian(0, a.Value));
+                            weight.Weight = MathX.Abs(Rand.Gauss.GetNormal(0, a.Value));
                             weight = weight.Next;
                         }
 
@@ -112,7 +112,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Centered
         {
-            public static readonly string Description = "weigth(a) = -a / 2 + a * random[0, 1), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = -a / 2 + random.flat[0, a), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -130,7 +130,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = -a.Value / 2 + a.Value * Rand.GetFlatRandom();
+                            weight.Weight = -a.Value / 2 + Rand.Flat.Get(a.Value);
                             weight = weight.Next;
                         }
 
@@ -176,7 +176,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Xavier
         {
-            public static readonly string Description = "weigth(a) = random[0, a) * sqrt(1 / layer.previous.neurons.count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = random.flat[0, a) * sqrt(1 / layer.previous.neurons.count), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -196,11 +196,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.GetFlatRandom();
+                                weight.Weight = Rand.Flat.Get(1);
                             }
                             else
                             {
-                                weight.Weight = Rand.GetFlatRandom(a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = Rand.Flat.Get(a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -216,7 +216,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussXavier
         {
-            public static readonly string Description = "weigth(a) = random.gaussian(0, a) * sqrt(1 / layer.previous.neurons.count), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gauss.normal(0, a) * sqrt(1 / layer.previous.neurons.count), (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -238,11 +238,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value);
+                                weight.Weight = Rand.Gauss.GetNormal(0, a.Value);
                             }
                             else
                             {
-                                weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = Rand.Gauss.GetNormal(0, a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -258,7 +258,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class HeEtAl
         {
-            public static readonly string Description = "weigth(a) = random[0, a) * sqrt(2 / layer.previous.neurons.count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = random.flat[0, a) * sqrt(2 / layer.previous.neurons.count), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -278,11 +278,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.GetFlatRandom();
+                                weight.Weight = Rand.Flat.Get(1);
                             }
                             else
                             {
-                                weight.Weight = Rand.GetFlatRandom(a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = Rand.Flat.Get(a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -298,7 +298,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussHeEtAl
         {
-            public static readonly string Description = "weigth(a) = random.gaussian(0, a) * sqrt(2 / layer.previous.neurons.count), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gauss.normal(0, a) * sqrt(2 / layer.previous.neurons.count), (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -320,11 +320,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value);
+                                weight.Weight = Rand.Gauss.GetNormal(0, a.Value);
                             }
                             else
                             {
-                                weight.Weight = Rand.GaussianRand.NextGaussian(0, a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = Rand.Gauss.GetNormal(0, a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;

@@ -61,7 +61,7 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            CtlActivationFunction.Fill<ActivationFunction>(Config, nameof(ActivationFunction.None));
+            CtlActivationFunction.Fill<ActivationFunction>(Config, nameof(ActivationFunction.Liner));
             CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.None));
 
             _configParams.ForEach(param => param.LoadConfig());

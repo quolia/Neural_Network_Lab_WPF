@@ -253,7 +253,7 @@ namespace Qualia.Controls
                                         _penSilver,
                                         ref Rects.Get(AXIS_OFFSET,
                                                       AXIS_OFFSET + input * POINT_SIZE,
-                                                      _classes.Count * POINT_SIZE,
+                                                      _classes.Count * POINT_SIZE + 11,
                                                       POINT_SIZE));
 
             CtlPresenter.DrawRectangle(input == output ? _correctBrush : _incorrectBrush,
@@ -261,7 +261,7 @@ namespace Qualia.Controls
                                         ref Rects.Get(AXIS_OFFSET + output * POINT_SIZE,
                                                       AXIS_OFFSET,
                                                       POINT_SIZE,
-                                                      _classes.Count * POINT_SIZE));
+                                                      _classes.Count * POINT_SIZE + 11));
         }
 
         public void Clear()

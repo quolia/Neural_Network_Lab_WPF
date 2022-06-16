@@ -1,6 +1,5 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls

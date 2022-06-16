@@ -50,7 +50,7 @@ namespace Qualia.Tools
 
         sealed public class CountDots : ITaskControl
         {
-            public static readonly string Description = "Counts red dots amount.";
+            public static readonly string Description = "Network counts red dots amount.";
 
             public static readonly TaskFunction Instance = new(&Do, new CountDots());
 
@@ -119,7 +119,7 @@ namespace Qualia.Tools
 
                 while (intNumber > 0)
                 {
-                    var active = neurons[Rand.Flat.Next(neurons.Count)];
+                    var active = neurons[(int)Rand.Flat.Get(neurons.Count)];
 
                     while (active.Activation == networkModel.InputInitial1)
                     {
@@ -153,7 +153,7 @@ namespace Qualia.Tools
 
         sealed public class MNIST : ITaskControl
         {
-            public static readonly string Description = "Recognizes hand-written numbers.";
+            public static readonly string Description = "Network recognizes hand-written numbers.";
 
             public static readonly TaskFunction Instance = new(&Do, new MNIST());
 
@@ -196,7 +196,7 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
-                var image = s_control.Images[Rand.Flat.Next(s_control.Images.Count)];
+                var image = s_control.Images[(int)Rand.Flat.Get(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;
 
                 for (int i = 0; i < count; ++i)
