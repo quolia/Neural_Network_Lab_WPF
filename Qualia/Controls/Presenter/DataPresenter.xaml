@@ -18,7 +18,6 @@
         <StackPanel  Orientation="Vertical" >
             <local:QLabel Content="Task:" />
             <local:QComboBox x:Name="CtlTaskFunction" />
-            
             <local:QLabel Content="Input data function:" />
             <local:QComboBox x:Name="CtlInputDataFunction" />
 

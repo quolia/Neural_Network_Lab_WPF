@@ -21,6 +21,8 @@ namespace Qualia.Tools
                 throw new InvalidOperationException($"Unknown function name: {funcName}.");
             }
 
+            funcName = Config.PrepareValue(funcName);
+
             var type = typeof(T).GetNestedTypes()
                                 .Where(type => type.Name == funcName)
                                 .FirstOrDefault();
@@ -35,14 +37,25 @@ namespace Qualia.Tools
 
         public static string[] GetItems()
         {
+            return _getItems(false);
+        }
+
+        public static string[] GetItemsWithDescriptions()
+        {
+            return _getItems(true);
+        }
+
+        private static string[] _getItems(bool uncludeDescription)
+        {
             return typeof(T).GetNestedTypes()
-                            .Select(type => type.Name)
+                            .Select(type => type.Name + (uncludeDescription ? "\n " + GetDescription(type.Name) : ""))
                             .ToArray();
         }
 
         public static string GetDescription(object name)
         {
             var funcName = name.ToString();
+            funcName = Config.PrepareValue(funcName);
 
             var type = typeof(T).GetNestedTypes()
                                 .Where(type => type.Name == funcName)

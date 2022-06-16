@@ -144,7 +144,7 @@ namespace Qualia.Tools
                 defaultValue = BaseFunction<T>.DefaultValue;
             }
 
-            var items = BaseFunction<T>.GetItems();
+            var items = BaseFunction<T>.GetItemsWithDescriptions();
             FillComboBox(items, comboBox, config, defaultValue);
 
             return BaseFunction<T>.GetDescription(comboBox.SelectedItem);
@@ -161,29 +161,32 @@ namespace Qualia.Tools
 
             comboBox.Items.Clear();
 
-            foreach (var i in items)
+            foreach (var item in items)
             {
-                comboBox.Items.Add(i);
+                comboBox.Items.Add(Config.PrepareValue(item));
             }
 
-            var item = config.GetString(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
-            if (items.Length > 0)
+            var selectedItem = config.GetString(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
+            selectedItem = Config.PrepareValue(selectedItem);
+
+            if (comboBox.Items.Count > 0)
             {
-                if (!items.Contains(item))
+                if (!comboBox.Items.Contains(selectedItem))
                 {
-                    item = items[0];
+                    selectedItem = (string)comboBox.Items.GetItemAt(0);
                 }
             }
             else
             {
-                item = null;
+                selectedItem = null;
             }
 
-            if (!string.IsNullOrEmpty(item))
+            if (!string.IsNullOrEmpty(selectedItem))
             {
-                comboBox.SelectedItem = item;
-                //comboBox.Text = item + ": descriprtion";
+                comboBox.SelectedItem = selectedItem;
             }
+
+            comboBox.ToolTip = string.Join("\n\n", items);
         }
     }
 }

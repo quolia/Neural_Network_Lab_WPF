@@ -16,6 +16,8 @@ namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
     {
+        public static Main Instance; 
+
         public static readonly object ApplyChangesLocker = new();
 
         private Thread _timeThread;
@@ -32,6 +34,8 @@ namespace Qualia.Controls
 
         public Main()
         {
+            Instance = this;
+
             //SetProcessorAffinity(Processor.Proc1);
             //SetThreadPriority(ThreadPriorityLevel.Normal);
 

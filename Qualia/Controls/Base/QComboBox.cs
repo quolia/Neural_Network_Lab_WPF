@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -10,10 +11,10 @@ namespace Qualia.Controls
 
         private event Action OnChanged = delegate { };
 
-        string DefaultValue { get; set; }
-
         public QComboBox()
         {
+            //ItemTemplate = Main.Instance.Resources["QComboBoxTemplate"] as DataTemplate;
+
             Padding = new(2);
             Margin = new(1);
             MinWidth = 60;

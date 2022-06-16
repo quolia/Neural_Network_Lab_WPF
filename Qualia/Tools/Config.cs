@@ -36,9 +36,29 @@ namespace Qualia.Tools
             ParentConfig = parentConfig;
         }
 
-        private string CutName(string name)
+        private static string CutParamPrefix(string paramName)
         {
-            return name.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(3) : name;
+            return paramName.StartsWith("Ctl", StringComparison.InvariantCultureIgnoreCase) ? paramName.Substring(3) : paramName;
+        }
+
+        private static string CutValueDescription(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            return value.Split(new[] { '\n' })[0];
+        }
+
+        public static string PrepareParamName(object paramName)
+        {
+            return CutParamPrefix(paramName.ToString());
+        }
+
+        public static string PrepareValue(string value)
+        {
+            return CutValueDescription(value);
         }
 
         public Config Extend(object extender)
@@ -64,15 +84,7 @@ namespace Qualia.Tools
 
         public double? GetDouble(Constants.Param paramName, double? defaultValue = null)
         {
-            if (Converter.TryTextToDouble(GetValue(paramName, Converter.DoubleToText(defaultValue)), out double? value))
-            {
-                return value;
-            }
-            else
-            {
-                Set(paramName, defaultValue);
-                return defaultValue;
-            }
+            return GetDouble(paramName.ToString("G"), defaultValue);
         }
 
         public double? GetDouble(string paramName, double? defaultValue = null)
@@ -90,15 +102,7 @@ namespace Qualia.Tools
 
         public long? GetInt(Constants.Param paramName, long? defaultValue = null)
         {
-            if (Converter.TryTextToInt(GetValue(paramName, Converter.IntToText(defaultValue)), out long? value))
-            {
-                return value;
-            }
-            else
-            {
-                Set(paramName, defaultValue);
-                return defaultValue;
-            }
+            return GetInt(paramName.ToString("G"), defaultValue);
         }
 
         public long? GetInt(string paramName, long? defaultValue = null)
@@ -126,13 +130,7 @@ namespace Qualia.Tools
 
         public long[] GetArray(Constants.Param paramName, string defaultValue = null)
         {
-            if (defaultValue == null)
-            {
-                defaultValue = string.Empty;
-            }
-
-            string value = GetValue(paramName, defaultValue);
-            return string.IsNullOrEmpty(value) ? Array.Empty<long>() : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+            return GetArray(paramName.ToString("G"), defaultValue);
         }
 
         public long[] GetArray(string paramName, string defaultValue = null)
@@ -142,26 +140,19 @@ namespace Qualia.Tools
                 defaultValue = string.Empty;
             }
 
-            string value = GetValue(paramName, defaultValue);
+            var value = GetValue(paramName, defaultValue);
             return string.IsNullOrEmpty(value) ? Array.Empty<long>() : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
         }
 
         public void Remove(Constants.Param paramName)
         {
-            var values = GetValuesSave();
-            if (values.TryGetValue(paramName.ToString("G") + _extender, out _))
-            {
-                values.Remove(paramName.ToString("G") + _extender);
-            }
-
-            SaveValues(values);
-
-            values = GetValuesLoad();
-            values.Remove(paramName.ToString("G") + _extender);
+            Remove(paramName.ToString("G"));
         }
 
         public void Remove(string paramName)
         {
+            paramName = PrepareParamName(paramName);
+
             var values = GetValuesSave();
             if (values.TryGetValue(paramName + _extender, out _))
             {
@@ -176,18 +167,13 @@ namespace Qualia.Tools
 
         public void Set(Constants.Param paramName, string value)
         {
-            var values = GetValuesSave();
-            values[paramName.ToString("G") + _extender] = value;
-
-            SaveValues(values);
-
-            values = GetValuesLoad();
-            values[paramName.ToString("G") + _extender] = value;
+            Set(paramName.ToString("G"), value);
         }
 
         public void Set(string paramName, string value)
         {
-            paramName = CutName(paramName);
+            paramName = PrepareParamName(paramName);
+            value = PrepareValue(value);
 
             var values = GetValuesSave();
             values[paramName + _extender] = value;
@@ -240,22 +226,12 @@ namespace Qualia.Tools
 
         private string GetValue(Constants.Param paramName, string defaultValue = null)
         {
-            var values = GetValuesLoad();
-
-            if (values.TryGetValue(paramName.ToString("G") + _extender, out string value))
-            {
-                return value;
-            }
-            else
-            {
-                Set(paramName, defaultValue);
-                return defaultValue;
-            }
+            return GetValue(paramName.ToString("G"), defaultValue);
         }
 
         private string GetValue(string paramName, string defaultValue = null)
         {
-            paramName = CutName(paramName);
+            paramName = PrepareParamName(paramName);
 
             var values = GetValuesLoad();
 
