@@ -1,5 +1,7 @@
 <h1>Echoviser Neural Networks Lab</h1>
 
+<h2> Warning:<br>Due to perfomance reasons the application could crush if some parameters are changed in running state (temporal issue). </h2>
+
 <h3>Some strange effects of Neural Networks</h3>
 
 <h4>Unexplainable surges</h4>
