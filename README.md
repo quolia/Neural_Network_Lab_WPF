@@ -6,6 +6,10 @@
 
 I've found some strange effects. Even a 100% learned NN could "go crazy" at some moment and make a row of mistakes without any visible reason. It doesn't depend on if it continues learning or not. Be careful with your Tesla car :) Someday it could kill you just out of nothing. I've not found an explanation of this. Yet.
 
+Options to check:
+
+1. .NET memory optimization issue.
+
 1 <img width="1280" alt="2022-06-12 (5)" src="https://user-images.githubusercontent.com/53271533/173506921-d082039b-3816-4401-a03a-49ac8b2a4926.png">
 2 <img width="1280" alt="2022-06-12 (6)" src="https://user-images.githubusercontent.com/53271533/173506925-d721c70a-c37a-49d3-9cb3-5359af7d1f5d.png">
 3 <img width="1280" alt="2022-06-12 (4)" src="https://user-images.githubusercontent.com/53271533/173506918-d91a5f61-da85-47f3-8d4b-c19b8598a81f.png">
