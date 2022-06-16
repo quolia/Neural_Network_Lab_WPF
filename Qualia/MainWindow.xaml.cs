@@ -467,6 +467,9 @@ namespace Qualia.Controls
                             var cost = networkModel.CostFunction.Do(networkModel);
                             var statistics = networkModel.Statistics;
 
+                            statistics.LastInput = input;
+                            statistics.LastOutput = outputId;
+
                             if (input == outputId)
                             {
                                 ++statistics.CorrectRoundsTotal;
@@ -677,7 +680,7 @@ namespace Qualia.Controls
                         {
                             swRenderTime.Restart();
 
-                            CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender);
+                            CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender, statisticsToRender.LastInput, statisticsToRender.LastOutput);
                             errorMatrixToRender.ClearData();
 
                             swRenderTime.Stop();

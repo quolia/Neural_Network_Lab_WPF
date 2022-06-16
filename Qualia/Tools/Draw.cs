@@ -58,6 +58,7 @@ namespace Qualia.Tools
     {
         public static readonly Color White = Colors.White;
         public static readonly Color Green = Colors.Green;
+        public static readonly Color Blue = Colors.Blue;
         public static readonly Color Red = Colors.Red;
         public static readonly Color LightGray = Colors.LightGray;
         public static readonly Color Silver = Colors.Silver;

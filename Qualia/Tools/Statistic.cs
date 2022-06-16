@@ -37,6 +37,10 @@ namespace Qualia.Tools
         public long First100PercentOnRound;
         public long Last100PercentOnRound;
 
+        public long LastInput;
+        public long LastOutput;
+
+
         public long BlockedWeights;
 
         public Statistics Copy()
