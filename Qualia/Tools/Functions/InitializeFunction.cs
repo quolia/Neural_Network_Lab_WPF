@@ -19,7 +19,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class None
         {
-            public static readonly string Description = "f(a) = none, the value is skipped.";
+            public static readonly string Description = "f(a) = none, the value is skipped, (a -> not used)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -29,7 +29,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Constant
         {
-            public static readonly string Description = "f(a) = a, (a = 1)";
+            public static readonly string Description = "f(a) = a, (a=1)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -39,7 +39,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class FlatRandom
         {
-            public static readonly string Description = "f(a) = a * random[0, 1), (a = 1)";
+            public static readonly string Description = "f(a) = a * random[0, 1), (a=1 -> max value)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -49,7 +49,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Centered
         {
-            public static readonly string Description = "f(a) = -a / 2 + a * random[0, 1), (a = 1)";
+            public static readonly string Description = "f(a) = -a / 2 + a * random[0, 1), (a=1 -> max value)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -63,7 +63,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Gaussian
         {
-            public static readonly string Description = "f(a) = gaussian.random(a, 0.17), (a = mean_value = 0.5, sigma = 0.17)";
+            public static readonly string Description = "f(a) = gaussian.random(a, sigma), (a=0.5 -> mean_value, sigma=0.17)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -89,7 +89,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted
         {
-            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a = sigma = 0.17)";
+            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a=0.17 -> sigma)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -108,7 +108,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted2
         {
-            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a = sigma = 0.17)";
+            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a=0.17 -> sigma)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 

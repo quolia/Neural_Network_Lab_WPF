@@ -17,7 +17,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class None
         {
-            public static readonly string Description = "f(x, a) = x * a, (a == 1)";
+            public static readonly string Description = "f(x, a) = x * a, (a=1 -> max value)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -30,7 +30,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class LogisticSigmoid
         {
-            public static readonly string Description = "f(x, a) = 1 / (1 + Exp(-x))";
+            public static readonly string Description = "f(x, a) = 1 / (1 + Exp(-x)), (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -43,7 +43,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class SymmetricSigmoid
         {
-            public static readonly string Description = "f(x, a) = 2 / (1 + Exp(-x)) - 1";
+            public static readonly string Description = "f(x, a) = 2 / (1 + Exp(-x)) - 1, (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -56,7 +56,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Softsign
         {
-            public static readonly string Description = "f(x, a) = x / (1 + |x|)";
+            public static readonly string Description = "f(x, a) = x / (1 + |x|), (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -69,7 +69,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Tanh
         {
-            public static readonly string Description = "f(x, a) = 2 / (1 + Exp(-2 * x)) - 1";
+            public static readonly string Description = "f(x, a) = 2 / (1 + Exp(-2 * x)) - 1, (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -82,7 +82,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class ReLu
         {
-            public static readonly string Description = "f(x, a) = x > 0 ? x * a : 0, (a = 1)";
+            public static readonly string Description = "f(x, a) = x > 0 ? x * a : 0, (a=1)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -103,7 +103,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class StepConst
         {
-            public static readonly string Description = "f(x, a) = x > 0 ? a : -a, (a = 1)";
+            public static readonly string Description = "f(x, a) = x > 0 ? a : -a, (a=1)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 

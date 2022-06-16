@@ -128,7 +128,7 @@ namespace Qualia.Tools
             }
         }
 
-        //Returns: Selected item description.
+        /// <returns>Selected item's description.</returns>
         public static string Fill<T>(this ComboBox comboBox, Config config, string defaultValue = null) where T : class
         {
             return Initializer.FillComboBox<T>(comboBox, config, defaultValue);
@@ -136,12 +136,6 @@ namespace Qualia.Tools
 
         private static class Initializer
         {
-            //private static string CutName(string name)
-            //{
-            //    var prefix = "Ctl";
-            //    return name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase) ? name.Substring(prefix.Length) : name;
-            //}
-
             public static string FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue = null) where T : class
             {
                 if (defaultValue == null)
