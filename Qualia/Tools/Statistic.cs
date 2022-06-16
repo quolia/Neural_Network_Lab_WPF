@@ -31,8 +31,11 @@ namespace Qualia.Tools
         public string LastGoodInput;
         public double LastGoodCost;
 
-        public long First100PercentOnTicks;
-        public long Last100PercentOnTicks;
+        public long First100PercentOnTick;
+        public long Last100PercentOnTick;
+
+        public long First100PercentOnRound;
+        public long Last100PercentOnRound;
 
         public long BlockedWeights;
 

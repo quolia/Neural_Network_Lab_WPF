@@ -158,19 +158,11 @@ namespace Qualia.Model
                     var AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
-                        //if (AxW.WeightModel.IsBlocked)
-                        {
-                          //  ++blocked;
-                        }
-                        
-                        {
-                            sum += AxW.AxW;
-                        }
-
+                        sum += AxW.AxW;
                         AxW = AxW.Next;
                     }
 
-                    nextLayerNeuron.Activation = nextLayerNeuron.ActivationFunction.Do(sum, nextLayerNeuron.ActivationFuncParam);
+                    nextLayerNeuron.Activation = nextLayerNeuron.ActivationFunction.Do(sum, nextLayerNeuron.ActivationFunctionParam);
                     nextLayerNeuron = nextLayerNeuron.Next;
                 }
 
@@ -187,7 +179,7 @@ namespace Qualia.Model
 
             while (neuron != null)
             {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParam);
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFunctionParam);
                 neuron = neuron.Next;
             }
 
@@ -205,7 +197,7 @@ namespace Qualia.Model
                         var prevNeuron = AxW.Neuron;
                         if (prevNeuron.Activation != 0)
                         {
-                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFuncParam);
+                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
                         }
 
                         AxW = AxW.Next;
@@ -414,6 +406,8 @@ namespace Qualia.Model
                 layerModel = layerModel.Next;
                 layerModelCopy = layerModelCopy.Next;
             }
+
+            _copy.TargetOutput = TargetOutput;
 
             return _copy;
         }

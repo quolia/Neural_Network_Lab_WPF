@@ -299,7 +299,7 @@ namespace Qualia.Controls
                     neuronModel.IsBiasConnected = ctlNeurons[neuronInd].IsBiasConnected;
 
                     neuronModel.ActivationFunction = ctlNeurons[neuronInd].ActivationFunction;
-                    neuronModel.ActivationFuncParam = ctlNeurons[neuronInd].ActivationFunctionParam;
+                    neuronModel.ActivationFunctionParam = ctlNeurons[neuronInd].ActivationFunctionParam;
 
 
                     if (layerInd == 0 && !neuronModel.IsBias)

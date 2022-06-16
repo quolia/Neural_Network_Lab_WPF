@@ -139,7 +139,7 @@ namespace Qualia.Controls
         private void DrawPoint(double x, double y, double value, bool isData)
         {
             var brush = value == 0
-                        ? System.Windows.Media.Brushes.White
+                        ? System.Windows.Media.Brushes.CornflowerBlue
                         : (isData
                            ? Draw.GetBrush(value)
                            : Draw.GetBrush(Draw.GetColor((byte)(255 * value), in QColors.Green)));

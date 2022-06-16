@@ -73,8 +73,9 @@ namespace Qualia.Tools
 
         private static readonly char[] _0 = new[] { '0' };
         private static readonly char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
+        private static readonly string[] _postfixes = new[] {"", " K", " M", " B", " T" };
 
-        public static string DoubleToText(double? d, string format = "F20", bool trim = true)
+    public static string DoubleToText(double? d, string format = "F20", bool trim = true)
         {
             if (!d.HasValue)
             {
@@ -88,6 +89,27 @@ namespace Qualia.Tools
             }
 
             return result;
+        }
+
+        public static string RoundsToString(long rounds)
+        {
+            var s = rounds.ToString();
+
+            int postfixId = 0;
+
+            while (s.EndsWith("000") && postfixId < _postfixes.Length - 1)
+            {
+                s = s.Substring(0, s.Length - 3);
+                ++postfixId;
+            }
+
+            if (s.Length > 3)
+            {
+                s = s.Insert(s.Length - 3, ".").TrimEnd(_0);
+                postfixId += 1;
+            }
+
+            return s + _postfixes[postfixId];
         }
     }
 }

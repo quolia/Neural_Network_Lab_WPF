@@ -21,7 +21,7 @@ namespace Qualia.Model
         public double? WeightsInitializerParam;
 
         public ActivationFunction ActivationFunction;
-        public double? ActivationFuncParam;
+        public double? ActivationFunctionParam;
 
         public readonly ListX<WeightDataModel> Weights;
 

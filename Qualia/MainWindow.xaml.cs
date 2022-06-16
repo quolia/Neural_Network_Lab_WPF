@@ -149,7 +149,7 @@ namespace Qualia.Controls
 
         private void SetTitle(string fileName)
         {
-            Title = "Neural Network - " + fileName;
+            Title = "Networks - " + Path.GetFileNameWithoutExtension(fileName) + ": " + fileName;
         }
 
         private void LoadNetworksManager(string fileName)
@@ -558,19 +558,22 @@ namespace Qualia.Controls
 
                             if (statistics.CorrectRounds == currentLoopLimit)
                             {
-                                if (statistics.First100PercentOnTicks == 0)
+                                if (statistics.First100PercentOnTick == 0)
                                 {
-                                    statistics.First100PercentOnTicks = statistics.TotalTicksElapsed;
+                                    statistics.First100PercentOnTick = statistics.TotalTicksElapsed;
+                                    statistics.First100PercentOnRound = statistics.Rounds;
                                 }
 
-                                if (statistics.Last100PercentOnTicks == 0)
+                                if (statistics.Last100PercentOnTick == 0)
                                 {
-                                    statistics.Last100PercentOnTicks = statistics.TotalTicksElapsed;
+                                    statistics.Last100PercentOnTick = statistics.TotalTicksElapsed;
+                                    statistics.Last100PercentOnRound = statistics.Rounds;
                                 }
                             }
                             else
                             {
-                                statistics.Last100PercentOnTicks = 0;
+                                statistics.Last100PercentOnTick = 0;
+                                statistics.Last100PercentOnRound = 0;
                             }
 
                             networkModel.DynamicStatistics.Add(statistics.Percent, statistics.CostAvg);
@@ -803,39 +806,39 @@ namespace Qualia.Controls
             stat.Add("4", null);
 
             stat.Add("Rounds",
-                     statistics.Rounds.ToString());
+                     Converter.RoundsToString(statistics.Rounds));
 
             stat.Add("Percent",
                      Converter.DoubleToText(statistics.Percent, "N6") + " %");
 
             stat.Add("4.5", null);
 
-            stat.Add("First 100%, time",
-                      statistics.First100PercentOnTicks > 0
-                      ? TimeSpan.FromTicks(statistics.First100PercentOnTicks).ToString(Culture.TimeFormat)
+            stat.Add("First 100%, time (round)",
+                      statistics.First100PercentOnTick > 0
+                      ? TimeSpan.FromTicks(statistics.First100PercentOnTick).ToString(Culture.TimeFormat) + " (" + Converter.RoundsToString(statistics.First100PercentOnRound) + ")"
                       : "...");
 
             string currentPeriod;
 
-            if (statistics.Last100PercentOnTicks == 0)
+            if (statistics.Last100PercentOnTick == 0)
             {
-                currentPeriod = "0 msec";
+                currentPeriod = "...";
             }
             else
             {
-                var current100PercentPeriodTicks = statistics.TotalTicksElapsed - statistics.Last100PercentOnTicks;
+                var current100PercentPeriodTicks = statistics.TotalTicksElapsed - statistics.Last100PercentOnTick;
 
                 if (current100PercentPeriodTicks < TimeSpan.FromSeconds(1).Ticks)
                 {
-                    currentPeriod = (int)TimeSpan.FromTicks(current100PercentPeriodTicks).TotalMilliseconds + " msec";
+                    currentPeriod = (int)TimeSpan.FromTicks(current100PercentPeriodTicks).TotalMilliseconds + " msec" + " (" + Converter.RoundsToString(statistics.Last100PercentOnRound) + ")";
                 }
                 else
                 {
-                    currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).ToString(Culture.TimeFormat);
+                    currentPeriod = TimeSpan.FromTicks(current100PercentPeriodTicks).ToString(Culture.TimeFormat) + " (" + Converter.RoundsToString(statistics.Last100PercentOnRound) + ")";
                 }
             }
 
-            stat.Add("Current 100% period, time", currentPeriod);
+            stat.Add("Current 100% period, time (from round)", currentPeriod);
 
             stat.Add("5", null);
 
@@ -860,10 +863,10 @@ namespace Qualia.Controls
             stat.Add("Statistics",
                      ((int)TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds()).ToString());
 
-            stat.Add("7", null);
+            //stat.Add("7", null);
 
-            stat.Add("Blocked weights count",
-                     statistics.BlockedWeights.ToString());
+            //stat.Add("Blocked weights count",
+            //         statistics.BlockedWeights.ToString());
 
             CtlStatisticsPresenter.Draw(stat);
 

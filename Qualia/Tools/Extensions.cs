@@ -111,6 +111,11 @@ namespace Qualia.Tools
             return (long)(span.TotalMilliseconds * 1000);
         }
 
+        public static long TotalNanoseconds(this TimeSpan span)
+        {
+            return (long)(span.TotalMilliseconds * 1000 * 1000);
+        }
+
         public static string GetDirectoryName(string path, string defaultePath)
         {
             try
@@ -177,6 +182,7 @@ namespace Qualia.Tools
             if (!string.IsNullOrEmpty(item))
             {
                 comboBox.SelectedItem = item;
+                //comboBox.Text = item + ": descriprtion";
             }
         }
     }

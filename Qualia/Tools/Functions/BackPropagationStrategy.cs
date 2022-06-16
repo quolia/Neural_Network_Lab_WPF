@@ -129,7 +129,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class UntilNoErrorInLoop
         {
-            public static readonly string Description = "BP executes in every round until all rounds in a loop are correct. BP does not executes until the next error round.";
+            public static readonly string Description = "BP executes in every round until all rounds in a loop are correct. BP does not execute until the next error round.";
 
             public static readonly BackPropagationStrategy Instance = new(&PrepareForRun,
                                                                           &Stub1,
