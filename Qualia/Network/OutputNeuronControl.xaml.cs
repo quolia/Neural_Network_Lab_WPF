@@ -34,7 +34,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            Initializer.FillComboBox<ActivationFunction>(CtlActivationFunction, Config);
+            CtlActivationFunction.Fill<ActivationFunction>(Config);
             _configParams.ForEach(param => param.LoadConfig());
 
             StateChanged();

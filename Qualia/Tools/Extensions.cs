@@ -127,66 +127,72 @@ namespace Qualia.Tools
                 return defaultePath;
             }
         }
-    }
 
-    public static class Initializer
-    {
-        private static string CutName(string name)
+        //Returns: Selected item description.
+        public static string Fill<T>(this ComboBox comboBox, Config config, string defaultValue = null) where T : class
         {
-            var prefix = "Ctl";
-            return name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase) ? name.Substring(prefix.Length) : name;
+            return Initializer.FillComboBox<T>(comboBox, config, defaultValue);
         }
 
-        public static string FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue = null) where T : class
+        private static class Initializer
         {
-            if (defaultValue == null)
+            //private static string CutName(string name)
+            //{
+            //    var prefix = "Ctl";
+            //    return name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase) ? name.Substring(prefix.Length) : name;
+            //}
+
+            public static string FillComboBox<T>(ComboBox comboBox, Config config, string defaultValue = null) where T : class
             {
-                defaultValue = BaseFunction<T>.DefaultValue;
-            }
-
-            var items = BaseFunction<T>.GetItemsWithDescriptions();
-            FillComboBox(items, comboBox, config, defaultValue);
-
-            return BaseFunction<T>.GetDescription(comboBox.SelectedItem);
-        }
-
-        private static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue = null)
-        {
-            FillComboBox(getItemsFunc(), comboBox, config, defaultValue);
-        }
-
-        private static void FillComboBox(in string[] items, ComboBox comboBox, Config config, string defaultValue = null)
-        {
-            var paramName = CutName(comboBox.Name);
-
-            comboBox.Items.Clear();
-
-            foreach (var item in items)
-            {
-                comboBox.Items.Add(Config.PrepareValue(item));
-            }
-
-            var selectedItem = config.GetString(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
-            selectedItem = Config.PrepareValue(selectedItem);
-
-            if (comboBox.Items.Count > 0)
-            {
-                if (!comboBox.Items.Contains(selectedItem))
+                if (defaultValue == null)
                 {
-                    selectedItem = (string)comboBox.Items.GetItemAt(0);
+                    defaultValue = BaseFunction<T>.DefaultValue;
                 }
-            }
-            else
-            {
-                selectedItem = null;
+
+                var items = BaseFunction<T>.GetItemsWithDescriptions();
+                FillComboBox(items, comboBox, config, defaultValue);
+
+                return BaseFunction<T>.GetDescription(comboBox.SelectedItem);
             }
 
-            if (!string.IsNullOrEmpty(selectedItem))
+            private static void FillComboBox(Func<string[]> getItemsFunc, ComboBox comboBox, Config config, string defaultValue = null)
             {
-                comboBox.SelectedItem = selectedItem;
+                FillComboBox(getItemsFunc(), comboBox, config, defaultValue);
             }
 
-            comboBox.ToolTip = string.Join("\n\n", items);
+            private static void FillComboBox(in string[] items, ComboBox comboBox, Config config, string defaultValue = null)
+            {
+                var paramName = Config.PrepareParamName(comboBox.Name);
+
+                comboBox.Items.Clear();
+
+                foreach (var item in items)
+                {
+                    comboBox.Items.Add(Config.PrepareValue(item));
+                }
+
+                var selectedItem = config.GetString(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
+                selectedItem = Config.PrepareValue(selectedItem);
+
+                if (comboBox.Items.Count > 0)
+                {
+                    if (!comboBox.Items.Contains(selectedItem))
+                    {
+                        selectedItem = (string)comboBox.Items.GetItemAt(0);
+                    }
+                }
+                else
+                {
+                    selectedItem = null;
+                }
+
+                if (!string.IsNullOrEmpty(selectedItem))
+                {
+                    comboBox.SelectedItem = selectedItem;
+                }
+
+                comboBox.ToolTip = string.Join("\n\n", items);
+            }
         }
     }
 }

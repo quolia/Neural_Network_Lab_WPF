@@ -80,11 +80,11 @@ namespace Qualia.Controls
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            Initializer.FillComboBox<TaskFunction>(CtlTaskFunction, config);
+            CtlTaskFunction.Fill<TaskFunction>(config);
             TaskFunction = TaskFunction.GetInstance(CtlTaskFunction.SelectedItem);
 
             var parametersConfig = config.Extend(CtlTaskFunction.SelectedItem);
-            Initializer.FillComboBox<InputDataFunction>(CtlInputDataFunction, parametersConfig);
+            CtlInputDataFunction.Fill<InputDataFunction>(parametersConfig);
             TaskFunction.InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction.SelectedItem);
 
             _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();

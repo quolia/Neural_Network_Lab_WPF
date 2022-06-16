@@ -164,9 +164,9 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Initializer.FillComboBox<RandomizeFunction>(CtlRandomizeFunction, Config);
-            Initializer.FillComboBox<CostFunction>(CtlCostFunction, Config);
-            var description = Initializer.FillComboBox<BackPropagationStrategy>(CtlBackPropagationStrategy, Config);
+            CtlRandomizeFunction.Fill<RandomizeFunction>(Config);
+            CtlCostFunction.Fill<CostFunction>(Config);
+            var description = CtlBackPropagationStrategy.Fill<BackPropagationStrategy>(Config);
             CtlBackPropagationStrategyDescription.Text = description;
 
             _configParams.ForEach(param => param.LoadConfig());

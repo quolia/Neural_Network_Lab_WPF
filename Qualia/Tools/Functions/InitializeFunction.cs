@@ -19,70 +19,68 @@ namespace Qualia.Tools
 
         unsafe sealed public class None
         {
-            public static readonly string Description = "Output = none, the value is skipped.";
+            public static readonly string Description = "f(a) = none, the value is skipped.";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? param) => Constants.SkipValue;
+            public static double Do(double? a) => Constants.SkipValue;
         }
 
         unsafe sealed public class Constant
         {
-            public static readonly string Description = "Output = a, (a = 1)";
+            public static readonly string Description = "f(a) = a, (a = 1)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? value = 1) => value ?? 1;
+            public static double Do(double? a) => a ?? 1;
         }
 
         unsafe sealed public class FlatRandom
         {
-            public static readonly string Description = "Output = a * random[0, 1), (a = 1)";
+            public static readonly string Description = "f(a) = a * random[0, 1), (a = 1)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? maxValue = 1) => (maxValue ?? 1) * Rand.GetFlatRandom();
+            public static double Do(double? a) => (a ?? 1) * Rand.GetFlatRandom();
         }
 
         unsafe sealed public class Centered
         {
-            public static readonly string Description = "Output = -a / 2 + a * random[0, 1), (a = 1)";
+            public static readonly string Description = "f(a) = -a / 2 + a * random[0, 1), (a = 1)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? widthWithZeroInTheMiddle = 1)
+            public static double Do(double? a)
             {
-                var param = widthWithZeroInTheMiddle;
-
-                param ??= 1;
-                return -param.Value / 2 + param.Value * Rand.GetFlatRandom();
+                a ??= 1;
+                return -a.Value / 2 + a.Value * Rand.GetFlatRandom();
             }
         }
 
         unsafe sealed public class Gaussian
         {
-            public static readonly string Description = "Output = gaussian.random(a, 0.17), (a = mean_value = 0.5, sigma = 0.17)";
+            public static readonly string Description = "f(a) = gaussian.random(a, 0.17), (a = mean_value = 0.5, sigma = 0.17)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? meanValue = 0.5)
+            public static double Do(double? a)
             {
-                meanValue ??= 0.5;
+                a ??= 0.5;
 
-                var randNumber = Rand.GaussianRand.NextGaussian(meanValue.Value, 0.17);
+                var randNumber = Rand.GaussianRand.NextGaussian(a.Value, 0.17);
 
                 if (randNumber < 0)
                 {
-                    randNumber += meanValue.Value;
+                    randNumber += a.Value;
                 }
                 else if (randNumber > Constants.LessThan1)
                 {
-                    randNumber += meanValue.Value - Constants.LessThan1;
+                    randNumber += a.Value - Constants.LessThan1;
                 }
 
                 return randNumber;
@@ -91,17 +89,17 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted
         {
-            public static readonly string Description = "Output = gaussian.random.inverted(a), (a = sigma = 0.17)";
+            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a = sigma = 0.17)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? sigma = 0.17)
+            public static double Do(double? a)
             {
-                sigma ??= 0.17;
+                a ??= 0.17;
 
                 var s = Rand.Flat.Next() % 2;
-                var x = Rand.GaussianRand.NextGaussian(0, sigma.Value);
+                var x = Rand.GaussianRand.NextGaussian(0, a.Value);
                 x = s == 0 ? MathX.Abs(x) : Constants.LessThan1 - MathX.Abs(x);
 
                 return x;
@@ -110,16 +108,16 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted2
         {
-            public static readonly string Description = "Output = gaussian.random.inverted(a), (a = sigma = 0.17)";
+            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a = sigma = 0.17)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? sigma = 0.17)
+            public static double Do(double? a)
             {
-                sigma ??= 0.17;
+                a ??= 0.17;
 
-                var x = Rand.GaussianRand.NextGaussian(0, sigma.Value);
+                var x = Rand.GaussianRand.NextGaussian(0, a.Value);
                 x = x < 0 ? -x : Constants.LessThan1 - x;
 
                 return x;

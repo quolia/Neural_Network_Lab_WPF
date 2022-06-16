@@ -37,6 +37,7 @@ namespace Qualia.Tools
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
         public readonly delegate*<NetworkDataModel, InputDataFunction, void> Do;
+
         public ITaskControl VisualControl;
         public InputDataFunction InputDataFunction;
 
