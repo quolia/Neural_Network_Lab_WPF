@@ -48,7 +48,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussRandom
         {
-            public static readonly string Description = "weigth(a) = gaussian.random(0, a), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gaussian(0, a), (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -80,7 +80,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class AbsGaussRandom
         {
-            public static readonly string Description = "weigth(a) = |gaussian.random(0, a)|, (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = |random.gaussian(0, a)|, (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -144,7 +144,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class WaveProgress
         {
-            public static readonly string Description = "weigth(a) = a * (centered(layerId + 1) * cos(weightId / pi) * cos(neuronId / pi)), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * (centered(layer.id + 1) * cos(weight.id / pi) * cos(neuron.id / pi)), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -176,7 +176,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Xavier
         {
-            public static readonly string Description = "weigth(a) = random[0, a) * sqrt(1 / layer.Previous.Neurons.Count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = random[0, a) * sqrt(1 / layer.previous.neurons.count), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -216,7 +216,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussXavier
         {
-            public static readonly string Description = "weigth(a) = gaussian.random[0, a) * sqrt(1 / layer.Previous.Neurons.Count), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gaussian(0, a) * sqrt(1 / layer.previous.neurons.count), (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -258,7 +258,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class HeEtAl
         {
-            public static readonly string Description = "weigth(a) = random[0, a) * sqrt(2 / layer.Previous.Neurons.Count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = random[0, a) * sqrt(2 / layer.previous.neurons.count), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -298,7 +298,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussHeEtAl
         {
-            public static readonly string Description = "weigth(a) = gaussian.random[0, a) * sqrt(2 / layer.Previous.Neurons.Count), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gaussian(0, a) * sqrt(2 / layer.previous.neurons.count), (a=0.17 -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 

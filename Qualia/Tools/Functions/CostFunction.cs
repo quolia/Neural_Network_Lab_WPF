@@ -17,7 +17,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class MSE
         {
-            public static readonly string Description = "f = neurons.sum(target - activation)";
+            public static readonly string Description = "f(network) = network.layers.last.neurons.sum(neuron.target - neuron.activation)";
 
             public static readonly CostFunction Instance = new(&Do, &Derivative);
 

@@ -29,7 +29,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Constant
         {
-            public static readonly string Description = "f(a) = a, (a=1)";
+            public static readonly string Description = "f(a) = a, (a=1 -> constant)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -63,7 +63,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Gaussian
         {
-            public static readonly string Description = "f(a) = gaussian.random(a, sigma), (a=0.5 -> mean_value, sigma=0.17)";
+            public static readonly string Description = "f(a) = random.gaussian(a, sigma), (a=0.5 -> mean value, sigma=0.17)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -89,7 +89,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted
         {
-            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a=0.17 -> sigma)";
+            public static readonly string Description = "f(a) = random.gaussian.inverted(a), (a=0.17 -> sigma)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -108,7 +108,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussianInverted2
         {
-            public static readonly string Description = "f(a) = gaussian.random.inverted(a), (a=0.17 -> sigma)";
+            public static readonly string Description = "f(a) = random.gaussian.inverted(a), (a=0.17 -> sigma)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
