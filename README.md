@@ -4,7 +4,7 @@
 
 <h3>Some strange effects of Neural Networks</h3>
 
-<h4>Unexplainable surges</h4>
+<h2>1. Unexplainable surges</h2>
 
 I've found some strange effects. Even a 100% learned NN could "go crazy" at some moment and make a row of mistakes without any visible reason. It doesn't depend on if it continues learning or not. Be careful with your Tesla car :) Someday it could kill you just out of nothing. I've not found an explanation of this. Yet.
 
@@ -16,7 +16,8 @@ Options to check:
 2 <img width="1280" alt="2022-06-12 (6)" src="https://user-images.githubusercontent.com/53271533/173506925-d721c70a-c37a-49d3-9cb3-5359af7d1f5d.png">
 3 <img width="1280" alt="2022-06-12 (4)" src="https://user-images.githubusercontent.com/53271533/173506918-d91a5f61-da85-47f3-8d4b-c19b8598a81f.png">
 
-<h4> Stable weights</h4>
+<br>
+<h2>2. Stable weights</h2>
 
 Another one strange effect is that after some time of learning a NN gets some stable weights which don't change. But they should change, because all weights on a previous layer are changed. And the pattern of these weights looks like this. Outcoming weights are grouped at some neurons and incoming weights most often belong to some first and some last neurons of the output layer.
 
@@ -24,7 +25,8 @@ Another one strange effect is that after some time of learning a NN gets some st
 34 <img width="1280" alt="2022-06-12 (1)" src="https://user-images.githubusercontent.com/53271533/173506908-20448b8a-4fe6-4943-a301-8f903ffc6efd.png">
 35 <img width="1280" alt="2022-06-12 (2)" src="https://user-images.githubusercontent.com/53271533/173506913-22234672-4ec9-4315-832a-30eaaceccae3.png">
 
-<h4>Some other screenshots</h4>
+<br>
+<h2>Some other screenshots</h2>
 
 36 <img width="1280" alt="2022-06-12 (8)" src="https://user-images.githubusercontent.com/53271533/173506933-1a26528c-7fb7-4df8-8ef0-a0902328f7bf.png">
 4 <img width="1280" alt="2022-06-01 (2)" src="https://user-images.githubusercontent.com/53271533/173506779-c5d43a5d-e1c3-489b-a964-2436348034c5.png">
