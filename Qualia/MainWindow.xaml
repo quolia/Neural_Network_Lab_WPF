@@ -7,16 +7,6 @@
         Closing="Window_Closing"
         mc:Ignorable="d" Height="450" Width="800" Title="Networks">
 
-    <Window.Resources>
-
-        <DataTemplate x:Name="QComboBoxTemplate" x:Key="QComboBoxTemplate" DataType="{x:Type ComboBoxItem}">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding}" HorizontalAlignment="Stretch" Background="WhiteSmoke" />
-            </StackPanel>
-        </DataTemplate>
-
-    </Window.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="DataWidth" />

@@ -43,9 +43,9 @@ namespace Qualia.Controls
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
         public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
-        public double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
+        public double? ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull;
         public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction.SelectedItem);
-        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull ?? 1;
+        public double? WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull;
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
 
         public void OnTaskChanged(TaskFunction taskFunction)
@@ -78,7 +78,7 @@ namespace Qualia.Controls
             InputNeuronControl ctlNeuron = new(NeuronsHolder.Children.Count)
             {
                 ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem),
-                ActivationFunctionParam = CtlActivationFunctionParam.ValueOrNull ?? 1
+                ActivationFunctionParam = CtlActivationFunctionParam.ValueOrNull
             };
 
             return ctlNeuron;

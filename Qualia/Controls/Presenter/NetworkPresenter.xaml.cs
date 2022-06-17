@@ -123,15 +123,15 @@ namespace Qualia.Controls
                                 else
                                 {
                                     prevWeight = 0;
-                                    _prevWeights.Add(weightModel, weightModel.Weight);
+                                    //_prevWeights.Add(weightModel, weightModel.Weight);
+                                    _prevWeights.Add(weightModel, 0);
                                     isWeightChanged = true;
                                 }
 
                                 if (isWeightChanged && isShowOnlyChangedWeights)
                                 {
                                     double changeFraction = (prevWeight - weightModel.Weight) / prevWeight;
-
-                                    if (changeFraction < 0.0001 && changeFraction > -0.0001)
+                                    if (changeFraction < 0.00001 && changeFraction > -0.00001)
                                     {
                                         isWeightChanged = false;
                                         //opacity = 1 / opacityFactor / 2;

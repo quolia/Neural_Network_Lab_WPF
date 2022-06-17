@@ -228,7 +228,7 @@ namespace Qualia.Controls
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
         private RandomizeFunction RandomizeMode => RandomizeFunction.GetInstance(CtlRandomizeFunction.SelectedItem);
-        private double RandomizerParam => CtlRandomizeFunctionParam.ValueOrNull ?? 1;
+        private double? RandomizerParam => CtlRandomizeFunctionParam.ValueOrNull;
         private double LearningRate => CtlLearningRate.Value;
 
         public void DeleteLayer()

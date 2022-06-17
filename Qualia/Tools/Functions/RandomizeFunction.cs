@@ -6,9 +6,9 @@ namespace Qualia.Tools
 {
     unsafe public class RandomizeFunction : BaseFunction<RandomizeFunction>
     {
-        public readonly delegate*<NetworkDataModel, double, void> Do;
+        public readonly delegate*<NetworkDataModel, double?, void> Do;
 
-        public RandomizeFunction(delegate*<NetworkDataModel, double, void> doFunc)
+        public RandomizeFunction(delegate*<NetworkDataModel, double?, void> doFunc)
             : base(defaultValue: nameof(FlatRandom))
         {
             Do = doFunc;
@@ -21,8 +21,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? upperBound = 1)
             {
+                upperBound ??= 1;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -32,7 +34,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = a * Rand.RandomFlat.NextDouble();
+                            weight.Weight = Rand.RandomFlat.NextDouble() * upperBound.Value;
                             weight = weight.Next;
                         }
 
@@ -51,7 +53,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? sigma = 0.17)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -62,7 +64,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = InitializeFunction.GaussNormal.Do(a);
+                            weight.Weight = Rand.Gauss.GetNormal(0, sigma.Value);
                             weight = weight.Next;
                         }
 
@@ -81,8 +83,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? sigma = 0.17)
             {
+                sigma ??= 0.17;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -92,7 +96,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = MathX.Abs(Rand.Gauss.GetNormal(0, a));
+                            weight.Weight = MathX.Abs(Rand.Gauss.GetNormal(0, sigma.Value));
                             weight = weight.Next;
                         }
 
@@ -111,8 +115,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? width = 1)
             {
+                width ??= 1;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -122,7 +128,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = -a / 2 + a * Rand.RandomFlat.NextDouble();
+                            weight.Weight = -width.Value / 2 + width.Value * Rand.RandomFlat.NextDouble();
                             weight = weight.Next;
                         }
 
@@ -141,8 +147,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? multyplier = 1)
             {
+                multyplier ??= 1;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -152,7 +160,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = a * InitializeFunction.Centered.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                            weight.Weight = multyplier.Value * InitializeFunction.Centered.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
                             weight = weight.Next;
                         }
 
@@ -171,8 +179,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? upperBound = 1)
             {
+                upperBound ??= 1;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -188,7 +198,7 @@ namespace Qualia.Tools
                             }
                             else
                             {
-                                weight.Weight = a * Rand.RandomFlat.NextDouble() * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = upperBound.Value * Rand.RandomFlat.NextDouble() * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -209,9 +219,11 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? sigma = 0.17)
             {
                 // Xavier initialization works better for layers with sigmoid activation.
+
+                sigma ??= 0.17;
 
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -224,11 +236,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.Gauss.GetNormal(0, a);
+                                weight.Weight = Rand.Gauss.GetNormal(0, sigma.Value);
                             }
                             else
                             {
-                                weight.Weight = Rand.Gauss.GetNormal(0, a) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = Rand.Gauss.GetNormal(0, sigma.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -249,8 +261,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? upperBound = 1)
             {
+                upperBound ??= 1;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -266,7 +280,7 @@ namespace Qualia.Tools
                             }
                             else
                             {
-                                weight.Weight = a * Rand.RandomFlat.NextDouble() * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = upperBound.Value * Rand.RandomFlat.NextDouble() * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -287,9 +301,11 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a)
+            public static void Do(NetworkDataModel networkModel, double? sigma = 0.17)
             {
                 // He initialization works better for layers with ReLu(s) activation.
+
+                sigma ??= 0.17 ;
 
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -302,11 +318,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.Gauss.GetNormal(0, a);
+                                weight.Weight = Rand.Gauss.GetNormal(0, sigma.Value);
                             }
                             else
                             {
-                                weight.Weight = Rand.Gauss.GetNormal(0, a) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = Rand.Gauss.GetNormal(0, sigma.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -327,8 +343,10 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a )
+            public static void Do(NetworkDataModel networkModel, double? value = 1)
             {
+                value ??= 1;
+
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -338,7 +356,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = a;
+                            weight.Weight = value.Value;
                             weight = weight.Next;
                         }
 

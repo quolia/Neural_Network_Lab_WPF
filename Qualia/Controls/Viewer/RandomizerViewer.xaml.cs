@@ -9,7 +9,7 @@ namespace Qualia.Controls
     unsafe sealed public partial class RandomizerViewer : WindowResizeControl
     {
         private readonly RandomizeFunction _randomizeMode;
-        private readonly double _param;
+        private readonly double? _param;
 
         private readonly Font _font = new("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
 
@@ -20,7 +20,7 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public RandomizerViewer(RandomizeFunction randomizeMode, double param)
+        public RandomizerViewer(RandomizeFunction randomizeMode, double? param)
         {
             InitializeComponent();
 

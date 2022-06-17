@@ -26,11 +26,11 @@ namespace Qualia.Controls
         }
 
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.None.Instance;
-        public override double WeightsInitializeFunctionParam => 1;
+        public override double? WeightsInitializeFunctionParam => null;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
         public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
-        public override double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
+        public override double? ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull;
 
         public void LoadConfig()
         {

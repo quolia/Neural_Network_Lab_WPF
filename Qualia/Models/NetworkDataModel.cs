@@ -17,7 +17,7 @@ namespace Qualia.Model
         public Color Color;
         public double LearningRate;
         public RandomizeFunction RandomizeMode;
-        public double RandomizerParam;
+        public double? RandomizerParam;
         public double InputInitial0;
         public double InputInitial1;
         public bool IsAdjustFirstLayerWeights;

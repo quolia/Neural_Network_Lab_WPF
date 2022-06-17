@@ -100,9 +100,13 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
-                int randNumber = (int)((1 + _maxNumber - _minNumber) * inputDataFunction.Do(1) + _minNumber);
+                double randNumber = inputDataFunction.Do(null);
 
-                networkModel.TargetOutput = randNumber;
+                randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
+
+                var intNumber = (int)randNumber;
+
+                networkModel.TargetOutput = intNumber;
 
                 var neurons = networkModel.Layers.First.Neurons;
                 var neuron = neurons.First;
@@ -113,7 +117,7 @@ namespace Qualia.Tools
                     neuron = neuron.Next;
                 }
 
-                while (randNumber > 0)
+                while (intNumber > 0)
                 {
                     var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
 
@@ -127,7 +131,7 @@ namespace Qualia.Tools
                     }
 
                     active.Activation = networkModel.InputInitial1;
-                    --randNumber;
+                    --intNumber;
                 }
 
                 neuron = networkModel.Layers.Last.Neurons.First;
