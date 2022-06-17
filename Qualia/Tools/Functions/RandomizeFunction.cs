@@ -21,7 +21,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 1)
             {
                 a ??= 1;
 
@@ -53,7 +53,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 0.5)
             {
                 a ??= 0.5;
 
@@ -85,7 +85,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 0.17)
             {
                 a ??= 0.17;
 
@@ -117,7 +117,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 1)
             {
                 a ??= 1;
 
@@ -149,7 +149,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 1)
             {
                 a ??= 1;
 
@@ -181,7 +181,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 1)
             {
                 a ??= 1;
 
@@ -221,7 +221,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 0.17)
             {
                 // Xavier initialization works better for layers with sigmoid activation.
 
@@ -263,7 +263,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 1)
             {
                 a ??= 1;
 
@@ -303,7 +303,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 0.17)
             {
                 // He initialization works better for layers with ReLu(s) activation.
 
@@ -345,7 +345,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double? a)
+            public static void Do(NetworkDataModel networkModel, double? a = 1)
             {
                 a ??= 1;
 

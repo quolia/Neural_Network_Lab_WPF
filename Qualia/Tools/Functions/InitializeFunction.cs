@@ -24,7 +24,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a) => Constants.SkipValue;
+            public static double Do(double? a = 1) => Constants.SkipValue;
         }
 
         unsafe sealed public class Constant
@@ -34,7 +34,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a) => a ?? 1;
+            public static double Do(double? a = 1) => a ?? 1;
         }
 
         unsafe sealed public class FlatRandom
@@ -44,7 +44,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a) => (a ?? 1) * Rand.RandomFlat.NextDouble();
+            public static double Do(double? a = 1) => (a ?? 1) * Rand.RandomFlat.NextDouble();
         }
 
         unsafe sealed public class Centered
@@ -54,7 +54,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a)
+            public static double Do(double? a = 1)
             {
                 a ??= 1;
                 return -a.Value / 2 + a.Value * Rand.RandomFlat.NextDouble();
@@ -68,7 +68,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a)
+            public static double Do(double? a = 0.5)
             {
                 a ??= 0.5;
 
@@ -94,7 +94,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a)
+            public static double Do(double? a = 0.17)
             {
                 var gauss = Rand.Gauss.GetNormal(0, a ?? 0.17);
 
