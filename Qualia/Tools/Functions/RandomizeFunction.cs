@@ -21,7 +21,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 1)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -51,7 +51,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 0.17)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -81,7 +81,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 0.17)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -111,7 +111,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 1)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -141,7 +141,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 1)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -171,7 +171,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 1)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -209,7 +209,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 0.17)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 // Xavier initialization works better for layers with sigmoid activation.
 
@@ -249,7 +249,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 1)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
@@ -287,7 +287,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 0.17)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 // He initialization works better for layers with ReLu(s) activation.
 
@@ -327,7 +327,7 @@ namespace Qualia.Tools
             public static readonly RandomizeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, double a = 1)
+            public static void Do(NetworkDataModel networkModel, double a)
             {
                 var layer = networkModel.Layers.First;
                 while (layer != null)
