@@ -16,7 +16,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class FlatRandom
         {
-            public static readonly string Description = "weigth(a) = a * random.flat[0, 1), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * random.flat[0, 1), (a -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -32,7 +32,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = Rand.RandomFlat.NextDouble() * a;
+                            weight.Weight = a * Rand.RandomFlat.NextDouble();
                             weight = weight.Next;
                         }
 
@@ -76,7 +76,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussNormalModule
         {
-            public static readonly string Description = "weigth(a) = |random.gauss.normal(0, a)|, (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = |random.gauss.normal(0, a)|, (a -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -106,7 +106,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Centered
         {
-            public static readonly string Description = "weigth(a) = -a / 2 + a * random.flat[0, 1), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = -a / 2 + a * random.flat[0, 1), (a -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -136,7 +136,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class WaveProgress
         {
-            public static readonly string Description = "weigth(a) = a * (centered(layer.id + 1) * cos(weight.id / pi) * cos(neuron.id / pi)), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * (centered(layer.id + 1) * cos(weight.id / pi) * cos(neuron.id / pi)), (a -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -166,7 +166,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Xavier
         {
-            public static readonly string Description = "weigth(a) = a * random.flat[0, 1) * sqrt(1 / layer.previous.neurons.count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * random.flat[0, 1) * sqrt(1 / layer.previous.neurons.count), (a -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -204,7 +204,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussXavier
         {
-            public static readonly string Description = "weigth(a) = random.gauss.normal(0, a) * sqrt(1 / layer.previous.neurons.count), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gauss.normal(0, a) * sqrt(1 / layer.previous.neurons.count), (a -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -244,7 +244,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class HeEtAl
         {
-            public static readonly string Description = "weigth(a) = a * random.flat[0, 1) * sqrt(2 / layer.previous.neurons.count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * random.flat[0, 1) * sqrt(2 / layer.previous.neurons.count), (a -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -282,7 +282,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class GaussHeEtAl
         {
-            public static readonly string Description = "weigth(a) = random.gauss.normal(0, a) * sqrt(2 / layer.previous.neurons.count), (a=0.17 -> sigma)";
+            public static readonly string Description = "weigth(a) = random.gauss.normal(0, a) * sqrt(2 / layer.previous.neurons.count), (a -> sigma)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -322,7 +322,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Constant
         {
-            public static readonly string Description = "weigth(a) = a, (a=1 -> constant)";
+            public static readonly string Description = "weigth(a) = a, (a -> constant)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 

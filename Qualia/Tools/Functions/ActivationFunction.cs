@@ -17,8 +17,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class Liner
         {
-            public static readonly string Description = "f(x, a) = a * x, (a=1 -> multiplier)";
-            public static readonly string DerivativeDescription = "f(x, a)' = a, (a=1 -> multiplier)";
+            public static readonly string Description = "f(x, a) = a * x, (a -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = a, (a -> multiplier)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -54,7 +54,11 @@ namespace Qualia.Tools
             public static double Do(double x, double a) => 2 / (1 + Math.Exp(-x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double a) => 2 * LogisticSigmoid.Instance.Do(x, 1) * (1 - LogisticSigmoid.Instance.Do(x, 1));
+            public static double Derivative(double x, double a)
+            {
+                var sigmoid = LogisticSigmoid.Instance.Do(x, 1);
+                return 2 * sigmoid * (1 - sigmoid);
+            }
         }
 
         unsafe sealed public class Softsign
@@ -87,15 +91,15 @@ namespace Qualia.Tools
 
         unsafe sealed public class ReLu
         {
-            public static readonly string Description = "f(x, a) = if (x > 0) => (a * x) else => (0), (a=1 -> multiplier)";
-            public static readonly string DerivativeDescription = "f(x, a)' = if (x > 0) => (a) else => (0), (a=1 -> multiplier)";
+            public static readonly string Description = "f(x, a) = if (x > 0) => (a * x) else => (0), (a -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = if (x > 0) => (a) else => (0), (a -> multiplier)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Do(double x, double a)
             {
-                return x > 0 ? x * a : 0;
+                return x > 0 ? a * x : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -107,7 +111,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class StepConst
         {
-            public static readonly string Description = "f(x, a) = if (x > 0) => (a) else => (-a), (a=1 -> multiplier)";
+            public static readonly string Description = "f(x, a) = if (x > 0) => (a) else => (-a), (a -> multiplier)";
             public static readonly string DerivativeDescription = "f(x, a)' = 0, (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
