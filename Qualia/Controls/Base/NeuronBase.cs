@@ -70,9 +70,9 @@ namespace Qualia.Controls
         }
 
         public virtual InitializeFunction ActivationInitializeFunction => throw new InvalidOperationException();
-        public virtual double? ActivationInitializeFunctionParam => throw new InvalidOperationException();
+        public virtual double ActivationInitializeFunctionParam => throw new InvalidOperationException();
         public virtual InitializeFunction WeightsInitializeFunction => throw new InvalidOperationException();
-        public virtual double? WeightsInitializeFunctionParam => throw new InvalidOperationException();
+        public virtual double WeightsInitializeFunctionParam => throw new InvalidOperationException();
 
         public virtual ActivationFunction ActivationFunction
         {
@@ -80,7 +80,7 @@ namespace Qualia.Controls
             set => throw new InvalidOperationException();
         }
 
-        public virtual double? ActivationFunctionParam
+        public virtual double ActivationFunctionParam
         {
             get => throw new InvalidOperationException();
             set => throw new InvalidOperationException();

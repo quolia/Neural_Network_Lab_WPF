@@ -100,7 +100,7 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
-                double randNumber = inputDataFunction.Do(null);
+                double randNumber = inputDataFunction.Do(1);
 
                 randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
 
