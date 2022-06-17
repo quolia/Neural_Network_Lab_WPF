@@ -24,7 +24,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a) => Constants.SkipValue;
+            public static double Do(double? a = 1) => Constants.SkipValue;
         }
 
         unsafe sealed public class Constant
