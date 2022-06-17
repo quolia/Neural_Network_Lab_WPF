@@ -7,13 +7,13 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Qualia")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Neural Network Lab (Qualia)")]
+[assembly: AssemblyDescription("This application is used to exlore Neural Networks.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("echoviser")]
 [assembly: AssemblyProduct("Qualia")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright ©  2019-2022")]
+[assembly: AssemblyTrademark("echoviser")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
