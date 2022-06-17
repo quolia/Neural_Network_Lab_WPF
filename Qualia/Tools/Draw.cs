@@ -222,7 +222,7 @@ namespace Qualia.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetRandomColor(byte offsetFromTop, in Color baseColor)
         {
-            var rand = (byte)Rand.Flat.Get(offsetFromTop);
+            var rand = Rand.RandomFlat.Next(offsetFromTop);
             return Color.FromArgb(255,
                                   (byte)(MathX.Max(baseColor.R - offsetFromTop, 0) + rand),
                                   (byte)(MathX.Max(baseColor.G - offsetFromTop, 0) + rand),

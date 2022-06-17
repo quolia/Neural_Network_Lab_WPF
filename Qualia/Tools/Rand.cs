@@ -7,33 +7,25 @@ namespace Qualia.Tools
 {
     public static class Rand
     {
+        public static readonly Random RandomFlat = new((int)(DateTime.UtcNow.Ticks % int.MaxValue));
+
         public static class Flat
         {
-            private static Random _flat = new((int)(DateTime.UtcNow.Ticks % int.MaxValue));
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            //public static double Get() => RandomFlat.NextDouble();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Get(double maxValue)
-            {
-                return maxValue * _flat.NextDouble();
-            }
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            //public static double Get(double maxValue) => maxValue * RandomFlat.NextDouble();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double GetInRange(double minValue, double maxValue)
-            {
-                return Get(maxValue - minValue) + minValue;
-            }
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            //public static double GetInRange(double minValue, double maxValue) => RandomFlat.NextDouble() * (maxValue - minValue) + minValue;
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double GetFromCenter(double range)
-            {
-                return Get(range) - range / 2;
-            }
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            //public static double GetFromCenter(double range) => RandomFlat.NextDouble() * range - range / 2;
         }
 
         sealed public class Gauss
         {
-            private static Random _randomFlat = new((int)(DateTime.UtcNow.Ticks % int.MaxValue));
-
             private static bool _hasDeviate;
             private static double _storedDeviate;
 
@@ -43,8 +35,8 @@ namespace Qualia.Tools
             /// within the unit circle, and transforms them into two independently
             /// distributed normal deviates.
             /// </summary>
-            /// <param name="meanValue">The mean of the distribution.  Default is zero.</param>
-            /// <param name="sigma">The standard deviation of the distribution.  Default is one.</param>
+            /// <param name="meanValue">The mean of the distribution.</param>
+            /// <param name="sigma">The standard deviation of the distribution.</param>
             /// <returns></returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double GetNormal(double meanValue, double sigma)
@@ -63,21 +55,17 @@ namespace Qualia.Tools
                 double v1, v2, squared;
                 do
                 {
-                    // two random values between -1.0 and 1.0
-                    v1 = 2 * _randomFlat.NextDouble() - 1;
-                    v2 = 2 * _randomFlat.NextDouble() - 1;
+                    v1 = 2 * RandomFlat.NextDouble() - 1;
+                    v2 = 2 * RandomFlat.NextDouble() - 1;
                     squared = v1 * v1 + v2 * v2;
-                    // ensure within the unit circle
                 }
                 while (squared >= 1 || squared == 0);
 
-                // calculate polar tranformation for each deviate
                 var polar = Math.Sqrt(-2 * Math.Log(squared) / squared);
-                // store first deviate
+
                 _storedDeviate = v2 * polar;
                 _hasDeviate = true;
 
-                // return second deviate
                 return v1 * polar * sigma + meanValue;
             }
         }
@@ -107,6 +95,7 @@ namespace Qualia.Tools
         }
     }
 
+    /*
     public static class RandomExtensions
     {
         /// <summary>
@@ -159,6 +148,7 @@ namespace Qualia.Tools
             _rand = new Random();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double Next()
         {
             if (_available)
@@ -175,14 +165,17 @@ namespace Qualia.Tools
             return temp1 * Math.Cos(temp2);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double Next(double meanValue, double sigma)
         {
             return meanValue + sigma * Next();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double Next(double sigma)
         {
             return sigma * Next();
         }
     }
+    */
 }

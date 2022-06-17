@@ -95,22 +95,20 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Do(double x, double? a)
             {
-                a ??= 1;
-                return x > 0 ? a.Value * x : 0;
+                return x > 0 ? (a ?? 1) * x : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Derivative(double x, double? a)
             {
-                a ??= 1;
-                return x > 0 ? a.Value : 0;
+                return x > 0 ? (a ?? 1) : 0;
             }
         }
 
         unsafe sealed public class StepConst
         {
-            public static readonly string Description = "f(x, a) = if (x > 0) => (a) else => (-a), (a=1 => multiplier)";
-            public static readonly string DerivativeDescription = "f(x, a)' = 0, (a => not used)";
+            public static readonly string Description = "f(x, a) = if (x > 0) => (a) else => (-a), (a=1 -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = 0, (a -> not used)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 

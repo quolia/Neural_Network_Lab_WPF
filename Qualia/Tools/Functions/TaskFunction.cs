@@ -100,13 +100,9 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
-                double randNumber = inputDataFunction.Do(null);
+                int randNumber = (int)((1 + _maxNumber - _minNumber) * inputDataFunction.Do(null) + _minNumber);
 
-                randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
-
-                var intNumber = (int)randNumber;
-
-                networkModel.TargetOutput = intNumber;
+                networkModel.TargetOutput = randNumber;
 
                 var neurons = networkModel.Layers.First.Neurons;
                 var neuron = neurons.First;
@@ -117,9 +113,9 @@ namespace Qualia.Tools
                     neuron = neuron.Next;
                 }
 
-                while (intNumber > 0)
+                while (randNumber > 0)
                 {
-                    var active = neurons[(int)Rand.Flat.Get(neurons.Count)];
+                    var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
 
                     while (active.Activation == networkModel.InputInitial1)
                     {
@@ -131,7 +127,7 @@ namespace Qualia.Tools
                     }
 
                     active.Activation = networkModel.InputInitial1;
-                    --intNumber;
+                    --randNumber;
                 }
 
                 neuron = networkModel.Layers.Last.Neurons.First;
@@ -151,11 +147,11 @@ namespace Qualia.Tools
             public void InvalidateValue() => throw new InvalidOperationException();
         }
 
-        sealed public class MNIST : ITaskControl
+        sealed public class MNISTNumbers : ITaskControl
         {
             public static readonly string Description = "Network recognizes hand-written numbers.";
 
-            public static readonly TaskFunction Instance = new(&Do, new MNIST());
+            public static readonly TaskFunction Instance = new(&Do, new MNISTNumbers());
 
             private static readonly MNISTControl s_control = new();
 
@@ -196,7 +192,7 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
             {
-                var image = s_control.Images[(int)Rand.Flat.Get(s_control.Images.Count)];
+                var image = s_control.Images[Rand.RandomFlat.Next(s_control.Images.Count)];
                 var count = networkModel.Layers.First.Neurons.Count;
 
                 for (int i = 0; i < count; ++i)

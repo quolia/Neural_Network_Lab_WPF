@@ -16,7 +16,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class FlatRandom
         {
-            public static readonly string Description = "weigth(a) = random.flat[0, a), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * random.flat[0, 1), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -34,7 +34,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = Rand.Flat.Get(a.Value);
+                            weight.Weight = a.Value * Rand.RandomFlat.NextDouble();
                             weight = weight.Next;
                         }
 
@@ -112,7 +112,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Centered
         {
-            public static readonly string Description = "weigth(a) = -a / 2 + random.flat[0, a), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = -a / 2 + a * random.flat[0, 1), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -130,7 +130,7 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = -a.Value / 2 + Rand.Flat.Get(a.Value);
+                            weight.Weight = -a.Value / 2 + a.Value * Rand.RandomFlat.NextDouble();
                             weight = weight.Next;
                         }
 
@@ -176,7 +176,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Xavier
         {
-            public static readonly string Description = "weigth(a) = random.flat[0, a) * sqrt(1 / layer.previous.neurons.count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * random.flat[0, 1) * sqrt(1 / layer.previous.neurons.count), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -196,11 +196,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.Flat.Get(1);
+                                weight.Weight = Rand.RandomFlat.NextDouble();
                             }
                             else
                             {
-                                weight.Weight = Rand.Flat.Get(a.Value) * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = a.Value * Rand.RandomFlat.NextDouble() * Math.Sqrt(1 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;
@@ -258,7 +258,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class HeEtAl
         {
-            public static readonly string Description = "weigth(a) = random.flat[0, a) * sqrt(2 / layer.previous.neurons.count), (a=1 -> max value)";
+            public static readonly string Description = "weigth(a) = a * random.flat[0, 1) * sqrt(2 / layer.previous.neurons.count), (a=1 -> max value)";
 
             public static readonly RandomizeFunction Instance = new(&Do);
 
@@ -278,11 +278,11 @@ namespace Qualia.Tools
                         {
                             if (layer.Previous == null)
                             {
-                                weight.Weight = Rand.Flat.Get(1);
+                                weight.Weight = Rand.RandomFlat.NextDouble();
                             }
                             else
                             {
-                                weight.Weight = Rand.Flat.Get(a.Value) * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
+                                weight.Weight = a.Value * Rand.RandomFlat.NextDouble() * Math.Sqrt(2 / (double)layer.Previous.Neurons.Count);
                             }
 
                             weight = weight.Next;

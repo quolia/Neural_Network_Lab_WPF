@@ -244,7 +244,6 @@ namespace Qualia.Controls
             }
 
             DrawCross(lastInput, lastOutput);
-
         }
 
         private void DrawCross(long input, long output)

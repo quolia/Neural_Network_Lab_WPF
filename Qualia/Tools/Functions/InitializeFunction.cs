@@ -39,17 +39,17 @@ namespace Qualia.Tools
 
         unsafe sealed public class FlatRandom
         {
-            public static readonly string Description = "f(a) = random.flat[0, a), (a=1 -> max value)";
+            public static readonly string Description = "f(a) = a * random.flat[0, 1), (a=1 -> max value)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? a) => Rand.Flat.Get(a ?? 1);
+            public static double Do(double? a) => (a ?? 1) * Rand.RandomFlat.NextDouble();
         }
 
         unsafe sealed public class Centered
         {
-            public static readonly string Description = "f(a) = -a / 2 + random.flat[0, a), (a=1 -> max value)";
+            public static readonly string Description = "f(a) = -a / 2 + a * random.flat[0, 1), (a=1 -> max value)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
@@ -57,7 +57,7 @@ namespace Qualia.Tools
             public static double Do(double? a)
             {
                 a ??= 1;
-                return -a.Value / 2 + Rand.Flat.Get(a.Value);
+                return -a.Value / 2 + a.Value * Rand.RandomFlat.NextDouble();
             }
         }
 
@@ -96,9 +96,7 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Do(double? a)
             {
-                a ??= 0.17;
-
-                var gauss = Rand.Gauss.GetNormal(0, a.Value);
+                var gauss = Rand.Gauss.GetNormal(0, a ?? 0.17);
 
                 if (gauss < 0)
                 {
