@@ -24,7 +24,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? param) => Constants.SkipValue;
+            public static double Do(double? a) => Constants.SkipValue;
         }
 
         unsafe sealed public class Constant
@@ -34,7 +34,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? value = 1) => value ?? 1;
+            public static double Do(double? a = 1) => a ?? 1;
         }
 
         unsafe sealed public class FlatRandom
@@ -44,7 +44,7 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? maxValue = 1) => (maxValue ?? 1) * Rand.RandomFlat.NextDouble();
+            public static double Do(double? a = 1) => (a ?? 1) * Rand.RandomFlat.NextDouble();
         }
 
         unsafe sealed public class Centered
@@ -54,12 +54,10 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? widthWithZeroInTheMiddle = 1)
+            public static double Do(double? a = 1)
             {
-                var param = widthWithZeroInTheMiddle;
-
-                param ??= 1;
-                return -param.Value / 2 + param.Value * Rand.RandomFlat.NextDouble();
+                a ??= 1;
+                return -a.Value / 2 + a.Value * Rand.RandomFlat.NextDouble();
             }
         }
 
@@ -70,19 +68,19 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? meanValue = 0.5)
+            public static double Do(double? a = 0.5)
             {
-                meanValue ??= 0.5;
+                a ??= 0.5;
 
-                var randNumber = Rand.Gauss.GetNormal(meanValue.Value, 0.17);
+                var randNumber = Rand.Gauss.GetNormal(a.Value, 0.17);
 
                 if (randNumber < 0)
                 {
-                    randNumber += meanValue.Value;
+                    randNumber += a.Value;
                 }
                 else if (randNumber > Constants.LessThan1)
                 {
-                    randNumber += meanValue.Value - Constants.LessThan1;
+                    randNumber += a.Value - Constants.LessThan1;
                 }
 
                 return randNumber;
@@ -96,12 +94,12 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? sigma = 0.17)
+            public static double Do(double? a = 0.17)
             {
-                sigma ??= 0.17;
+                a ??= 0.17;
 
                 var s = Rand.RandomFlat.Next() % 2;
-                var x = Rand.Gauss.GetNormal(0, sigma.Value);
+                var x = Rand.Gauss.GetNormal(0, a.Value);
                 x = s == 0 ? MathX.Abs(x) : Constants.LessThan1 - MathX.Abs(x);
 
                 return x;
@@ -115,11 +113,11 @@ namespace Qualia.Tools
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double? sigma = 0.17)
+            public static double Do(double? a = 0.17)
             {
-                sigma ??= 0.17;
+                a ??= 0.17;
 
-                var x = Rand.Gauss.GetNormal(0, sigma.Value);
+                var x = Rand.Gauss.GetNormal(0, a.Value);
                 x = x < 0 ? -x : Constants.LessThan1 - x;
 
                 return x;

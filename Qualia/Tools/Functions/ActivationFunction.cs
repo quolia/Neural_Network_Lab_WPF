@@ -23,10 +23,10 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Do(double x, double? param = 1) => (param ?? 1) * x;
+            private static double Do(double x, double? a = 1) => (a ?? 1) * x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Derivative(double x, double? param = 1) => param ?? 1;
+            private static double Derivative(double x, double? a = 1) => a ?? 1;
         }
 
         unsafe sealed public class LogisticSigmoid
@@ -37,10 +37,10 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? param) => 1 / (1 + Math.Exp(-x));
+            public static double Do(double x, double? a) => 1 / (1 + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? param) => x * (1 - x);
+            public static double Derivative(double x, double? a) => x * (1 - x);
         }
 
         unsafe sealed public class SymmetricSigmoid
@@ -51,10 +51,10 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? param) => 2 / (1 + Math.Exp(-x)) - 1;
+            public static double Do(double x, double? a) => 2 / (1 + Math.Exp(-x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? param) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
+            public static double Derivative(double x, double? a) => 2 * LogisticSigmoid.Instance.Do(x, null) * (1 - LogisticSigmoid.Instance.Do(x, null));
         }
 
         unsafe sealed public class Softsign
@@ -65,10 +65,10 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? param) => x / (1 + MathX.Abs(x));
+            public static double Do(double x, double? a) => x / (1 + MathX.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? param) => throw new InvalidOperationException();
+            public static double Derivative(double x, double? a) => throw new InvalidOperationException();
         }
 
         unsafe sealed public class Tanh
@@ -79,10 +79,10 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? param) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+            public static double Do(double x, double? a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? param) => x * (2 - x);
+            public static double Derivative(double x, double? a) => x * (2 - x);
         }
 
         unsafe sealed public class ReLu
@@ -93,17 +93,17 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? param)
+            public static double Do(double x, double? a)
             {
-                param ??= 1;
-                return x > 0 ? x * param.Value : 0;
+                a ??= 1;
+                return x > 0 ? x * a.Value : 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? param)
+            public static double Derivative(double x, double? a)
             {
-                param ??= 1;
-                return x > 0 ? param.Value : 0;
+                a ??= 1;
+                return x > 0 ? a.Value : 0;
             }
         }
 
@@ -115,14 +115,14 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double? param)
+            public static double Do(double x, double? a)
             {
-                param ??= 1;
-                return x > 0 ? param.Value : -param.Value;
+                a ??= 1;
+                return x > 0 ? a.Value : -a.Value;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double? param) => 0;
+            public static double Derivative(double x, double? a) => 0;
         }
     }
 }
