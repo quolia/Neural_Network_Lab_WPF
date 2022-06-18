@@ -2,9 +2,9 @@
 
 namespace Qualia.Controls
 {
-    sealed public class QLabel : Label
+    sealed public class TextControl : Label
     {
-        public QLabel()
+        public TextControl()
         {
             Padding = new(3);
         }

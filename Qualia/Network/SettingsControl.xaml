@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Name="CtlPanel" Orientation="Vertical">
-            <local:QLabel Content="Rounds per action:" />
+            <local:TextControl Content="Rounds per action:" />
             <Grid Margin="10,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -23,14 +23,14 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <local:QLabel HorizontalAlignment="Right" Content="Draw error matrix:" />
-                <local:QInt HorizontalAlignment="Left" Grid.Column="1" x:Name="CtlSkipRoundsToDrawErrorMatrix" DefaultValue="1000" Value="1000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
+                <local:TextControl HorizontalAlignment="Right" Content="Draw error matrix:" />
+                <local:IntValueControl HorizontalAlignment="Left" Grid.Column="1" x:Name="CtlSkipRoundsToDrawErrorMatrix" DefaultValue="1000" Value="1000" MaximumValue="100000" MinimumValue="1" />
 
-                <local:QLabel HorizontalAlignment="Right" Grid.Row="1" Content="Draw network:" />
-                <local:QInt HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" x:Name="CtlSkipRoundsToDrawNetworks" DefaultValue="10000" Value="10000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
+                <local:TextControl HorizontalAlignment="Right" Grid.Row="1" Content="Draw network:" />
+                <local:IntValueControl HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" x:Name="CtlSkipRoundsToDrawNetworks" DefaultValue="10000" Value="10000" MaximumValue="100000" MinimumValue="1" />
 
-                <local:QLabel HorizontalAlignment="Right" Grid.Row="2" Content="Draw statistics:" />
-                <local:QInt HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" x:Name="CtlSkipRoundsToDrawStatistics" DefaultValue="10000" Value="10000" IsNullAllowed="False" MaximumValue="100000" MinimumValue="1" />
+                <local:TextControl HorizontalAlignment="Right" Grid.Row="2" Content="Draw statistics:" />
+                <local:IntValueControl HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" x:Name="CtlSkipRoundsToDrawStatistics" DefaultValue="10000" Value="10000" MaximumValue="100000" MinimumValue="1" />
 
             </Grid>
         </StackPanel>   

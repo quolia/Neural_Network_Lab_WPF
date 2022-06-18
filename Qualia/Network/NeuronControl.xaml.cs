@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Qualia.Controls
 {
-    public partial class NeuronControl : NeuronBase
+    public partial class NeuronControl : NeuronBaseControl
     {
         private readonly List<IConfigParam> _configParams;
 
@@ -51,14 +51,14 @@ namespace Qualia.Controls
             OnChanged();
         }
 
-        public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunction.GetInstance(CtlActivationInitializeFunction.SelectedItem) : null);
-        public override double ActivationInitializeFunctionParam => (CtlIsBias.IsChecked == true ? CtlActivationInitializeFunctionParam.ValueOrNull ?? 1 : 1);
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction.SelectedItem);
-        public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull ?? 1;
+        public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunction.GetInstance(CtlActivationInitializeFunction) : null);
+        public override double ActivationInitializeFunctionParam => (CtlIsBias.IsChecked == true ? CtlActivationInitializeFunctionParam.Value : 1);
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
+        public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
         public override bool IsBias => CtlIsBias.IsChecked == true;
         public override bool IsBiasConnected => CtlIsBiasConnected.IsChecked == true && IsBias;
-        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
-        public override double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
+        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
+        public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
 
         public void LoadConfig()
         {
@@ -77,7 +77,7 @@ namespace Qualia.Controls
 
         public bool IsValidActivationIniterParam()
         {
-            return !IsBias || Converter.TryTextToDouble(CtlActivationInitializeFunctionParam.Text, out _);
+            return !IsBias || Converter.TryTextToDouble(CtlActivationInitializeFunctionParam.Text, out _, 777);
         }
 
         public override bool IsValid()

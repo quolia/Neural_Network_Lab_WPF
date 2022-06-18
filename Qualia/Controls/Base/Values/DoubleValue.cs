@@ -5,23 +5,25 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public class QDouble : TextBox, IConfigParam
+    sealed public class DoubleValueControl : TextBox, IConfigParam
     {
         private Config _config;
 
         private event Action OnChanged = delegate { };
 
-        public double? DefaultValue { get; set; }
+        public double DefaultValue{ get; set; } 
 
-        public double MinimumValue { get; set; }
+        public DoubleValueControl SetDefaultValue(double value)
+        {
+            DefaultValue = value;
+            return this;
+        }
 
-        public double MaximumValue { get; set; }
+        public double MinimumValue { get; set; } = double.MinValue;
 
-        public bool IsNullAllowed { get; set; }
+        public double MaximumValue { get; set; } = double.MaxValue;
 
-        public bool IsUnranged => MinimumValue == 0 && MaximumValue == 0;
-
-        public QDouble()
+        public DoubleValueControl()
         {
             Padding = new(0);
             Margin = new(3);
@@ -45,15 +47,13 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            if (IsNull() && IsNullAllowed)
+            if (IsNull())
             {
-                return true;
+                return false;
             }
 
-            var ok = Converter.TryTextToDouble(Text, out double? value);
-            ok &= value != null || IsNullAllowed;
-
-            return ok && (IsUnranged || (value >= MinimumValue && value <= MaximumValue));
+            var ok = Converter.TryTextToDouble(Text, out double value, DefaultValue);
+            return ok && (value >= MinimumValue && value <= MaximumValue);
         }
 
         public bool IsNull() => string.IsNullOrEmpty(Text);
@@ -71,19 +71,6 @@ namespace Qualia.Controls
             }
         }
 
-        public double? ValueOrNull
-        {
-            get => IsNull() && IsNullAllowed
-                   ? null
-                   : IsValid() ? Converter.TextToDouble(Text) : throw new InvalidValueException(Name, Text);
-
-            set
-            {
-                Text = Converter.DoubleToText(value);
-                DoubleBox_TextChanged(null, null);
-            }
-        }
-
         public void SetConfig(Config config)
         {
             _config = config;
@@ -91,33 +78,24 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            var value = _config.GetDouble(Name, DefaultValue);
-            if (!IsUnranged && value.HasValue)
-            {
-                if (value.Value < MinimumValue)
-                {
-                    value = MinimumValue;
-                }
+            var value = _config.Get(this, DefaultValue);
 
-                if (value.Value > MaximumValue)
-                {
-                    value = MaximumValue;
-                }
+            if (value < MinimumValue)
+            {
+                value = MinimumValue;
             }
 
-            if (IsNullAllowed)
+            if (value > MaximumValue)
             {
-                ValueOrNull = value;
+                value = MaximumValue;
             }
-            else
-            {
-                Value = value.Value;
-            }
+
+            Value = value;
         }
 
         public void SaveConfig()
         {
-            _config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
+            _config.Set(Name, Value);
         }
 
         public void VanishConfig()

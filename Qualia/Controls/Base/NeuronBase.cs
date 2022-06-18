@@ -6,17 +6,17 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    public partial class NeuronBase : UserControl
+    public partial class NeuronBaseControl : UserControl
     {
         public readonly long Id;
-        public Config Config;
+        public readonly Config Config;
 
-        public Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        public readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
-        private MenuItem _menuAdd;
-        private MenuItem _menuDelete;
+        private readonly MenuItem _menuAdd;
+        private readonly MenuItem _menuDelete;
 
-        public NeuronBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public NeuronBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             ContextMenu = new();
             ContextMenu.Opened += ContextMenu_Opened;
@@ -40,12 +40,12 @@ namespace Qualia.Controls
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
-            _menuDelete.IsEnabled = this.GetParentOfType<LayerBase>().NeuronsCount > 1;
+            _menuDelete.IsEnabled = this.GetParentOfType<LayerBaseControl>().NeuronsCount > 1;
         }
 
         private void AddNeuron_Click(object sender, RoutedEventArgs e)
         {
-            this.GetParentOfType<LayerBase>().AddNeuron();
+            this.GetParentOfType<LayerBaseControl>().AddNeuron();
         }
 
         private void DeleteNeuron_Click(object sender, RoutedEventArgs e)
@@ -66,7 +66,7 @@ namespace Qualia.Controls
         {
             Background = IsBias 
                          ? Draw.GetBrush(Draw.GetRandomColor(20, Draw.GetColor(240, 250, 240)))
-                         : Draw.GetBrush(Draw.GetRandomColor(20, in QColors.Lavender));
+                         : Draw.GetBrush(Draw.GetRandomColor(20, in ColorsX.Lavender));
         }
 
         public virtual InitializeFunction ActivationInitializeFunction => throw new InvalidOperationException();
@@ -95,7 +95,7 @@ namespace Qualia.Controls
 
         private void DeleteNeuron()
         {
-            var layerBase = this.GetParentOfType<LayerBase>();
+            var layerBase = this.GetParentOfType<LayerBaseControl>();
             if (layerBase.NeuronsCount < 2)
             {
                 MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);

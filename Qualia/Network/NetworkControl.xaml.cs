@@ -151,12 +151,12 @@ namespace Qualia.Controls
             Config.Remove(Constants.Param.Layers);
         }
 
-        private List<LayerBase> GetLayersControls()
+        private List<LayerBaseControl> GetLayersControls()
         {
-            List<LayerBase> ctlLayers = new(CtlTabsLayers.Items.Count);
+            List<LayerBaseControl> ctlLayers = new(CtlTabsLayers.Items.Count);
             for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
-                ctlLayers.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBase>().First());
+                ctlLayers.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBaseControl>().First());
             }
 
             return ctlLayers;
@@ -166,12 +166,13 @@ namespace Qualia.Controls
         {
             CtlRandomizeFunction.Fill<RandomizeFunction>(Config);
             CtlCostFunction.Fill<CostFunction>(Config);
-            var description = CtlBackPropagationStrategy.Fill<BackPropagationStrategy>(Config);
+            CtlBackPropagationStrategy.Fill<BackPropagationStrategy>(Config);
+            var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy);
             CtlBackPropagationStrategyDescription.Text = description;
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var color = Config.GetArray(Constants.Param.Color, "255,100,100,100");
+            var color = Config.Get(Constants.Param.Color, new long[] { 255,100,100,100 });
             CtlColor.Foreground = Draw.GetBrush(Color.FromArgb((byte)color[0],
                                                                (byte)color[1],
                                                                (byte)color[2],
@@ -179,7 +180,7 @@ namespace Qualia.Controls
 
             //
 
-            var layerIds = Config.GetArray(Constants.Param.Layers);
+            var layerIds = Config.Get(Constants.Param.Layers, Array.Empty<long>());
             var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Constants.UnknownId;
             var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
@@ -213,7 +214,7 @@ namespace Qualia.Controls
                 }
             }
 
-            CtlTabsLayers.SelectedIndex = (int)Config.GetInt(Constants.Param.SelectedLayerIndex, 0).Value;
+            CtlTabsLayers.SelectedIndex = (int)Config.Get(Constants.Param.SelectedLayerIndex, 0);
         }
 
         public int[] GetLayersSizes()
@@ -221,14 +222,14 @@ namespace Qualia.Controls
             return GetLayersControls().Select(ctlLayer => ctlLayer.NeuronsCount).ToArray();
         }
 
-        public LayerBase SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First();
+        public LayerBaseControl SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBaseControl>().First();
 
-        public Type SelectedLayerType => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBase>().First().GetType();
+        public Type SelectedLayerType => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBaseControl>().First().GetType();
 
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
-        private RandomizeFunction RandomizeMode => RandomizeFunction.GetInstance(CtlRandomizeFunction.SelectedItem);
-        private double RandomizerParam => CtlRandomizeFunctionParam.ValueOrNull ?? 1;
+        private RandomizeFunction RandomizeMode => RandomizeFunction.GetInstance(CtlRandomizeFunction);
+        private double RandomizerParam => CtlRandomizeFunctionParam.Value;
         private double LearningRate => CtlLearningRate.Value;
 
         public void DeleteLayer()
@@ -270,8 +271,8 @@ namespace Qualia.Controls
                 InputInitial1 = InputLayer.ActivationFunction.Do(InputLayer.Initial1,
                                                                  InputLayer.ActivationFunctionParam),
 
-                CostFunction = CostFunction.GetInstance(CtlCostFunction.SelectedValue),
-                BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropagationStrategy.SelectedValue),
+                CostFunction = CostFunction.GetInstance(CtlCostFunction),
+                BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropagationStrategy),
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 

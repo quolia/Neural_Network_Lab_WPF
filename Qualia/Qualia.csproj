@@ -156,11 +156,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Base\QLabel.cs" />
-    <Compile Include="Controls\Base\QPresenter.cs" />
-    <Compile Include="Controls\Base\QCheckBox.cs" />
-    <Compile Include="Controls\Base\QComboBox.cs" />
-    <Compile Include="Controls\Base\QTextBox.cs" />
+    <Compile Include="Controls\Base\BaseUserControl.cs" />
+    <Compile Include="Controls\Base\FunctionControl.xaml.cs">
+      <DependentUpon>FunctionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Base\CanvasControl.cs" />
+    <Compile Include="Controls\Base\Values\Text.cs" />
+    <Compile Include="Controls\Base\Values\BoolValue.cs" />
+    <Compile Include="Controls\Base\Values\SelectValue.cs" />
+    <Compile Include="Controls\Base\Values\StringValue.cs" />
     <Compile Include="Network\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>
@@ -204,6 +208,10 @@
     <Compile Include="Tools\Thread.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="Tools\Unsafe.cs" />
+    <Page Include="Controls\Base\FunctionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Network\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -276,8 +284,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Base\QDouble.cs" />
-    <Compile Include="Controls\Base\QInt.cs" />
+    <Compile Include="Controls\Base\Values\DoubleValue.cs" />
+    <Compile Include="Controls\Base\Values\IntValue.cs" />
     <Compile Include="Controls\Base\LayerBase.cs" />
     <Compile Include="Controls\Base\NeuronBase.cs" />
     <Compile Include="Network\HiddenLayerControl.xaml.cs">

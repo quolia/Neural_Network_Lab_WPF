@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class HiddenLayerControl : LayerBase
+    sealed public partial class HiddenLayerControl : LayerBaseControl
     {
         public HiddenLayerControl()
             : base(0, null, null)
@@ -18,7 +18,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            var neuronsIds = Config.GetArray(Constants.Param.Neurons);
+            var neuronsIds = Config.Get(Constants.Param.Neurons, Array.Empty<long>());
             if (neuronsIds.Length == 0)
             {
                 neuronsIds = new long[] { Constants.UnknownId };

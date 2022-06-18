@@ -1,7 +1,6 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -23,7 +22,7 @@ namespace Qualia.Controls
 
         private INetworkTaskChanged _onTaskChanged;
 
-        private readonly System.Windows.Media.Pen _penBlack = Draw.GetPen(in QColors.Black);
+        private readonly System.Windows.Media.Pen _penBlack = Draw.GetPen(in ColorsX.Black);
 
         public DataPresenter()
         {
@@ -31,11 +30,12 @@ namespace Qualia.Controls
 
             _penBlack.Freeze();
 
-            _pointSize = (int)Config.Main.GetInt(Constants.Param.PointSize, 7).Value;
+            _pointSize = Config.Main.Get(Constants.Param.PointSize, 7);
 
             SizeChanged += DataPresenter_SizeChanged;
             CtlTaskFunction.SetChangeEvent(CtlTask_SelectedIndexChanged);
             CtlInputDataFunction.SetChangeEvent(OnInputDataFunctionChanged);
+            CtlInputDataFunctionParam.SetChangeEvent(OnInputDataFunctionChanged);
         }
 
         private void CtlTask_SelectedIndexChanged()
@@ -45,7 +45,8 @@ namespace Qualia.Controls
                 return;
             }
 
-            TaskFunction = TaskFunction.GetInstance(CtlTaskFunction.SelectedItem);
+            TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+
             _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();
             TaskFunction.VisualControl.SetChangeEvent(TaskParameterChanged);
 
@@ -67,7 +68,10 @@ namespace Qualia.Controls
                 return;
             }
 
-            TaskFunction.InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction.SelectedItem);
+            TaskFunction.InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction);
+
+            //var inputDataFunctionConfig = config.Extend(CtlInputDataFunction.SelectedItem);
+            //TaskFunction.InputDataFunctionParam = Config.Main.GetString(Constants.Param.);
         }
 
         private void DataPresenter_SizeChanged(object sender, EventArgs e)
@@ -80,25 +84,33 @@ namespace Qualia.Controls
 
         public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
         {
-            CtlTaskFunction.Fill<TaskFunction>(config);
-            TaskFunction = TaskFunction.GetInstance(CtlTaskFunction.SelectedItem);
+            TaskFunction = CtlTaskFunction.Fill<TaskFunction>(config);
+            var taskFunctionConfig = config.Extend(CtlTaskFunction.Name)
+                                           .Extend(CtlTaskFunction.SelectedItem);
 
-            var parametersConfig = config.Extend(CtlTaskFunction.SelectedItem);
-            CtlInputDataFunction.Fill<InputDataFunction>(parametersConfig);
-            TaskFunction.InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction.SelectedItem);
+            TaskFunction.InputDataFunction = CtlInputDataFunction.Fill<InputDataFunction>(taskFunctionConfig);
+            var parametersConfig = taskFunctionConfig.Extend(CtlInputDataFunction.Name)
+                                                     .Extend(CtlInputDataFunction.SelectedItem);
+
+            TaskFunction.InputDataFunctionParam = parametersConfig.Get(CtlInputDataFunctionParam, 777);
+
 
             _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();
 
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(TaskFunction.VisualControl.GetVisualControl());
 
-            TaskFunction.VisualControl.SetConfig(config);
+            TaskFunction.VisualControl.SetConfig(parametersConfig);
             TaskFunction.VisualControl.LoadConfig();
             TaskFunction.VisualControl.SetChangeEvent(TaskParameterChanged);
 
             CtlInputDataFunction.SetConfig(parametersConfig);
             CtlInputDataFunction.LoadConfig();
             CtlInputDataFunction.SetChangeEvent(OnInputDataFunctionChanged);
+
+            CtlInputDataFunctionParam.SetConfig(parametersConfig);
+            CtlInputDataFunctionParam.LoadConfig();
+            CtlInputDataFunctionParam.SetChangeEvent(OnInputDataFunctionChanged);
 
             _onTaskChanged = taskChanged;
             TaskParameterChanged();
@@ -128,9 +140,13 @@ namespace Qualia.Controls
             var parametersConfig = config.Extend(CtlTaskFunction.SelectedValue);
             CtlInputDataFunction.SetConfig(parametersConfig);
 
+            var inputDataFunctionConfig = parametersConfig.Extend(CtlInputDataFunction.SelectedItem);
+            CtlInputDataFunctionParam.SetConfig(inputDataFunctionConfig);
+
             CtlTaskFunction.SaveConfig();
             TaskFunction.VisualControl.SaveConfig();
             CtlInputDataFunction.SaveConfig();
+            CtlInputDataFunctionParam.SaveConfig();
 
             config.FlushToDrive();
             parametersConfig.FlushToDrive();
@@ -142,9 +158,9 @@ namespace Qualia.Controls
                         ? System.Windows.Media.Brushes.CornflowerBlue
                         : (isData
                            ? Draw.GetBrush(value)
-                           : Draw.GetBrush(Draw.GetColor((byte)(255 * value), in QColors.Green)));
+                           : Draw.GetBrush(Draw.GetColor((byte)(255 * value), in ColorsX.Green)));
 
-            CtlPresenter.DrawRectangle(brush, _penBlack, ref Rects.Get(x * _pointSize, y * _pointSize, _pointSize, _pointSize));
+            CtlCanvas.DrawRectangle(brush, _penBlack, ref Rects.Get(x * _pointSize, y * _pointSize, _pointSize, _pointSize));
         }
         public void SetInputDataAndDraw(NetworkDataModel networkModel)
         {
@@ -196,7 +212,7 @@ namespace Qualia.Controls
 
         private void Rearrange(int pointsCount)
         {
-            CtlPresenter.Clear();
+            CtlCanvas.Clear();
 
             if (pointsCount != CURRENT_POINTS_COUNT)
             {

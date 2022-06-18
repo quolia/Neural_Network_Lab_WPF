@@ -36,9 +36,9 @@ namespace Qualia.Controls
 
         private readonly Dictionary<string, FormattedText> _classesFormatText = new();
 
-        private readonly Pen _penSilver = Draw.GetPen(in QColors.Silver);
-        private readonly Brush _correctBrush = Draw.GetBrush(QColors.Green);
-        private readonly Brush _incorrectBrush = Draw.GetBrush(QColors.Red);
+        private readonly Pen _penSilver = Draw.GetPen(in ColorsX.Silver);
+        private readonly Brush _correctBrush = Draw.GetBrush(ColorsX.Green);
+        private readonly Brush _incorrectBrush = Draw.GetBrush(ColorsX.Red);
 
         private List<string> _classes;
 
@@ -99,7 +99,7 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(matrix));
             }
 
-            CtlBase.Clear();
+            CtlBaseCanvas.Clear();
 
             const int POINTS_SIZE = 9;
             const int AXIS_OFFSET = 12;
@@ -108,7 +108,7 @@ namespace Qualia.Controls
             {
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
-                    CtlBase.DrawRectangle(null,
+                    CtlBaseCanvas.DrawRectangle(null,
                                           _penSilver,
                                           ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE,
                                                         AXIS_OFFSET + y * POINTS_SIZE,
@@ -120,7 +120,7 @@ namespace Qualia.Controls
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
                 var text = _classesFormatText[matrix.Classes[x]];
-                CtlBase.DrawText(text,
+                CtlBaseCanvas.DrawText(text,
                                  ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
                                                 1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
             }
@@ -128,16 +128,16 @@ namespace Qualia.Controls
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
                 var text = _classesFormatText[matrix.Classes[y]];
-                CtlBase.DrawText(text,
+                CtlBaseCanvas.DrawText(text,
                                  ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
                                                 AXIS_OFFSET + y * POINTS_SIZE));
             }
         
-            CtlBase.DrawText(_textOutput,
+            CtlBaseCanvas.DrawText(_textOutput,
                              ref Points.Get(AXIS_OFFSET + (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2,
                                             AXIS_OFFSET - _textOutput.Height - 1));
 
-            CtlBase.DrawText(_textInput,
+            CtlBaseCanvas.DrawText(_textInput,
                              ref Points.Get(-AXIS_OFFSET - (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2,
                                             AXIS_OFFSET - _textInput.Height - 1),
                              -90);
@@ -162,7 +162,7 @@ namespace Qualia.Controls
             }
 
             _classes = matrix.Classes;
-            CtlPresenter.Clear();
+            CtlDataCanvas.Clear();
 
             long goodMax = 1;
             long badMax = 1;
@@ -190,14 +190,14 @@ namespace Qualia.Controls
                     if (matrix.Matrix[y, x] > 0)
                     {
                         var value = (double)matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
-                        var color = Draw.GetColorDradient(in QColors.LightGray,
-                                                          x == y ? QColors.Green : QColors.Red,
+                        var color = Draw.GetColorDradient(in ColorsX.LightGray,
+                                                          x == y ? ColorsX.Green : ColorsX.Red,
                                                           255,
                                                           value);
 
                         var brush = Draw.GetBrush(in color);
 
-                        CtlPresenter.DrawRectangle(brush, _penSilver, ref Rects.Get(AXIS_OFFSET + x * POINT_SIZE,
+                        CtlDataCanvas.DrawRectangle(brush, _penSilver, ref Rects.Get(AXIS_OFFSET + x * POINT_SIZE,
                                                                                     AXIS_OFFSET + y * POINT_SIZE,
                                                                                     POINT_SIZE,
                                                                                     POINT_SIZE));
@@ -208,17 +208,17 @@ namespace Qualia.Controls
             long outputMax = matrix.MaxOutput();
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
-                var color = Draw.GetColorDradient(in QColors.White,
+                var color = Draw.GetColorDradient(in ColorsX.White,
                                                   matrix.Output[x] > matrix.Input[x]
-                                                      ? QColors.Red
+                                                      ? ColorsX.Red
                                                       : matrix.Output[x] < matrix.Input[x]
-                                                          ? QColors.Blue
-                                                          : QColors.Green,
+                                                          ? ColorsX.Blue
+                                                          : ColorsX.Green,
                                                   100,
                                                   (double)matrix.Output[x] / (double)outputMax);
 
                 var brush = Draw.GetBrush(in color);
-                CtlPresenter.DrawRectangle(brush,
+                CtlDataCanvas.DrawRectangle(brush,
                                            _penSilver,
                                            ref Rects.Get(AXIS_OFFSET + x * POINT_SIZE,
                                                          10 + AXIS_OFFSET + matrix.Input.Length * POINT_SIZE,
@@ -229,13 +229,13 @@ namespace Qualia.Controls
             long inputMax = matrix.MaxInput();
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
-                var color = Draw.GetColorDradient(in QColors.White,
-                                                  in QColors.Green,
+                var color = Draw.GetColorDradient(in ColorsX.White,
+                                                  in ColorsX.Green,
                                                   100,
                                                   (double)matrix.Input[y] / (double)inputMax);
 
                 var brush = Draw.GetBrush(in color);
-                CtlPresenter.DrawRectangle(brush,
+                CtlDataCanvas.DrawRectangle(brush,
                                            _penSilver,
                                            ref Rects.Get(11 + AXIS_OFFSET + matrix.Output.Length * POINT_SIZE,
                                                          AXIS_OFFSET + y * POINT_SIZE,
@@ -248,14 +248,14 @@ namespace Qualia.Controls
 
         private void DrawCross(long input, long output)
         {
-            CtlPresenter.DrawRectangle(_correctBrush,
+            CtlDataCanvas.DrawRectangle(_correctBrush,
                                         _penSilver,
                                         ref Rects.Get(AXIS_OFFSET,
                                                       AXIS_OFFSET + input * POINT_SIZE,
                                                       _classes.Count * POINT_SIZE + 11,
                                                       POINT_SIZE));
 
-            CtlPresenter.DrawRectangle(input == output ? _correctBrush : _incorrectBrush,
+            CtlDataCanvas.DrawRectangle(input == output ? _correctBrush : _incorrectBrush,
                                         _penSilver,
                                         ref Rects.Get(AXIS_OFFSET + output * POINT_SIZE,
                                                       AXIS_OFFSET,
@@ -265,7 +265,7 @@ namespace Qualia.Controls
 
         public void Clear()
         {
-            CtlPresenter.Clear();
+            CtlDataCanvas.Clear();
         }
     }
 

@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public class QTextBox : TextBox, IConfigParam
+    sealed public class StringValueControl : TextBox, IConfigParam
     {
         private Config _config;
 
@@ -13,9 +13,13 @@ namespace Qualia.Controls
 
         public string DefaultValue { get; set; }
 
-        public bool IsNullAllowed { get; set; }
+        public StringValueControl SetDefaultValue(string value)
+        {
+            DefaultValue = value;
+            return this;
+        }
 
-        public QTextBox()
+        public StringValueControl()
         {
             InvalidateValue();
             TextChanged += QTextBox_TextChanged;
@@ -34,7 +38,7 @@ namespace Qualia.Controls
             }
         }
 
-        public bool IsValid() => IsNullAllowed || !string.IsNullOrEmpty(Text);
+        public bool IsValid() => !string.IsNullOrEmpty(Text);
 
         public bool IsNull() => string.IsNullOrEmpty(Text);
 
@@ -56,7 +60,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            Value = _config.GetString(Name, DefaultValue);
+            Value = _config.Get(this, DefaultValue);
         }
 
         public void SaveConfig()

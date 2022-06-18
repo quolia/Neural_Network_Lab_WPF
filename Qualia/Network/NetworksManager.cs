@@ -25,6 +25,7 @@ namespace Qualia.Controls
         public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             OnNetworkUIChanged = onNetworkUIChanged;
+
             _ctlTabs = tabs;
             _ctlTabs.SelectionChanged += CtlTabs_SelectionChanged;
 
@@ -111,14 +112,14 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            var networkIds = Config.GetArray(Constants.Param.Networks);
+            var networkIds = Config.Get(Constants.Param.Networks, Array.Empty<long>());
             if (networkIds.Length == 0)
             {
                 networkIds = new long[] { Constants.UnknownId };
             }
 
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
-            _ctlTabs.SelectedIndex = (int)Config.GetInt(Constants.Param.SelectedNetworkIndex, 0).Value + 1;
+            _ctlTabs.SelectedIndex = (int)Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
 
             RefreshNetworksDataModels();
         }
@@ -217,7 +218,7 @@ namespace Qualia.Controls
                     File.Delete(saveDialog.FileName);
                 }
 
-                File.Copy(Config.Main.GetString(Constants.Param.NetworksManagerName), saveDialog.FileName);
+                File.Copy(Config.Main.Get(Constants.Param.NetworksManagerName, ""), saveDialog.FileName);
             }
         }
 
@@ -270,7 +271,7 @@ namespace Qualia.Controls
         unsafe public void PrepareModelsForRound()
         {
             var baseNetwork = NetworkModels.First;
-            _taskFunction.Do(baseNetwork, _taskFunction.InputDataFunction);
+            _taskFunction.Do(baseNetwork, _taskFunction.InputDataFunction, _taskFunction.InputDataFunctionParam);
 
             // copy first layer state and last layer targets to other networks
 

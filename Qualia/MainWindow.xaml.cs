@@ -103,18 +103,18 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            Width = Config.Main.GetDouble(Constants.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth).Value;
-            Height = Config.Main.GetDouble(Constants.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight).Value;
-            Top = Config.Main.GetDouble(Constants.Param.ScreenTop, 0).Value;
-            Left = Config.Main.GetDouble(Constants.Param.ScreenLeft, 0).Value;
-            Topmost = Config.Main.GetBool(Constants.Param.OnTop, false);
-            DataWidth.Width = new(Config.Main.GetDouble(Constants.Param.DataWidth, 100).Value);
-            NetworkHeight.Height = new(Config.Main.GetDouble(Constants.Param.NetworkHeight, 200).Value);
+            Width = Config.Main.Get(Constants.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth);
+            Height = Config.Main.Get(Constants.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight);
+            Top = Config.Main.Get(Constants.Param.ScreenTop, (double)0);
+            Left = Config.Main.Get(Constants.Param.ScreenLeft, (double)0);
+            Topmost = Config.Main.Get(Constants.Param.OnTop, false);
+            DataWidth.Width = new(Config.Main.Get(Constants.Param.DataWidth, (double)100));
+            NetworkHeight.Height = new(Config.Main.Get(Constants.Param.NetworkHeight, (double)200));
 
             _configParams.ForEach(p => p.SetConfig(Config.Main));
             _configParams.ForEach(p => p.LoadConfig());
 
-            var fileName = Config.Main.GetString(Constants.Param.NetworksManagerName, null);
+            var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, (string)null);
             LoadNetworksManager(fileName);
             LoadSettings();
         }
@@ -934,7 +934,7 @@ namespace Qualia.Controls
                 ReplaceNetworksManagerControl(_networksManager);
                 if (_networksManager.IsValid())
                 {
-                    var fileName = Config.Main.GetString(Constants.Param.NetworksManagerName, null);
+                    var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, (string)null);
                     SetTitle(fileName);
 
                     ApplyChangesToStandingNetworks();
@@ -970,7 +970,7 @@ namespace Qualia.Controls
 
         private void DeleteNetworksManager()
         {
-            var networksManagerName = Config.Main.GetString(Constants.Param.NetworksManagerName);
+            var networksManagerName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
             if (string.IsNullOrEmpty(networksManagerName))
             {
                 return;
@@ -999,7 +999,7 @@ namespace Qualia.Controls
             }
             else
             {
-                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(Config.Main.GetString(Constants.Param.NetworksManagerName).Replace("_", "__"));
+                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(Config.Main.Get(Constants.Param.NetworksManagerName, "").Replace("_", "__"));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;

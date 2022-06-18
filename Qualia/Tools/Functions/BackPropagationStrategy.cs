@@ -1,11 +1,15 @@
 ﻿using Qualia.Model;
 using System;
 using System.Runtime.CompilerServices;
+using static Qualia.Tools.BackPropagationStrategy;
 
 namespace Qualia.Tools
 {
     unsafe public class BackPropagationStrategy : BaseFunction<BackPropagationStrategy>
     {
+        //public override string DefaultFunction => nameof(Always);
+
+
         public readonly delegate*<NetworkDataModel, void> PrepareForRun;
         public readonly delegate*<NetworkDataModel, void> PrepareForRound;
         public readonly delegate*<NetworkDataModel, void> PrepareForLoop;
@@ -22,7 +26,7 @@ namespace Qualia.Tools
                                        delegate*<NetworkDataModel, void> onAfterLoopFinished,
                                        delegate*<NetworkDataModel, bool, void> onError,
                                        delegate*<NetworkDataModel, bool> isBackPropagationNeeded)
-            : base(defaultValue: nameof(Always))
+            : base(nameof(Always))
         {
             PrepareForRun = prepareForRun;
             PrepareForRound = prepareForRound;

@@ -5,23 +5,25 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public class QInt : TextBox, IConfigParam
+    sealed public class IntValueControl : TextBox, IConfigParam
     {
         private Config _config;
 
         private event Action OnChanged = delegate { };
 
-        public long? DefaultValue { get; set; }
+        public long DefaultValue { get; set; }
 
-        public long MinimumValue { get; set; }
+        public IntValueControl SetDefaultValue(long value)
+        {
+            DefaultValue = value;
+            return this;
+        }
 
-        public long MaximumValue { get; set; }
+        public long MinimumValue { get; set; } = long.MinValue;
 
-        public bool IsNullAllowed { get; set; }
+        public long MaximumValue { get; set; } = long.MaxValue;
 
-        public bool IsUnranged => MinimumValue == 0 && MaximumValue == 0;
-
-        public QInt()
+        public IntValueControl()
         {
             Padding = new(0);
             Margin = new(3);
@@ -45,15 +47,13 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            if (IsNull() && IsNullAllowed)
+            if (IsNull())
             {
-                return true;
+                return false;
             }
 
-            var ok = Converter.TryTextToInt(Text, out long? value);
-            ok &= value != null || IsNullAllowed;
-
-            return ok && (IsUnranged || (value >= MinimumValue && value <= MaximumValue));
+            var ok = Converter.TryTextToInt(Text, out long value, DefaultValue);
+            return ok && (value >= MinimumValue && value <= MaximumValue);
         }
 
         public bool IsNull() => string.IsNullOrEmpty(Text);
@@ -74,22 +74,6 @@ namespace Qualia.Controls
             }
         }
 
-        public long? ValueOrNull
-        {
-            get
-            {
-                return IsNull() && IsNullAllowed
-                       ? null
-                       : IsValid() ? Converter.TextToInt(Text) : throw new InvalidValueException(Name, Text);
-            }
-
-            set
-            {
-                Text = Converter.IntToText(value);
-                IntBox_TextChanged(null, null);
-            }
-        }
-
         public void SetConfig(Config config)
         {
             _config = config;
@@ -97,34 +81,24 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            var value = _config.GetInt(Name, DefaultValue);
+            var value = _config.Get(this, DefaultValue);
 
-            if (!IsUnranged && value.HasValue)
+            if (value < MinimumValue)
             {
-                if (value.Value < MinimumValue)
-                {
-                    value = MinimumValue;
-                }
-
-                if (value.Value > MaximumValue)
-                {
-                    value = MaximumValue;
-                }
+                value = MinimumValue;
             }
 
-            if (IsNullAllowed)
+            if (value > MaximumValue)
             {
-                ValueOrNull = value;
+                value = MaximumValue;
             }
-            else
-            {
-                Value = value.Value;
-            }
+
+            Value = value;
         }
 
         public void SaveConfig()
         {
-            _config.Set(Name, IsNullAllowed ? ValueOrNull : Value);
+            _config.Set(Name, Value);
         }
 
         public void VanishConfig()

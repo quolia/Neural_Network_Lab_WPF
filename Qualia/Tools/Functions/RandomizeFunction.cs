@@ -6,10 +6,13 @@ namespace Qualia.Tools
 {
     unsafe public class RandomizeFunction : BaseFunction<RandomizeFunction>
     {
+        //public override string DefaultFunction => nameof(FlatRandom);
+
+
         public readonly delegate*<NetworkDataModel, double, void> Do;
 
         public RandomizeFunction(delegate*<NetworkDataModel, double, void> doFunc)
-            : base(defaultValue: nameof(FlatRandom))
+            : base(nameof(FlatRandom))
         {
             Do = doFunc;
         }

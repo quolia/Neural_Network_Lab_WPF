@@ -6,14 +6,14 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public partial class LayerBase : StackPanel
+    public partial class LayerBaseControl : StackPanel
     {
         public readonly long Id;
         public readonly Config Config;
          
-        public Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        public readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
-        public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public LayerBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             if (config is null)
             {
@@ -40,7 +40,7 @@ namespace Qualia.Controls
         public virtual Panel NeuronsHolder => throw new InvalidOperationException();
         public virtual int NeuronsCount => GetNeuronsControls().Count();
 
-        public IEnumerable<NeuronBase> GetNeuronsControls() => NeuronsHolder.Children.OfType<NeuronBase>();
+        public IEnumerable<NeuronBaseControl> GetNeuronsControls() => NeuronsHolder.Children.OfType<NeuronBaseControl>();
 
         public void AddNeuron() => AddNeuron(Constants.UnknownId);
 

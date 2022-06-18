@@ -1,15 +1,19 @@
 ﻿using Qualia.Model;
 using System.Runtime.CompilerServices;
+using static Qualia.Tools.CostFunction;
 
 namespace Qualia.Tools
 {
     unsafe public class CostFunction : BaseFunction<CostFunction>
     {
+        //public override string DefaultFunction => nameof(MeanSquaredError);
+
+
         public readonly delegate*<NetworkDataModel, double> Do;
         public readonly delegate*<NetworkDataModel, NeuronDataModel, double> Derivative;
 
         public CostFunction(delegate*<NetworkDataModel, double> doFunc, delegate*<NetworkDataModel, NeuronDataModel, double> doDerivative)
-            : base(defaultValue: nameof(MeanSquaredError))
+            : base(nameof(MeanSquaredError))
         {
             Do = doFunc;
             Derivative = doDerivative;

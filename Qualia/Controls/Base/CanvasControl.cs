@@ -6,13 +6,13 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public class QPresenter : Panel
+    sealed public class CanvasControl : Panel
     {
         private readonly VisualCollection _visuals;
 
         public Func<double, double> Scale = RenderSettings.Scale;
 
-        public QPresenter()
+        public CanvasControl()
         {
             _visuals = new(this);
             SnapsToDevicePixels = true;

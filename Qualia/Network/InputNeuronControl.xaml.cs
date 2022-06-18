@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Qualia.Controls
 {
-    sealed public partial class InputNeuronControl : NeuronBase
+    sealed public partial class InputNeuronControl : NeuronBaseControl
     {
         public InputNeuronControl(long id)
             : base(id, null, null)

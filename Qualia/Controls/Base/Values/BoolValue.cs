@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public class QCheckBox : CheckBox, IConfigParam
+    sealed public class BoolValueControl : CheckBox, IConfigParam
     {
         private Config _config;
 
@@ -12,13 +12,19 @@ namespace Qualia.Controls
 
         public bool DefaultValue { get; set; }
 
+        public BoolValueControl SetDefaultValue(bool value)
+        {
+            DefaultValue = value;
+            return this;
+        }
+
         public bool IsOn
         {
             get => IsChecked == true;
             set => IsChecked = value;
         }
 
-        public QCheckBox()
+        public BoolValueControl()
         {
             Checked += OnOffBox_Changed;
             Unchecked += OnOffBox_Changed;
@@ -36,7 +42,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            IsOn = _config.GetBool(Name, DefaultValue);
+            IsOn = _config.Get(this, DefaultValue);
         }
 
         public void SaveConfig()

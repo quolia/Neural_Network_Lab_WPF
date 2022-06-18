@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class InputLayerControl : LayerBase
+    sealed public partial class InputLayerControl : LayerBaseControl
     {
         private readonly List<IConfigParam> _configParams;
 
@@ -42,10 +42,10 @@ namespace Qualia.Controls
         public override Panel NeuronsHolder => CtlNeuronsHolder;
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
-        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
-        public double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
-        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction.SelectedItem);
-        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull ?? 1;
+        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
+        public double ActivationFunctionParam => CtlActivationFunctionParam.Value;
+        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
+        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
 
         public void OnTaskChanged(TaskFunction taskFunction)
@@ -66,7 +66,7 @@ namespace Qualia.Controls
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var neuronIds = Config.GetArray(Constants.Param.Neurons);
+            var neuronIds = Config.Get(Constants.Param.Neurons, Array.Empty<long>());
             foreach (var biasNeuronId in neuronIds)
             {
                 AddBias(biasNeuronId);
@@ -77,8 +77,8 @@ namespace Qualia.Controls
         {
             InputNeuronControl ctlNeuron = new(NeuronsHolder.Children.Count)
             {
-                ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem),
-                ActivationFunctionParam = CtlActivationFunctionParam.ValueOrNull ?? 1
+                ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction),
+                ActivationFunctionParam = CtlActivationFunctionParam.Value
             };
 
             return ctlNeuron;

@@ -3,10 +3,13 @@ namespace Qualia.Tools
 {
     unsafe public class InputDataFunction : BaseFunction<InputDataFunction>
     {
+        //public override string DefaultFunction => nameof(FlatRandom);
+
+
         public readonly delegate*<double, double> Do;
 
         public InputDataFunction(delegate*<double, double> doFunc)
-            : base(defaultValue: nameof(FlatRandom))
+            : base(nameof(FlatRandom))
         {
             Do = doFunc;
         }

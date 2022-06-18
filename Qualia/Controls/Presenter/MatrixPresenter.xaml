@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <local:QPresenter x:Name="CtlBase" />
-        <local:QPresenter x:Name="CtlPresenter" />
+        <local:CanvasControl x:Name="CtlBaseCanvas" />
+        <local:CanvasControl x:Name="CtlDataCanvas" />
     </Grid>
 </UserControl>

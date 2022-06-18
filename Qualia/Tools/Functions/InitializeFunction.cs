@@ -4,10 +4,13 @@ namespace Qualia.Tools
 {
     unsafe public class InitializeFunction : BaseFunction<InitializeFunction>
     {
+        //public override string DefaultFunction => nameof(FlatRandom);
+
+
         public readonly delegate*<double, double> Do;
 
         public InitializeFunction(delegate*<double, double> doFunc)
-            : base(defaultValue: nameof(FlatRandom))
+            : base(nameof(FlatRandom))
         {
             Do = doFunc;
         }

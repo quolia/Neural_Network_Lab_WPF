@@ -20,7 +20,7 @@ namespace Qualia.Tools
             return string.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
         }
 
-        public static bool TryTextToInt(string text, out long? result, long? defaultValue = null)
+        public static bool TryTextToInt(string text, out long result, long defaultValue)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -34,7 +34,7 @@ namespace Qualia.Tools
                 return true;
             }
 
-            result = null;
+            result = 0;
             return false;
         }
 
@@ -50,39 +50,33 @@ namespace Qualia.Tools
 
         public static double TextToDouble(string text, double defaultValue)
         {
-            return string.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double a) ? a : defaultValue;
+            return string.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double value) ? value : defaultValue;
         }
 
-        public static bool TryTextToDouble(string text, out double? result, double? defaultValue = null)
+        public static bool TryTextToDouble(string text, out double result, double defaultValue)
         {
+            result = defaultValue;
+
             if (string.IsNullOrEmpty(text))
             {
-                result = defaultValue;
                 return true;
             }
 
-            if (double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double d))
+            if (double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double value))
             {
-                result = d;
-                return true;
+                result = value;
             }
 
-            result = null;
-            return false;
+            return true;
         }
 
         private static readonly char[] _0 = new[] { '0' };
         private static readonly char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
         private static readonly string[] _postfixes = new[] {"", " K", " M", " B", " T" };
 
-    public static string DoubleToText(double? d, string format = "F20", bool trim = true)
+    public static string DoubleToText(double d, string format = "F20", bool trim = true)
         {
-            if (!d.HasValue)
-            {
-                return null;
-            }
-
-            var result = d.Value.ToString(format, Culture.Current);
+            var result = d.ToString(format, Culture.Current);
             if (trim && result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
             {
                 result = result.TrimEnd(_0).TrimEnd(_S);

@@ -5,15 +5,15 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class OutputLayerControl : LayerBase
+    sealed public partial class OutputLayerControl : LayerBaseControl
     {
         public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
             : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            var neuronIds = Config.GetArray(Constants.Param.Neurons);
-            neuronIds.ToList().ForEach(neuronId => AddNeuron(neuronId));
+            var neuronIds = Config.Get(Constants.Param.Neurons, Array.Empty<long>());
+            neuronIds.ToList().ForEach(AddNeuron);
 
             if (neuronIds.Length == 0)
             {

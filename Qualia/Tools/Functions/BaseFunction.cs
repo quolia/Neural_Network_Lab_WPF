@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace Qualia.Tools
 {
-    unsafe public class BaseFunction<T> where T : class
+    unsafe public class BaseFunction<T>  where T : class
     {
-        public static string DefaultValue = null;
+        public readonly string DefaultFunction;
 
-        public BaseFunction(string defaultValue)
+        public BaseFunction(string defaultFunction)
         {
-            DefaultValue = defaultValue;
+            DefaultFunction = defaultFunction;
+        }
+
+        public static string GetDefaultFunctionName()
+        {
+            var functions = GetItems();
+            return (GetInstance(functions[0]) as BaseFunction<T>).DefaultFunction;
+        }
+
+        public static T GetInstance(Selector selector)
+        {
+            return GetInstance(selector.SelectedValue);
         }
 
         public static T GetInstance(object name)
@@ -20,8 +33,6 @@ namespace Qualia.Tools
             {
                 throw new InvalidOperationException($"Unknown function name: {funcName}.");
             }
-
-            funcName = Config.PrepareValue(funcName);
 
             var type = typeof(T).GetNestedTypes()
                                 .Where(type => type.Name == funcName)
@@ -40,7 +51,7 @@ namespace Qualia.Tools
             return _getItems(false);
         }
 
-        public static string[] GetItemsWithDescriptions()
+        public static string[] GetItemsWithDescription()
         {
             return _getItems(true);
         }
@@ -52,10 +63,14 @@ namespace Qualia.Tools
                             .ToArray();
         }
 
+        public static string GetDescription(Selector selector)
+        {
+            return GetDescription(selector.SelectedValue);
+        }
+
         public static string GetDescription(object name)
         {
             var funcName = name.ToString();
-            funcName = Config.PrepareValue(funcName);
 
             var type = typeof(T).GetNestedTypes()
                                 .Where(type => type.Name == funcName)

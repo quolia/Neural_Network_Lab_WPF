@@ -23,7 +23,7 @@ namespace Qualia.Controls
 
         public void Draw(Dictionary<string, string> stats)
         {
-            CtlPresenter.Clear();
+            CtlCanvas.Clear();
 
             if (stats == null)
             {
@@ -50,7 +50,7 @@ namespace Qualia.Controls
                                               Brushes.Black,
                                               RenderSettings.PixelsPerDip);
 
-            CtlPresenter.DrawText(formattedText, ref Points.Get(10, 0));
+            CtlCanvas.DrawText(formattedText, ref Points.Get(10, 0));
 
             Width = MathX.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
         }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
-    sealed public partial class OutputNeuronControl : NeuronBase
+    sealed public partial class OutputNeuronControl : NeuronBaseControl
     {
         private readonly List<IConfigParam> _configParams;
 
@@ -29,8 +29,8 @@ namespace Qualia.Controls
         public override double WeightsInitializeFunctionParam => 1;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
-        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
-        public override double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
+        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
+        public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
 
         public void LoadConfig()
         {

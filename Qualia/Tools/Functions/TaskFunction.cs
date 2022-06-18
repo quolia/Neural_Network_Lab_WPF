@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using static Qualia.Tools.TaskFunction;
 
 namespace Qualia.Tools
 {
@@ -36,13 +37,17 @@ namespace Qualia.Tools
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
-        public readonly delegate*<NetworkDataModel, InputDataFunction, void> Do;
+        //public override string DefaultFunction => nameof(CountDots);
+
+        public readonly delegate*<NetworkDataModel, InputDataFunction, double, void> Do;
 
         public ITaskControl VisualControl;
-        public InputDataFunction InputDataFunction;
 
-        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, void> doFunc, ITaskControl visualControl)
-            : base(defaultValue: nameof(CountDots))
+        public InputDataFunction InputDataFunction;
+        public double InputDataFunctionParam;
+
+        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, double, void> doFunc, ITaskControl visualControl)
+            : base(nameof(CountDots))
         {
             Do = doFunc;
             VisualControl = visualControl;
@@ -98,9 +103,9 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
             {
-                double randNumber = inputDataFunction.Do(1);
+                double randNumber = inputDataFunction.Do(inputDataFunctionParam);
 
                 randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
 
@@ -194,9 +199,9 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
             {
-                var image = s_control.Images[Rand.RandomFlat.Next(s_control.Images.Count)];
+                var image = s_control.Images[(int)(s_control.Images.Count * inputDataFunction.Do(inputDataFunctionParam))];
                 var count = networkModel.Layers.First.Neurons.Count;
 
                 for (int i = 0; i < count; ++i)

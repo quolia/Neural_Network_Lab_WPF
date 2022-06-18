@@ -14,34 +14,34 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <local:QCheckBox x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
-                    <local:QLabel Content="Color:" Margin="20,0,0,0" />
-                    <local:QLabel x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
+                    <local:BoolValueControl x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
+                    <local:TextControl Content="Color:" Margin="20,0,0,0" />
+                    <local:TextControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:QLabel Content="Weights randomizer:" />
-                <local:QComboBox x:Name="CtlRandomizeFunction" />
-                <local:QLabel Content="a:" />
-                <local:QDouble x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" IsNullAllowed="True" />
+                <local:TextControl Content="Weights randomizer:" />
+                <local:SelectValueControl x:Name="CtlRandomizeFunction" />
+                <local:TextControl Content="a:" />
+                <local:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="CtlRandomizerButton_Click" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:QLabel Content="Learning rate:" />
-                <local:QDouble x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" IsNullAllowed="False" />
+                <local:TextControl Content="Learning rate:" />
+                <local:DoubleValueControl x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:QLabel Content="Cost function:" />
-                <local:QComboBox x:Name="CtlCostFunction" />
+                <local:TextControl Content="Cost function:" />
+                <local:SelectValueControl x:Name="CtlCostFunction" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:QLabel Content="Back propagation strategy:" />
-                <local:QComboBox x:Name="CtlBackPropagationStrategy" />
+                <local:TextControl Content="Back propagation strategy:" />
+                <local:SelectValueControl x:Name="CtlBackPropagationStrategy" />
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <local:QLabel Content="Description:" />
+                <local:TextControl Content="Description:" />
                 <TextBlock x:Name="CtlBackPropagationStrategyDescription" Padding="3" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>

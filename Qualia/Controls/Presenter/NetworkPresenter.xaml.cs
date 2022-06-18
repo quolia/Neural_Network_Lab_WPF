@@ -24,8 +24,8 @@ namespace Qualia.Controls
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new();
 
-        private readonly Pen _penChange = Draw.GetPen(in QColors.Lime);
-        private readonly Pen _biasPen = Draw.GetPen(in QColors.Orange);
+        private readonly Pen _penChange = Draw.GetPen(in ColorsX.Lime);
+        private readonly Pen _biasPen = Draw.GetPen(in ColorsX.Orange);
 
         public NetworkPresenter()
         {
@@ -268,7 +268,7 @@ namespace Qualia.Controls
                                     var point1 = _coordinator[neuronModel1];
                                     var point2 = _coordinator[neuronModel2];
 
-                                    CtlPresenter.DrawLine(pen, ref point1, ref point2);
+                                    CtlCanvas.DrawLine(pen, ref point1, ref point2);
                                     prevNeuronModel = neuronModel1;
                                 }
                             }
@@ -320,7 +320,7 @@ namespace Qualia.Controls
 
                     if (neuronModel.IsBias)
                     {
-                        CtlPresenter.DrawEllipse(Brushes.Orange, _biasPen, ref centerPoint, BIAS_RADIUS, BIAS_RADIUS);
+                        CtlCanvas.DrawEllipse(Brushes.Orange, _biasPen, ref centerPoint, BIAS_RADIUS, BIAS_RADIUS);
                     }
 
                     var radius = NEURON_RADIUS;
@@ -329,7 +329,7 @@ namespace Qualia.Controls
                     {
                         if (neuronModel.Id == networkModel.TargetOutput)
                         {
-                            brush = Draw.GetBrush(in QColors.Yellow);
+                            brush = Draw.GetBrush(in ColorsX.Yellow);
                         }
 
                         if (neuronModel.Id == output)
@@ -338,7 +338,7 @@ namespace Qualia.Controls
                         }
                     }
 
-                    CtlPresenter.DrawEllipse(brush, pen, ref centerPoint, radius, radius);  
+                    CtlCanvas.DrawEllipse(brush, pen, ref centerPoint, radius, radius);  
                 }
 
                 neuronModel = neuronModel.Next;
@@ -347,7 +347,7 @@ namespace Qualia.Controls
 
         private void Render(bool fullState, NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
-            CtlPresenter.Clear();
+            CtlCanvas.Clear();
 
             if (networkModel == null)
             {

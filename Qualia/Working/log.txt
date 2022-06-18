@@ -1707,3 +1707,691 @@ Application started.
 2022-06-17 19:11:31
 Application started.
 
+2022-06-17 19:17:05
+Application started.
+
+2022-06-17 19:17:16
+Application started.
+
+2022-06-17 19:49:26
+Application started.
+
+2022-06-17 19:49:36
+Application started.
+
+2022-06-17 19:54:08
+Application started.
+
+2022-06-17 20:01:27
+Application started.
+
+2022-06-17 20:13:24
+Application started.
+
+2022-06-17 20:21:20
+Application started.
+
+2022-06-17 20:22:41
+Application started.
+
+2022-06-17 20:24:32
+Application started.
+
+2022-06-17 20:25:53
+Application started.
+
+2022-06-17 20:29:33
+Application started.
+
+2022-06-17 20:34:15
+Application started.
+
+2022-06-17 20:37:46
+Application started.
+
+2022-06-17 20:40:10
+Application started.
+
+2022-06-17 20:40:56
+Qualia.Tools.InvalidValueException
+Invalid value Task_CountDots_MaxNumber = 'null'.
+   at Qualia.Controls.QInt.get_Value() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\QInt.cs:line 65
+   at Qualia.Controls.CountDotsControl.IsValid() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\CountDotsControl.xaml.cs:line 53
+   at Qualia.Controls.CountDotsControl.Changed() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\CountDotsControl.xaml.cs:line 23
+   at System.Action.Invoke()
+   at Qualia.Controls.QInt.IntBox_TextChanged(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\QInt.cs:line 38
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.TextBoxBase.OnTextContainerChanged(Object sender, TextContainerChangedEventArgs e)
+   at System.Windows.Controls.TextBox.OnTextContainerChanged(Object sender, TextContainerChangedEventArgs e)
+   at System.Windows.Documents.TextContainerChangedEventHandler.Invoke(Object sender, TextContainerChangedEventArgs e)
+   at System.Windows.Documents.TextContainer.EndChange(Boolean skipEvents)
+   at System.Windows.Documents.TextRangeBase.EndChange(ITextRange thisRange, Boolean disableScroll, Boolean skipEvents)
+   at System.Windows.Documents.TextRange.ChangeBlock.System.IDisposable.Dispose()
+   at System.Windows.Controls.TextBox.OnTextPropertyChanged(String oldText, String newText)
+   at System.Windows.Controls.TextBox.OnTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+   at System.Windows.DependencyObject.OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+   at System.Windows.FrameworkElement.OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+   at System.Windows.Controls.TextBox.OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+   at System.Windows.DependencyObject.NotifyPropertyChange(DependencyPropertyChangedEventArgs args)
+   at System.Windows.DependencyObject.UpdateEffectiveValue(EntryIndex entryIndex, DependencyProperty dp, PropertyMetadata metadata, EffectiveValueEntry oldEntry, EffectiveValueEntry& newEntry, Boolean coerceWithDeferredReference, Boolean coerceWithCurrentValue, OperationType operationType)
+   at System.Windows.DependencyObject.SetValueCommon(DependencyProperty dp, Object value, PropertyMetadata metadata, Boolean coerceWithDeferredReference, Boolean coerceWithCurrentValue, OperationType operationType, Boolean isInternal)
+   at System.Windows.Controls.TextBox.set_Text(String value)
+   at Qualia.Controls.QInt.set_Value(Int64 value) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\QInt.cs:line 72
+   at Qualia.Controls.QInt.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\QInt.cs:line 115
+   at Qualia.Controls.CountDotsControl.<>c.<LoadConfig>b__12_0(IConfigParam param) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\CountDotsControl.xaml.cs:line 36
+   at Qualia.Tools.Range.ForEach[T](IEnumerable`1 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 23
+   at Qualia.Controls.CountDotsControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\CountDotsControl.xaml.cs:line 36
+   at Qualia.Tools.TaskFunction.CountDots.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 83
+   at Qualia.Controls.DataPresenter.LoadConfig(Config config, INetworkTaskChanged taskChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\DataPresenter.xaml.cs:line 104
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 180
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-17 20:42:04
+Application started.
+
+2022-06-17 20:46:26
+Application started.
+
+2022-06-17 20:55:04
+Application started.
+
+2022-06-17 20:59:38
+Application started.
+
+2022-06-17 21:07:40
+Application started.
+
+2022-06-17 21:14:23
+Application started.
+
+2022-06-17 21:14:40
+Application started.
+
+2022-06-17 21:15:17
+Application started.
+
+2022-06-17 21:16:18
+Application started.
+
+2022-06-17 21:16:36
+Application started.
+
+2022-06-17 21:16:48
+Application started.
+
+2022-06-17 21:20:46
+Application started.
+
+2022-06-17 21:21:31
+Application started.
+
+2022-06-17 21:22:48
+Application started.
+
+2022-06-17 21:26:45
+Application started.
+
+2022-06-17 21:31:42
+Application started.
+
+2022-06-17 21:34:33
+Application started.
+
+2022-06-17 21:35:08
+Application started.
+
+2022-06-17 21:37:42
+Application started.
+
+2022-06-17 21:38:58
+Application started.
+
+2022-06-17 21:39:06
+System.NullReferenceException
+Object reference not set to an instance of an object.
+   at Qualia.Tools.Extension.Initializer.FillComboBox[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 143
+   at Qualia.Tools.Extension.Fill[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 134
+   at Qualia.Controls.NetworkControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 167
+   at Qualia.Controls.NetworkControl..ctor(Int64 id, Config config, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 46
+   at Qualia.Controls.NetworksManager.AddNetwork(Int64 networkId) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 141
+   at Qualia.Controls.NetworksManager.<>c__DisplayClass17_0.<LoadConfig>b__0(Int32 i) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Tools.Range.For(Int32 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 14
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 35
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 178
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-17 21:39:52
+Application started.
+
+2022-06-17 22:05:44
+Application started.
+
+2022-06-17 22:06:34
+Application started.
+
+2022-06-17 22:12:37
+Application started.
+
+2022-06-17 22:13:41
+Application started.
+
+2022-06-17 22:13:59
+Application started.
+
+2022-06-17 22:14:04
+System.NullReferenceException
+Object reference not set to an instance of an object.
+   at Qualia.Tools.Extension.Initializer.FillComboBox[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 143
+   at Qualia.Tools.Extension.Fill[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 134
+   at Qualia.Controls.NetworkControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 167
+   at Qualia.Controls.NetworkControl..ctor(Int64 id, Config config, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 46
+   at Qualia.Controls.NetworksManager.AddNetwork(Int64 networkId) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 141
+   at Qualia.Controls.NetworksManager.<>c__DisplayClass17_0.<LoadConfig>b__0(Int32 i) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Tools.Range.For(Int32 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 14
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 35
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 178
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-17 22:16:29
+Application started.
+
+2022-06-17 22:16:32
+System.NullReferenceException
+Object reference not set to an instance of an object.
+   at Qualia.Tools.Extension.Initializer.FillComboBox[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 143
+   at Qualia.Tools.Extension.Fill[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 134
+   at Qualia.Controls.NetworkControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 167
+   at Qualia.Controls.NetworkControl..ctor(Int64 id, Config config, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 46
+   at Qualia.Controls.NetworksManager.AddNetwork(Int64 networkId) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 141
+   at Qualia.Controls.NetworksManager.<>c__DisplayClass17_0.<LoadConfig>b__0(Int32 i) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Tools.Range.For(Int32 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 14
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 35
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 178
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-17 22:18:58
+Application started.
+
+2022-06-17 22:19:02
+System.NullReferenceException
+Object reference not set to an instance of an object.
+   at Qualia.Tools.Extension.Initializer.FillComboBox[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 143
+   at Qualia.Tools.Extension.Fill[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 134
+   at Qualia.Controls.NetworkControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 167
+   at Qualia.Controls.NetworkControl..ctor(Int64 id, Config config, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 46
+   at Qualia.Controls.NetworksManager.AddNetwork(Int64 networkId) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 141
+   at Qualia.Controls.NetworksManager.<>c__DisplayClass17_0.<LoadConfig>b__0(Int32 i) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Tools.Range.For(Int32 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 14
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 35
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 178
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-17 22:20:12
+Application started.
+
+2022-06-17 22:20:23
+Application started.
+
+2022-06-17 22:21:46
+Application started.
+
+2022-06-17 22:22:39
+Application started.
+
+2022-06-17 22:27:10
+Application started.
+
+2022-06-17 22:27:15
+System.NullReferenceException
+Object reference not set to an instance of an object.
+   at Qualia.Tools.Extension.Initializer.FillComboBox[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 143
+   at Qualia.Tools.Extension.Fill[T](ComboBox comboBox, Config config, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 134
+   at Qualia.Controls.NetworkControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 167
+   at Qualia.Controls.NetworkControl..ctor(Int64 id, Config config, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 46
+   at Qualia.Controls.NetworksManager.AddNetwork(Int64 networkId) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 141
+   at Qualia.Controls.NetworksManager.<>c__DisplayClass17_0.<LoadConfig>b__0(Int32 i) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Tools.Range.For(Int32 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 14
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 120
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 35
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 178
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-17 22:27:48
+Application started.
+
+2022-06-17 22:28:59
+Application started.
+
+2022-06-17 22:33:13
+Application started.
+
+2022-06-17 22:35:21
+Application started.
+
+2022-06-17 22:36:26
+Application started.
+
+2022-06-17 22:43:55
+Application started.
+
+2022-06-17 22:44:52
+Application started.
+
+2022-06-17 22:45:23
+Application started.
+
+2022-06-17 22:46:43
+Application started.
+
+2022-06-17 22:52:59
+Application started.
+
+2022-06-17 22:53:25
+Application started.
+
+2022-06-17 22:54:58
+Application started.
+
+2022-06-17 22:56:26
+Application started.
+
+2022-06-17 22:56:59
+Application started.
+
+2022-06-17 23:05:52
+Application started.
+
+2022-06-17 23:07:09
+Application started.
+
+2022-06-17 23:11:07
+Application started.
+
+2022-06-17 23:13:22
+Application started.
+
+2022-06-17 23:18:43
+Application started.
+
+2022-06-17 23:19:09
+Application started.
+
+2022-06-17 23:23:56
+Application started.
+
+2022-06-17 23:24:36
+Application started.
+
+2022-06-17 23:26:12
+Application started.
+
+2022-06-17 23:29:08
+Application started.
+
+2022-06-17 23:34:26
+Application started.
+
+2022-06-17 23:46:08
+Application started.
+
+2022-06-17 23:50:24
+Application started.
+
+2022-06-17 23:50:49
+Application started.
+
+2022-06-17 23:55:21
+Application started.
+
+2022-06-17 23:57:01
+Application started.
+
+2022-06-18 00:02:47
+Application started.
+
+2022-06-18 00:09:35
+Application started.
+
+2022-06-18 00:10:34
+Application started.
+
+2022-06-18 00:15:33
+Application started.
+
+2022-06-18 00:17:18
+Application started.
+
+2022-06-18 00:21:34
+Application started.
+
+2022-06-18 01:24:38
+Application started.
+
+2022-06-18 02:24:17
+Application started.
+
+2022-06-18 02:25:09
+Application started.
+
+2022-06-18 02:25:53
+Application started.
+
+2022-06-18 02:26:03
+Application started.
+
+2022-06-18 02:27:08
+Application started.
+
+2022-06-18 02:27:22
+Application started.
+
+2022-06-18 02:29:38
+Application started.
+
+2022-06-18 03:20:57
+Application started.
+
+2022-06-18 03:21:20
+Application started.
+
+2022-06-18 03:21:37
+Application started.
+
+2022-06-18 03:22:34
+Application started.
+
+2022-06-18 04:34:36
+Application started.
+
+2022-06-18 04:36:49
+Application started.
+
+2022-06-18 04:39:34
+Application started.
+
+2022-06-18 04:43:23
+Application started.
+
+2022-06-18 04:44:04
+Application started.
+
+2022-06-18 04:44:52
+Application started.
+
+2022-06-18 04:45:22
+Application started.
+
+2022-06-18 04:47:30
+Application started.
+
+2022-06-18 04:48:33
+Application started.
+
+2022-06-18 04:49:19
+Application started.
+
+2022-06-18 04:50:06
+Application started.
+
+2022-06-18 04:53:40
+Application started.
+
+2022-06-18 04:54:09
+Application started.
+
+2022-06-18 04:56:00
+Application started.
+
+2022-06-18 04:57:59
+Application started.
+
+2022-06-18 04:58:19
+Application started.
+
+2022-06-18 04:58:36
+Application started.
+
+2022-06-18 04:59:43
+Application started.
+
+2022-06-18 05:00:27
+Application started.
+
+2022-06-18 05:02:03
+Application started.
+
+2022-06-18 05:02:19
+Application started.
+
+2022-06-18 05:03:19
+Application started.
+
+2022-06-18 05:03:26
+Application started.
+
+2022-06-18 05:04:07
+Application started.
+
+2022-06-18 05:07:12
+Application started.
+
+2022-06-18 05:13:55
+Application started.
+
+2022-06-18 05:16:23
+Application started.
+
+2022-06-18 05:20:16
+Application started.
+
+2022-06-18 05:41:15
+Application started.
+
+2022-06-18 05:42:16
+Application started.
+
+2022-06-18 05:48:07
+Application started.
+
+2022-06-18 05:49:36
+Application started.
+
+2022-06-18 05:50:31
+Application started.
+
+2022-06-18 05:52:04
+Application started.
+
+2022-06-18 05:53:08
+Application started.
+
+2022-06-18 14:30:35
+Application started.
+
+2022-06-18 14:31:12
+System.FormatException
+Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt64(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Qualia.Tools.Config.<>c.<Get>b__31_0(String s) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 239
+   at System.Linq.Enumerable.WhereSelectArrayIterator`2.MoveNext()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at Qualia.Tools.Config.Get(String paramName, Int64[] defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 239
+   at Qualia.Tools.Config.Get(Param paramName, Int64[] defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 230
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 115
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 36
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 178
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 118
+   at Qualia.Controls.Main.Main_Load(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 67
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.DefWndProcWrapper(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.CallWindowProc(IntPtr wndProc, IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-06-18 14:33:16
+Application started.
+

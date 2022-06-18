@@ -26,10 +26,10 @@
                      
                 <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
                 <StackPanel Orientation="Horizontal">
-                    <local:QCheckBox x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:QCheckBox x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:QCheckBox x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:QCheckBox x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:BoolValueControl x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:BoolValueControl x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:BoolValueControl x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:BoolValueControl x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                 </StackPanel>
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
 
@@ -42,7 +42,7 @@
                     <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
                     <local:StatisticsPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
                     <local:MatrixPresenter Margin="10 0 0 0" Grid.Column="2" x:Name="CtlMatrixPresenter" />
-                    <local:QLabel Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                    <local:TextControl Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
                 </Grid>
             </Grid>
         </ScrollViewer>
@@ -82,7 +82,7 @@
                         <MenuItem Name="CtlMenuReset" Header="Reset" Click="CtlMenuReset_Click" />
                     </MenuItem>
                 </Menu>
-                <local:QLabel Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
+                <local:TextControl Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
             </Grid>
             <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="CtlApplyChanges_Click" />
             <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="CtlTabs_SelectionChanged" >
