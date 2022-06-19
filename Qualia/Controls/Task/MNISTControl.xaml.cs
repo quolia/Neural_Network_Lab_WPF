@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class MNISTControl : UserControl, IConfigParam
+    sealed public partial class MNISTControl : BaseUserControl, IConfigParam
     {
         public readonly List<MNISTImage> Images = new();
 
@@ -347,9 +347,12 @@ namespace Qualia.Controls
             decompressionStream.CopyTo(targetStream);
         }
 
-        public string ToXml()
+        public new string ToXml()
         {
-            throw new NotImplementedException();
+            string content = base.ToXml();
+            return $"<MNIST Type=\"Numbers\"> \n" +
+                   $"   {content} \n" +
+                   $"</MNIST> \n";
         }
     }
 

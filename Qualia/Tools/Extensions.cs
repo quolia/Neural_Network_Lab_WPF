@@ -134,14 +134,10 @@ namespace Qualia.Tools
             return to.Union(from).ToDictionary(x => x.Key, x => x.Value);
         }
 
-        /// <returns>Selected item's description.</returns>
+        /// <returns>Selected function instance.</returns>
         public static T Fill<T>(this SelectValueControl comboBox, Config config, string defaultValue = null) where T : class
         {
             return Initializer.FillComboBox<T>(comboBox, config, defaultValue);
-        }
-        public static void FillByFunctionType(this SelectValueControl comboBox, Type funcType, Config config, string defaultValue = null)
-        {
-            
         }
 
         static class Initializer

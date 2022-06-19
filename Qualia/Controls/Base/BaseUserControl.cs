@@ -59,7 +59,11 @@ namespace Qualia.Controls
 
         public string ToXml()
         {
-            throw new NotImplementedException();
+            string content = string.Empty;
+
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => content += param.ToXml());
+
+            return content;
         }
     }
 }

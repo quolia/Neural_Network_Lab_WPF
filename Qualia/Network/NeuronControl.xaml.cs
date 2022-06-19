@@ -47,8 +47,8 @@ namespace Qualia.Controls
 
         private void IsBias_OnCheckedChanged()
         {
-            CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
-            CtlActivation.Height = CtlIsBias.IsOn ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
+            CtlIsBiasConnected.Visibility = CtlIsBias.Value ? Visibility.Visible : Visibility.Collapsed;
+            CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
             Neuron_OnChanged();
@@ -71,9 +71,9 @@ namespace Qualia.Controls
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
-            CtlIsBiasConnected.IsOn &= CtlIsBias.IsOn;
-            CtlActivation.Height = CtlIsBias.IsOn ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
+            CtlIsBiasConnected.Visibility = CtlIsBias.Value ? Visibility.Visible : Visibility.Collapsed;
+            CtlIsBiasConnected.Value &= CtlIsBias.Value;
+            CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
         }
@@ -87,7 +87,7 @@ namespace Qualia.Controls
         {
             _configParams.ForEach(param => param.SaveConfig());
 
-            if (!CtlIsBias.IsOn)
+            if (!CtlIsBias.Value)
             {
                 CtlActivationInitializeFunction.RemoveFromConfig();
                 CtlActivationInitializeFunctionParam.RemoveFromConfig();

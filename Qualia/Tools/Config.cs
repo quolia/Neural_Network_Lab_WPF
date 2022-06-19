@@ -54,7 +54,7 @@ namespace Qualia.Tools
             return string.IsNullOrEmpty(value) ? value : value.Split(new[] { '\n' })[0];
         }
 
-        private static string PrepareParamName(string paramName)
+        public static string PrepareParamName(string paramName)
         {
             return CutParamPrefix(paramName);
         }

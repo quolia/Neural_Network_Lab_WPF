@@ -18,7 +18,7 @@ namespace Qualia.Controls
             return this;
         }
 
-        public bool IsOn
+        public bool Value
         {
             get => IsChecked == true;
             set => IsChecked = value;
@@ -26,11 +26,11 @@ namespace Qualia.Controls
 
         public BoolValueControl()
         {
-            Checked += OnValueChanged;
-            Unchecked += OnValueChanged;
+            Checked += Value_OnChanged;
+            Unchecked += Value_OnChanged;
         }
 
-        private void OnValueChanged(object sender, RoutedEventArgs e)
+        private void Value_OnChanged(object sender, RoutedEventArgs e)
         {
             _onValueChanged();
         }
@@ -42,12 +42,12 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            IsOn = _config.Get(this, DefaultValue);
+            Value = _config.Get(this, DefaultValue);
         }
 
         public void SaveConfig()
         {
-            _config.Set(this, IsOn);
+            _config.Set(this, Value);
         }
 
         public void RemoveFromConfig()
@@ -66,7 +66,8 @@ namespace Qualia.Controls
 
         public string ToXml()
         {
-            throw new NotImplementedException();
+            string name = Config.PrepareParamName(Name);
+            return $"<{name} Value=\"{Value}\" /> \n";
         }
     }
 }

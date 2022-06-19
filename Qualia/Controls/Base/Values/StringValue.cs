@@ -86,7 +86,8 @@ namespace Qualia.Controls
 
         public string ToXml()
         {
-            throw new NotImplementedException();
+            string name = Config.PrepareParamName(Name);
+            return $"<{name} Value=\"{Value}\" /> \n";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Qualia.Controls.MNISTControl"
+﻿<local:BaseUserControl x:Class="Qualia.Controls.MNISTControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -42,4 +42,4 @@
             <Button Name="CtlBrowseLabelsPath" Grid.Column="1" Content="Browse" Click="BrowseLabelsPath_OnClick" />
         </Grid>
     </Grid>
-</UserControl>
+</local:BaseUserControl>

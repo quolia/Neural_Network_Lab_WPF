@@ -159,7 +159,7 @@ namespace Qualia.Tools
 
             public string ToXml()
             {
-                throw new NotImplementedException();
+                return s_control.ToXml();
             }
         }
 
@@ -236,7 +236,7 @@ namespace Qualia.Tools
 
             public string ToXml()
             {
-                throw new NotImplementedException();
+                return s_control.ToXml();
             }
         }
     }

@@ -1,5 +1,5 @@
-ScreenWidth:1721.33333333333
 PointSize:7
+ScreenWidth:1721.33333333333
 NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\jhte.txt
 ScreenHeight:1033.33333333333
 ScreenTop:0

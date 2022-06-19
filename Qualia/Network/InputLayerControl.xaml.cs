@@ -46,7 +46,7 @@ namespace Qualia.Controls
         public double ActivationFunctionParam => CtlActivationFunctionParam.Value;
         public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
         public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
-        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
+        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.Value;
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {

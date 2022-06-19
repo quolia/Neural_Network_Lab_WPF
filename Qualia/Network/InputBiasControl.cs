@@ -16,10 +16,10 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            CtlIsBias.IsOn = true;
-            CtlIsBiasConnected.IsOn = false;
+            CtlIsBias.Value = true;
+            CtlIsBiasConnected.Value = false;
             CtlIsBias.IsEnabled = false;
-            CtlIsBiasConnected.Visible(CtlIsBias.IsOn);
+            CtlIsBiasConnected.Visible(CtlIsBias.Value);
             CtlIsBiasConnected.IsEnabled = false;
         }
     }

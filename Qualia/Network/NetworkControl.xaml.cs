@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public partial class NetworkControl : System.Windows.Controls.UserControl
+    sealed public partial class NetworkControl : BaseUserControl
     {
         public readonly long Id;
         public Config Config;
@@ -22,7 +22,7 @@ namespace Qualia.Controls
 
         public InputLayerControl InputLayer { get; private set; }
 
-        public bool IsNetworkEnabled => CtlIsNetworkEnabled.IsOn;
+        public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
         public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
@@ -267,7 +267,7 @@ namespace Qualia.Controls
             {
                 ErrorMatrix = matrix,
                 Classes = taskFunction?.VisualControl.GetClasses(),
-                IsEnabled = CtlIsNetworkEnabled.IsOn,
+                IsEnabled = CtlIsNetworkEnabled.Value,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = RandomizeMode,
                 RandomizerParam = RandomizerParam,
@@ -414,6 +414,14 @@ namespace Qualia.Controls
         {
             RandomizerViewer viewer = new(RandomizeMode, RandomizerParam);
             viewer.Show();
+        }
+
+        public new string ToXml()
+        {
+            string content = base.ToXml();
+            return $"<Network Id=\"{Id}\"> \n" +
+                   $"   {content} \n" +
+                   $"</Network> \n"; 
         }
     }
 }

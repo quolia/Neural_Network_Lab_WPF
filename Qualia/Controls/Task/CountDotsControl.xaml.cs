@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class CountDotsControl : UserControl, IConfigParam
+    sealed public partial class CountDotsControl : BaseUserControl, IConfigParam
     {
         private event Action OnChange = delegate { };
 
@@ -70,10 +70,12 @@ namespace Qualia.Controls
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
-
-        public string ToXml()
+        public new string ToXml()
         {
-            throw new NotImplementedException();
+            string content = base.ToXml();
+            return $"<CountDots> \n" +
+                   $"   {content} \n" +
+                   $"</CountDots> \n";
         }
     }
 }

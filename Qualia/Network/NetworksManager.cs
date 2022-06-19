@@ -204,6 +204,9 @@ namespace Qualia.Controls
             Config.Set(Constants.Param.SelectedNetworkIndex, _ctlTabs.SelectedIndex - 1);
 
             Networks.ForEach(ctlNetwork => ctlNetwork.SaveConfig());
+
+            string xml = string.Empty;
+            Networks.ForEach(ctlNetwork => xml += ctlNetwork.ToXml());
         }
 
         public void ResetLayersTabsNames()

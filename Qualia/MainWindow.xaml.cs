@@ -81,7 +81,7 @@ namespace Qualia.Controls
                 if (IsRunning)
                 {
                     CtlNetworkPresenter.ClearCache();
-                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn, CtlShowOnlyUnchangedWeights.IsOn);
+                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.Value, CtlOnlyChangedWeights.Value, CtlHighlightChangedWeights.Value, CtlShowOnlyUnchangedWeights.Value);
                 }
                 else
                 {
@@ -292,10 +292,10 @@ namespace Qualia.Controls
 
                 CtlNetworkPresenter.ClearCache();
                 CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel,
-                                                  CtlUseWeightsColors.IsOn,
-                                                  CtlOnlyChangedWeights.IsOn,
-                                                  CtlHighlightChangedWeights.IsOn,
-                                                  CtlShowOnlyUnchangedWeights.IsOn);
+                                                  CtlUseWeightsColors.Value,
+                                                  CtlOnlyChangedWeights.Value,
+                                                  CtlHighlightChangedWeights.Value,
+                                                  CtlShowOnlyUnchangedWeights.Value);
 
                 ToggleApplyChanges(Constants.Toggle.Off);
             }
@@ -350,10 +350,10 @@ namespace Qualia.Controls
             _networksManager.FeedForward(); // initialize state
 
             DrawNetworkAndInputData(_networksManager.SelectedNetworkModel,
-                                    CtlUseWeightsColors.IsOn,
-                                    CtlOnlyChangedWeights.IsOn,
-                                    CtlHighlightChangedWeights.IsOn,
-                                    CtlShowOnlyUnchangedWeights.IsOn);
+                                    CtlUseWeightsColors.Value,
+                                    CtlOnlyChangedWeights.Value,
+                                    CtlHighlightChangedWeights.Value,
+                                    CtlShowOnlyUnchangedWeights.Value);
 
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
@@ -682,7 +682,7 @@ namespace Qualia.Controls
                         {
                             swRenderTime.Restart();
 
-                            DrawNetworkAndInputData(networkModelToRender, CtlUseWeightsColors.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn, CtlShowOnlyUnchangedWeights.IsOn);
+                            DrawNetworkAndInputData(networkModelToRender, CtlUseWeightsColors.Value, CtlOnlyChangedWeights.Value, CtlHighlightChangedWeights.Value, CtlShowOnlyUnchangedWeights.Value);
 
                             swRenderTime.Stop();
                             RenderTime.Network = swRenderTime.Elapsed.Ticks;
@@ -1099,7 +1099,7 @@ namespace Qualia.Controls
                 {
                     CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels.First);
                     CtlNetworkPresenter.ClearCache();
-                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.IsOn, CtlOnlyChangedWeights.IsOn, CtlHighlightChangedWeights.IsOn, CtlShowOnlyUnchangedWeights.IsOn);
+                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.Value, CtlOnlyChangedWeights.Value, CtlHighlightChangedWeights.Value, CtlShowOnlyUnchangedWeights.Value);
                     CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, _networksManager.SelectedNetworkModel);
                     CtlStatisticsPresenter.Draw(_networksManager.SelectedNetworkModel.LastStatistics);
                 }
