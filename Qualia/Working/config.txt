@@ -1,7 +1,7 @@
-PointSize:7
-NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\780_21x21_21.txt
 ScreenWidth:1721.33333333333
-ScreenHeight:968
+PointSize:7
+NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\jhte.txt
+ScreenHeight:1033.33333333333
 ScreenTop:0
 ScreenLeft:0
 OnTop:0
@@ -14,3 +14,10 @@ ShowOnlyUnchangedWeights:0
 SkipRoundsToDrawErrorMatrix:1000
 SkipRoundsToDrawNetworks:10000
 SkipRoundsToDrawStatistics:10000
+UseWeightsColors.UseWeightsColors:UseWeightsColors.0
+OnlyChangedWeights.OnlyChangedWeights:OnlyChangedWeights.0
+HighlightChangedWeights.HighlightChangedWeights:HighlightChangedWeights.0
+ShowOnlyUnchangedWeights.ShowOnlyUnchangedWeights:ShowOnlyUnchangedWeights.0
+SkipRoundsToDrawErrorMatrix.SkipRoundsToDrawErrorMatrix:SkipRoundsToDrawErrorMatrix.10000
+SkipRoundsToDrawNetworks.SkipRoundsToDrawNetworks:SkipRoundsToDrawNetworks.10000
+SkipRoundsToDrawStatistics.SkipRoundsToDrawStatistics:SkipRoundsToDrawStatistics.10000

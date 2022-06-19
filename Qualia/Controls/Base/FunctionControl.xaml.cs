@@ -4,12 +4,12 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class FunctionControl : BaseUserControl
+    public partial class FunctionControl : BaseUserControl
     {
-        public FunctionControl SetDefaultValues(string functionName, double functionParam)
+        public FunctionControl Initialize(string defaultFunctionName, double? defaultParamValue = null)
         {
-            CtlFunction.DefaultValue = functionName;
-            CtlFunctionParam.DefaultValue = functionParam;
+            CtlFunction.Initialize(defaultFunctionName);
+            CtlFunctionParam.Initialize(defaultValue: defaultParamValue);
 
             return this;
         }
@@ -17,13 +17,64 @@ namespace Qualia.Controls
         public FunctionControl()
         {
             InitializeComponent();
-
-            CtlFunction.SelectionChanged += SelectBox_SelectionChanged;
         }
 
-        private void SelectBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Function_OnSelected(object sender, SelectionChangedEventArgs e)
         {
-            //OnChanged();
+            OnChanged();
+        }
+
+        public new void SetConfig(Config config)
+        {
+            CtlFunction.SetConfig(config);
+            CtlFunctionParam.SetConfig(config.Extend(SelectedFunction.Name));
+        }
+
+        public new void LoadConfig()
+        {
+            CtlFunction.LoadConfig();
+            CtlFunctionParam.LoadConfig();
+
+            //CtlFunction.SelectionChanged += SelectBox_SelectionChanged;
+        }
+
+        public T Fill<T>(Config config) where T : class
+        {
+            //_setConfig(config);
+            //LoadConfig();
+
+            return CtlFunction.Fill<T>(config);
+        }
+
+        public SelectedFunction SelectedFunction
+        {
+            get
+            {
+                if (CtlFunction.SelectedItem == null)
+                {
+                    return new(null, 0);
+                }
+
+                var selectedFunctionName = CtlFunction.SelectedItem.ToString();
+                return new SelectedFunction(selectedFunctionName, CtlFunctionParam.Value);
+            }
+        }
+        
+        public T GetInstance<T>() where T : class
+        {
+            return BaseFunction<T>.GetInstance(SelectedFunction.Name);
+        }
+    }
+
+    public class SelectedFunction
+    {
+        public string Name;
+        public double Param;
+
+        public SelectedFunction(string name, double param)
+        {
+            Name = name;
+            Param = param;
         }
     }
 }

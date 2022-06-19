@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Qualia.Controls.DataPresenter"
+﻿<UserControl x:Class="Qualia.Controls.InputDataPresenter"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,16 +19,9 @@
             <local:TextControl Content="Task:" />
             <local:SelectValueControl x:Name="CtlTaskFunction" />
             <local:TextControl Content="Input data function:" />
-
-            <StackPanel Orientation="Horizontal">
-                <local:SelectValueControl x:Name="CtlInputDataFunction" />
-                <local:TextControl Content="a:" />
-                <local:DoubleValueControl x:Name="CtlInputDataFunctionParam" />
-            </StackPanel>
-
+            <local:FunctionControl x:Name="CtlInputDataFunction" />
             <Grid Name="CtlHolder">
             </Grid>
-            
             <local:TextControl Content="Input data:" />
         </StackPanel>
         <local:CanvasControl Margin="0,10,0,0" Grid.Row="1" x:Name="CtlCanvas" />

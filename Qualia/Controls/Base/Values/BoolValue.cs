@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -7,14 +8,13 @@ namespace Qualia.Controls
     sealed public class BoolValueControl : CheckBox, IConfigParam
     {
         private Config _config;
-
-        private event Action Changed = delegate { };
+        private event Action _onValueChanged = delegate { };
 
         public bool DefaultValue { get; set; }
 
-        public BoolValueControl SetDefaultValue(bool value)
+        public BoolValueControl Initialize(bool defaultValue)
         {
-            DefaultValue = value;
+            DefaultValue = defaultValue;
             return this;
         }
 
@@ -26,18 +26,18 @@ namespace Qualia.Controls
 
         public BoolValueControl()
         {
-            Checked += OnOffBox_Changed;
-            Unchecked += OnOffBox_Changed;
+            Checked += OnValueChanged;
+            Unchecked += OnValueChanged;
         }
 
-        private void OnOffBox_Changed(object sender, System.Windows.RoutedEventArgs e)
+        private void OnValueChanged(object sender, RoutedEventArgs e)
         {
-            Changed();
+            _onValueChanged();
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(this);
         }
 
         public void LoadConfig()
@@ -47,21 +47,26 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, IsOn);
+            _config.Set(this, IsOn);
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            _config.Remove(this);
         }
 
         public bool IsValid() => true;
 
-        public void SetChangeEvent(Action action)
+        public void SetChangeEvent(Action onValueChanged)
         {
-            Changed = action;
+            _onValueChanged = onValueChanged;
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

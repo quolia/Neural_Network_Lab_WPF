@@ -8,14 +8,27 @@ namespace Qualia.Controls
     sealed public class DoubleValueControl : TextBox, IConfigParam
     {
         private Config _config;
+        private event Action _onChanged = delegate { };
 
-        private event Action OnChanged = delegate { };
+        public double DefaultValue { get; set; } = double.NaN;
 
-        public double DefaultValue{ get; set; } 
-
-        public DoubleValueControl SetDefaultValue(double value)
+        public DoubleValueControl Initialize(double? defaultValue = null, double? minValue = null, double? maxValue = null)
         {
-            DefaultValue = value;
+            if (defaultValue.HasValue)
+            {
+                DefaultValue = defaultValue.Value;
+            }
+
+            if (minValue.HasValue)
+            {
+                MinimumValue = minValue.Value;
+            }
+
+            if (maxValue.HasValue)
+            {
+                MaximumValue = maxValue.Value;
+            }
+
             return this;
         }
 
@@ -29,15 +42,15 @@ namespace Qualia.Controls
             Margin = new(3);
             MinWidth = 60;
 
-            TextChanged += DoubleBox_TextChanged;
+            TextChanged += Value_OnChanged;
         }
 
-        private void DoubleBox_TextChanged(object sender, EventArgs e)
+        private void Value_OnChanged(object sender, EventArgs e)
         {
             if (IsValid())
             {
                 Background = Brushes.White;
-                OnChanged();
+                _onChanged();
             }
             else
             {
@@ -52,28 +65,43 @@ namespace Qualia.Controls
                 return false;
             }
 
-            var ok = Converter.TryTextToDouble(Text, out double value, DefaultValue);
-            return ok && (value >= MinimumValue && value <= MaximumValue);
+            try
+            {
+                var value = Converter.TextToDouble(Text, DefaultValue);
+                return value >= MinimumValue && value <= MaximumValue;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public bool IsNull() => string.IsNullOrEmpty(Text);
+        public bool IsNull() => string.IsNullOrEmpty(Text) && double.IsNaN(DefaultValue);
 
         public double Value
         {
-            get => IsValid() 
-                   ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToDouble(Text).Value)
-                   : throw new InvalidValueException(Name, Text);
+            get
+            {
+                if (string.IsNullOrEmpty(Text) && !double.IsNaN(DefaultValue))
+                {
+                    Text = Converter.DoubleToText(DefaultValue);
+                }
+
+                return IsValid()
+                       ? Converter.TextToDouble(Text, DefaultValue)
+                       : throw new InvalidValueException(Name, Text);
+            }
 
             set
             {
                 Text = Converter.DoubleToText(value);
-                DoubleBox_TextChanged(null, null);
+                Value_OnChanged(null, null);
             }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(this);
         }
 
         public void LoadConfig()
@@ -95,23 +123,28 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value);
+            _config.Set(this, Value);
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            _config.Remove(this);
         }
 
         public void SetChangeEvent(Action onChanged)
         {
-            OnChanged -= onChanged;
-            OnChanged += onChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
         }
 
         public void InvalidateValue()
         {
             Background = Brushes.Tomato;
+        }
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }

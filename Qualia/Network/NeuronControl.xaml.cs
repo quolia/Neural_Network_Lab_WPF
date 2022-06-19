@@ -9,46 +9,49 @@ namespace Qualia.Controls
     {
         private readonly List<IConfigParam> _configParams;
 
-        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
-            : base(id, config, onNetworkUIChanged)
+        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
+            : base(id, config, networkUI_OnChanged)
         {
             InitializeComponent();
 
             _configParams = new()
             {
-                CtlActivationInitializeFunctionParam,
-                CtlActivationInitializeFunction,
-                CtlWeightsInitializeFunctionParam,
-                CtlWeightsInitializeFunction,
-                CtlIsBias,
-                CtlIsBiasConnected,
-                CtlActivationFunction,
-                CtlActivationFunctionParam
+                CtlActivationFunction.Initialize(nameof(ActivationFunction.LogisticSigmoid)),
+                CtlActivationFunctionParam.Initialize(defaultValue: 1),
+
+                CtlActivationInitializeFunction.Initialize(nameof(InitializeFunction.FlatRandom)),
+                CtlActivationInitializeFunctionParam.Initialize(defaultValue: 1),
+
+                CtlWeightsInitializeFunction.Initialize(nameof(InitializeFunction.FlatRandom)),
+                CtlWeightsInitializeFunctionParam.Initialize(defaultValue: 1),
+
+                CtlIsBias.Initialize(false),
+                CtlIsBiasConnected.Initialize(false)
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
+            _configParams.ForEach(param => param.SetChangeEvent(Neuron_OnChanged));
         }
 
-        private void OnChanged()
+        private void Neuron_OnChanged()
         {
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
+            NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
         }
 
-        public override void OrdinalNumberChanged(int number)
+        public override void OrdinalNumber_OnChanged(int number)
         {
-            CtlNumber.Content = number.ToString();
+            CtlNumber.Content = Converter.IntToText(number);
         }
 
-        private void CtlIsBias_CheckedChanged()
+        private void IsBias_OnCheckedChanged()
         {
             CtlIsBiasConnected.Visibility = CtlIsBias.IsOn ? Visibility.Visible : Visibility.Collapsed;
             CtlActivation.Height = CtlIsBias.IsOn ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
-            OnChanged();
+            Neuron_OnChanged();
         }
 
         public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunction.GetInstance(CtlActivationInitializeFunction) : null);
@@ -62,7 +65,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.None));
+            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.Skip));
             CtlActivationInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.Constant));
             CtlActivationFunction.Fill<ActivationFunction>(Config);
 
@@ -73,11 +76,6 @@ namespace Qualia.Controls
             CtlActivation.Height = CtlIsBias.IsOn ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
-        }
-
-        public bool IsValidActivationIniterParam()
-        {
-            return !IsBias || Converter.TryTextToDouble(CtlActivationInitializeFunctionParam.Text, out _, 777);
         }
 
         public override bool IsValid()
@@ -91,14 +89,14 @@ namespace Qualia.Controls
 
             if (!CtlIsBias.IsOn)
             {
-                CtlActivationInitializeFunction.VanishConfig();
-                CtlActivationInitializeFunctionParam.VanishConfig();
+                CtlActivationInitializeFunction.RemoveFromConfig();
+                CtlActivationInitializeFunctionParam.RemoveFromConfig();
             }
         }
 
-        public override void VanishConfig()
+        public override void RemoveFromConfig()
         {
-            _configParams.ForEach(param => param.VanishConfig());
+            _configParams.ForEach(param => param.RemoveFromConfig());
         }
     }
 }

@@ -10,9 +10,9 @@ namespace Qualia.Controls
     sealed public partial class StatisticsPresenter : UserControl
     {
         private static readonly Typeface s_font = new(new("Tahoma"),
-                                                          FontStyles.Normal,
-                                                          FontWeights.Bold,
-                                                          FontStretches.Normal);
+                                                      FontStyles.Normal,
+                                                      FontWeights.Bold,
+                                                      FontStretches.Normal);
 
         private static readonly StringBuilder s_stringBuilder = new();
 

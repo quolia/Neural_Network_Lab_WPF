@@ -72,7 +72,7 @@
     <OutputPath>Working\Bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
@@ -240,7 +240,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Presenter\DataPresenter.xaml">
+    <Page Include="Controls\Presenter\InputDataPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -310,8 +310,8 @@
     <Compile Include="Network\OutputNeuronControl.xaml.cs">
       <DependentUpon>OutputNeuronControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Presenter\DataPresenter.xaml.cs">
-      <DependentUpon>DataPresenter.xaml</DependentUpon>
+    <Compile Include="Controls\Presenter\InputDataPresenter.xaml.cs">
+      <DependentUpon>InputDataPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Presenter\MatrixPresenter.xaml.cs">
       <DependentUpon>MatrixPresenter.xaml</DependentUpon>

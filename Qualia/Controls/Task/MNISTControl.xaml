@@ -30,7 +30,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <local:StringValueControl x:Name="CtlTask_MNIST_ImagesPath" />
-            <Button Name="CtlBrowseImagesPath" Grid.Column="1" Content="Browse" Click="CtlBrowseImagesPath_Click" />
+            <Button Name="CtlBrowseImagesPath" Grid.Column="1" Content="Browse" Click="BrowseImagesPath_OnClick" />
         </Grid>
         <local:TextControl Grid.Row="4" Grid.ColumnSpan="2" Content="Path to labels (*.gz):" />
         <Grid Grid.Row="5" Grid.ColumnSpan="2">
@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <local:StringValueControl x:Name="CtlTask_MNIST_LabelsPath" />
-            <Button Name="CtlBrowseLabelsPath" Grid.Column="1" Content="Browse" Click="CtlBrowseLabelsPath_Click" />
+            <Button Name="CtlBrowseLabelsPath" Grid.Column="1" Content="Browse" Click="BrowseLabelsPath_OnClick" />
         </Grid>
     </Grid>
 </UserControl>

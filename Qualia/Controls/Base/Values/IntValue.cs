@@ -8,14 +8,27 @@ namespace Qualia.Controls
     sealed public class IntValueControl : TextBox, IConfigParam
     {
         private Config _config;
+        private event Action _onChanged = delegate { };
 
-        private event Action OnChanged = delegate { };
+        public long DefaultValue { get; set; } = Constants.LongNaN;
 
-        public long DefaultValue { get; set; }
-
-        public IntValueControl SetDefaultValue(long value)
+        public IntValueControl Initialize(long? defaultValue = null, long? minValue = null, long? maxValue = null)
         {
-            DefaultValue = value;
+            if (defaultValue.HasValue)
+            {
+                DefaultValue = defaultValue.Value;
+            }
+
+            if (minValue.HasValue)
+            {
+                MinimumValue = minValue.Value;
+            }
+
+            if (maxValue.HasValue)
+            {
+                MaximumValue = maxValue.Value;
+            }
+
             return this;
         }
 
@@ -29,15 +42,15 @@ namespace Qualia.Controls
             Margin = new(3);
             MinWidth = 60;
 
-            TextChanged += IntBox_TextChanged;
+            TextChanged += OnValueChanged;
         }
 
-        private void IntBox_TextChanged(object sender, EventArgs e)
+        private void OnValueChanged(object sender, EventArgs e)
         {
             if (IsValid())
             {
                 Background = Brushes.White;
-                OnChanged();
+                _onChanged();
             }
             else
             {
@@ -52,31 +65,31 @@ namespace Qualia.Controls
                 return false;
             }
 
-            var ok = Converter.TryTextToInt(Text, out long value, DefaultValue);
-            return ok && (value >= MinimumValue && value <= MaximumValue);
+            long value = Converter.TextToInt(Text, DefaultValue);
+            return value >= MinimumValue && value <= MaximumValue;
         }
 
-        public bool IsNull() => string.IsNullOrEmpty(Text);
+        public bool IsNull() => string.IsNullOrEmpty(Text) && Constants.IsNaN(DefaultValue);
 
         public long Value
         {
             get
             {
                 return IsValid()
-                       ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToInt(Text).Value)
+                       ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToInt(Text, DefaultValue))
                        : throw new InvalidValueException(Name, Text);
             }
 
             set
             {
                 Text = Converter.IntToText(value);
-                IntBox_TextChanged(null, null);
+                OnValueChanged(null, null);
             }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(this);
         }
 
         public void LoadConfig()
@@ -98,23 +111,28 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value);
+            _config.Set(this, Value);
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            _config.Remove(this);
         }
 
         public void SetChangeEvent(Action onChanged)
         {
-            OnChanged -= onChanged;
-            OnChanged += onChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
         }
 
         public void InvalidateValue()
         {
             Background = Brushes.Tomato;
+        }
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }

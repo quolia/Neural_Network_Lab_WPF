@@ -11,8 +11,8 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
-            : base(id, config, onNetworkUIChanged)
+        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
+            : base(id, config, networkUI_OnChanged)
         {
             InitializeComponent();
 

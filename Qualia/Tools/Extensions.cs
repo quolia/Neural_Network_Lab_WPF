@@ -42,7 +42,7 @@ namespace Qualia.Tools
             return ((SolidColorBrush)brush).Color;
         }
 
-        public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : class
+        public static IEnumerable<T> FindVisualChildren<T>(this Control depObj) where T : class
         {
             if (depObj != null)
             {
@@ -129,19 +129,28 @@ namespace Qualia.Tools
             }
         }
 
+        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> to, Dictionary<TKey, TValue> from)
+        {
+            return to.Union(from).ToDictionary(x => x.Key, x => x.Value);
+        }
+
         /// <returns>Selected item's description.</returns>
         public static T Fill<T>(this SelectValueControl comboBox, Config config, string defaultValue = null) where T : class
         {
             return Initializer.FillComboBox<T>(comboBox, config, defaultValue);
         }
+        public static void FillByFunctionType(this SelectValueControl comboBox, Type funcType, Config config, string defaultValue = null)
+        {
+            
+        }
 
-        private static class Initializer
+        static class Initializer
         {
             public static T FillComboBox<T>(SelectValueControl comboBox, Config config, string defaultValue = null) where T : class
             {
                 if (defaultValue == null)
                 {
-                    defaultValue = BaseFunction<T>.GetDefaultFunctionName();
+                    defaultValue = comboBox.DefaultValue;
                 }
 
                 var items = BaseFunction<T>.GetItems();

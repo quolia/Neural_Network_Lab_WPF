@@ -18,7 +18,7 @@ namespace Qualia.Controls
         public int MaxNumber => (int)CtlTask_CountDots_MaxNumber.Value;
         public int MinNumber => (int)CtlTask_CountDots_MinNumber.Value;
 
-        private void Changed()
+        private void Parameter_OnChanged()
         {
             if (IsValid())
             {
@@ -41,9 +41,9 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
         }
 
         public bool IsValid()
@@ -66,9 +66,14 @@ namespace Qualia.Controls
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Parameter_OnChanged));
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

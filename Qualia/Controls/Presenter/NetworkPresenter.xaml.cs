@@ -34,19 +34,17 @@ namespace Qualia.Controls
             _penChange.Freeze();
             _biasPen.Freeze();
 
-            SizeChanged += NetworkPresenter_SizeChanged;
+            SizeChanged += NetworkPresenter_OnSizeChanged;
         }
 
-        private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void NetworkPresenter_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             ClearCache();
         }
 
-        public int LayerDistance(NetworkDataModel model)
+        public int LayerDistance(NetworkDataModel model!!)
         {
-            return model == null
-                   ? throw new ArgumentNullException(nameof(model))
-                   : (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
+            return (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
         }
 
         private float VerticalDistance(int count)
@@ -356,32 +354,33 @@ namespace Qualia.Controls
 
             //lock (Main.ApplyChangesLocker)
             {
-                if (networkModel.Layers.Count > 0)
+                if (networkModel.Layers.Count == 0)
                 {
-                    var lastLayerModel = networkModel.Layers.Last;
+                    return;
+                }
 
-                    var layerModel = networkModel.Layers.First;
-                    while (layerModel != lastLayerModel)
-                    {
-                        DrawLayersLinks(fullState,
-                                        networkModel,
-                                        layerModel,
-                                        layerModel.Next,
-                                        isUseWeightsColors,
-                                        isOnlyChangedWeights,
-                                        isHighlightChangedWeights,
-                                        isShowOnlyUnchangedWeights);
+                var lastLayerModel = networkModel.Layers.Last;
+
+                var layerModel = networkModel.Layers.First;
+                while (layerModel != lastLayerModel)
+                {
+                    DrawLayersLinks(fullState,
+                                    networkModel,
+                                    layerModel,
+                                    layerModel.Next,
+                                    isUseWeightsColors,
+                                    isOnlyChangedWeights,
+                                    isHighlightChangedWeights,
+                                    isShowOnlyUnchangedWeights);
                     
-                        layerModel = layerModel.Next;
-                    }
+                    layerModel = layerModel.Next;
+                }
 
-                    layerModel = networkModel.Layers.First;
-                    while (layerModel != null)
-                    {
-                        DrawLayerNeurons(fullState, networkModel, layerModel);
-
-                        layerModel = layerModel.Next;
-                    }
+                layerModel = networkModel.Layers.First;
+                while (layerModel != null)
+                {
+                    DrawLayerNeurons(fullState, networkModel, layerModel);
+                    layerModel = layerModel.Next;
                 }
             }
         }

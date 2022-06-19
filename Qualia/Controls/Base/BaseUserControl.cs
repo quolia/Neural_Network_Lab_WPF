@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -7,55 +8,58 @@ namespace Qualia.Controls
     public partial class BaseUserControl : UserControl, IConfigParam
     {
         protected Config _config;
-        protected event Action OnChanged = delegate { };
+        protected event Action _onChanged = delegate { };
 
         public BaseUserControl()
         {
 
         }
 
-
-        public bool IsValid() => true;
+        public bool IsValid()
+        {
+            return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
+        }
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(this);
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(_config));
         }
 
         public void LoadConfig()
         {
-            //var paramConfig = _config.Extend(Name);
-            //ParamValue = paramConfig.GetDouble(Constants.Param.Value, 777);
-
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
         }
 
         public void SaveConfig()
         {
-            //var paramConfig = _config.Extend(Name);
-            //paramConfig.Set(Constants.Param.Value, ParamValue);
-
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            _config.Remove(this);
 
-            //var paramConfig = _config.Extend(Name);
-            //paramConfig.Remove(Constants.Param.Value);
-
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
         }
 
         public void SetChangeEvent(Action onChanged)
         {
-            OnChanged -= onChanged;
-            OnChanged += onChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
+        }
+
+        public void OnChanged()
+        {
+            _onChanged();
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

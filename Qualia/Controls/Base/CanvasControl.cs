@@ -10,7 +10,7 @@ namespace Qualia.Controls
     {
         private readonly VisualCollection _visuals;
 
-        public Func<double, double> Scale = RenderSettings.Scale;
+        private Func<double, double> _scaleFunc = RenderSettings.Scale;
 
         public CanvasControl()
         {
@@ -38,10 +38,7 @@ namespace Qualia.Controls
             _visuals.Add(visual);
         }
 
-        protected override int VisualChildrenCount
-        {
-            get => _visuals.Count;
-        }
+        protected override int VisualChildrenCount => _visuals.Count;
 
         protected override Visual GetVisualChild(int index)
         {
@@ -57,10 +54,10 @@ namespace Qualia.Controls
         {
             using var g = G();
 
-            rect.X = Scale(rect.X);
-            rect.Y = Scale(rect.Y);
-            rect.Width = Scale(rect.Width);
-            rect.Height = Scale(rect.Height);
+            rect.X = _scaleFunc(rect.X);
+            rect.Y = _scaleFunc(rect.Y);
+            rect.Width = _scaleFunc(rect.Width);
+            rect.Height = _scaleFunc(rect.Height);
 
             g.DrawRectangle(brush, pen, rect);
         }
@@ -69,8 +66,8 @@ namespace Qualia.Controls
         {
             using var g = G();
 
-            point.X = Scale(point.X);
-            point.Y = Scale(point.Y);
+            point.X = _scaleFunc(point.X);
+            point.Y = _scaleFunc(point.Y);
 
             if (angle != 0)
             {
@@ -93,10 +90,10 @@ namespace Qualia.Controls
         {
             using var g = G();
 
-            point1.X = Scale(point1.X);
-            point1.Y = Scale(point1.Y);
-            point2.X = Scale(point2.X);
-            point2.Y = Scale(point2.Y);
+            point1.X = _scaleFunc(point1.X);
+            point1.Y = _scaleFunc(point1.Y);
+            point2.X = _scaleFunc(point2.X);
+            point2.Y = _scaleFunc(point2.Y);
 
             g.DrawLine(pen, point1, point2);
         }
@@ -105,10 +102,10 @@ namespace Qualia.Controls
         {
             using var g = G();
 
-            center.X = Scale(center.X);
-            center.Y = Scale(center.Y);
-            radiusX = Scale(radiusX);
-            radiusY = Scale(radiusY);
+            center.X = _scaleFunc(center.X);
+            center.Y = _scaleFunc(center.Y);
+            radiusX = _scaleFunc(radiusX);
+            radiusY = _scaleFunc(radiusY);
 
             g.DrawEllipse(brush, pen, center, radiusX, radiusY);
         }

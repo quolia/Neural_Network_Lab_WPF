@@ -16,7 +16,7 @@
                 <StackPanel Orientation="Horizontal">
                     <local:BoolValueControl x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
                     <local:TextControl Content="Color:" Margin="20,0,0,0" />
-                    <local:TextControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="CtlColor_Click" />
+                    <local:TextControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="Color_OnClick" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -26,7 +26,7 @@
                 <local:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="CtlRandomizerButton_Click" />
+                <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="RandomizerButton_OnClick" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:TextControl Content="Learning rate:" />
@@ -47,9 +47,9 @@
         </StackPanel>
         <TabControl Grid.Row="1" Name="CtlTabsLayers" Padding="0" Margin="0,10,0,0">
             <TabControl.ContextMenu>
-                <ContextMenu Name="CtlLayerContextMenu" Opened="CtlLayerContextMenu_Opened">
-                    <MenuItem Name="CtlMenuAddLayer" Header="Add Layer" Click="CtlMenuAddLayer_Click" />
-                    <MenuItem Name="CtlMenuDeleteLayer" Header="Delete Layer..." Click="CtlMenuDeleteLayer_Click" />
+                <ContextMenu Name="CtlLayerContextMenu" Opened="LayerContextMenu_OnOpened">
+                    <MenuItem Name="CtlMenuAddLayer" Header="Add Layer" Click="MenuAddLayer_OnClick" />
+                    <MenuItem Name="CtlMenuDeleteLayer" Header="Delete Layer..." Click="MenuDeleteLayer_OnClick" />
                 </ContextMenu>
             </TabControl.ContextMenu>
             <TabItem Name="CtlTabInput" Header="Input" Margin="0" />

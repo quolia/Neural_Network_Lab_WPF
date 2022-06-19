@@ -9,7 +9,7 @@ namespace Qualia.Controls
     {
         private Config _config;
 
-        private event Action OnChanged = delegate { };
+        private event Action _onChanged = delegate { };
 
         public string DefaultValue { get; set; }
 
@@ -22,15 +22,15 @@ namespace Qualia.Controls
         public StringValueControl()
         {
             InvalidateValue();
-            TextChanged += QTextBox_TextChanged;
+            TextChanged += OnValueChanged;
         }
 
-        private void QTextBox_TextChanged(object sender, EventArgs e)
+        private void OnValueChanged(object sender, EventArgs e)
         {
             if (IsValid())
             {
                 Background = Brushes.White;
-                OnChanged();
+                _onChanged();
             }
             else
             {
@@ -49,13 +49,13 @@ namespace Qualia.Controls
             set
             {
                 Text = value;
-                QTextBox_TextChanged(null, null);
+                OnValueChanged(null, null);
             }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(this);
         }
 
         public void LoadConfig()
@@ -65,23 +65,28 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value);
+            _config.Set(this, Value);
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            _config.Remove(this);
         }
 
         public void SetChangeEvent(Action onChanged)
         {
-            OnChanged -= onChanged;
-            OnChanged += onChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
         }
 
         public void InvalidateValue()
         {
             Background = IsValid() ? Brushes.White : Brushes.Tomato;
+        }
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }

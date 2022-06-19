@@ -7,13 +7,17 @@ namespace Qualia.Controls
     sealed public class SelectValueControl : ComboBox, IConfigParam
     {
         private Config _config;
-        private event Action OnChanged = delegate { };
+        private event Action _onChanged = delegate { };
 
         public string DefaultValue { get; set; }
 
-        public SelectValueControl SetDefaultValue(string value)
+        public SelectValueControl Initialize(string defaultFunctionName)
         {
-            DefaultValue = value;
+            if (!string.IsNullOrEmpty(defaultFunctionName))
+            {
+                DefaultValue = defaultFunctionName;
+            }
+
             return this;
         }
 
@@ -25,49 +29,59 @@ namespace Qualia.Controls
             Margin = new(1);
             MinWidth = 60;
 
-            SelectionChanged += SelectBox_SelectionChanged;
+            SelectionChanged += Value_OnChanged;
         }
 
-        private void SelectBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
         {
-            OnChanged();
+            _onChanged();
+        }
+        public bool IsValid() => !IsNull();
+
+        public bool IsNull() => string.IsNullOrEmpty(Text) && string.IsNullOrEmpty(DefaultValue);
+
+        public string Value
+        {
+            get => IsValid() ? Text : throw new InvalidValueException(Name, Text);
+
+            set
+            {
+                Text = value;
+                Value_OnChanged(null, null);
+            }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(this);
         }
 
         public void LoadConfig()
         {
-            //var paramConfig = _config.Extend(Name);
-            //ParamValue = paramConfig.GetDouble(Constants.Param.Value, 777);
+            Value = SelectedItem.ToString();
         }
 
         public void SaveConfig()
         {
-            _config.Set(Name, SelectedItem.ToString());
-
-            //var paramConfig = _config.Extend(Name);
-            //paramConfig.Set(Constants.Param.Value, ParamValue);
+            _config.Set(this, SelectedItem.ToString());
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            _config.Remove(Name);
-
-            //var paramConfig = _config.Extend(Name);
-            //paramConfig.Remove(Constants.Param.Value);
+            _config.Remove(this);
         }
-
-        public bool IsValid() => true;
 
         public void SetChangeEvent(Action onChanged)
         {
-            OnChanged -= onChanged;
-            OnChanged += onChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,8 +7,8 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputLayerControl : LayerBaseControl
     {
-        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
-            : base(id, config, onNetworkUIChanged)
+        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
+            : base(id, config, networkUI_OnChanged)
         {
             InitializeComponent();
 
@@ -25,19 +25,19 @@ namespace Qualia.Controls
 
         public override Panel NeuronsHolder => CtlNeuronsHolder;
 
-        private void CtlMenuAddNeuron_Click(object sender, EventArgs e)
+        private void MenuAddNeuron_OnClick(object sender, EventArgs e)
         {
             AddNeuron(Constants.UnknownId);
         }
 
         public override void AddNeuron(long neuronId)
         {
-            OutputNeuronControl ctlNeuron = new(neuronId, Config, OnNetworkUIChanged);
+            OutputNeuronControl ctlNeuron = new(neuronId, Config, NetworkUI_OnChanged);
             NeuronsHolder.Children.Add(ctlNeuron);
 
             if (neuronId == Constants.UnknownId)
             {
-                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
+                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
             RefreshOrdinalNumbers();
@@ -56,15 +56,15 @@ namespace Qualia.Controls
             ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.SaveConfig());
         }
 
-        public override void VanishConfig()
+        public override void RemoveFromConfig()
         {
             Config.Remove(Constants.Param.Neurons);
 
             var ctlNeurons = GetNeuronsControls();
-            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.RemoveFromConfig());
         }
 
-        public void OnTaskChanged(TaskFunction taskFunction)
+        public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
             var ctlNeurons = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
 

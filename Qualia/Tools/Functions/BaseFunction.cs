@@ -1,11 +1,20 @@
-﻿using System;
+﻿using Qualia.Controls;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
 namespace Qualia.Tools
 {
-    unsafe public class BaseFunction<T>  where T : class
+    unsafe public class BaseFunctionInfo
+    {
+        public static string[] GetItemsByType(Type funcType)
+        {
+            return (string[])funcType.GetMethod("GetItems").Invoke(null, null);
+        }
+    }
+
+    unsafe public class BaseFunction<T> : BaseFunctionInfo where T : class
     {
         public readonly string DefaultFunction;
 
@@ -22,12 +31,17 @@ namespace Qualia.Tools
 
         public static T GetInstance(Selector selector)
         {
-            return GetInstance(selector.SelectedValue);
+            return GetInstance(selector.SelectedValue.ToString());
         }
 
-        public static T GetInstance(object name)
+        public static T GetInstance(FunctionControl function)
         {
-            var funcName = name.ToString();
+            return GetInstance(function.SelectedFunction.Name);
+        }
+
+        public static T GetInstance(string name)
+        {
+            var funcName = name;
 
             if (!GetItems().Contains(funcName)) // Call it just to tell compiler to compile GetItems, but not to exclude it.
             {

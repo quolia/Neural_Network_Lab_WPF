@@ -5,78 +5,67 @@ namespace Qualia.Tools
 {
     public static class Converter
     {
+        private static readonly char[] _0 = new[] { '0' };
+        private static readonly char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
+        private static readonly string[] _postfixes = new[] { "", " K", " M", " B", " T" };
+
         public static long TicksToMicroseconds(long ticks)
         {
             return (long)(TimeSpan.FromTicks(ticks).TotalMilliseconds * 1000);
         }
 
-        public static long? TextToInt(string text, long? defaultValue = null)
-        {
-            return string.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
-        }
-
         public static long TextToInt(string text, long defaultValue)
         {
-            return string.IsNullOrEmpty(text) ? defaultValue : long.TryParse(text, out long a) ? a : defaultValue;
-        }
-
-        public static bool TryTextToInt(string text, out long result, long defaultValue)
-        {
-            if (string.IsNullOrEmpty(text))
+            bool valid = long.TryParse(text, out long value);
+            
+            if (valid)
             {
-                result = defaultValue;
-                return true;
+                return value;
             }
 
-            if (long.TryParse(text, out long d))
+            if (Constants.IsNaN(defaultValue))
             {
-                result = d;
-                return true;
+                throw new InvalidValueException("long", "NaN");
             }
 
-            result = 0;
-            return false;
+            return defaultValue;
         }
 
-        public static string IntToText(long? d)
+        public static string IntToText(long value)
         {
-            return d.HasValue ? d.Value.ToString() : null;
-        }
+            if (Constants.IsNaN(value))
+            {
+                throw new InvalidValueException("long", "NaN");
+            }
 
-        public static double? TextToDouble(string text, double? defaultValue = null)
-        {
-            return string.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double a) ? a : defaultValue;
+            return value.ToString(Culture.Current);
         }
 
         public static double TextToDouble(string text, double defaultValue)
         {
-            return string.IsNullOrEmpty(text) ? defaultValue : double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double value) ? value : defaultValue;
-        }
+            bool valid = double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double value);
 
-        public static bool TryTextToDouble(string text, out double result, double defaultValue)
-        {
-            result = defaultValue;
-
-            if (string.IsNullOrEmpty(text))
+            if (valid)
             {
-                return true;
+                return value;
             }
 
-            if (double.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.Current, out double value))
+            if (double.IsNaN(defaultValue))
             {
-                result = value;
+                throw new InvalidValueException("double", "NaN");
             }
 
-            return true;
+            return defaultValue;
         }
 
-        private static readonly char[] _0 = new[] { '0' };
-        private static readonly char[] _S = new[] { Culture.Current.NumberFormat.NumberDecimalSeparator[0] };
-        private static readonly string[] _postfixes = new[] {"", " K", " M", " B", " T" };
-
-    public static string DoubleToText(double d, string format = "F20", bool trim = true)
+        public static string DoubleToText(double value, string format = "F20", bool trim = true)
         {
-            var result = d.ToString(format, Culture.Current);
+            if (double.IsNaN(value))
+            {
+                throw new InvalidValueException("double", "NaN");
+            }
+
+            var result = value.ToString(format, Culture.Current);
             if (trim && result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
             {
                 result = result.TrimEnd(_0).TrimEnd(_S);
@@ -87,11 +76,11 @@ namespace Qualia.Tools
 
         public static string RoundsToString(long rounds)
         {
-            var s = rounds.ToString();
+            var s = IntToText(rounds);
 
             int postfixId = 0;
 
-            while (s.EndsWith("000") && postfixId < _postfixes.Length - 1)
+            while (s.EndsWith("000", true, Culture.Current) && postfixId < _postfixes.Length - 1)
             {
                 s = s.Substring(0, s.Length - 3);
                 ++postfixId;

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using static Qualia.Tools.TaskFunction;
 
 namespace Qualia.Tools
 {
@@ -27,12 +26,15 @@ namespace Qualia.Tools
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int GetPointsRearrangeSnap();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        string ToXml();
     }
 
     public interface INetworkTaskChanged
     {
         void TaskChanged();
-        void TaskParameterChanged();
+        void TaskParameter_OnChanged();
     }
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
@@ -96,7 +98,7 @@ namespace Qualia.Tools
                 List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
-                    classes.Add(number.ToString());
+                    classes.Add(Converter.IntToText(number));
                 }
 
                 return classes;
@@ -147,13 +149,18 @@ namespace Qualia.Tools
                 }
             }
 
-            public void VanishConfig() => s_control.VanishConfig();
+            public void RemoveFromConfig() => s_control.RemoveFromConfig();
 
             public bool IsValid() => s_control.IsValid();
 
             public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
+
+            public string ToXml()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         sealed public class MNISTNumbers : ITaskControl
@@ -192,7 +199,7 @@ namespace Qualia.Tools
                 List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
-                    classes.Add(number.ToString());
+                    classes.Add(Converter.IntToText(number));
                 }
 
                 return classes;
@@ -219,13 +226,18 @@ namespace Qualia.Tools
                 networkModel.TargetOutput = image.Label;
             }
 
-            public void VanishConfig() => s_control.VanishConfig();
+            public void RemoveFromConfig() => s_control.RemoveFromConfig();
 
             public bool IsValid() => s_control.IsValid();
 
             public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
+
+            public string ToXml()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
