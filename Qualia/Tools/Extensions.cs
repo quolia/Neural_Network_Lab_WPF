@@ -42,7 +42,7 @@ namespace Qualia.Tools
             return ((SolidColorBrush)brush).Color;
         }
 
-        public static IEnumerable<T> FindVisualChildren<T>(this Control depObj) where T : class
+        public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : class
         {
             if (depObj != null)
             {
