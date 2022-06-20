@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public partial class MatrixPresenter : UserControl
+    sealed public partial class MatrixPresenter : BaseUserControl
     {
         private const int POINT_SIZE = 9;
         private const int AXIS_OFFSET = 12;

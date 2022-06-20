@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public partial class NetworkPresenter : UserControl
+    sealed public partial class NetworkPresenter : BaseUserControl
     {
         private const int NEURON_MAX_DIST = 40;
         private const int HORIZONTAL_OFFSET = 10;

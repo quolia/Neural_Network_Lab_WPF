@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public partial class LayerBaseControl : StackPanel
+    public partial class LayerBaseControl : StackPanel, IConfigParam
     {
         public readonly long Id;
         public readonly Config Config;
@@ -57,6 +57,31 @@ namespace Qualia.Controls
             }
 
             MaxWidth = (sender as ScrollViewer).ViewportWidth;
+        }
+
+        public void SetConfig(Config config)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadConfig()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetChangeEvent(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InvalidateValue()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }

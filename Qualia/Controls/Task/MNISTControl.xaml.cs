@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class MNISTControl : BaseUserControl, IConfigParam
+    sealed public partial class MNISTControl : BaseUserControl
     {
         public readonly List<MNISTImage> Images = new();
 

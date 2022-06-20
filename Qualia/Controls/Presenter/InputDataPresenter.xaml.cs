@@ -7,7 +7,7 @@ namespace Qualia.Controls
 {
     using Point = System.Windows.Point;
 
-    sealed public partial class InputDataPresenter : UserControl
+    sealed public partial class InputDataPresenter : BaseUserControl
     {
         private const int CURRENT_POINTS_COUNT = -1;
 

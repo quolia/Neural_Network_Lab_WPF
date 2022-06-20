@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class CountDotsControl : BaseUserControl, IConfigParam
+    sealed public partial class CountDotsControl : BaseUserControl
     {
         private event Action OnChange = delegate { };
 

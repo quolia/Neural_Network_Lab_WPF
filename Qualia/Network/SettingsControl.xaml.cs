@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class SettingsControl : UserControl, IConfigParam
+    sealed public partial class SettingsControl : BaseUserControl
     {
         private Config _config;
 

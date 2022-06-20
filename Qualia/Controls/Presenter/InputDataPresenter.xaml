@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Qualia.Controls.InputDataPresenter"
+﻿<local:BaseUserControl x:Class="Qualia.Controls.InputDataPresenter"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -26,4 +26,4 @@
         </StackPanel>
         <local:CanvasControl Margin="0,10,0,0" Grid.Row="1" x:Name="CtlCanvas" />
     </Grid>
-</UserControl>
+</local:BaseUserControl>

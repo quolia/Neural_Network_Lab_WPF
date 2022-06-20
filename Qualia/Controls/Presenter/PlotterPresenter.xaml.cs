@@ -11,7 +11,7 @@ namespace Qualia.Controls
                                                DynamicStatistics.PlotPoint plotPoint,
                                                long timeTicks);
 
-    sealed public partial class PlotterPresenter : UserControl
+    sealed public partial class PlotterPresenter : BaseUserControl
     {
         private const int AXIS_OFFSET = 6;
         private bool _isBaseRedrawNeeded;

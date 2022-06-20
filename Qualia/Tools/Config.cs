@@ -7,7 +7,12 @@ using System.Windows;
 
 namespace Qualia.Tools
 {
-    public interface IConfigParam
+    public interface IXmlConfigParam
+    {
+        string ToXml();
+    }
+
+    public interface IConfigParam : IXmlConfigParam
     {
         void SetConfig(Config config);
         void LoadConfig();
@@ -16,7 +21,6 @@ namespace Qualia.Tools
         bool IsValid();
         void SetChangeEvent(Action action);
         void InvalidateValue();
-        string ToXml();
     }
 
     sealed public class Config

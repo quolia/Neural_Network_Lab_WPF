@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public partial class StatisticsPresenter : UserControl
+    sealed public partial class StatisticsPresenter : BaseUserControl
     {
         private static readonly Typeface s_font = new(new("Tahoma"),
                                                       FontStyles.Normal,

@@ -14,9 +14,12 @@ using System.Windows.Threading;
 
 namespace Qualia.Controls
 {
-    sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
+    sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable, IConfigParam
     {
         public static readonly object ApplyChangesLocker = new();
+
+        private Config _config;
+        private readonly List<IConfigParam> _configParams;
 
         private Thread _timeThread;
         private Thread _runNetworksThread;
@@ -28,8 +31,6 @@ namespace Qualia.Controls
         private Stopwatch _startTime;
         private long _rounds;
 
-        private readonly List<IConfigParam> _configParams;
-
         public Main()
         {
             Thread.CurrentThread.CurrentCulture = Culture.Current;
@@ -39,10 +40,12 @@ namespace Qualia.Controls
 
             _configParams = new()
             {
-                CtlUseWeightsColors,
-                CtlOnlyChangedWeights,
-                CtlHighlightChangedWeights,
-                CtlShowOnlyUnchangedWeights
+                CtlUseWeightsColors.Initialize(true),
+                CtlOnlyChangedWeights.Initialize(false),
+                CtlHighlightChangedWeights.Initialize(false),
+                CtlShowOnlyUnchangedWeights.Initialize(false),
+                
+                CtlSettings,
             };
 
             Loaded += MainWindow_OnLoaded;
@@ -54,6 +57,9 @@ namespace Qualia.Controls
 
             CtlNetworkPresenter.SizeChanged += NetworkPresenter_OnSizeChanged;
 
+            SetConfig(Config.Main);
+            CtlSettings.SetConfig(_config);
+
             LoadConfig();
 
             CtlMenuRun.IsEnabled = _networksManager != null && _networksManager.NetworkModels != null && _networksManager.NetworkModels.Any();
@@ -61,7 +67,7 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_OnSizeChanged(object sender, EventArgs e)
         {
-            //CtlNetworkPresenter.Height = QMath.Max(CtlNetworkPresenter.Height, 400);
+            CtlNetworkPresenter.Height = MathX.Max(CtlNetworkPresenter.Height, 400);
 
             if (_networksManager == null)
             {
@@ -81,7 +87,11 @@ namespace Qualia.Controls
                 if (IsRunning)
                 {
                     CtlNetworkPresenter.ClearCache();
-                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.Value, CtlOnlyChangedWeights.Value, CtlHighlightChangedWeights.Value, CtlShowOnlyUnchangedWeights.Value);
+                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel,
+                                                      CtlUseWeightsColors.Value,
+                                                      CtlOnlyChangedWeights.Value,
+                                                      CtlHighlightChangedWeights.Value,
+                                                      CtlShowOnlyUnchangedWeights.Value);
                 }
                 else
                 {
@@ -91,30 +101,10 @@ namespace Qualia.Controls
             }, DispatcherPriority.Render);
         }
 
-        private void LoadConfig()
-        {
-            Width = Config.Main.Get(Constants.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth);
-            Height = Config.Main.Get(Constants.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight);
-            Top = Config.Main.Get(Constants.Param.ScreenTop, 0);
-            Left = Config.Main.Get(Constants.Param.ScreenLeft, 0);
-            Topmost = Config.Main.Get(Constants.Param.OnTop, false);
-            DataWidth.Width = new(Config.Main.Get(Constants.Param.DataWidth, 100));
-            NetworkHeight.Height = new(Config.Main.Get(Constants.Param.NetworkHeight, 200));
-
-            WindowState = WindowState.Maximized;
-
-            _configParams.ForEach(p => p.SetConfig(Config.Main));
-            _configParams.ForEach(p => p.LoadConfig());
-
-            var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
-            LoadNetworksManager(fileName);
-            LoadSettings();
-        }
-
         private void LoadSettings()
         {
-            CtlSettings.SetConfig(Config.Main);
-            CtlSettings.LoadConfig();
+            //CtlSettings.SetConfig(_config);
+            //CtlSettings.LoadConfig();
             CtlSettings.SetChangeEvent(Settings_OnChanged);
             CtlApplySettingsButton.IsEnabled = false;
             CtlCancelSettingsButton.IsEnabled = false;
@@ -163,7 +153,7 @@ namespace Qualia.Controls
             if (!File.Exists(fileName))
             {
                 MessageBox.Show($"Network '{fileName}' is not found!", "Error", MessageBoxButton.OK);
-                Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
+                _config.Set(Constants.Param.NetworksManagerName, fileName);
                 return;
             }
 
@@ -173,7 +163,7 @@ namespace Qualia.Controls
             }
 
             _networksManager = new(CtlTabs, fileName, NetworkUI_OnChanged);
-            Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
+            _config.Set(Constants.Param.NetworksManagerName, fileName);
             CtlInputDataPresenter.LoadConfig(_networksManager.Config, this);
 
             ReplaceNetworksManagerControl(_networksManager);
@@ -185,42 +175,6 @@ namespace Qualia.Controls
 
             SetTitle(fileName);
             ApplyChangesToStandingNetworks();
-        }
-
-        private bool SaveConfig()
-        {
-            Config.Main.Set(Constants.Param.ScreenWidth, ActualWidth);
-            Config.Main.Set(Constants.Param.ScreenHeight, ActualHeight);
-            Config.Main.Set(Constants.Param.ScreenTop, Top);
-            Config.Main.Set(Constants.Param.ScreenLeft, Left);
-            Config.Main.Set(Constants.Param.OnTop, Topmost);
-            Config.Main.Set(Constants.Param.DataWidth, DataWidth.ActualWidth);
-            Config.Main.Set(Constants.Param.NetworkHeight, NetworkHeight.ActualHeight);
-
-            _configParams.ForEach(p => p.SaveConfig());
-
-            if (!SaveSettings())
-            {
-                return false;
-            }
-
-            if (_networksManager != null)
-            {
-                CtlInputDataPresenter.SaveConfig(_networksManager.Config);
-
-                if (!_networksManager.IsValid())
-                {
-                    MessageBox.Show("Network parameter is invalid", "Error");
-                    return false;
-                }
-
-                _networksManager.SaveConfig();
-            }
-
-            Config.Main.FlushToDrive();
-            _networksManager?.Config.FlushToDrive();
- 
-            return true;
         }
 
         private void CreateDirectories()
@@ -322,7 +276,7 @@ namespace Qualia.Controls
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!SaveConfig())
+            if (!SaveConfigs())
             {
                 return;
             }
@@ -949,7 +903,7 @@ namespace Qualia.Controls
                     return;
                 }
 
-                var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
+                var fileName = _config.Get(Constants.Param.NetworksManagerName, "");
                 SetTitle(fileName);
 
                 ApplyChangesToStandingNetworks();
@@ -980,7 +934,7 @@ namespace Qualia.Controls
 
         private void DeleteNetworksManager()
         {
-            var networksManagerName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
+            var networksManagerName = _config.Get(Constants.Param.NetworksManagerName, "");
             if (string.IsNullOrEmpty(networksManagerName))
             {
                 return;
@@ -1009,7 +963,7 @@ namespace Qualia.Controls
             else
             {
                 CtlNetworkName.Content =
-                    Path.GetFileNameWithoutExtension(Config.Main.Get(Constants.Param.NetworksManagerName, "").Replace("_", "__"));
+                    Path.GetFileNameWithoutExtension(_config.Get(Constants.Param.NetworksManagerName, "").Replace("_", "__"));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;
@@ -1060,7 +1014,7 @@ namespace Qualia.Controls
         {
             try
             {
-                SaveConfig();
+                SaveConfigs();
             }
             catch (Exception ex)
             {
@@ -1119,7 +1073,7 @@ namespace Qualia.Controls
 
             try
             {
-                SaveConfig();
+                SaveConfigs();
             }
             catch (Exception ex)
             {
@@ -1140,7 +1094,7 @@ namespace Qualia.Controls
 
         private void MainMenuSaveAs_OnClick(object sender, RoutedEventArgs e)
         {
-            if (SaveConfig())
+            if (SaveConfigs())
             {
                 NetworksManager.SaveAs();
             }
@@ -1230,6 +1184,106 @@ namespace Qualia.Controls
                 _cancellationTokenSource.Dispose();
                 _cancellationTokenSource = null;
             }
+        }
+
+        public void SetConfig(Config config)
+        {
+            _config = config;
+        }
+
+        public void LoadConfig()
+        {
+            Width = _config.Get(Constants.Param.ScreenWidth, SystemParameters.PrimaryScreenWidth);
+            Height = _config.Get(Constants.Param.ScreenHeight, SystemParameters.PrimaryScreenHeight);
+            Top = _config.Get(Constants.Param.ScreenTop, 0);
+            Left = _config.Get(Constants.Param.ScreenLeft, 0);
+            Topmost = _config.Get(Constants.Param.OnTop, false);
+            DataWidth.Width = new(_config.Get(Constants.Param.DataWidth, 100));
+            NetworkHeight.Height = new(_config.Get(Constants.Param.NetworkHeight, 200));
+            
+            CtlSettings.LoadConfig();
+
+            WindowState = WindowState.Maximized;
+
+            _configParams.ForEach(p => p.SetConfig(_config));
+            _configParams.ForEach(p => p.LoadConfig());
+
+            var fileName = _config.Get(Constants.Param.NetworksManagerName, "");
+            LoadNetworksManager(fileName);
+            LoadSettings();
+        }
+
+        public bool SaveConfigs()
+        {
+            try
+            {
+                SaveConfig();
+            }
+            catch (Exception ex)
+            {
+                Logger.ShowException(ex, "Cannot save config.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public void SaveConfig()
+        {
+            _config.Set(Constants.Param.ScreenWidth, ActualWidth);
+            _config.Set(Constants.Param.ScreenHeight, ActualHeight);
+            _config.Set(Constants.Param.ScreenTop, Top);
+            _config.Set(Constants.Param.ScreenLeft, Left);
+            _config.Set(Constants.Param.OnTop, Topmost);
+            _config.Set(Constants.Param.DataWidth, DataWidth.ActualWidth);
+            _config.Set(Constants.Param.NetworkHeight, NetworkHeight.ActualHeight);
+
+            _configParams.ForEach(p => p.SaveConfig());
+
+            if (!SaveSettings())
+            {
+                throw new Exception("Cannot save settings.");
+            }
+
+            if (_networksManager != null)
+            {
+                CtlInputDataPresenter.SaveConfig(_networksManager.Config);
+
+                if (!_networksManager.IsValid())
+                {
+                    throw new Exception("Network parameter is invalid.");
+                }
+
+                _networksManager.SaveConfig();
+            }
+
+            _config.FlushToDrive();
+            _networksManager?.Config.FlushToDrive();
+        }
+
+        public void RemoveFromConfig()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsValid()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetChangeEvent(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InvalidateValue()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    public partial class NeuronBaseControl : UserControl
+    public partial class NeuronBaseControl : BaseUserControl
     {
         public readonly long Id;
         public readonly Config Config;
