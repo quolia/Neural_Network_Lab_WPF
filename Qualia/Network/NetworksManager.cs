@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public class NetworksManager
+    sealed public class NetworksManager : IConfigParam
     {
         public readonly Config Config;
         public ListX<NetworkDataModel> NetworkModels;
@@ -352,6 +352,36 @@ namespace Qualia.Controls
                 m.ErrorMatrix.ClearData();
                 m.ErrorMatrix.Next.ClearData();
             });
+        }
+
+        public void SetConfig(Config config)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IConfigParam.LoadConfig()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveFromConfig()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetChangeEvent(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InvalidateValue()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }
