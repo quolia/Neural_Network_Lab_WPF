@@ -7,12 +7,12 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public partial class StatisticsPresenter : UserControl
+    sealed public partial class StatisticsPresenter : BaseUserControl
     {
         private static readonly Typeface s_font = new(new("Tahoma"),
-                                                          FontStyles.Normal,
-                                                          FontWeights.Bold,
-                                                          FontStretches.Normal);
+                                                      FontStyles.Normal,
+                                                      FontWeights.Bold,
+                                                      FontStretches.Normal);
 
         private static readonly StringBuilder s_stringBuilder = new();
 
@@ -23,7 +23,7 @@ namespace Qualia.Controls
 
         public void Draw(Dictionary<string, string> stats)
         {
-            CtlPresenter.Clear();
+            CtlCanvas.Clear();
 
             if (stats == null)
             {
@@ -50,7 +50,7 @@ namespace Qualia.Controls
                                               Brushes.Black,
                                               RenderSettings.PixelsPerDip);
 
-            CtlPresenter.DrawText(formattedText, ref Points.Get(10, 0));
+            CtlCanvas.DrawText(formattedText, ref Points.Get(10, 0));
 
             Width = MathX.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
         }

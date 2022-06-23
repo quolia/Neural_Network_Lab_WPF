@@ -7,9 +7,11 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    public delegate ref Point GetPointDelegate(DynamicStatistics.PlotPointsList plotPoints, DynamicStatistics.PlotPoint plotPoint, long timeTicks);
+    public delegate ref Point GetPointDelegate(DynamicStatistics.PlotPointsList plotPoints,
+                                               DynamicStatistics.PlotPoint plotPoint,
+                                               long timeTicks);
 
-    sealed public partial class PlotterPresenter : UserControl
+    sealed public partial class PlotterPresenter : BaseUserControl
     {
         private const int AXIS_OFFSET = 6;
         private bool _isBaseRedrawNeeded;
@@ -19,8 +21,8 @@ namespace Qualia.Controls
                                               FontWeights.Bold,
                                               FontStretches.Normal);
 
-        private readonly Pen _penBlack = Draw.GetPen(in QColors.Black);
-        private readonly Pen _penLightGray = Draw.GetPen(in QColors.LightGray);
+        private readonly Pen _penBlack = Draw.GetPen(in ColorsX.Black);
+        private readonly Pen _penLightGray = Draw.GetPen(in ColorsX.LightGray);
 
 
         public PlotterPresenter()
@@ -34,21 +36,16 @@ namespace Qualia.Controls
             UseLayoutRounding = true;
             SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
 
-            CtlPresenter.SizeChanged += PlotterPresenter_SizeChanged;
+            CtlDataCanvas.SizeChanged += PlotterPresenter_OnSizeChanged;
         }
 
-        private void PlotterPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void PlotterPresenter_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             _isBaseRedrawNeeded = true;
         }
 
-        public void OptimizePlotPointsCount(ListX<NetworkDataModel> networkModels)
+        public void OptimizePlotPointsCount(ListX<NetworkDataModel> networkModels!!)
         {
-            if (networkModels == null)
-            {
-                throw new ArgumentNullException(nameof(networkModels));
-            }
-
             if (!networkModels.Any())
             {
                 throw new ArgumentException("No network models.", nameof(networkModels));
@@ -64,8 +61,8 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                Vanish(networkModel.DynamicStatistics.PercentData, GetPointPercentData);
-                Vanish(networkModel.DynamicStatistics.CostData, GetPointCostData);
+                OptimizePointsCount(networkModel.DynamicStatistics.PercentData, GetPointPercentData);
+                OptimizePointsCount(networkModel.DynamicStatistics.CostData, GetPointCostData);
 
                 networkModel.DynamicStatistics.CopyForRender = new(networkModel.DynamicStatistics);
 
@@ -81,7 +78,7 @@ namespace Qualia.Controls
                 _isBaseRedrawNeeded = false;
             }
 
-            CtlPresenter.Clear();
+            CtlDataCanvas.Clear();
 
             if (networkModels == null)
             {
@@ -104,14 +101,14 @@ namespace Qualia.Controls
                 }
 
                 RenderData(networkModel.DynamicStatistics.CopyForRender.PercentData,
-                         Draw.GetColor(220, networkModel.Color),
-                         GetPointPercentData,
-                         false);
+                           Draw.GetColor(220, networkModel.Color),
+                           GetPointPercentData,
+                           false);
 
                 RenderData(networkModel.DynamicStatistics.CopyForRender.CostData,
-                         Draw.GetColor(150, networkModel.Color),
-                         GetPointCostData,
-                         true);
+                           Draw.GetColor(150, networkModel.Color),
+                           GetPointCostData,
+                           true);
 
                 networkModel = networkModel.Next;
             }
@@ -125,7 +122,7 @@ namespace Qualia.Controls
 
         private void RenderPlotter()
         {
-            CtlBase.Clear();
+            CtlBaseCanvas.Clear();
 
             double step = (ActualWidth - AXIS_OFFSET) / 10;
             double y = ActualHeight - AXIS_OFFSET - AXIS_OFFSET / 2;
@@ -133,17 +130,17 @@ namespace Qualia.Controls
 
             for (x = 0; x < 11; ++x)
             {
-                CtlBase.DrawLine(_penLightGray,
-                                 ref Points.Get((float)(AXIS_OFFSET + step * x),
-                                                (float)y),
-                                 ref Points.Get((float)(AXIS_OFFSET + step * x),
-                                                 0));
+                CtlBaseCanvas.DrawLine(_penLightGray,
+                                        ref Points.Get((float)(AXIS_OFFSET + step * x),
+                                                       (float)y),
+                                        ref Points.Get((float)(AXIS_OFFSET + step * x),
+                                                       0));
 
-                CtlBase.DrawLine(_penBlack,
-                                 ref Points.Get((float)(AXIS_OFFSET + step * x),
-                                                (float)y),
-                                 ref Points.Get((float)(AXIS_OFFSET + step * x),
-                                                (float)(y + AXIS_OFFSET)));
+                CtlBaseCanvas.DrawLine(_penBlack,
+                                        ref Points.Get((float)(AXIS_OFFSET + step * x),
+                                                       (float)y),
+                                        ref Points.Get((float)(AXIS_OFFSET + step * x),
+                                                       (float)(y + AXIS_OFFSET)));
             }
 
             step = (ActualHeight - AXIS_OFFSET) / 10;
@@ -151,26 +148,26 @@ namespace Qualia.Controls
 
             for (y = 0; y < 11; ++y)
             {
-                CtlBase.DrawLine(_penLightGray,
-                                 ref Points.Get((float)x,
-                                                (float)(ActualHeight - AXIS_OFFSET - step * y)),
-                                 ref Points.Get(ActualWidth,
-                                                (float)(ActualHeight - AXIS_OFFSET - step * y)));
+                CtlBaseCanvas.DrawLine(_penLightGray,
+                                       ref Points.Get((float)x,
+                                                      (float)(ActualHeight - AXIS_OFFSET - step * y)),
+                                       ref Points.Get(ActualWidth,
+                                                      (float)(ActualHeight - AXIS_OFFSET - step * y)));
 
-                CtlBase.DrawLine(_penBlack,
-                                 ref Points.Get((float)x,
-                                                (float)(ActualHeight - AXIS_OFFSET - step * y)),
-                                 ref Points.Get((float)(x + AXIS_OFFSET),
-                                                (float)(ActualHeight - AXIS_OFFSET - step * y)));
+                CtlBaseCanvas.DrawLine(_penBlack,
+                                       ref Points.Get((float)x,
+                                                      (float)(ActualHeight - AXIS_OFFSET - step * y)),
+                                       ref Points.Get((float)(x + AXIS_OFFSET),
+                                                      (float)(ActualHeight - AXIS_OFFSET - step * y)));
             }
 
-            CtlBase.DrawLine(_penBlack,
-                             ref Points.Get(AXIS_OFFSET, 0),
-                             ref Points.Get(AXIS_OFFSET, ActualHeight));
+            CtlBaseCanvas.DrawLine(_penBlack,
+                                   ref Points.Get(AXIS_OFFSET, 0),
+                                   ref Points.Get(AXIS_OFFSET, ActualHeight));
 
-            CtlBase.DrawLine(_penBlack,
-                             ref Points.Get(0, ActualHeight - AXIS_OFFSET),
-                             ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
+            CtlBaseCanvas.DrawLine(_penBlack,
+                                   ref Points.Get(0, ActualHeight - AXIS_OFFSET),
+                                   ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
         private void RenderData(DynamicStatistics.PlotPointsList pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
@@ -197,21 +194,21 @@ namespace Qualia.Controls
                 if ((point.X - prevPoint.X) > 10 || MathX.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
                 {
                     ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
-                    CtlPresenter.DrawLine(pen, ref fromPoint, ref point);
+                    CtlDataCanvas.DrawLine(pen, ref fromPoint, ref point);
 
                     if (isRect)
                     {
-                        CtlPresenter.DrawRectangle(pen.Brush,
-                                                   pen,
-                                                   ref Rects.Get(point.X - 6 / 2, point.Y - 6 / 2, 6, 6));
+                        CtlDataCanvas.DrawRectangle(pen.Brush,
+                                                    pen,
+                                                    ref Rects.Get(point.X - 6 / 2, point.Y - 6 / 2, 6, 6));
                     }
                     else
                     {
-                        CtlPresenter.DrawEllipse(pen.Brush,
-                                                 pen,
-                                                 ref Points.Get(point.X, point.Y),
-                                                 7 / 2,
-                                                 7 / 2);
+                        CtlDataCanvas.DrawEllipse(pen.Brush,
+                                                  pen,
+                                                  ref Points.Get(point.X, point.Y),
+                                                  7 / 2,
+                                                  7 / 2);
                     }
 
                     prevPointData = pointData;
@@ -222,8 +219,11 @@ namespace Qualia.Controls
 
         private void DrawLabel(DynamicStatistics.PlotPointsList pointsData, in Color color)
         {
-            FormattedText text = new(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks).ToString(Culture.TimeFormat)
-                                      + " / " + Converter.DoubleToText(pointsData.Last().Value, "N6", true) + " %",
+            FormattedText text = new(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks)
+                                             .ToString(Culture.TimeFormat, Culture.Current)
+                                             + " / "
+                                             + Converter.DoubleToText(pointsData.Last().Value, "N6", true)
+                                             + " %",
                                       Culture.Current,
                                       FlowDirection.LeftToRight,
                                       _font,
@@ -231,15 +231,15 @@ namespace Qualia.Controls
                                       Draw.GetBrush(in color),
                                       RenderSettings.PixelsPerDip);
 
-            CtlPresenter.DrawRectangle(Draw.GetBrush(Draw.GetColor(150, in QColors.White)),
-                                       null,
-                                       ref Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
-                                                     ActualHeight - AXIS_OFFSET - 20,
-                                                     text.Width + 10,
-                                                     text.Height));
+            CtlDataCanvas.DrawRectangle(Draw.GetBrush(Draw.GetColor(150, in ColorsX.White)),
+                                        null,
+                                        ref Rects.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2 - 5,
+                                                      ActualHeight - AXIS_OFFSET - 20,
+                                                      text.Width + 10,
+                                                      text.Height));
 
-            CtlPresenter.DrawText(text,
-                                  ref Points.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2,
+            CtlDataCanvas.DrawText(text,
+                                   ref Points.Get((ActualWidth - AXIS_OFFSET - text.Width) / 2,
                                                   ActualHeight - AXIS_OFFSET - 20));
         }
 
@@ -251,7 +251,7 @@ namespace Qualia.Controls
                          ? AXIS_OFFSET
                          : AXIS_OFFSET + (ActualWidth - AXIS_OFFSET) * (plotPoint.TimeTicks - pointData0.TimeTicks) / ticks;
 
-            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - (plotPoint.Value / 100));
+            var pointY = (ActualHeight - AXIS_OFFSET) * (1 - plotPoint.Value / 100);
 
             return ref Points.Get((int)pointX, (int)pointY);
         }
@@ -268,7 +268,7 @@ namespace Qualia.Controls
             return ref Points.Get((int)pointX, (int)pointY);
         }
 
-        private void Vanish(DynamicStatistics.PlotPointsList pointsData, GetPointDelegate getPoint)
+        private void OptimizePointsCount(DynamicStatistics.PlotPointsList pointsData, GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 14;
             const int MIN_POINTS_COUNT = 10;

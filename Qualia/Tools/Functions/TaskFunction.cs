@@ -31,18 +31,20 @@ namespace Qualia.Tools
     public interface INetworkTaskChanged
     {
         void TaskChanged();
-        void TaskParameterChanged();
+        void TaskParameter_OnChanged();
     }
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
-        public readonly delegate*<NetworkDataModel, InputDataFunction, void> Do;
+        public readonly delegate*<NetworkDataModel, InputDataFunction, double, void> Do;
 
         public ITaskControl VisualControl;
-        public InputDataFunction InputDataFunction;
 
-        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, void> doFunc, ITaskControl visualControl)
-            : base(defaultValue: nameof(CountDots))
+        public InputDataFunction InputDataFunction;
+        public double InputDataFunctionParam;
+
+        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, double, void> doFunc, ITaskControl visualControl)
+            : base(nameof(CountDots))
         {
             Do = doFunc;
             VisualControl = visualControl;
@@ -91,16 +93,16 @@ namespace Qualia.Tools
                 List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
-                    classes.Add(number.ToString());
+                    classes.Add(Converter.IntToText(number));
                 }
 
                 return classes;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
             {
-                double randNumber = inputDataFunction.Do(1);
+                double randNumber = inputDataFunction.Do(inputDataFunctionParam);
 
                 randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
 
@@ -142,7 +144,7 @@ namespace Qualia.Tools
                 }
             }
 
-            public void VanishConfig() => s_control.VanishConfig();
+            public void RemoveFromConfig() => s_control.RemoveFromConfig();
 
             public bool IsValid() => s_control.IsValid();
 
@@ -187,16 +189,16 @@ namespace Qualia.Tools
                 List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
                 {
-                    classes.Add(number.ToString());
+                    classes.Add(Converter.IntToText(number));
                 }
 
                 return classes;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction)
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
             {
-                var image = s_control.Images[Rand.RandomFlat.Next(s_control.Images.Count)];
+                var image = s_control.Images[(int)(s_control.Images.Count * inputDataFunction.Do(inputDataFunctionParam))];
                 var count = networkModel.Layers.First.Neurons.Count;
 
                 for (int i = 0; i < count; ++i)
@@ -214,7 +216,7 @@ namespace Qualia.Tools
                 networkModel.TargetOutput = image.Label;
             }
 
-            public void VanishConfig() => s_control.VanishConfig();
+            public void RemoveFromConfig() => s_control.RemoveFromConfig();
 
             public bool IsValid() => s_control.IsValid();
 

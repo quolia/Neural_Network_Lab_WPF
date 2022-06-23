@@ -6,49 +6,49 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class InputLayerControl : LayerBase
+    sealed public partial class InputLayerControl : LayerBaseControl
     {
         private readonly List<IConfigParam> _configParams;
 
-        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
-            : base(id, config, onNetworkUIChanged)
+        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
+            : base(id, config, networkUI_OnChanged)
         {
             InitializeComponent();
 
             _configParams = new()
             {
-                CtlInputInitial0,
-                CtlInputInitial1,
-                CtlActivationFunction,
-                CtlActivationFunctionParam,
-                CtlAdjustFirstLayerWeights,
-                CtlWeightsInitializeFunction,
-                CtlWeightsInitializeFunctionParam
+                CtlInputInitial0.Initialize(defaultValue: 0),
+                CtlInputInitial1.Initialize(defaultValue: 1),
+                CtlActivationFunction.Initialize(nameof(ActivationFunction.LogisticSigmoid)),
+                CtlActivationFunctionParam.Initialize(defaultValue: 1),
+                CtlAdjustFirstLayerWeights.Initialize(true),
+                CtlWeightsInitializeFunction.Initialize(nameof(InitializeFunction.FlatRandom)),
+                CtlWeightsInitializeFunctionParam.Initialize(defaultValue: 1)
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
 
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetChangeEvent(ParameterChanged));
+            _configParams.ForEach(param => param.SetChangeEvent(Parameter_OnChanged));
         }
 
-        private void ParameterChanged()
+        private void Parameter_OnChanged()
         {
-            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
+            NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
         }
 
         public override bool IsInput => true;
         public override Panel NeuronsHolder => CtlNeuronsHolder;
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
-        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
-        public double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
-        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction.SelectedItem);
-        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.ValueOrNull ?? 1;
-        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.IsOn;
+        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
+        public double ActivationFunctionParam => CtlActivationFunctionParam.Value;
+        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
+        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
+        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.Value;
 
-        public void OnTaskChanged(TaskFunction taskFunction)
+        public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
             var ctlNeurons = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
             ctlNeurons.ForEach(NeuronsHolder.Children.Remove);
@@ -61,12 +61,12 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            CtlActivationFunction.Fill<ActivationFunction>(Config, nameof(ActivationFunction.Liner));
-            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.None));
+            CtlActivationFunction.Fill<ActivationFunction>(Config, nameof(ActivationFunction.None));
+            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.Skip));
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var neuronIds = Config.GetArray(Constants.Param.Neurons);
+            var neuronIds = Config.Get(Constants.Param.Neurons, Array.Empty<long>());
             foreach (var biasNeuronId in neuronIds)
             {
                 AddBias(biasNeuronId);
@@ -77,8 +77,8 @@ namespace Qualia.Controls
         {
             InputNeuronControl ctlNeuron = new(NeuronsHolder.Children.Count)
             {
-                ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem),
-                ActivationFunctionParam = CtlActivationFunctionParam.ValueOrNull ?? 1
+                ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction),
+                ActivationFunctionParam = CtlActivationFunctionParam.Value
             };
 
             return ctlNeuron;
@@ -91,12 +91,12 @@ namespace Qualia.Controls
 
         public void AddBias(long biasNeuronId)
         {
-            InputBiasControl ctlNeuron = new(biasNeuronId, Config, OnNetworkUIChanged);
+            InputBiasControl ctlNeuron = new(biasNeuronId, Config, NetworkUI_OnChanged);
             NeuronsHolder.Children.Add(ctlNeuron);
 
             if (biasNeuronId == Constants.UnknownId)
             {
-                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
+                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
             RefreshOrdinalNumbers();
@@ -117,15 +117,15 @@ namespace Qualia.Controls
             ctlNeurons.ToList().ForEach(neuron => neuron.SaveConfig());
         }
 
-        public override void VanishConfig()
+        public override void RemoveFromConfig()
         {
             Config.Remove(Constants.Param.Neurons);
-            _configParams.ForEach(param => param.VanishConfig());
+            _configParams.ForEach(param => param.RemoveFromConfig());
             var ctlNeurons = GetNeuronsControls();
-            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.VanishConfig());
+            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.RemoveFromConfig());
         }
 
-        private void CtlMenuAddBias_Click(object sender, EventArgs e)
+        private void MenuAddBias_OnClick(object sender, EventArgs e)
         {
             AddBias(Constants.UnknownId);
         }

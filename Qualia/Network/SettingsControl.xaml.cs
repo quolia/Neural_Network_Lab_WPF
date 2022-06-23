@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class SettingsControl : UserControl, IConfigParam
+    sealed public partial class SettingsControl : BaseUserControl
     {
         private Config _config;
 
@@ -36,6 +36,10 @@ namespace Qualia.Controls
         public SettingsControl()
         {
             InitializeComponent();
+
+            CtlSkipRoundsToDrawErrorMatrix.Initialize(defaultValue: 10000);
+            CtlSkipRoundsToDrawNetworks.Initialize(defaultValue: 10000);
+            CtlSkipRoundsToDrawStatistics.Initialize(defaultValue: 10000);
         }
 
         public void SetConfig(Config config)
@@ -58,9 +62,9 @@ namespace Qualia.Controls
             _config.FlushToDrive();
         }
 
-        public void VanishConfig()
+        public void RemoveFromConfig()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
             _config.FlushToDrive();
         }
 

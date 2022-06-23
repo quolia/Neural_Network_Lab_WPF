@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Qualia.Controls
 {
-    sealed public partial class InputNeuronControl : NeuronBase
+    sealed public partial class InputNeuronControl : NeuronBaseControl
     {
         public InputNeuronControl(long id)
             : base(id, null, null)
@@ -12,14 +12,14 @@ namespace Qualia.Controls
             Visibility = Visibility.Collapsed; // do not show it
         }
 
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.None.Instance;
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
         public override double WeightsInitializeFunctionParam => 1;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
         public override ActivationFunction ActivationFunction { get; set; }
         public override double ActivationFunctionParam { get; set; }
 
-        public override void OrdinalNumberChanged(int number)
+        public override void OrdinalNumber_OnChanged(int number)
         {
             //
         }
@@ -31,7 +31,7 @@ namespace Qualia.Controls
             //
         }
 
-        public override void VanishConfig()
+        public override void RemoveFromConfig()
         {
             //
         }

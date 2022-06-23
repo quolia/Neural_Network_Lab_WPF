@@ -6,21 +6,21 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public partial class LayerBase : StackPanel
+    public partial class LayerBaseControl : StackPanel, IConfigParam
     {
         public readonly long Id;
         public readonly Config Config;
          
-        public Action<Notification.ParameterChanged> OnNetworkUIChanged;
+        public readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
 
-        public LayerBase(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public LayerBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
             if (config is null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
-            OnNetworkUIChanged = onNetworkUIChanged;
+            NetworkUI_OnChanged = onNetworkUIChanged;
 
             Id = UniqId.GetNextId(id);
             Config = config.Extend(Id);
@@ -31,7 +31,7 @@ namespace Qualia.Controls
             int ordinalNumber = 0;
             var neurons = GetNeuronsControls();
 
-            Range.ForEach(neurons, n => n.OrdinalNumberChanged(++ordinalNumber));
+            Range.ForEach(neurons, n => n.OrdinalNumber_OnChanged(++ordinalNumber));
         }
 
         public virtual bool IsInput => false;
@@ -40,16 +40,16 @@ namespace Qualia.Controls
         public virtual Panel NeuronsHolder => throw new InvalidOperationException();
         public virtual int NeuronsCount => GetNeuronsControls().Count();
 
-        public IEnumerable<NeuronBase> GetNeuronsControls() => NeuronsHolder.Children.OfType<NeuronBase>();
+        public IEnumerable<NeuronBaseControl> GetNeuronsControls() => NeuronsHolder.Children.OfType<NeuronBaseControl>();
 
         public void AddNeuron() => AddNeuron(Constants.UnknownId);
 
         public virtual void AddNeuron(long id) => throw new InvalidOperationException();
         public virtual bool IsValid() => throw new InvalidOperationException();
         public virtual void SaveConfig() => throw new InvalidOperationException();
-        public virtual void VanishConfig() => throw new InvalidOperationException();
+        public virtual void RemoveFromConfig() => throw new InvalidOperationException();
 
-        public void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        public void Scroll_OnChanged(object sender, ScrollChangedEventArgs e)
         {
             if (sender is null)
             {
@@ -57,6 +57,26 @@ namespace Qualia.Controls
             }
 
             MaxWidth = (sender as ScrollViewer).ViewportWidth;
+        }
+
+        public void SetConfig(Config config)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadConfig()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetChangeEvent(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InvalidateValue()
+        {
+            throw new NotImplementedException();
         }
     }
 }

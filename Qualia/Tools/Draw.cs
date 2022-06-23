@@ -54,7 +54,7 @@ namespace Qualia.Tools
         }
     }
 
-    public static class QColors
+    public static class ColorsX
     {
         public static readonly Color White = Colors.White;
         public static readonly Color Green = Colors.Green;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Qualia.Controls;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Qualia.Tools
         void SetConfig(Config config);
         void LoadConfig();
         void SaveConfig();
-        void VanishConfig();
+        void RemoveFromConfig();
         bool IsValid();
         void SetChangeEvent(Action action);
         void InvalidateValue();
@@ -20,20 +21,26 @@ namespace Qualia.Tools
     sealed public class Config
     {
         public static Config Main = new(App.WorkingDirectory + "config.txt");
-        public readonly string Name;
-        public Config ParentConfig;
 
-        private static readonly object s_locker = new();
-        
-        private string _extender;
+        private readonly string _fileName;
+        private readonly Config _parentConfig;
+
+        private readonly string _extender;
 
         private static readonly Dictionary<string, Dictionary<string, string>> s_cacheLoad = new();
         private static readonly Dictionary<string, Dictionary<string, string>> s_cacheSave = new();
 
-        public Config(string fileName, Config parentConfig = null)
+        public Config(string fileName)
         {
-            Name = fileName;
-            ParentConfig = parentConfig;
+            _fileName = fileName;
+        }
+
+        public Config(string fileName, Config parentConfig, string extender)
+        {
+            _fileName = fileName;
+            _parentConfig = parentConfig;
+
+            _extender = extender;
         }
 
         private static string CutParamPrefix(string paramName)
@@ -43,163 +50,264 @@ namespace Qualia.Tools
 
         private static string CutValueDescription(string value)
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                return value;
-            }
-
-            return value.Split(new[] { '\n' })[0];
+            return string.IsNullOrEmpty(value) ? value : value.Split(new[] { '\n' })[0];
         }
 
-        public static string PrepareParamName(object paramName)
+        public static string PrepareParamName(string paramName)
         {
-            return CutParamPrefix(paramName.ToString());
+            return CutParamPrefix(paramName);
         }
 
-        public static string PrepareValue(string value)
+        private static string PrepareValue(string value)
         {
             return CutValueDescription(value);
         }
 
-        public Config Extend(object extender)
+        /*
+        private Config _Extend(object extender)
         {
-            Config config = new(Name)
-            {
-                ParentConfig = this,
-                _extender = "." + extender
-            };
+            extender = PrepareParamName(extender.ToString());
+
+            Config config = new(_fileName, this);
+            config._extender = extender + ".";
 
             return config;
         }
-
-        public string GetString(Constants.Param paramName, string defaultValue = null)
+        */
+        /*
+        public Config Extend(object extender)
         {
-            return GetValue(paramName, defaultValue);
+            extender = PrepareParamName(extender.ToString());
+
+            Config config = new(_fileName, this);
+            config._extender = _extender + extender + ".";
+
+            return config;
+        }
+*/
+        public Config Extend(string extender)
+        {
+            return new(_fileName, this, PrepareParamName(extender) + ".");
         }
 
-        public string GetString(string paramName, string defaultValue = null)
+        public Config Extend(SelectValueControl select)
         {
-            return GetValue(paramName, defaultValue);
+            return Extend(select.Name)
+                  .Extend((select.SelectedItem ?? select.DefaultValue).ToString());
         }
 
-        public double? GetDouble(Constants.Param paramName, double? defaultValue = null)
+        public Config Extend(FunctionControl function)
         {
-            return GetDouble(paramName.ToString("G"), defaultValue);
+            return Extend(function.CtlFunction);
+        }
+        public Config Extend(FrameworkElement element)
+        {
+            return Extend(element.Name);
         }
 
-        public double? GetDouble(string paramName, double? defaultValue = null)
+        public Config Extend(long extender)
         {
-            if (Converter.TryTextToDouble(GetValue(paramName, Converter.DoubleToText(defaultValue)), out double? value))
+            return Extend(Converter.IntToText(extender));
+        }
+
+        private string GetFullParamName(string paramName)
+        {
+            string name = "";
+
+            Config config = this;
+
+            while (config != null)
+            {
+                name = config._extender + name;
+                config = config._parentConfig;
+            }
+
+            return name + paramName;
+        }
+
+
+        public string Get(FrameworkElement paramName, string defaultValue) 
+        {
+            return Get(paramName.Name, defaultValue);
+        }
+
+        public string Get(Constants.Param paramName, string defaultValue) 
+        {
+            return Get(ParamToStr(paramName), defaultValue);
+        }
+
+        public string Get(string paramName, string defaultValue)
+        {
+            paramName = PrepareParamName(paramName);
+
+            var values = GetLoaded();
+
+            if (values.TryGetValue(GetFullParamName(paramName), out string value))
             {
                 return value;
             }
-            else
-            {
-                Set(paramName, defaultValue);
-                return defaultValue;
-            }
+
+            Set(paramName, defaultValue);
+            return defaultValue;
         }
 
-        public long? GetInt(Constants.Param paramName, long? defaultValue = null)
+        public int Get(Constants.Param paramName, int defaultValue)
         {
-            return GetInt(paramName.ToString("G"), defaultValue);
+            return Get(ParamToStr(paramName), defaultValue);
         }
 
-        public long? GetInt(string paramName, long? defaultValue = null)
+        public int Get(FrameworkElement paramName, int defaultValue)
         {
-            if (Converter.TryTextToInt(GetValue(paramName, Converter.IntToText(defaultValue)), out long? value))
-            {
-                return value;
-            }
-            else
-            {
-                Set(paramName, defaultValue);
-                return defaultValue;
-            }
+            return Get(paramName.Name, defaultValue);
         }
 
-        public bool GetBool(Constants.Param paramName, bool defaultValue = false)
+        public int Get(string paramName, int defaultValue)
         {
-            return 1 == GetInt(paramName, defaultValue ? 1 : 0);
+            return (int)Get(paramName, (long)defaultValue);
         }
 
-        public bool GetBool(string paramName, bool defaultValue = false)
+        public long Get(Constants.Param paramName, long defaultValue)
         {
-            return 1 == GetInt(paramName, defaultValue ? 1 : 0);
+            return Get(ParamToStr(paramName), defaultValue);
         }
 
-        public long[] GetArray(Constants.Param paramName, string defaultValue = null)
+        public long Get(FrameworkElement paramName, long defaultValue)
         {
-            return GetArray(paramName.ToString("G"), defaultValue);
+            return Get(paramName.Name, defaultValue);
         }
 
-        public long[] GetArray(string paramName, string defaultValue = null)
+        public long Get(string paramName, long defaultValue)
         {
-            if (defaultValue == null)
-            {
-                defaultValue = string.Empty;
-            }
+            long value = Converter.TextToInt(Get(paramName,
+                                                 Converter.IntToText(defaultValue)),
+                                             defaultValue);
+            Set(paramName, value);
+            return value;
+        }
 
-            var value = GetValue(paramName, defaultValue);
-            return string.IsNullOrEmpty(value) ? Array.Empty<long>() : value.Split(new[] { ',' }).Select(s => long.Parse(s.Trim())).ToArray();
+        public bool Get(FrameworkElement paramName, bool defaultValue)
+        {
+            return Get(paramName.Name, defaultValue);
+        }
+
+        public bool Get(Constants.Param paramName, bool defaultValue)
+        {
+            return Get(ParamToStr(paramName), defaultValue);
+        }
+
+        public bool Get(string paramName, bool defaultValue)
+        {
+            return 1 == Get(paramName, (long)(defaultValue ? 1 : 0));
+        }
+
+        public double Get(FrameworkElement paramName, double defaultValue)
+        {
+            return Get(paramName.Name, defaultValue);
+        }
+
+        public double Get(Constants.Param paramName, double defaultValue)
+        {
+            return Get(ParamToStr(paramName), defaultValue);
+        }
+
+        public double Get(string paramName, double defaultValue)
+        {
+            var value = Converter.TextToDouble(Get(paramName,
+                                                   Converter.DoubleToText(defaultValue)),
+                                               defaultValue);
+            Set(paramName, value);
+            return value;
+        }
+
+        public long[] Get(Constants.Param paramName, long[] defaultValue)
+        {
+            return Get(ParamToStr(paramName), defaultValue);
+        }
+
+        public long[] Get(string paramName, long[] defaultValue)
+        {
+            var value = Get(paramName, string.Join(",", defaultValue));
+            return string.IsNullOrEmpty(value)
+                   ? defaultValue
+                   : value.Split(new[] { ',' }).Select(s => Converter.TextToInt(s.Trim(), 0)).ToArray();
         }
 
         public void Remove(Constants.Param paramName)
         {
-            Remove(paramName.ToString("G"));
+            Remove(ParamToStr(paramName));
+        }
+
+        public void Remove(FrameworkElement paramName)
+        {
+            Remove(paramName.Name);
         }
 
         public void Remove(string paramName)
         {
             paramName = PrepareParamName(paramName);
 
-            var values = GetValuesSave();
-            if (values.TryGetValue(paramName + _extender, out _))
+            var values = GetSaved();
+            if (values.TryGetValue(GetFullParamName(paramName), out _))
             {
-                values.Remove(paramName + _extender);
+                values.Remove(GetFullParamName(paramName));
             }
 
             SaveValues(values);
 
-            values = GetValuesLoad();
-            values.Remove(paramName + _extender);
+            values = GetLoaded();
+            values.Remove(GetFullParamName(paramName));
+        }
+
+        public void Set(FrameworkElement paramName, string value)
+        {
+            Set(paramName.Name, value);
         }
 
         public void Set(Constants.Param paramName, string value)
         {
-            Set(paramName.ToString("G"), value);
+            Set(ParamToStr(paramName), value);
         }
 
         public void Set(string paramName, string value)
         {
-            paramName = PrepareParamName(paramName);
-            value = PrepareValue(value);
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
 
-            var values = GetValuesSave();
-            values[paramName + _extender] = value;
+            paramName = GetFullParamName(PrepareParamName(paramName));
+            value = GetFullParamName(PrepareValue(value));
 
-            SaveValues(values);
+            var valuesToSave = GetSaved();
+            valuesToSave[paramName] = value;
 
-            values = GetValuesLoad();
-            values[paramName + _extender] = value;
+            var valuesLoaded = GetLoaded();
+            valuesLoaded[paramName] = value;
+
+            SaveValues(valuesToSave.Merge(valuesLoaded));
         }
 
-        public void Set(Constants.Param paramName, double? value)
+        public void Set(FrameworkElement paramName, double value)
+        {
+            Set(paramName.Name, Converter.DoubleToText(value));
+        }
+
+        public void Set(Constants.Param paramName, double value)
         {
             Set(paramName, Converter.DoubleToText(value));
         }
 
-        public void Set(string paramName, double? value)
+        public void Set(string paramName, double value)
         {
             Set(paramName, Converter.DoubleToText(value));
         }
 
-        public void Set(Constants.Param paramName, long? value)
+        public void Set(Constants.Param paramName, long value)
         {
             Set(paramName, Converter.IntToText(value));
         }
 
-        public void Set(string paramName, long? value)
+        public void Set(string paramName, long value)
         {
             Set(paramName, Converter.IntToText(value));
         }
@@ -213,10 +321,14 @@ namespace Qualia.Tools
         {
             Set(paramName, value ? 1 : 0);
         }
+        public void Set(FrameworkElement paramName, bool value)
+        {
+            Set(paramName.Name, value ? 1 : 0);
+        }
 
         public void Set<T>(Constants.Param paramName, IEnumerable<T> list)
         {
-            Set(paramName, string.Join(",", list.Select(l => l.ToString())));
+            Set(ParamToStr(paramName), list);
         }
 
         public void Set<T>(string paramName, IEnumerable<T> list)
@@ -224,76 +336,51 @@ namespace Qualia.Tools
             Set(paramName, string.Join(",", list.Select(l => l.ToString())));
         }
 
-        private string GetValue(Constants.Param paramName, string defaultValue = null)
-        {
-            return GetValue(paramName.ToString("G"), defaultValue);
-        }
-
-        private string GetValue(string paramName, string defaultValue = null)
-        {
-            paramName = PrepareParamName(paramName);
-
-            var values = GetValuesLoad();
-
-            if (values.TryGetValue(paramName + _extender, out string value))
-            {
-                return value;
-            }
-            else
-            {
-                Set(paramName, defaultValue);
-                return defaultValue;
-            }
-        }
-
         private void SaveValues(Dictionary<string, string> values)
         {
-            if (s_cacheSave.ContainsKey(Name))
+            if (s_cacheSave.ContainsKey(_fileName))
             {
-                s_cacheSave[Name] = values;
+                s_cacheSave[_fileName] = values;
             }
             else
             {
-                s_cacheSave.Add(Name, values);
+                s_cacheSave.Add(_fileName, values);
             }
         }
 
         public void FlushToDrive()
         {
-            if (!s_cacheSave.ContainsKey(Name))
+            if (!s_cacheSave.ContainsKey(_fileName))
             {
                 return;
             }
 
             List<string> lines = new();
 
-            var values = s_cacheSave[Name];
+            var values = s_cacheSave[_fileName];
             foreach (var pair in values)
             {
                 lines.Add(pair.Key + ":" + pair.Value);
             }
 
-            lock (s_locker)
-            {
-                File.WriteAllLines(Name, lines);
-            }
+            File.WriteAllLines(_fileName, lines);
         }
 
-        private Dictionary<string, string> GetValuesLoad()
+        private Dictionary<string, string> GetLoaded()
         {
-            if (s_cacheLoad.ContainsKey(Name))
+            if (s_cacheLoad.ContainsKey(_fileName))
             {
-                return s_cacheLoad[Name];
+                return s_cacheLoad[_fileName];
             }
 
             Dictionary<string, string> result = new();
 
-            if (!File.Exists(Name))
+            if (!File.Exists(_fileName))
             {
                 Clear();
             }
 
-            var lines = File.ReadAllLines(Name);
+            var lines = File.ReadAllLines(_fileName);
 
             foreach (var line in lines)
             {
@@ -303,7 +390,7 @@ namespace Qualia.Tools
                 }
 
                 var parts = line.Split(new[] { ':' });
-                if (Name != "config.txt" && !parts[0].Contains("."))
+                if (_fileName != "config.txt" && !parts[0].Contains("."))
                 {
                     //continue;                        
                 }
@@ -314,31 +401,33 @@ namespace Qualia.Tools
                 }
             }
 
-            s_cacheLoad.Add(Name, result);
+            s_cacheLoad.Add(_fileName, result);
 
             return result;
         }
 
-        private Dictionary<string, string> GetValuesSave()
+        private Dictionary<string, string> GetSaved()
         {
-            if (s_cacheSave.ContainsKey(Name))
+            if (s_cacheSave.ContainsKey(_fileName))
             {
-                return s_cacheSave[Name];
+                return s_cacheSave[_fileName];
             }
             
-            s_cacheSave[Name] = new();
-            return s_cacheSave[Name];
+            s_cacheSave[_fileName] = new();
+            return s_cacheSave[_fileName];
         }
 
         public void Clear()
         {
-            lock (s_locker)
-            {
-                File.WriteAllLines(Name, Array.Empty<string>());
-            }
+            File.WriteAllLines(_fileName, Array.Empty<string>());
 
             s_cacheLoad.Clear();
             s_cacheSave.Clear();
+        }
+
+        private static string ParamToStr(Constants.Param param)
+        {
+            return param.ToString("G");
         }
     }
 }
