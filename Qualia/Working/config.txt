@@ -3,10 +3,10 @@ NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Work
 ScreenWidth:1721.33333333333
 ScreenHeight:1033.33333333333
 ScreenTop:14
-ScreenLeft:-71.3333333333333
+ScreenLeft:0
 OnTop:0
 DataWidth:251
-NetworkHeight:613
+NetworkHeight:486
 UseWeightsColors:1
 OnlyChangedWeights:1
 HighlightChangedWeights:0
@@ -14,3 +14,10 @@ ShowOnlyUnchangedWeights:1
 SkipRoundsToDrawErrorMatrix:10000
 SkipRoundsToDrawNetworks:10000
 SkipRoundsToDrawStatistics:10000
+UseWeightsColors.UseWeightsColors:UseWeightsColors.0
+OnlyChangedWeights.OnlyChangedWeights:OnlyChangedWeights.0
+HighlightChangedWeights.HighlightChangedWeights:HighlightChangedWeights.0
+ShowOnlyUnchangedWeights.ShowOnlyUnchangedWeights:ShowOnlyUnchangedWeights.0
+SkipRoundsToDrawErrorMatrix.SkipRoundsToDrawErrorMatrix:SkipRoundsToDrawErrorMatrix.10000
+SkipRoundsToDrawNetworks.SkipRoundsToDrawNetworks:SkipRoundsToDrawNetworks.10000
+SkipRoundsToDrawStatistics.SkipRoundsToDrawStatistics:SkipRoundsToDrawStatistics.10000

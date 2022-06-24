@@ -1,4 +1,4 @@
-﻿<local:NeuronBase x:Class="Qualia.Controls.NeuronControl"
+﻿<local:NeuronBaseControl x:Class="Qualia.Controls.NeuronControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -25,24 +25,24 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-            <local:QCheckBox x:Name="CtlIsBias" Content="Is bias" DefaultValue="False" />
-            <local:QCheckBox x:Name="CtlIsBiasConnected" Content="Is bias connected" DefaultValue="False" Margin="10,0,0,0" />
+            <local:BoolValueControl x:Name="CtlIsBias" Content="Is bias" DefaultValue="False" />
+            <local:BoolValueControl x:Name="CtlIsBiasConnected" Content="Is bias connected" DefaultValue="False" Margin="10,0,0,0" />
         </StackPanel>
-        <local:QLabel Grid.Column="3" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
+        <local:TextControl Grid.Column="3" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
 
-        <local:QLabel Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
-        <local:QComboBox Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializeFunction" />
-        <local:QLabel Grid.Row="1" Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializeFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:TextControl Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
+        <local:SelectValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializeFunction" />
+        <local:TextControl Grid.Row="1" Grid.Column="2" Content="a:" />
+        <local:DoubleValueControl Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializeFunctionParam" MinimumValue="-100" MaximumValue="100" />
 
-        <local:QLabel Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
-        <local:QComboBox Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializeFunction" />
-        <local:QLabel Grid.Row="2" Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializeFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:TextControl Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
+        <local:SelectValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializeFunction" />
+        <local:TextControl Grid.Row="2" Grid.Column="2" Content="a:" />
+        <local:DoubleValueControl Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializeFunctionParam" MinimumValue="-100" MaximumValue="100" />
 
-        <local:QLabel Grid.Row="3" Grid.Column="0" Content="Activation func:" />
-        <local:QComboBox Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunction" />
-        <local:QLabel Grid.Row="3" Grid.Column="2" Content="a:" />
-        <local:QDouble Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFunctionParam" IsNullAllowed="True" MinimumValue="-100" MaximumValue="100" />
+        <local:TextControl Grid.Row="3" Grid.Column="0" Content="Activation func:" />
+        <local:SelectValueControl Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunction" />
+        <local:TextControl Grid.Row="3" Grid.Column="2" Content="a:" />
+        <local:DoubleValueControl Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFunctionParam" MinimumValue="-100" MaximumValue="100" />
     </Grid>
-</local:NeuronBase>
+</local:NeuronBaseControl>

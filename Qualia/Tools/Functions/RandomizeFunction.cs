@@ -9,7 +9,7 @@ namespace Qualia.Tools
         public readonly delegate*<NetworkDataModel, double, void> Do;
 
         public RandomizeFunction(delegate*<NetworkDataModel, double, void> doFunc)
-            : base(defaultValue: nameof(FlatRandom))
+            : base(defaultFunction: nameof(FlatRandom))
         {
             Do = doFunc;
         }

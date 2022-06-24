@@ -33,18 +33,18 @@ namespace Qualia.Controls
             CtlPresenter.Width = SystemParameters.PrimaryScreenWidth;
             CtlPresenter.Height = SystemParameters.PrimaryScreenHeight;
 
-            RandomizerViewer_SizeChanged(null, null);
+            RandomizerViewer_OnSizeChanged(null, null);
 
-            SizeChanged += RandomizerViewer_SizeChanged;
-            Loaded += RandomizerViewer_Loaded;
+            SizeChanged += RandomizerViewer_OnSizeChanged;
+            Loaded += RandomizerViewer_OnLoaded;
         }
 
-        private void RandomizerViewer_Loaded(object sender, RoutedEventArgs e)
+        private void RandomizerViewer_OnLoaded(object sender, RoutedEventArgs e)
         {
             Render();
         }
 
-        private void RandomizerViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void RandomizerViewer_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {   
             CtlPresenter.SetValue(System.Windows.Controls.Canvas.LeftProperty, (CtlCanvas.ActualWidth - CtlPresenter.ActualWidth) / 2);
             CtlPresenter.SetValue(System.Windows.Controls.Canvas.TopProperty, (CtlCanvas.ActualHeight - CtlPresenter.ActualHeight) / 2);
@@ -92,7 +92,7 @@ namespace Qualia.Controls
             byte alpha = 100;
             int heightOf1 = (CtlPresenter.CtlPresenter.Height - 250) / 2 / GetModelWeightsMaxValue();
 
-            Pen zeroColor = new(Color.FromArgb(alpha, Color.Gray)); // TODO using
+            using Pen zeroColor = new(Color.FromArgb(alpha, Color.Gray)); 
 
             for (int layer = 0; layer < _model.Layers.Count - 1; ++layer)
             {
@@ -107,20 +107,18 @@ namespace Qualia.Controls
                         var hover = value == 0 ? 0 : 30 * MathX.Sign(value);
                         var p = Draw.GetPen(value, 0, alpha);
 
-                        using (Pen pen = new(Draw.MediaColorToSystemColor(p.Brush.GetColor())))
-                        {
-                            CtlPresenter.CtlPresenter.G.DrawLine(pen,
-                                                                 left - neuron + layer * layersDistance + weight,
-                                                                 top + neuron - hover,
-                                                                 left - neuron + layer * layersDistance + weight,
-                                                                 top + neuron - hover - (float)(heightOf1 * value));
+                        using Pen pen = new(Draw.MediaColorToSystemColor(p.Brush.GetColor()));
+                        CtlPresenter.CtlPresenter.G.DrawLine(pen,
+                                                             left - neuron + layer * layersDistance + weight,
+                                                             top + neuron - hover,
+                                                             left - neuron + layer * layersDistance + weight,
+                                                             top + neuron - hover - (float)(heightOf1 * value));
 
-                            CtlPresenter.CtlPresenter.G.FillEllipse(Brushes.Orange,
-                                                                    left - neuron + layer * layersDistance + weight - 1,
-                                                                    top + neuron - hover - (float)(heightOf1 * value),
-                                                                    2,
-                                                                    2);
-                        }
+                        CtlPresenter.CtlPresenter.G.FillEllipse(Brushes.Orange,
+                                                                left - neuron + layer * layersDistance + weight - 1,
+                                                                top + neuron - hover - (float)(heightOf1 * value),
+                                                                2,
+                                                                2);
                     }
                 }
 

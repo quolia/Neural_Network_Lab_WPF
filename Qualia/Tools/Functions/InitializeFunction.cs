@@ -7,7 +7,7 @@ namespace Qualia.Tools
         public readonly delegate*<double, double> Do;
 
         public InitializeFunction(delegate*<double, double> doFunc)
-            : base(defaultValue: nameof(FlatRandom))
+            : base(defaultFunction: nameof(FlatRandom))
         {
             Do = doFunc;
         }
@@ -17,14 +17,24 @@ namespace Qualia.Tools
             return double.IsNaN(value);
         }
 
-        unsafe sealed public class None
+        unsafe sealed public class Skip
         {
-            public static readonly string Description = "f(a) = none (the value is skipped), (a -> not used)";
+            public static readonly string Description = "f(a) = SkipValue (initialization is skipped)";
 
             public static readonly InitializeFunction Instance = new(&Do);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Do(double a) => Constants.SkipValue;
+        }
+
+        unsafe sealed public class None
+        {
+            public static readonly string Description = "f(a) = 0";
+
+            public static readonly InitializeFunction Instance = new(&Do);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double a) => 0;
         }
 
         unsafe sealed public class Constant

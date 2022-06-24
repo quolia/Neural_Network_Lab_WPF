@@ -6,7 +6,7 @@ namespace Qualia.Tools
         public readonly delegate*<double, double> Do;
 
         public InputDataFunction(delegate*<double, double> doFunc)
-            : base(defaultValue: nameof(FlatRandom))
+            : base(defaultFunction: nameof(FlatRandom))
         {
             Do = doFunc;
         }
