@@ -13,13 +13,13 @@ namespace Qualia
         {
             Logger.LogFileName = WorkingDirectory + "log.txt";
 
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_OnUnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_OnUnobservedTaskException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
 
-        public static string WorkingDirectory => Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
+        public static string WorkingDirectory => Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;// AppDomain.CurrentDomain.BaseDirectory;
 
-        private void TaskScheduler_OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Qualia
             }
         }
 
-        private void CurrentDomain_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             try
             {

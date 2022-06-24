@@ -72,7 +72,7 @@
     <OutputPath>Working\Bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
@@ -156,15 +156,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Base\BaseUserControl.cs" />
-    <Compile Include="Controls\Base\FunctionControl.xaml.cs">
-      <DependentUpon>FunctionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Base\CanvasControl.cs" />
-    <Compile Include="Controls\Base\Values\Text.cs" />
-    <Compile Include="Controls\Base\Values\BoolValue.cs" />
-    <Compile Include="Controls\Base\Values\SelectValue.cs" />
-    <Compile Include="Controls\Base\Values\StringValue.cs" />
+    <Compile Include="Controls\Base\QLabel.cs" />
+    <Compile Include="Controls\Base\QPresenter.cs" />
+    <Compile Include="Controls\Base\QCheckBox.cs" />
+    <Compile Include="Controls\Base\QComboBox.cs" />
+    <Compile Include="Controls\Base\QTextBox.cs" />
     <Compile Include="Network\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>
@@ -208,10 +204,6 @@
     <Compile Include="Tools\Thread.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="Tools\Unsafe.cs" />
-    <Page Include="Controls\Base\FunctionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Network\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -240,7 +232,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Presenter\InputDataPresenter.xaml">
+    <Page Include="Controls\Presenter\DataPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -284,8 +276,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Base\Values\DoubleValue.cs" />
-    <Compile Include="Controls\Base\Values\IntValue.cs" />
+    <Compile Include="Controls\Base\QDouble.cs" />
+    <Compile Include="Controls\Base\QInt.cs" />
     <Compile Include="Controls\Base\LayerBase.cs" />
     <Compile Include="Controls\Base\NeuronBase.cs" />
     <Compile Include="Network\HiddenLayerControl.xaml.cs">
@@ -310,8 +302,8 @@
     <Compile Include="Network\OutputNeuronControl.xaml.cs">
       <DependentUpon>OutputNeuronControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Presenter\InputDataPresenter.xaml.cs">
-      <DependentUpon>InputDataPresenter.xaml</DependentUpon>
+    <Compile Include="Controls\Presenter\DataPresenter.xaml.cs">
+      <DependentUpon>DataPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Presenter\MatrixPresenter.xaml.cs">
       <DependentUpon>MatrixPresenter.xaml</DependentUpon>

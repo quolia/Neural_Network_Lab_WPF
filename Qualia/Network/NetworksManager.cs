@@ -15,19 +15,18 @@ namespace Qualia.Controls
         public readonly Config Config;
         public ListX<NetworkDataModel> NetworkModels;
 
-        private readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
+        private readonly Action<Notification.ParameterChanged> OnNetworkUIChanged;
 
         private readonly TabControl _ctlTabs;
         private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
         private NetworkDataModel _prevSelectedNetworkModel;
 
-        public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> networkUI_OnChanged)
+        public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onNetworkUIChanged)
         {
-            NetworkUI_OnChanged = networkUI_OnChanged;
-
+            OnNetworkUIChanged = onNetworkUIChanged;
             _ctlTabs = tabs;
-            _ctlTabs.SelectionChanged += NetworksTabs_OnSelected;
+            _ctlTabs.SelectionChanged += CtlTabs_SelectionChanged;
 
             Config = string.IsNullOrEmpty(fileName) ? CreateNewManager() : new(fileName);
             if (Config != null)
@@ -37,7 +36,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void NetworksTabs_OnSelected(object sender, SelectionChangedEventArgs e)
+        private void CtlTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _selectedNetworkControl = _ctlTabs.SelectedContent as NetworkControl;
         }
@@ -74,26 +73,6 @@ namespace Qualia.Controls
 
         public static Config CreateNewManager()
         {
-            var fileName = GetNewFileName();
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return null;
-            }
-
-            if (File.Exists(fileName))
-            {
-                File.Delete(fileName);
-            }
-
-            Config config = new(fileName);
-            Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
-            Config.Main.FlushToDrive();
-
-            return config;
-        }
-
-        private static string GetNewFileName()
-        {
             SaveFileDialog saveDialog = new()
             {
                 InitialDirectory = App.WorkingDirectory + "Networks",
@@ -103,18 +82,23 @@ namespace Qualia.Controls
                 RestoreDirectory = true
             };
 
-            bool yes = false;
-
-            try
+            if (saveDialog.ShowDialog() == true)
             {
-                yes = saveDialog.ShowDialog() == true;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
+                var fileName = saveDialog.FileName;
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                Config config = new(fileName);
+                Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
+                Config.Main.FlushToDrive();
+
+                return config;
             }
 
-            return yes ? saveDialog.FileName : null;
+            return null;
         }
 
         private void ClearNetworks()
@@ -127,10 +111,14 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            var networkIds = Config.Get(Constants.Param.Networks, new long[] { Constants.UnknownId });
+            var networkIds = Config.GetArray(Constants.Param.Networks);
+            if (networkIds.Length == 0)
+            {
+                networkIds = new long[] { Constants.UnknownId };
+            }
 
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
-            _ctlTabs.SelectedIndex = Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
+            _ctlTabs.SelectedIndex = (int)Config.GetInt(Constants.Param.SelectedNetworkIndex, 0).Value + 1;
 
             RefreshNetworksDataModels();
         }
@@ -138,9 +126,9 @@ namespace Qualia.Controls
         public void RebuildNetworksForTask(TaskFunction task)
         {
             _taskFunction = task;
-            Networks.ForEach(ctlNetwork => ctlNetwork.NetworkTask_OnChanged(task));
+            Networks.ForEach(ctlNetwork => ctlNetwork.OnTaskChanged(task));
 
-            NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+            OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
         }
 
         public void AddNetwork()
@@ -150,7 +138,7 @@ namespace Qualia.Controls
 
         private void AddNetwork(long networkId)
         {
-            NetworkControl ctlNetwork = new(networkId, Config, NetworkUI_OnChanged);
+            NetworkControl ctlNetwork = new(networkId, Config, OnNetworkUIChanged);
             TabItem tabItem = new()
             {
                 Header = $"Network {_ctlTabs.Items.Count}",
@@ -162,7 +150,7 @@ namespace Qualia.Controls
 
             if (networkId == Constants.UnknownId)
             {
-                ctlNetwork.InputLayer.NetworkTask_OnChanged(_taskFunction);
+                ctlNetwork.InputLayer.OnTaskChanged(_taskFunction);
                 ctlNetwork.ResetLayersTabsNames();
             }
         }
@@ -173,7 +161,7 @@ namespace Qualia.Controls
                                                        "Confirm",
                                                        MessageBoxButton.OKCancel))
             {
-                SelectedNetworkControl.RemoveFromConfig();
+                SelectedNetworkControl.VanishConfig();
 
                 var index = _ctlTabs.Items.IndexOf(_ctlTabs.SelectedTab());
                 _ctlTabs.Items.Remove(_ctlTabs.SelectedTab());
@@ -181,7 +169,7 @@ namespace Qualia.Controls
 
                 ResetNetworksTabsNames();
 
-                NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+                OnNetworkUIChanged(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -213,18 +201,24 @@ namespace Qualia.Controls
 
         public static void SaveAs()
         {
-            var fileName = GetNewFileName();
-            if (string.IsNullOrEmpty(fileName))
+            SaveFileDialog saveDialog = new()
             {
-                return;
-            }
+                InitialDirectory = App.WorkingDirectory + "Networks",
+                DefaultExt = "txt",
+                Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
 
-            if (File.Exists(fileName))
+            if (saveDialog.ShowDialog() == true)
             {
-                File.Delete(fileName);
-            }
+                if (File.Exists(saveDialog.FileName))
+                {
+                    File.Delete(saveDialog.FileName);
+                }
 
-            File.Copy(Config.Main.Get(Constants.Param.NetworksManagerName, ""), fileName);
+                File.Copy(Config.Main.GetString(Constants.Param.NetworksManagerName), saveDialog.FileName);
+            }
         }
 
         public ListX<NetworkDataModel> CreateNetworksDataModels()
@@ -276,7 +270,7 @@ namespace Qualia.Controls
         unsafe public void PrepareModelsForRound()
         {
             var baseNetwork = NetworkModels.First;
-            _taskFunction.Do(baseNetwork, _taskFunction.InputDataFunction, _taskFunction.InputDataFunctionParam);
+            _taskFunction.Do(baseNetwork, _taskFunction.InputDataFunction);
 
             // copy first layer state and last layer targets to other networks
 
@@ -326,7 +320,6 @@ namespace Qualia.Controls
         {
             NetworkModels.ForEach(model => model.BackPropagationStrategy.PrepareForLoop(model));
         }
-
         public void FeedForward()
         {
             NetworkModels.ForEach(model => model.FeedForward());

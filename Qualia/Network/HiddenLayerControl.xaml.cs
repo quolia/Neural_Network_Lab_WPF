@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class HiddenLayerControl : LayerBaseControl, IConfigParam
+    sealed public partial class HiddenLayerControl : LayerBase
     {
         public HiddenLayerControl()
             : base(0, null, null)
@@ -13,12 +13,16 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public HiddenLayerControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public HiddenLayerControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+            : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            var neuronsIds = Config.Get(Constants.Param.Neurons, new long[] { Constants.UnknownId });
+            var neuronsIds = Config.GetArray(Constants.Param.Neurons);
+            if (neuronsIds.Length == 0)
+            {
+                neuronsIds = new long[] { Constants.UnknownId };
+            }
 
             foreach (var neuronId in neuronsIds)
             {
@@ -32,12 +36,12 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long id)
         {
-            NeuronControl neuron = new(id, Config, NetworkUI_OnChanged);
+            NeuronControl neuron = new(id, Config, OnNetworkUIChanged);
             NeuronsHolder.Children.Add(neuron);
 
             if (id == Constants.UnknownId)
             {
-                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+                OnNetworkUIChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
             RefreshOrdinalNumbers();
@@ -57,11 +61,11 @@ namespace Qualia.Controls
             ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
         }
 
-        public override void RemoveFromConfig()
+        public override void VanishConfig()
         {
             Config.Remove(Constants.Param.Neurons);
             var ctlNeurons = GetNeuronsControls().ToList();
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.RemoveFromConfig());
+            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.VanishConfig());
         }
     }
 }

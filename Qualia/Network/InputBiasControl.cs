@@ -11,15 +11,15 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+            : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
-            CtlIsBias.Value = true;
-            CtlIsBiasConnected.Value = false;
+            CtlIsBias.IsOn = true;
+            CtlIsBiasConnected.IsOn = false;
             CtlIsBias.IsEnabled = false;
-            CtlIsBiasConnected.Visible(CtlIsBias.Value);
+            CtlIsBiasConnected.Visible(CtlIsBias.IsOn);
             CtlIsBiasConnected.IsEnabled = false;
         }
     }

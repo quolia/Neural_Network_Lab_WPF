@@ -4,33 +4,33 @@ using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
-    sealed public partial class OutputNeuronControl : NeuronBaseControl
+    sealed public partial class OutputNeuronControl : NeuronBase
     {
         private readonly List<IConfigParam> _configParams;
 
-        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+            : base(id, config, onNetworkUIChanged)
         {
             InitializeComponent();
 
             _configParams = new()
             {
-                CtlActivationFunction.Initialize(nameof(ActivationFunction.LogisticSigmoid)),
-                CtlActivationFunctionParam.Initialize(defaultValue: 1)
+                CtlActivationFunction,
+                CtlActivationFunctionParam
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetChangeEvent(Neuron_OnChanged));
+            _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
         }
 
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
+        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.None.Instance;
         public override double WeightsInitializeFunctionParam => 1;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
-        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
-        public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
+        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction.SelectedItem);
+        public override double ActivationFunctionParam => CtlActivationFunctionParam.ValueOrNull ?? 1;
 
         public void LoadConfig()
         {
@@ -40,14 +40,14 @@ namespace Qualia.Controls
             StateChanged();
         }
 
-        private void Neuron_OnChanged()
+        private void OnChanged()
         {
-            NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+            OnNetworkUIChanged(Notification.ParameterChanged.Structure);
         }
 
-        public override void OrdinalNumber_OnChanged(int number)
+        public override void OrdinalNumberChanged(int number)
         {
-            CtlNumber.Content = Converter.IntToText(number);
+            CtlNumber.Content = number.ToString();
         }
 
         public override bool IsValid()
@@ -60,9 +60,9 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SaveConfig());
         }
 
-        public override void RemoveFromConfig()
+        public override void VanishConfig()
         {
-            _configParams.ForEach(param => param.RemoveFromConfig());
+            _configParams.ForEach(param => param.VanishConfig());
         }
     }
 }

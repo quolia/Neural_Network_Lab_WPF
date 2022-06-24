@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class MNISTControl : BaseUserControl
+    sealed public partial class MNISTControl : UserControl, IConfigParam
     {
         public readonly List<MNISTImage> Images = new();
 
@@ -24,7 +24,7 @@ namespace Qualia.Controls
         public int MaxNumber => (int)CtlTask_MNIST_MaxNumber.Value;
         public int MinNumber => (int)CtlTask_MNIST_MinNumber.Value;
 
-        private void Parameter_OnChanged()
+        private void Changed()
         {
             if (IsValid())
             {
@@ -270,9 +270,9 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
-        public void RemoveFromConfig()
+        public void VanishConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
         }
 
         public bool IsValid()
@@ -285,22 +285,22 @@ namespace Qualia.Controls
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Parameter_OnChanged));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
 
-        private void BrowseImagesPath_OnClick(object sender, RoutedEventArgs e)
+        private void CtlBrowseImagesPath_Click(object sender, RoutedEventArgs e)
         {
             BrowseFile(CtlTask_MNIST_ImagesPath, "images.bin");
         }
 
-        private void BrowseLabelsPath_OnClick(object sender, RoutedEventArgs e)
+        private void CtlBrowseLabelsPath_Click(object sender, RoutedEventArgs e)
         {
             BrowseFile(CtlTask_MNIST_LabelsPath, "labels.bin");
         }
 
-        private void BrowseFile(TextBox textBox, string targetFileName)
+        private void BrowseFile(TextBox ctlTextBox, string targetFileName)
         {
             var fileName = BrowseGzFile();
             if (string.IsNullOrEmpty(fileName))
@@ -311,11 +311,11 @@ namespace Qualia.Controls
             try
             {
                 Decompress(fileName, Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar + targetFileName);
-                textBox.Text = fileName;
+                ctlTextBox.Text = fileName;
             }
             catch (Exception ex)
             {
-                textBox.Text = string.Empty;
+                ctlTextBox.Text = string.Empty;
                 MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
             }
         }
@@ -350,7 +350,7 @@ namespace Qualia.Controls
 
     sealed public class MNISTImage
     {
-        public readonly byte[] Image = new byte[28 * 28];
+        public byte[] Image = new byte[28 * 28];
         public byte Label;
     }
 }

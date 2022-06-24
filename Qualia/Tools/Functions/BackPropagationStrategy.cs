@@ -22,7 +22,7 @@ namespace Qualia.Tools
                                        delegate*<NetworkDataModel, void> onAfterLoopFinished,
                                        delegate*<NetworkDataModel, bool, void> onError,
                                        delegate*<NetworkDataModel, bool> isBackPropagationNeeded)
-            : base(defaultFunction: nameof(Always))
+            : base(defaultValue: nameof(Always))
         {
             PrepareForRun = prepareForRun;
             PrepareForRound = prepareForRound;

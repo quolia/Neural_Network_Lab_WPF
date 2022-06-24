@@ -14,7 +14,7 @@ namespace Qualia.Tools
         public double CostAvg;
 
         public long TotalTicksElapsed;
-        public long MicrosecondsPerPureRound;
+        public long MicroSecondsPerPureRound;
         public double CurrentPureRoundsPerSecond;
         public double MaxPureRoundsPerSecond;
         public double CurrentLostRoundsPerSecond;

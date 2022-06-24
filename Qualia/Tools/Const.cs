@@ -14,13 +14,6 @@ namespace Qualia.Tools
 
         public const double LessThan1 = 1 - 0.000000000000001D;
 
-        public const long LongNaN = 8888888888777777777L;
-
-        public static bool IsNaN(long value)
-        {
-            return value == LongNaN;
-        }
-
         public enum Toggle
         {
             On,

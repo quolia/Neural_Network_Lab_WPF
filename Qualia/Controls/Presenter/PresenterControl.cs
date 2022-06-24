@@ -15,13 +15,13 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            SizeChanged += DrawBox_OnSizeChanged;
+            SizeChanged += DrawBox_SizeChanged;
             BackColor = Color.White;
 
-            Disposed += Presenter_OnDisposed;
+            Disposed += OnDisposed;
         }
 
-        private void Presenter_OnDisposed(object sender, EventArgs e)
+        private void OnDisposed(object sender, EventArgs e)
         {
             if (_drawArea != null)
             {
@@ -36,7 +36,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawBox_OnSizeChanged(object sender, EventArgs e)
+        private void DrawBox_SizeChanged(object sender, EventArgs e)
         {
             _isRenderNeeded = true;
         }

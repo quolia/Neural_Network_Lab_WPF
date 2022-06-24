@@ -15,6 +15,20 @@ namespace Qualia.Tools
             Derivative = derivativeFunc;
         }
 
+        unsafe sealed public class Liner
+        {
+            public static readonly string Description = "f(x, a) = a * x, (a -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = a, (a -> multiplier)";
+
+            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static double Do(double x, double a) => a * x;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static double Derivative(double x, double a) => a;
+        }
+
         unsafe sealed public class LogisticSigmoid
         {
             public static readonly string Description = "f(x, a) = 1 / (1 + exp(-x)), (a -> not used)";
@@ -45,34 +59,6 @@ namespace Qualia.Tools
                 var sigmoid = LogisticSigmoid.Instance.Do(x, 1);
                 return 2 * sigmoid * (1 - sigmoid);
             }
-        }
-
-        unsafe sealed public class None
-        {
-            public static readonly string Description = "f(x) = x, (a -> not used)";
-            public static readonly string DerivativeDescription = "f(x)' = 0, (a -> not used)";
-
-            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Do(double x, double a) => x;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Derivative(double x, double a) => 0;
-        }
-
-        unsafe sealed public class Liner
-        {
-            public static readonly string Description = "f(x, a) = a * x, (a -> multiplier)";
-            public static readonly string DerivativeDescription = "f(x, a)' = a, (a -> multiplier)";
-
-            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Do(double x, double a) => a * x;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Derivative(double x, double a) => a;
         }
 
         unsafe sealed public class Softsign

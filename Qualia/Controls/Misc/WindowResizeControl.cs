@@ -12,7 +12,7 @@ namespace Qualia.Controls
 
         public WindowResizeControl()
         {
-            SourceInitialized += Window_OnSourceInitialized;
+            SourceInitialized += Window_SourceInitialized;
         }
 
         internal enum SWP
@@ -62,7 +62,7 @@ namespace Qualia.Controls
             //
         }
 
-        private void Window_OnSourceInitialized(object sender, EventArgs ea)
+        private void Window_SourceInitialized(object sender, EventArgs ea)
         {
             HwndSource hwndSource = (HwndSource)HwndSource.FromVisual((Window)sender);
             hwndSource.AddHook(DragHook);

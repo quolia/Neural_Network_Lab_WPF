@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qualia.Controls"
-        Closing="MainWindow_OnClosing"
+        Closing="Window_Closing"
         mc:Ignorable="d" Height="450" Width="800" Title="Networks">
 
     <Grid>
@@ -14,7 +14,7 @@
             <ColumnDefinition MinWidth="300" MaxWidth="300" />
         </Grid.ColumnDefinitions>
 
-        <local:InputDataPresenter x:Name="CtlInputDataPresenter" Margin="2,0,7,0" />
+        <local:DataPresenter x:Name="CtlInputDataPresenter" Margin="2,0,7,0" />
         <GridSplitter Name="DataSplitter" Width="5" VerticalAlignment="Stretch" SnapsToDevicePixels="True" />
 
         <ScrollViewer Background="White" Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,5,0" >
@@ -26,10 +26,10 @@
                      
                 <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
                 <StackPanel Orientation="Horizontal">
-                    <local:BoolValueControl x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:QCheckBox x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                 </StackPanel>
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
 
@@ -42,7 +42,7 @@
                     <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
                     <local:StatisticsPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
                     <local:MatrixPresenter Margin="10 0 0 0" Grid.Column="2" x:Name="CtlMatrixPresenter" />
-                    <local:TextControl Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                    <local:QLabel Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
                 </Grid>
             </Grid>
         </ScrollViewer>
@@ -63,33 +63,33 @@
                 </Grid.ColumnDefinitions>
                 <Menu Name="CtlMenu" Background="White">
                     <MenuItem Header="File">
-                        <MenuItem Name="CtlMainMenuNew" Header="New..." Click="MainMenuNew_OnClick" />
-                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="MainMenuLoad_OnClick" />
-                        <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="MainMenuSaveAs_OnClick" />
+                        <MenuItem Name="CtlMainMenuNew" Header="New..." Click="CtlMainMenuNew_Click" />
+                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="CtlMainMenuLoad_Click" />
+                        <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="CtlMainMenuSaveAs_Click" />
                     </MenuItem>
-                    <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="MenuNetwork_OnSubmenuOpened">
-                        <MenuItem Name="CtlMainMenuAddNetwork" Header="Add Network" Click="MainMenuAddNetwork_OnClick" />
-                        <MenuItem Name="CtlMainMenuDeleteNetwork" Header="Delete Network..." Click="MainMenuDeleteNetwork_OnClick" />
+                    <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="CtlMenuNetwork_SubmenuOpened">
+                        <MenuItem Name="CtlMainMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />
+                        <MenuItem Name="CtlMainMenuDeleteNetwork" Header="Delete Network..." Click="CtlMainMenuDeleteNetwork_Click" />
                         <Separator />
-                        <MenuItem Name="CtlMainMenuAddLayer" Header="Add Layer" Click="MainMenuAddLayer_OnClick" />
-                        <MenuItem Name="CtlMainMenuDeleteLayer" Header="Delete Layer..." Click="MainMenuDeleteLayer_OnClick" />
+                        <MenuItem Name="CtlMainMenuAddLayer" Header="Add Layer" Click="CtlMainMenuAddLayer_Click" />
+                        <MenuItem Name="CtlMainMenuDeleteLayer" Header="Delete Layer..." Click="CtlMainMenuDeleteLayer_Click" />
                         <Separator />
-                        <MenuItem Name="CtlMainMenuAddNeuron" Header="Add Neuron" Click="MainMenuAddNeuron_OnClick" />
+                        <MenuItem Name="CtlMainMenuAddNeuron" Header="Add Neuron" Click="CtlMainMenuAddNeuron_Click" />
                     </MenuItem>
-                    <MenuItem Name="CtlMenuRun" Header="Run" IsEnabled="False" SubmenuOpened="MenuRun_OnSubmenuOpened">
-                        <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="MenuStart_OnClick" />
-                        <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="MenuStop_OnClick" />
-                        <MenuItem Name="CtlMenuReset" Header="Reset" Click="MenuReset_OnClick" />
+                    <MenuItem Name="CtlMenuRun" Header="Run" IsEnabled="False" SubmenuOpened="CtlMenuRun_SubmenuOpened">
+                        <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="CtlMenuStart_Click" />
+                        <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="CtlMenuStop_Click" />
+                        <MenuItem Name="CtlMenuReset" Header="Reset" Click="CtlMenuReset_Click" />
                     </MenuItem>
                 </Menu>
-                <local:TextControl Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
+                <local:QLabel Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
             </Grid>
-            <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="ApplyChanges_OnClick" />
-            <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="NetworkTab_OnChanged" >
+            <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="CtlApplyChanges_Click" />
+            <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="CtlTabs_SelectionChanged" >
                 <TabControl.ContextMenu>
-                    <ContextMenu Name="CtlNetworkContextMenu" Opened="NetworkContextMenu_OnOpened">
-                        <MenuItem Name="CtlMenuAddNetwork" Header="Add Network" Click="MainMenuAddNetwork_OnClick" />
-                        <MenuItem Name="CtlMenuDeleteNetwork" Header="Delete Network..." Click="MainMenuDeleteNetwork_OnClick" />
+                    <ContextMenu Name="CtlNetworkContextMenu" Opened="CtlNetworkContextMenu_Opened">
+                        <MenuItem Name="CtlMenuAddNetwork" Header="Add Network" Click="CtlMainMenuAddNetwork_Click" />
+                        <MenuItem Name="CtlMenuDeleteNetwork" Header="Delete Network..." Click="CtlMainMenuDeleteNetwork_Click" />
                     </ContextMenu>
                 </TabControl.ContextMenu>
                 <TabItem Name="CtlTabSettings" Header="Settings">
@@ -101,8 +101,8 @@
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button Padding="3" Margin="5" Name="CtlApplySettingsButton" Content="Apply" IsEnabled="False" Click="ApplySettingsButton_OnClick" />
-                                <Button Padding="3" Margin="5" Name="CtlCancelSettingsButton" Content="Cancel" IsEnabled="False" Click="CancelSettingsButton_OnClick" />
+                                <Button Padding="3" Margin="5" Name="CtlApplySettingsButton" Content="Apply" IsEnabled="False" Click="CtlApplySettingsButton_Click" />
+                                <Button Padding="3" Margin="5" Name="CtlCancelSettingsButton" Content="Cancel" IsEnabled="False" Click="CtlCancelSettingsButton_Click" />
                             </StackPanel>
                         </Grid>
                     </ContentControl>

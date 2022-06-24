@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Qualia.Controls
 {
-    sealed public partial class NetworkPresenter : BaseUserControl
+    sealed public partial class NetworkPresenter : UserControl
     {
         private const int NEURON_MAX_DIST = 40;
         private const int HORIZONTAL_OFFSET = 10;
@@ -24,8 +24,8 @@ namespace Qualia.Controls
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new();
 
-        private readonly Pen _penChange = Draw.GetPen(in ColorsX.Lime);
-        private readonly Pen _biasPen = Draw.GetPen(in ColorsX.Orange);
+        private readonly Pen _penChange = Draw.GetPen(in QColors.Lime);
+        private readonly Pen _biasPen = Draw.GetPen(in QColors.Orange);
 
         public NetworkPresenter()
         {
@@ -34,17 +34,19 @@ namespace Qualia.Controls
             _penChange.Freeze();
             _biasPen.Freeze();
 
-            SizeChanged += NetworkPresenter_OnSizeChanged;
+            SizeChanged += NetworkPresenter_SizeChanged;
         }
 
-        private void NetworkPresenter_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        private void NetworkPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             ClearCache();
         }
 
-        public int LayerDistance(NetworkDataModel model!!)
+        public int LayerDistance(NetworkDataModel model)
         {
-            return (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
+            return model == null
+                   ? throw new ArgumentNullException(nameof(model))
+                   : (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
         }
 
         private float VerticalDistance(int count)
@@ -266,7 +268,7 @@ namespace Qualia.Controls
                                     var point1 = _coordinator[neuronModel1];
                                     var point2 = _coordinator[neuronModel2];
 
-                                    CtlCanvas.DrawLine(pen, ref point1, ref point2);
+                                    CtlPresenter.DrawLine(pen, ref point1, ref point2);
                                     prevNeuronModel = neuronModel1;
                                 }
                             }
@@ -318,7 +320,7 @@ namespace Qualia.Controls
 
                     if (neuronModel.IsBias)
                     {
-                        CtlCanvas.DrawEllipse(Brushes.Orange, _biasPen, ref centerPoint, BIAS_RADIUS, BIAS_RADIUS);
+                        CtlPresenter.DrawEllipse(Brushes.Orange, _biasPen, ref centerPoint, BIAS_RADIUS, BIAS_RADIUS);
                     }
 
                     var radius = NEURON_RADIUS;
@@ -327,7 +329,7 @@ namespace Qualia.Controls
                     {
                         if (neuronModel.Id == networkModel.TargetOutput)
                         {
-                            brush = Draw.GetBrush(in ColorsX.Yellow);
+                            brush = Draw.GetBrush(in QColors.Yellow);
                         }
 
                         if (neuronModel.Id == output)
@@ -336,7 +338,7 @@ namespace Qualia.Controls
                         }
                     }
 
-                    CtlCanvas.DrawEllipse(brush, pen, ref centerPoint, radius, radius);  
+                    CtlPresenter.DrawEllipse(brush, pen, ref centerPoint, radius, radius);  
                 }
 
                 neuronModel = neuronModel.Next;
@@ -345,7 +347,7 @@ namespace Qualia.Controls
 
         private void Render(bool fullState, NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
         {
-            CtlCanvas.Clear();
+            CtlPresenter.Clear();
 
             if (networkModel == null)
             {
@@ -354,33 +356,32 @@ namespace Qualia.Controls
 
             //lock (Main.ApplyChangesLocker)
             {
-                if (networkModel.Layers.Count == 0)
+                if (networkModel.Layers.Count > 0)
                 {
-                    return;
-                }
+                    var lastLayerModel = networkModel.Layers.Last;
 
-                var lastLayerModel = networkModel.Layers.Last;
-
-                var layerModel = networkModel.Layers.First;
-                while (layerModel != lastLayerModel)
-                {
-                    DrawLayersLinks(fullState,
-                                    networkModel,
-                                    layerModel,
-                                    layerModel.Next,
-                                    isUseWeightsColors,
-                                    isOnlyChangedWeights,
-                                    isHighlightChangedWeights,
-                                    isShowOnlyUnchangedWeights);
+                    var layerModel = networkModel.Layers.First;
+                    while (layerModel != lastLayerModel)
+                    {
+                        DrawLayersLinks(fullState,
+                                        networkModel,
+                                        layerModel,
+                                        layerModel.Next,
+                                        isUseWeightsColors,
+                                        isOnlyChangedWeights,
+                                        isHighlightChangedWeights,
+                                        isShowOnlyUnchangedWeights);
                     
-                    layerModel = layerModel.Next;
-                }
+                        layerModel = layerModel.Next;
+                    }
 
-                layerModel = networkModel.Layers.First;
-                while (layerModel != null)
-                {
-                    DrawLayerNeurons(fullState, networkModel, layerModel);
-                    layerModel = layerModel.Next;
+                    layerModel = networkModel.Layers.First;
+                    while (layerModel != null)
+                    {
+                        DrawLayerNeurons(fullState, networkModel, layerModel);
+
+                        layerModel = layerModel.Next;
+                    }
                 }
             }
         }

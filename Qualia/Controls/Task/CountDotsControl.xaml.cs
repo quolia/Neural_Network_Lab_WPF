@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class CountDotsControl : BaseUserControl
+    sealed public partial class CountDotsControl : UserControl, IConfigParam
     {
         private event Action OnChange = delegate { };
 
@@ -18,7 +18,7 @@ namespace Qualia.Controls
         public int MaxNumber => (int)CtlTask_CountDots_MaxNumber.Value;
         public int MinNumber => (int)CtlTask_CountDots_MinNumber.Value;
 
-        private void Parameter_OnChanged()
+        private void Changed()
         {
             if (IsValid())
             {
@@ -41,9 +41,9 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
-        public void RemoveFromConfig()
+        public void VanishConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.VanishConfig());
         }
 
         public bool IsValid()
@@ -66,7 +66,7 @@ namespace Qualia.Controls
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Parameter_OnChanged));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Changed));
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
