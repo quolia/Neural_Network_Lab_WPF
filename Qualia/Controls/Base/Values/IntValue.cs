@@ -89,7 +89,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config.Extend(this);
+            _config = config;//.Extend(this);
         }
 
         public void LoadConfig()

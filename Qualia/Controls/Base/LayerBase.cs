@@ -23,7 +23,7 @@ namespace Qualia.Controls
             NetworkUI_OnChanged = onNetworkUIChanged;
 
             Id = UniqId.GetNextId(id);
-            Config = config.Extend(Id);
+            Config = config.ExtendWithId(Id);
         }
 
         public void RefreshOrdinalNumbers()

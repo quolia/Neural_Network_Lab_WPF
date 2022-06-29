@@ -34,7 +34,7 @@ namespace Qualia.Controls
             Id = UniqId.GetNextId(id);
             if (config != null)
             {
-                Config = config.Extend(Id);
+                Config = config.ExtendWithId(Id);
             }            
         }
 

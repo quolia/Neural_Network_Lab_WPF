@@ -98,8 +98,8 @@ namespace Qualia.Controls
             Top = Config.Main.Get(Constants.Param.ScreenTop, 0);
             Left = Config.Main.Get(Constants.Param.ScreenLeft, 0);
             Topmost = Config.Main.Get(Constants.Param.OnTop, false);
-            DataWidth.Width = new(Config.Main.Get(Constants.Param.DataWidth, 100));
-            NetworkHeight.Height = new(Config.Main.Get(Constants.Param.NetworkHeight, 200));
+            DataWidth.Width = new(Config.Main.Get(Constants.Param.DataWidth, 200));
+            NetworkHeight.Height = new(Config.Main.Get(Constants.Param.NetworkHeight, 500));
 
             WindowState = WindowState.Maximized;
 

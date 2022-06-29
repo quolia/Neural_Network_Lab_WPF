@@ -47,7 +47,6 @@
             </Grid>
         </ScrollViewer>
 
-
         <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" SnapsToDevicePixels="True" IsEnabled="False" />
 
         <Grid Grid.Column="2">
@@ -109,7 +108,5 @@
                 </TabItem>
             </TabControl>
         </Grid>
-        
-
     </Grid>
 </local:WindowResizeControl>
