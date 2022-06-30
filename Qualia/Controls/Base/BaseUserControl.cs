@@ -15,29 +15,29 @@ namespace Qualia.Controls
 
         }
 
-        public bool IsValid()
+        public virtual bool IsValid()
         {
             return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
-        public void SetConfig(Config config)
+        public virtual void SetConfig(Config config)
         {
             _config = config.Extend(Name);
 
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(_config));
         }
 
-        public void LoadConfig()
+        public virtual void LoadConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
         }
 
-        public void SaveConfig()
+        public virtual void SaveConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
-        public void RemoveFromConfig()
+        public virtual void RemoveFromConfig()
         {
             _config.Remove(Name);
 

@@ -36,11 +36,11 @@ namespace Qualia.Controls
             CtlInputDataFunction.Initialize(defaultFunctionName: nameof(InputDataFunction.FlatRandom), defaultParamValue: 1);
 
             SizeChanged += Presenter_OnSizeChanged;
-            CtlTaskFunction.SetChangeEvent(Task_OnChanged);
+            CtlTaskFunction.SetChangeEvent(TaskFunction_OnChanged);
             CtlInputDataFunction.SetChangeEvent(InputDataFunction_OnChanged);
         }
 
-        private void Task_OnChanged()
+        private void TaskFunction_OnChanged()
         {
             if (CtlTaskFunction.SelectedItem == null)
             {
@@ -49,13 +49,23 @@ namespace Qualia.Controls
 
             TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
 
+            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+
+            TaskFunction.InputDataFunction = CtlInputDataFunction.Fill<InputDataFunction>(taskFunctionConfig);
+
             _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();
-            TaskFunction.VisualControl.SetChangeEvent(TaskParameter_OnChanged);
 
             CtlHolder.Children.Clear();
+            CtlHolder.Children.Add(TaskFunction.VisualControl.GetVisualControl());
 
-            var control = TaskFunction.VisualControl.GetVisualControl();
-            CtlHolder.Children.Add(control);
+            CtlInputDataFunction.SetConfig(taskFunctionConfig);
+            CtlInputDataFunction.LoadConfig();
+            //CtlInputDataFunction.SetChangeEvent(InputDataFunction_OnChanged);
+
+            TaskFunction.VisualControl.SetConfig(taskFunctionConfig);   
+            TaskFunction.VisualControl.LoadConfig();
+            TaskFunction.VisualControl.SetChangeEvent(TaskParameter_OnChanged);
+
 
             _onTaskChanged?.TaskChanged();
         }
@@ -67,7 +77,11 @@ namespace Qualia.Controls
                 return;
             }
 
-            TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();// InputDataFunction.GetInstance(CtlInputDataFunction);
+            TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+
+            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+            CtlInputDataFunction.SetConfig(taskFunctionConfig);
+            CtlInputDataFunction.LoadConfig();
 
             //var inputDataFunctionConfig = config.Extend(CtlInputDataFunction.SelectedItem);
             //TaskFunction.InputDataFunctionParam = Config.Main.GetString(Constants.Param.);
@@ -81,25 +95,17 @@ namespace Qualia.Controls
             }
         }
 
-        public void LoadConfig(Config config, INetworkTaskChanged taskChanged)
+        public override void SetConfig(Config config)
         {
-            TaskFunction = CtlTaskFunction.Fill<TaskFunction>(config);
-            var taskFunctionConfig = config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+            _config = config;
+            CtlTaskFunction.SetConfig(_config);
+        }
 
-            TaskFunction.InputDataFunction = CtlInputDataFunction.Fill<InputDataFunction>(taskFunctionConfig);
+        public void LoadConfig(INetworkTaskChanged taskChanged)
+        {
+            TaskFunction = CtlTaskFunction.Fill<TaskFunction>(_config);
 
-            _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();
-
-            CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(TaskFunction.VisualControl.GetVisualControl());
-
-            CtlInputDataFunction.SetConfig(taskFunctionConfig);
-            CtlInputDataFunction.LoadConfig();
-            CtlInputDataFunction.SetChangeEvent(InputDataFunction_OnChanged);
-
-            TaskFunction.VisualControl.SetConfig(taskFunctionConfig);
-            TaskFunction.VisualControl.LoadConfig();
-            TaskFunction.VisualControl.SetChangeEvent(TaskParameter_OnChanged);
+            //CtlInputDataFunction.SetChangeEvent(InputDataFunction_OnChanged);
 
             _onTaskChanged = taskChanged;
             TaskParameter_OnChanged();
@@ -116,29 +122,29 @@ namespace Qualia.Controls
             _onTaskChanged.TaskParameter_OnChanged();
         }
 
-        public void SaveConfig(Config config)
+        public override void SaveConfig()
         {
-            config.FlushToDrive();
-            return;
-
-            if (config is null)
+            //_config.FlushToDrive();
+            //return;
+            
+            if (_config is null)
             {
-                throw new ArgumentNullException(nameof(config));   
+                throw new InvalidOperationException(nameof(_config));
             }
 
-            CtlTaskFunction.SetConfig(config);
+            //CtlTaskFunction.SetConfig(config);
 
-            var taskFunctionConfig = config.Extend(CtlTaskFunction);
-            TaskFunction.VisualControl.SetConfig(config);// taskFunctionConfig);
+            //var taskFunctionConfig = config.Extend(CtlTaskFunction);
+            //TaskFunction.VisualControl.SetConfig(config);// taskFunctionConfig);
 
             //var parametersConfig = config.Extend(CtlTaskFunction);
-            CtlInputDataFunction.SetConfig(config);// parametersConfig);
+            //CtlInputDataFunction.SetConfig(config);// parametersConfig);
 
             CtlTaskFunction.SaveConfig();
             TaskFunction.VisualControl.SaveConfig();
             CtlInputDataFunction.SaveConfig();
 
-            config.FlushToDrive();
+            _config.FlushToDrive();
             //parametersConfig.FlushToDrive();
         }
 

@@ -9,7 +9,7 @@ namespace Qualia.Controls
         public FunctionControl Initialize(string defaultFunctionName, double? defaultParamValue = null)
         {
             CtlFunction.Initialize(defaultFunctionName);
-            CtlFunctionParam.Initialize(defaultValue: defaultParamValue);
+            CtlParam.Initialize(defaultValue: defaultParamValue);
 
             return this;
         }
@@ -24,21 +24,32 @@ namespace Qualia.Controls
             OnChanged();
         }
 
-        public new void SetConfig(Config config)
+        public override void SetConfig(Config config)
         {
+            _config = config;
+            
             config = config.Extend(Name);
 
             CtlFunction.SetConfig(config);
-            CtlFunctionParam.SetConfig(config.Extend(SelectedFunction.Name));
+            CtlParam.SetConfig(config.Extend(SelectedFunction.Name));
         }
 
-        public new void LoadConfig()
+        public override void LoadConfig()
         {
-            CtlFunction.LoadConfig();
-            CtlFunctionParam.LoadConfig();
+            CtlFunction.SelectionChanged -= Function_OnSelected;
 
-            //CtlFunction.SelectionChanged += SelectBox_SelectionChanged;
+            CtlFunction.LoadConfig();
+            CtlParam.LoadConfig();
+
+            CtlFunction.SelectionChanged += Function_OnSelected;
         }
+
+        public override void SaveConfig()
+        {
+            _config.Set(Name, CtlFunction.SelectedItem.ToString());
+            CtlParam.SaveConfig();
+        }
+
 
         public T Fill<T>(Config config) where T : class
         {
@@ -58,7 +69,7 @@ namespace Qualia.Controls
                 }
 
                 var selectedFunctionName = CtlFunction.SelectedItem.ToString();
-                return new SelectedFunction(selectedFunctionName, CtlFunctionParam.Value);
+                return new SelectedFunction(selectedFunctionName, CtlParam.Value);
             }
         }
         
@@ -70,8 +81,8 @@ namespace Qualia.Controls
 
     public class SelectedFunction
     {
-        public string Name;
-        public double Param;
+        public readonly string Name;
+        public readonly double Param;
 
         public SelectedFunction(string name, double param)
         {

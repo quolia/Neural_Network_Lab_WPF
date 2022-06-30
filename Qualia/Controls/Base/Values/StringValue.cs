@@ -13,9 +13,9 @@ namespace Qualia.Controls
 
         public string DefaultValue { get; set; }
 
-        public StringValueControl SetDefaultValue(string value)
+        public StringValueControl Initialize(string defaultValue)
         {
-            DefaultValue = value;
+            DefaultValue = defaultValue;
             return this;
         }
 

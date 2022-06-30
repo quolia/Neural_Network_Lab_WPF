@@ -174,7 +174,9 @@ namespace Qualia.Controls
 
             _networksManager = new(CtlTabs, fileName, NetworkUI_OnChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
-            CtlInputDataPresenter.LoadConfig(_networksManager.Config, this);
+            
+            CtlInputDataPresenter.SetConfig(_networksManager.Config);
+            CtlInputDataPresenter.LoadConfig(this);
 
             ReplaceNetworksManagerControl(_networksManager);
             if (!_networksManager.IsValid())
@@ -206,7 +208,8 @@ namespace Qualia.Controls
 
             if (_networksManager != null)
             {
-                CtlInputDataPresenter.SaveConfig(_networksManager.Config);
+                //CtlInputDataPresenter.SaveConfig(_networksManager.Config);
+                CtlInputDataPresenter.SaveConfig();
 
                 if (!_networksManager.IsValid())
                 {
@@ -940,7 +943,9 @@ namespace Qualia.Controls
             if (networksManager.Config != null)
             {
                 _networksManager = networksManager;
-                CtlInputDataPresenter.LoadConfig(_networksManager.Config, this);
+
+                CtlInputDataPresenter.SetConfig(_networksManager.Config);
+                CtlInputDataPresenter.LoadConfig(this);
 
                 ReplaceNetworksManagerControl(_networksManager);
                 if (!_networksManager.IsValid())

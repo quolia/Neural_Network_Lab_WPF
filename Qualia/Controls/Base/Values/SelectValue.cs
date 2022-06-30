@@ -34,6 +34,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
         {
+            Text = SelectedItem?.ToString();
             _onChanged();
         }
         public bool IsValid() => !IsNull();

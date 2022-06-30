@@ -235,3 +235,168 @@ Application started.
 2022-06-30 07:02:45
 Application started.
 
+2022-06-30 07:06:51
+Application started.
+
+2022-06-30 07:07:11
+Application started.
+
+2022-06-30 07:11:20
+Application started.
+
+2022-06-30 07:13:16
+Application started.
+
+2022-06-30 07:15:02
+Application started.
+
+2022-06-30 07:15:53
+Application started.
+
+2022-06-30 07:16:38
+Application started.
+
+2022-06-30 07:19:24
+Application started.
+
+2022-06-30 07:50:50
+Application started.
+
+2022-06-30 07:51:57
+Application started.
+
+2022-06-30 07:54:51
+Application started.
+
+2022-06-30 08:02:36
+Application started.
+
+2022-06-30 08:03:15
+Application started.
+
+2022-06-30 08:03:53
+Application started.
+
+2022-06-30 08:05:41
+System.ArgumentNullException
+Value cannot be null.
+Parameter name: value
+   at Qualia.Tools.Config.Set(String paramName, String value) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 210
+   at Qualia.Tools.Config.Get(String paramName, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 114
+   at Qualia.Controls.StringValueControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\Values\StringValue.cs:line 63
+   at Qualia.Controls.MNISTControl.<>c.<LoadConfig>b__11_0(IConfigParam param) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\MNISTControl.xaml.cs:line 42
+   at Qualia.Tools.Range.ForEach[T](IEnumerable`1 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 23
+   at Qualia.Controls.MNISTControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\MNISTControl.xaml.cs:line 42
+   at Qualia.Tools.TaskFunction.MNISTNumbers.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 179
+   at Qualia.Controls.InputDataPresenter.Task_OnChanged() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\InputDataPresenter.xaml.cs:line 66
+   at System.Action.Invoke()
+   at Qualia.Controls.SelectValueControl.Value_OnChanged(Object sender, SelectionChangedEventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\Values\SelectValue.cs:line 38
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.ComboBox.OnSelectionChanged(SelectionChangedEventArgs e)
+   at System.Windows.Controls.Primitives.Selector.SelectionChanger.End()
+   at System.Windows.Controls.Primitives.Selector.SelectionChanger.SelectJustThisItem(ItemInfo info, Boolean assumeInItemsCollection)
+   at System.Windows.Controls.ComboBox.NotifyComboBoxItemMouseUp(ComboBoxItem comboBoxItem)
+   at System.Windows.Controls.ComboBoxItem.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+
+2022-06-30 08:14:52
+Application started.
+
+2022-06-30 08:15:42
+Application started.
+
+2022-06-30 08:16:43
+Application started.
+
+2022-06-30 08:22:14
+Application started.
+
+2022-06-30 08:25:23
+Application started.
+
+2022-06-30 08:29:29
+Application started.
+
+2022-06-30 08:52:16
+Application started.
+
+2022-06-30 09:33:47
+Application started.
+
+2022-06-30 09:36:34
+Application started.
+
+2022-06-30 09:44:28
+Application started.
+
+2022-06-30 09:45:58
+Application started.
+
+2022-06-30 09:46:07
+Application started.
+
+2022-06-30 09:47:43
+Application started.
+
+2022-06-30 09:51:38
+Application started.
+
+2022-06-30 09:57:01
+Application started.
+
+2022-06-30 09:58:52
+Application started.
+
+2022-06-30 09:59:22
+Application started.
+
+2022-06-30 10:00:04
+Application started.
+
+2022-06-30 10:01:22
+Application started.
+
+2022-06-30 10:03:46
+Application started.
+
+2022-06-30 10:05:11
+Application started.
+
+2022-06-30 10:05:58
+Application started.
+
+2022-06-30 10:07:07
+Application started.
+
+2022-06-30 10:07:31
+Application started.
+
