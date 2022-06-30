@@ -94,7 +94,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            var value = _config.Get(this, DefaultValue);
+            var value = _config.Get(Name, DefaultValue);
 
             if (value < MinimumValue)
             {
@@ -111,12 +111,12 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(this, Value);
+            _config.Set(Name, Value);
         }
 
         public void RemoveFromConfig()
         {
-            _config.Remove(this);
+            _config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)

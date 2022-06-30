@@ -22,7 +22,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config.Extend(this);
+            _config = config.Extend(Name);
 
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(_config));
         }
@@ -39,7 +39,7 @@ namespace Qualia.Controls
 
         public void RemoveFromConfig()
         {
-            _config.Remove(this);
+            _config.Remove(Name);
 
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
         }

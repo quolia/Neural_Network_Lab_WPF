@@ -26,6 +26,8 @@ namespace Qualia.Controls
 
         public new void SetConfig(Config config)
         {
+            config = config.Extend(Name);
+
             CtlFunction.SetConfig(config);
             CtlFunctionParam.SetConfig(config.Extend(SelectedFunction.Name));
         }
@@ -43,7 +45,7 @@ namespace Qualia.Controls
             //_setConfig(config);
             //LoadConfig();
 
-            return CtlFunction.Fill<T>(config);
+            return CtlFunction.Fill<T>(config, Name);
         }
 
         public SelectedFunction SelectedFunction

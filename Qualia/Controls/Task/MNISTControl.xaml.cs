@@ -21,8 +21,8 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public int MaxNumber => (int)CtlTask_MNIST_MaxNumber.Value;
-        public int MinNumber => (int)CtlTask_MNIST_MinNumber.Value;
+        public int MaxNumber => (int)CtlMaxNumber.Value;
+        public int MinNumber => (int)CtlMinNumber.Value;
 
         private void Parameter_OnChanged()
         {
@@ -41,17 +41,17 @@ namespace Qualia.Controls
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
-            var fileNameImagesBin = Extension.GetDirectoryName(CtlTask_MNIST_ImagesPath.Text,
+            var fileNameImagesBin = Extension.GetDirectoryName(CtlImagesPath.Text,
                                                                App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "images.bin";
             
             if (!File.Exists(fileNameImagesBin))
             {
-                if (!File.Exists(CtlTask_MNIST_ImagesPath.Text))
+                if (!File.Exists(CtlImagesPath.Text))
                 {
-                    CtlTask_MNIST_ImagesPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
+                    CtlImagesPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
                 }
 
-                fileNameImagesBin = Extension.GetDirectoryName(CtlTask_MNIST_ImagesPath.Text,
+                fileNameImagesBin = Extension.GetDirectoryName(CtlImagesPath.Text,
                                                                App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "images.bin";
 
                 if (!File.Exists(fileNameImagesBin))
@@ -61,12 +61,12 @@ namespace Qualia.Controls
                     {
                         try
                         {
-                            if (!File.Exists(CtlTask_MNIST_ImagesPath.Text))
+                            if (!File.Exists(CtlImagesPath.Text))
                             {
-                                throw new Exception($"Cannot find file '{CtlTask_MNIST_ImagesPath.Text}'.");
+                                throw new Exception($"Cannot find file '{CtlImagesPath.Text}'.");
                             }
 
-                            Decompress(CtlTask_MNIST_ImagesPath.Text, fileNameImagesBin);
+                            Decompress(CtlImagesPath.Text, fileNameImagesBin);
                         }
                         catch (Exception ex)
                         {
@@ -81,22 +81,22 @@ namespace Qualia.Controls
             var fileNameImagesGz = Extension.GetDirectoryName(fileNameImagesBin,
                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
 
-            CtlTask_MNIST_ImagesPath.Text = fileNameImagesGz;
+            CtlImagesPath.Text = fileNameImagesGz;
 
             //
 
 
-            var fileNameLabelsBin = Extension.GetDirectoryName(CtlTask_MNIST_LabelsPath.Text,
+            var fileNameLabelsBin = Extension.GetDirectoryName(CtlLabelsPath.Text,
                                                                App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "labels.bin";
 
             if (!File.Exists(fileNameLabelsBin))
             {
-                if (!File.Exists(CtlTask_MNIST_LabelsPath.Text))
+                if (!File.Exists(CtlLabelsPath.Text))
                 {
-                    CtlTask_MNIST_LabelsPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
+                    CtlLabelsPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
                 }
 
-                fileNameLabelsBin = Extension.GetDirectoryName(CtlTask_MNIST_LabelsPath.Text,
+                fileNameLabelsBin = Extension.GetDirectoryName(CtlLabelsPath.Text,
                                                                App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "labels.bin";
 
                 if (!File.Exists(fileNameLabelsBin))
@@ -106,12 +106,12 @@ namespace Qualia.Controls
                     {
                         try
                         {
-                            if (!File.Exists(CtlTask_MNIST_LabelsPath.Text))
+                            if (!File.Exists(CtlLabelsPath.Text))
                             {
-                                throw new Exception($"Cannot find file '{CtlTask_MNIST_LabelsPath.Text}'.");
+                                throw new Exception($"Cannot find file '{CtlLabelsPath.Text}'.");
                             }
 
-                            Decompress(CtlTask_MNIST_LabelsPath.Text, fileNameLabelsBin);
+                            Decompress(CtlLabelsPath.Text, fileNameLabelsBin);
                         }
                         catch (Exception ex)
                         {
@@ -126,7 +126,7 @@ namespace Qualia.Controls
             var fileNameLabelsGz = Extension.GetDirectoryName(fileNameLabelsBin,
                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
 
-            CtlTask_MNIST_LabelsPath.Text = fileNameLabelsGz;
+            CtlLabelsPath.Text = fileNameLabelsGz;
         }
 
         private void LoadImages(string fileName)
@@ -292,12 +292,12 @@ namespace Qualia.Controls
 
         private void BrowseImagesPath_OnClick(object sender, RoutedEventArgs e)
         {
-            BrowseFile(CtlTask_MNIST_ImagesPath, "images.bin");
+            BrowseFile(CtlImagesPath, "images.bin");
         }
 
         private void BrowseLabelsPath_OnClick(object sender, RoutedEventArgs e)
         {
-            BrowseFile(CtlTask_MNIST_LabelsPath, "labels.bin");
+            BrowseFile(CtlLabelsPath, "labels.bin");
         }
 
         private void BrowseFile(TextBox textBox, string targetFileName)

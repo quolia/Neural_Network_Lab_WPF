@@ -63,12 +63,12 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(this, SelectedItem.ToString());
+            _config.Set(Name, SelectedItem.ToString());
         }
 
         public void RemoveFromConfig()
         {
-            _config.Remove(this);
+            _config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)

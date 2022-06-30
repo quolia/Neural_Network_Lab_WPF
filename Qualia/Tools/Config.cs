@@ -66,16 +66,7 @@ namespace Qualia.Tools
         public Config Extend(SelectValueControl select)
         {
             return Extend(select.Name)
-                  .Extend((select.SelectedItem ?? select.DefaultValue).ToString());
-        }
-
-        public Config Extend(FunctionControl function)
-        {
-            return Extend(function.CtlFunction);
-        }
-        public Config Extend(FrameworkElement element)
-        {
-            return Extend(element.Name);
+                  .Extend(select.Value);
         }
 
         public Config ExtendWithId(long extender)
@@ -102,12 +93,6 @@ namespace Qualia.Tools
             return name + paramName;
         }
 
-
-        public string Get(FrameworkElement paramName, string defaultValue) 
-        {
-            return Get(paramName.Name, defaultValue);
-        }
-
         public string Get(Constants.Param paramName, string defaultValue) 
         {
             return Get(ParamToStr(paramName), defaultValue);
@@ -116,10 +101,11 @@ namespace Qualia.Tools
         public string Get(string paramName, string defaultValue)
         {
             paramName = PrepareParamName(paramName);
+            var paramFullName = GetFullParamName(paramName);
 
             var values = GetLoaded();
 
-            if (values.TryGetValue(GetFullParamName(paramName), out string value))
+            if (values.TryGetValue(paramFullName, out string value))
             {
                 Set(paramName, value);
                 return value;
@@ -134,11 +120,6 @@ namespace Qualia.Tools
             return Get(ParamToStr(paramName), defaultValue);
         }
 
-        public int Get(FrameworkElement paramName, int defaultValue)
-        {
-            return Get(paramName.Name, defaultValue);
-        }
-
         public int Get(string paramName, int defaultValue)
         {
             return (int)Get(paramName, (long)defaultValue);
@@ -149,23 +130,12 @@ namespace Qualia.Tools
             return Get(ParamToStr(paramName), defaultValue);
         }
 
-        public long Get(FrameworkElement paramName, long defaultValue)
-        {
-            return Get(paramName.Name, defaultValue);
-        }
-
         public long Get(string paramName, long defaultValue)
         {
-            long value = Converter.TextToInt(Get(paramName,
-                                                 Converter.IntToText(defaultValue)),
+            long value = Converter.TextToInt(Get(paramName, Converter.IntToText(defaultValue)),
                                              defaultValue);
             Set(paramName, value);
             return value;
-        }
-
-        public bool Get(FrameworkElement paramName, bool defaultValue)
-        {
-            return Get(paramName.Name, defaultValue);
         }
 
         public bool Get(Constants.Param paramName, bool defaultValue)
@@ -176,11 +146,6 @@ namespace Qualia.Tools
         public bool Get(string paramName, bool defaultValue)
         {
             return 1 == Get(paramName, (long)(defaultValue ? 1 : 0));
-        }
-
-        public double Get(FrameworkElement paramName, double defaultValue)
-        {
-            return Get(paramName.Name, defaultValue);
         }
 
         public double Get(Constants.Param paramName, double defaultValue)
@@ -214,11 +179,6 @@ namespace Qualia.Tools
             Remove(ParamToStr(paramName));
         }
 
-        public void Remove(FrameworkElement paramName)
-        {
-            Remove(paramName.Name);
-        }
-
         public void Remove(string paramName)
         {
             paramName = PrepareParamName(paramName);
@@ -233,11 +193,6 @@ namespace Qualia.Tools
 
             values = GetLoaded();
             values.Remove(GetFullParamName(paramName));
-        }
-
-        public void Set(FrameworkElement paramName, string value)
-        {
-            Set(paramName.Name, value);
         }
 
         public void Set(Constants.Param paramName, string value)
@@ -261,12 +216,7 @@ namespace Qualia.Tools
             var valuesLoaded = GetLoaded();
             valuesLoaded[paramName] = value;
 
-            SaveValues(valuesToSave);//.Merge(valuesLoaded));
-        }
-
-        public void Set(FrameworkElement paramName, double value)
-        {
-            Set(paramName.Name, Converter.DoubleToText(value));
+            SaveValues(valuesToSave);
         }
 
         public void Set(Constants.Param paramName, double value)
@@ -297,10 +247,6 @@ namespace Qualia.Tools
         public void Set(string paramName, bool value)
         {
             Set(paramName, value ? 1 : 0);
-        }
-        public void Set(FrameworkElement paramName, bool value)
-        {
-            Set(paramName.Name, value ? 1 : 0);
         }
 
         public void Set<T>(Constants.Param paramName, IEnumerable<T> list)

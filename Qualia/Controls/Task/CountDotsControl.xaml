@@ -18,10 +18,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:TextControl Content="Input count:" />
-        <local:IntValueControl Grid.Column="1" x:Name="CtlTask_CountDots_InputCount" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:IntValueControl Grid.Column="1" x:Name="CtlInputCount" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
         <local:TextControl Grid.Row="1" Content="Min number:" />
-        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlTask_CountDots_MinNumber" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
+        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMinNumber" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
         <local:TextControl Grid.Row="2" Content="Max number:" />
-        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlTask_CountDots_MaxNumber" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxNumber" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
     </Grid>
 </local:BaseUserControl>

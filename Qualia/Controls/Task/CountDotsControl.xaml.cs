@@ -14,9 +14,9 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public int InputCount => (int)CtlTask_CountDots_InputCount.Value;
-        public int MaxNumber => (int)CtlTask_CountDots_MaxNumber.Value;
-        public int MinNumber => (int)CtlTask_CountDots_MinNumber.Value;
+        public int InputCount => (int)CtlInputCount.Value;
+        public int MaxNumber => (int)CtlMaxNumber.Value;
+        public int MinNumber => (int)CtlMinNumber.Value;
 
         private void Parameter_OnChanged()
         {
@@ -50,12 +50,12 @@ namespace Qualia.Controls
         {
             if (this.FindVisualChildren<IConfigParam>().All(param => param.IsValid()))
             {
-                if (CtlTask_CountDots_InputCount.Value >= CtlTask_CountDots_MaxNumber.Value)
+                if (CtlInputCount.Value >= CtlMaxNumber.Value)
                 {
                     return true;
                 }
 
-                CtlTask_CountDots_InputCount.InvalidateValue();
+                CtlInputCount.InvalidateValue();
             }
 
             return false;

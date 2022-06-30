@@ -60,17 +60,17 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            Value = _config.Get(this, DefaultValue);
+            Value = _config.Get(Name, DefaultValue);
         }
 
         public void SaveConfig()
         {
-            _config.Set(this, Value);
+            _config.Set(Name, Value);
         }
 
         public void RemoveFromConfig()
         {
-            _config.Remove(this);
+            _config.Remove(Name);
         }
 
         public void SetChangeEvent(Action onChanged)

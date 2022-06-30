@@ -135,35 +135,33 @@ namespace Qualia.Tools
         }
 
         /// <returns>Selected function instance.</returns>
-        public static T Fill<T>(this SelectValueControl comboBox, Config config, string defaultValue = null) where T : class
+        public static T Fill<T>(this SelectValueControl comboBox, Config config, string paramName = null) where T : class
         {
-            return Initializer.FillComboBox<T>(comboBox, config, defaultValue);
+            return Initializer.FillComboBox<T>(comboBox, config, paramName);
         }
 
         static class Initializer
         {
-            public static T FillComboBox<T>(SelectValueControl comboBox, Config config, string defaultValue = null) where T : class
+            public static T FillComboBox<T>(SelectValueControl comboBox, Config config, string paramName) where T : class
             {
-                if (defaultValue == null)
-                {
-                    defaultValue = comboBox.DefaultValue;
-                }
 
                 var items = BaseFunction<T>.GetItems();
-                FillComboBox(items, comboBox, config, defaultValue);
+                FillComboBox(items, comboBox, config, paramName);
 
                 comboBox.ToolTip = string.Join("\n\n", BaseFunction<T>.GetItemsWithDescription());
 
                 return BaseFunction<T>.GetInstance(comboBox);
             }
 
-            private static void FillComboBox(Func<string[]> getItemsFunc, SelectValueControl comboBox, Config config, string defaultValue = null)
+            private static void FillComboBox(Func<string[]> getItemsFunc, SelectValueControl comboBox, Config config, string paramName)
             {
-                FillComboBox(getItemsFunc(), comboBox, config, defaultValue);
+                FillComboBox(getItemsFunc(), comboBox, config, paramName);
             }
 
-            private static void FillComboBox(in string[] items, SelectValueControl comboBox, Config config, string defaultValue = null)
+            private static void FillComboBox(in string[] items, SelectValueControl comboBox, Config config, string paramName)
             {
+                //comboBox.SetConfig(config.Extend(comboBox.Name));
+
                 comboBox.Items.Clear();
 
                 foreach (var item in items)
@@ -171,7 +169,14 @@ namespace Qualia.Tools
                     comboBox.Items.Add(item);
                 }
 
-                var selectedItem = config.Get(comboBox, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : (string)null);
+                var defaultValue = comboBox.DefaultValue;
+
+                if (string.IsNullOrEmpty(paramName))
+                {
+                    paramName = comboBox.Name;
+                }
+
+                var selectedItem = config.Get(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : (string)null);
 
                 if (comboBox.Items.Count > 0)
                 {

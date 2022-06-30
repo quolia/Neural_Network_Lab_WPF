@@ -20,16 +20,16 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:TextControl Grid.Row="0" Content="Min number:" />
-        <local:IntValueControl Grid.Row="0" Grid.Column="1" x:Name="CtlTask_MNIST_MinNumber" MinimumValue="0" MaximumValue="8" DefaultValue="0" />
+        <local:IntValueControl Grid.Row="0" Grid.Column="1" x:Name="CtlMinNumber" MinimumValue="0" MaximumValue="8" DefaultValue="0" />
         <local:TextControl Grid.Row="1" Content="Max number:" />
-        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlTask_MNIST_MaxNumber" MinimumValue="1" MaximumValue="9" DefaultValue="9" />
+        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMaxNumber" MinimumValue="1" MaximumValue="9" DefaultValue="9" />
         <local:TextControl Grid.Row="2" Grid.ColumnSpan="2" Content="Path to train images (*.gz):" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <local:StringValueControl x:Name="CtlTask_MNIST_ImagesPath" />
+            <local:StringValueControl x:Name="CtlImagesPath" />
             <Button Name="CtlBrowseImagesPath" Grid.Column="1" Content="Browse" Click="BrowseImagesPath_OnClick" />
         </Grid>
         <local:TextControl Grid.Row="4" Grid.ColumnSpan="2" Content="Path to labels (*.gz):" />
@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <local:StringValueControl x:Name="CtlTask_MNIST_LabelsPath" />
+            <local:StringValueControl x:Name="CtlLabelsPath" />
             <Button Name="CtlBrowseLabelsPath" Grid.Column="1" Content="Browse" Click="BrowseLabelsPath_OnClick" />
         </Grid>
     </Grid>

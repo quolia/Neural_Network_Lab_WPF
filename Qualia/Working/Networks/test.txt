@@ -41,12 +41,8 @@ Networks:637921243549111212
 637921243549111212.SelectedLayerIndex:1
 SelectedNetworkIndex:0
 TaskFunction:CountDots
-TaskFunction.CountDots.Function:FlatRandom
-TaskFunction.CountDots.Function.FlatRandom.Task_CountDots_InputCount:10
-TaskFunction.CountDots.Function.FlatRandom.Task_CountDots_MinNumber:0
-TaskFunction.CountDots.Function.FlatRandom.Task_CountDots_MaxNumber:10
-TaskFunction.CountDots.Function.FlatRandom.FlatRandom.FunctionParam:1
-Task_CountDots_InputCount:10
-Task_CountDots_MinNumber:0
-Task_CountDots_MaxNumber:10
-TaskFunction.CountDots.FlatRandom.FunctionParam:1
+TaskFunction.CountDots.InputDataFunction:FlatRandom
+TaskFunction.CountDots.InputDataFunction.FlatRandom.FunctionParam:1
+TaskFunction.CountDots.InputCount:10
+TaskFunction.CountDots.MinNumber:0
+TaskFunction.CountDots.MaxNumber:10

@@ -19,10 +19,10 @@ namespace Qualia.Controls
                 CtlActivationFunction.Initialize(nameof(ActivationFunction.LogisticSigmoid)),
                 CtlActivationFunctionParam.Initialize(defaultValue: 1),
 
-                CtlActivationInitializeFunction.Initialize(nameof(InitializeFunction.FlatRandom)),
+                CtlActivationInitializeFunction.Initialize(nameof(InitializeFunction.Constant)),
                 CtlActivationInitializeFunctionParam.Initialize(defaultValue: 1),
 
-                CtlWeightsInitializeFunction.Initialize(nameof(InitializeFunction.FlatRandom)),
+                CtlWeightsInitializeFunction.Initialize(nameof(InitializeFunction.Skip)),
                 CtlWeightsInitializeFunctionParam.Initialize(defaultValue: 1),
 
                 CtlIsBias.Initialize(false),
@@ -65,8 +65,8 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.Skip));
-            CtlActivationInitializeFunction.Fill<InitializeFunction>(Config, nameof(InitializeFunction.Constant));
+            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config);
+            CtlActivationInitializeFunction.Fill<InitializeFunction>(Config);
             CtlActivationFunction.Fill<ActivationFunction>(Config);
 
             _configParams.ForEach(param => param.LoadConfig());
