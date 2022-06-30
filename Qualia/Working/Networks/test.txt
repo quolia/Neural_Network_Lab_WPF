@@ -42,7 +42,7 @@ Networks:637921243549111212
 SelectedNetworkIndex:0
 TaskFunction:CountDots
 TaskFunction.CountDots.InputDataFunction:Constant
-TaskFunction.CountDots.InputDataFunction.Constant.Param:1
+TaskFunction.CountDots.InputDataFunction.Constant.Param:2
 TaskFunction.CountDots.InputCount:10
 TaskFunction.CountDots.MinNumber:0
 TaskFunction.CountDots.MaxNumber:10

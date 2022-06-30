@@ -50,13 +50,16 @@ namespace Qualia.Controls
             CtlParam.SaveConfig();
         }
 
-
-        public T Fill<T>(Config config) where T : class
+        public T SetConfig<T>(Config config) where T : class
         {
-            //_setConfig(config);
-            //LoadConfig();
-
-            return CtlFunction.Fill<T>(config, Name);
+            try
+            {
+                return CtlFunction.Fill<T>(config, Name);
+            }
+            finally
+            {
+                SetConfig(config);
+            }
         }
 
         public SelectedFunction SelectedFunction
