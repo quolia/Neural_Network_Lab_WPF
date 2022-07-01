@@ -32,10 +32,10 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.AddChangeEventListener(Neuron_OnChanged));
+            _configParams.ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
         }
 
-        private void Neuron_OnChanged()
+        private void Neuron_OnChanged(Notification.ParameterChanged _)
         {
             NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
         }
@@ -51,7 +51,7 @@ namespace Qualia.Controls
             CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
-            Neuron_OnChanged();
+            Neuron_OnChanged(Notification.ParameterChanged.Unknown);
         }
 
         public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunction.GetInstance(CtlActivationInitializeFunction) : null);

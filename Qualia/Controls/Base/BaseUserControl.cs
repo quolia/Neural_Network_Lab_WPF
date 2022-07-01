@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -7,10 +8,17 @@ namespace Qualia.Controls
 {
     public partial class BaseUserControl : UserControl, IConfigParam
     {
-        public bool IsLoading;
-
         protected Config _config;
-        protected event Action _onChanged = delegate {};
+        protected List<IConfigParam> _configParams;
+        protected event Action<Notification.ParameterChanged> _onChanged = delegate {};
+
+        public Notification.ParameterChanged UIParam { get; private set; }
+
+        public BaseUserControl SetUIParam(Notification.ParameterChanged param)
+        {
+            UIParam = param;
+            return this;
+        }
 
         public BaseUserControl()
         {
@@ -19,51 +27,44 @@ namespace Qualia.Controls
 
         public virtual bool IsValid()
         {
-            return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
+            return _configParams.TrueForAll(p => p.IsValid());
         }
 
         public virtual void SetConfig(Config config)
         {
             _config = config.Extend(Name);
-
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(_config));
+            _configParams.ForEach(p => p.SetConfig(_config));
         }
 
         public virtual void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
+            _configParams.ForEach(p => p.LoadConfig());
         }
 
         public virtual void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
         }
 
         public virtual void RemoveFromConfig()
         {
             _config.Remove(Name);
-
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
+            _configParams.ForEach(p => p.RemoveFromConfig());
         }
 
-        public virtual void AddChangeEventListener(Action onChanged)
+        public virtual void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(onChanged));
+            _configParams.ForEach(p => p.SetOnChangeEvent(onChanged));
         }
 
-        public void OnChanged()
+        public void OnChanged(Notification.ParameterChanged param)
         {
-            _onChanged();
+            _onChanged(param == Notification.ParameterChanged.Fake ? UIParam : param);
         }
 
         public virtual void InvalidateValue() => throw new InvalidOperationException();
-
-        public void RemoveChangeEventListener(Action action)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

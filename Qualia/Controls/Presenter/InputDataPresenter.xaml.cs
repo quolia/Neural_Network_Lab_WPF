@@ -35,11 +35,11 @@ namespace Qualia.Controls
             CtlInputDataFunction.Initialize(defaultFunctionName: nameof(InputDataFunction.FlatRandom), defaultParamValue: 1);
 
             SizeChanged += Presenter_OnSizeChanged;
-            CtlTaskFunction.AddChangeEventListener(TaskFunction_OnChanged);
-            CtlInputDataFunction.AddChangeEventListener(InputDataFunction_OnChanged);
+            CtlTaskFunction.SetOnChangeEvent(TaskFunction_OnChanged);
+            CtlInputDataFunction.SetOnChangeEvent(InputDataFunction_OnChanged);
         }
 
-        private void TaskFunction_OnChanged()
+        private void TaskFunction_OnChanged(Notification.ParameterChanged _)
         {
             if (CtlTaskFunction.SelectedItem == null)
             {
@@ -59,7 +59,7 @@ namespace Qualia.Controls
 
             taskControl.SetConfig(taskFunctionConfig);
             taskControl.LoadConfig();
-            taskControl.AddChangeEventListener(TaskParameter_OnChanged);
+            taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
 
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(taskControl.GetVisualControl());
@@ -67,7 +67,7 @@ namespace Qualia.Controls
             _onTaskChanged?.TaskChanged();
         }
 
-        private void InputDataFunction_OnChanged()
+        private void InputDataFunction_OnChanged(Notification.ParameterChanged _)
         {
             if (CtlInputDataFunction.SelectedFunction == null)
             {
@@ -105,10 +105,10 @@ namespace Qualia.Controls
             TaskFunction = CtlTaskFunction.Fill<TaskFunction>(_config);
 
             _onTaskChanged = taskChanged;
-            TaskParameter_OnChanged();
+            TaskParameter_OnChanged(Notification.ParameterChanged.Unknown);
         }
 
-        void TaskParameter_OnChanged()
+        void TaskParameter_OnChanged(Notification.ParameterChanged _)
         {
             if (_onTaskChanged == null)
             {
@@ -121,11 +121,6 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            if (_config is null)
-            {
-                throw new InvalidOperationException(nameof(_config));
-            }
-
             CtlTaskFunction.SaveConfig();
             TaskFunction.ITaskControl.SaveConfig();
             CtlInputDataFunction.SaveConfig();
@@ -146,11 +141,6 @@ namespace Qualia.Controls
 
         public void SetInputDataAndDraw(NetworkDataModel networkModel)
         {
-            if (networkModel == null)
-            {
-                throw new ArgumentNullException(nameof(networkModel));
-            }
-
             _threshold = networkModel.InputThreshold;
             var count = networkModel.Layers.First.Neurons.CountIf(n => !n.IsBias);
 

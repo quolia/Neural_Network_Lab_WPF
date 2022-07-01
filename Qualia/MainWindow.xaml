@@ -62,8 +62,8 @@
                 </Grid.ColumnDefinitions>
                 <Menu Name="CtlMenu" Background="White">
                     <MenuItem Header="File">
-                        <MenuItem Name="CtlMainMenuNew" Header="New..." Click="MainMenuNew_OnClick" />
-                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="MainMenuLoad_OnClick" />
+                        <MenuItem Name="CtlMainMenuNew" Header="New..." />
+                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." />
                         <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="MainMenuSaveAs_OnClick" />
                     </MenuItem>
                     <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="MenuNetwork_OnSubmenuOpened">
@@ -99,10 +99,6 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button Padding="3" Margin="5" Name="CtlApplySettingsButton" Content="Apply" IsEnabled="False" Click="ApplySettingsButton_OnClick" />
-                                <Button Padding="3" Margin="5" Name="CtlCancelSettingsButton" Content="Cancel" IsEnabled="False" Click="CancelSettingsButton_OnClick" />
-                            </StackPanel>
                         </Grid>
                     </ContentControl>
                 </TabItem>

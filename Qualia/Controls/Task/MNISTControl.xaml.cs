@@ -14,8 +14,6 @@ namespace Qualia.Controls
     {
         public readonly List<MNISTImage> Images = new();
 
-        private event Action OnChange = delegate { };
-
         public MNISTControl()
         {
             InitializeComponent();
@@ -27,20 +25,20 @@ namespace Qualia.Controls
         public int MaxNumber => (int)CtlMaxNumber.Value;
         public int MinNumber => (int)CtlMinNumber.Value;
 
-        private void Parameter_OnChanged()
+        private void Parameter_OnChanged(Notification.ParameterChanged param)
         {
             if (IsValid())
             {
-                OnChange();
+                OnChanged(param);
             }
         }
 
-        public void SetConfig(Config config)
+        public override void SetConfig(Config config)
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
-        public void LoadConfig()
+        public override void LoadConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
@@ -283,12 +281,12 @@ namespace Qualia.Controls
             return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
-        public override void AddChangeEventListener(Action onChange)
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
         {
-            OnChange -= onChange;
-            OnChange += onChange;
+            _onChanged -= onChange;
+            _onChanged += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(Parameter_OnChanged));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
         }
 
         public override void InvalidateValue() => throw new InvalidOperationException();

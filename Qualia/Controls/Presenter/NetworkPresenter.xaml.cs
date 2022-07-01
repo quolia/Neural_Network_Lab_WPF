@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Qualia.Controls
 {
@@ -39,7 +40,48 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ClearCache();
+            //ClearCache();
+        }
+
+        public void OnSizeChanged(NetworksManager networksManager,
+                                  bool isRunning,
+                                  bool isUseWeightsColors,
+                                  bool isOnlyChangedWeights,
+                                  bool isHighlightChangedWeights,
+                                  bool isShowOnlyUnchangedWeights)
+        {
+            //CtlNetworkPresenter.Height = QMath.Max(CtlNetworkPresenter.Height, 400);
+
+            if (networksManager == null)
+            {
+                return;
+            }
+
+            var ticks = DateTime.UtcNow.Ticks;
+            ResizeTicks = ticks;
+
+            this.Dispatch(() =>
+            {
+                if (ResizeTicks != ticks)
+                {
+                    return;
+                }
+
+                if (isRunning)
+                {
+                    ClearCache();
+                    RenderRunning(networksManager.SelectedNetworkModel,
+                                  isUseWeightsColors,
+                                  isOnlyChangedWeights,
+                                  isHighlightChangedWeights,
+                                  isShowOnlyUnchangedWeights);
+                }
+                else
+                {
+                    RenderStanding(networksManager.SelectedNetworkModel);
+                }
+
+            }, DispatcherPriority.Render);
         }
 
         public int LayerDistance(NetworkDataModel model!!)

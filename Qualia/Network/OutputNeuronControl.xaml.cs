@@ -22,7 +22,7 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.AddChangeEventListener(Neuron_OnChanged));
+            _configParams.ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
         }
 
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
@@ -40,7 +40,7 @@ namespace Qualia.Controls
             StateChanged();
         }
 
-        private void Neuron_OnChanged()
+        private void Neuron_OnChanged(Notification.ParameterChanged _)
         {
             NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
         }

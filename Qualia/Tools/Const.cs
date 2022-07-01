@@ -59,9 +59,13 @@ namespace Qualia.Tools
     {
         public enum ParameterChanged
         {
-            Randomizer,
+            Unknown = 0,
+
+            Settings,
             Structure,
-            NeuronsCount
+            NeuronsCount,
+
+            Fake
         }
     }
 }

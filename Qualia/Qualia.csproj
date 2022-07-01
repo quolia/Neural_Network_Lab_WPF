@@ -157,6 +157,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\Base\BaseUserControl.cs" />
+    <Compile Include="Controls\Base\FakeValue.cs" />
     <Compile Include="Controls\Base\FunctionControl.xaml.cs">
       <DependentUpon>FunctionControl.xaml</DependentUpon>
     </Compile>
@@ -165,6 +166,7 @@
     <Compile Include="Controls\Base\Values\BoolValue.cs" />
     <Compile Include="Controls\Base\Values\SelectValue.cs" />
     <Compile Include="Controls\Base\Values\StringValue.cs" />
+    <Compile Include="Models\WorkingModel.cs" />
     <Compile Include="Network\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>
@@ -187,6 +189,7 @@
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\Converter.cs" />
+    <Compile Include="Tools\FileHelper.cs" />
     <Compile Include="Tools\Functions\ActivationFunction.cs" />
     <Compile Include="Tools\Config.cs" />
     <Compile Include="Tools\Const.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="Tools\Functions\InputDataFunction.cs" />
     <Compile Include="Tools\Functions\BackPropagationStrategy.cs" />
     <Compile Include="Tools\List.cs" />
+    <Compile Include="Tools\Locker.cs" />
     <Compile Include="Tools\Logger.cs" />
     <Compile Include="Tools\Math.cs" />
     <Compile Include="Tools\Rand.cs" />

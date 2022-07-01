@@ -45,10 +45,10 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.AddChangeEventListener(OnChanged));
+            _configParams.ForEach(param => param.SetOnChangeEvent(OnChanged));
         }
 
-        private void OnChanged()
+        private void OnChanged(Notification.ParameterChanged _)
         {
             NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
 

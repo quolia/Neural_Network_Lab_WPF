@@ -69,17 +69,12 @@ namespace Qualia.Controls
             throw new NotImplementedException();
         }
 
-        public void AddChangeEventListener(Action action)
+        public void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
         {
             throw new NotImplementedException();
         }
 
         public void InvalidateValue()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveChangeEventListener(Action action)
         {
             throw new NotImplementedException();
         }
