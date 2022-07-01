@@ -17,17 +17,37 @@ namespace Qualia.Controls
         public FunctionControl()
         {
             InitializeComponent();
+
+            CtlFunction.AddChangeEventListener(Function_OnChanged);
+            CtlParam.AddChangeEventListener(Param_OnChanged);
         }
 
-        private void Function_OnSelected(object sender, SelectionChangedEventArgs e)
+        private void Function_OnChanged()
         {
-            OnChanged();
+            if (!IsLoading)
+            { 
+                OnChanged();
+            }
+        }
+
+        private void Param_OnChanged()
+        {
+            if (!IsLoading)
+            {
+                OnChanged();
+            }
+        }
+
+        public override void AddChangeEventListener(Action onChanged)
+        {
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
         }
 
         public override void SetConfig(Config config)
         {
             _config = config;
-            
+
             config = config.Extend(Name);
 
             CtlFunction.SetConfig(config);
@@ -36,17 +56,28 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            CtlFunction.SelectionChanged -= Function_OnSelected;
+            //CtlFunction.SelectionChanged -= Function_OnSelected;
 
-            CtlFunction.LoadConfig();
-            CtlParam.LoadConfig();
+            if (!IsLoading)
+            {
+                IsLoading = true;
 
-            CtlFunction.SelectionChanged += Function_OnSelected;
+                CtlFunction.LoadConfig();
+                CtlParam.LoadConfig();
+
+                IsLoading = false;
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+
+           // CtlFunction.SelectionChanged += Function_OnSelected;
         }
 
         public override void SaveConfig()
         {
-            _config.Set(Name, CtlFunction.SelectedItem.ToString());
+            _config.Set(Name, CtlFunction.Value);
             CtlParam.SaveConfig();
         }
 
@@ -68,11 +99,10 @@ namespace Qualia.Controls
             {
                 if (CtlFunction.SelectedItem == null)
                 {
-                    return new(null, 0);
+                    return null;
                 }
 
-                var selectedFunctionName = CtlFunction.SelectedItem.ToString();
-                return new SelectedFunction(selectedFunctionName, CtlParam.Value);
+                return new SelectedFunction(CtlFunction.Value, CtlParam.Value);
             }
         }
         

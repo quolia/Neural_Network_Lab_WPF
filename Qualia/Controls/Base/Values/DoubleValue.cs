@@ -8,9 +8,9 @@ namespace Qualia.Controls
     sealed public class DoubleValueControl : TextBox, IConfigParam
     {
         private Config _config;
-        private event Action _onChanged = delegate { };
+        private event Action _onChanged = delegate {};
 
-        public double DefaultValue { get; set; } = double.NaN;
+        public double DefaultValue { get; set; } = Constants.InvalidDouble;
 
         public DoubleValueControl Initialize(double? defaultValue = null, double? minValue = null, double? maxValue = null)
         {
@@ -47,7 +47,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, EventArgs e)
         {
-            if (IsValid())
+            if (IsValidInput(Constants.InvalidDouble))
             {
                 Background = Brushes.White;
                 _onChanged();
@@ -58,16 +58,16 @@ namespace Qualia.Controls
             }
         }
 
-        public bool IsValid()
+        private bool IsValidInput(double defaultValue)
         {
-            if (IsNull())
+            if (IsNull(defaultValue))
             {
                 return false;
             }
 
             try
             {
-                var value = Converter.TextToDouble(Text, DefaultValue);
+                var value = Converter.TextToDouble(Text, defaultValue);
                 return value >= MinimumValue && value <= MaximumValue;
             }
             catch
@@ -76,7 +76,12 @@ namespace Qualia.Controls
             }
         }
 
-        public bool IsNull() => string.IsNullOrEmpty(Text) && double.IsNaN(DefaultValue);
+        public bool IsValid()
+        {
+            return IsValidInput(DefaultValue);
+        }
+
+        private bool IsNull(double defaultValue) => string.IsNullOrEmpty(Text) && Constants.IsInvalid(defaultValue);
 
         public double Value
         {
@@ -94,14 +99,18 @@ namespace Qualia.Controls
 
             set
             {
-                Text = Converter.DoubleToText(value);
-                Value_OnChanged(null, null);
+                var text = Converter.DoubleToText(value);
+                if (Text != text)
+                {
+                    Text = text;
+                    //Value_OnChanged(null, null);
+                }
             }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;//.Extend(this);
+            _config = config;
         }
 
         public void LoadConfig()
@@ -131,10 +140,15 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void SetChangeEvent(Action onChanged)
+        public void AddChangeEventListener(Action onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
+        }
+
+        public void RemoveChangeEventListener(Action onChanged)
+        {
+            //_onChanged -= onChanged;
         }
 
         public void InvalidateValue()

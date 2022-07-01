@@ -14,7 +14,8 @@ namespace Qualia.Tools
         void SaveConfig();
         void RemoveFromConfig();
         bool IsValid();
-        void SetChangeEvent(Action action);
+        void AddChangeEventListener(Action action);
+        void RemoveChangeEventListener(Action action);
         void InvalidateValue();
     }
 

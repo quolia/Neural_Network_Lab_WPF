@@ -10,7 +10,7 @@ namespace Qualia.Controls
         private Config _config;
         private event Action _onChanged = delegate { };
 
-        public long DefaultValue { get; set; } = Constants.LongNaN;
+        public long DefaultValue { get; set; } = Constants.InvalidLong;
 
         public IntValueControl Initialize(long? defaultValue = null, long? minValue = null, long? maxValue = null)
         {
@@ -69,7 +69,7 @@ namespace Qualia.Controls
             return value >= MinimumValue && value <= MaximumValue;
         }
 
-        public bool IsNull() => string.IsNullOrEmpty(Text) && Constants.IsNaN(DefaultValue);
+        public bool IsNull() => string.IsNullOrEmpty(Text) && Constants.IsInvalid(DefaultValue);
 
         public long Value
         {
@@ -119,7 +119,7 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void SetChangeEvent(Action onChanged)
+        public void AddChangeEventListener(Action onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -134,6 +134,11 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
+        }
+
+        public void RemoveChangeEventListener(Action action)
+        {
+            throw new NotImplementedException();
         }
     }
 }

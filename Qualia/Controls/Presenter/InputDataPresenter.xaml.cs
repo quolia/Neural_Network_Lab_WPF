@@ -35,8 +35,8 @@ namespace Qualia.Controls
             CtlInputDataFunction.Initialize(defaultFunctionName: nameof(InputDataFunction.FlatRandom), defaultParamValue: 1);
 
             SizeChanged += Presenter_OnSizeChanged;
-            CtlTaskFunction.SetChangeEvent(TaskFunction_OnChanged);
-            CtlInputDataFunction.SetChangeEvent(InputDataFunction_OnChanged);
+            CtlTaskFunction.AddChangeEventListener(TaskFunction_OnChanged);
+            CtlInputDataFunction.AddChangeEventListener(InputDataFunction_OnChanged);
         }
 
         private void TaskFunction_OnChanged()
@@ -51,40 +51,44 @@ namespace Qualia.Controls
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
             TaskFunction.InputDataFunction = CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
-
-            _pointsRearrangeSnap = TaskFunction.VisualControl.GetPointsRearrangeSnap();
-
-            CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(TaskFunction.VisualControl.GetVisualControl());
-
-            CtlInputDataFunction.SetConfig(taskFunctionConfig);
             CtlInputDataFunction.LoadConfig();
 
-            TaskFunction.VisualControl.SetConfig(taskFunctionConfig);   
-            TaskFunction.VisualControl.LoadConfig();
-            TaskFunction.VisualControl.SetChangeEvent(TaskParameter_OnChanged);
+            var taskControl = TaskFunction.ITaskControl;
 
+            _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
+
+            taskControl.SetConfig(taskFunctionConfig);
+            taskControl.LoadConfig();
+            taskControl.AddChangeEventListener(TaskParameter_OnChanged);
+
+            CtlHolder.Children.Clear();
+            CtlHolder.Children.Add(taskControl.GetVisualControl());
 
             _onTaskChanged?.TaskChanged();
         }
 
         private void InputDataFunction_OnChanged()
         {
-            if (CtlInputDataFunction.SelectedFunction.Name == null)
+            if (CtlInputDataFunction.SelectedFunction == null)
             {
                 return;
             }
 
-            TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+            var inputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
 
-            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
-            CtlInputDataFunction.SetConfig(taskFunctionConfig);
-            CtlInputDataFunction.LoadConfig();
+            if (inputDataFunction != TaskFunction.InputDataFunction)
+            {
+                TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+
+                var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+                CtlInputDataFunction.SetConfig(taskFunctionConfig);
+                CtlInputDataFunction.LoadConfig();
+            }
         }
 
         private void Presenter_OnSizeChanged(object sender, EventArgs e)
         {
-            if (TaskFunction != null && TaskFunction.VisualControl.IsGridSnapAdjustmentAllowed())
+            if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
             {
                 Rearrange(CURRENT_POINTS_COUNT);
             }
@@ -123,7 +127,7 @@ namespace Qualia.Controls
             }
 
             CtlTaskFunction.SaveConfig();
-            TaskFunction.VisualControl.SaveConfig();
+            TaskFunction.ITaskControl.SaveConfig();
             CtlInputDataFunction.SaveConfig();
 
             _config.FlushToDrive();
@@ -176,14 +180,14 @@ namespace Qualia.Controls
         public void RearrangeWithNewPointsCount()
         {
             _data = null;
-            Rearrange(TaskFunction.VisualControl.GetInputCount());
+            Rearrange(TaskFunction.ITaskControl.GetInputCount());
         }
 
         private int GetSnaps()
         {
             int width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
-            return TaskFunction.VisualControl.IsGridSnapAdjustmentAllowed()
+            return TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed()
                    ? width / (_pointsRearrangeSnap * _pointSize)
                    : 1;
         }

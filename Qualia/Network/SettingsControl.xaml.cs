@@ -51,7 +51,7 @@ namespace Qualia.Controls
         public void LoadConfig()
         {
             Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(OnChanged));
+            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(OnChanged));
 
             OnChanged();
         }

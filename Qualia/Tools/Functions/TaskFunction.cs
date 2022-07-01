@@ -38,7 +38,7 @@ namespace Qualia.Tools
     {
         public readonly delegate*<NetworkDataModel, InputDataFunction, double, void> Do;
 
-        public ITaskControl VisualControl;
+        public ITaskControl ITaskControl;
 
         public InputDataFunction InputDataFunction;
         public double InputDataFunctionParam;
@@ -47,7 +47,7 @@ namespace Qualia.Tools
             : base(nameof(CountDots))
         {
             Do = doFunc;
-            VisualControl = visualControl;
+            ITaskControl = visualControl;
         }
 
         sealed public class CountDots : ITaskControl
@@ -148,9 +148,14 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
+            public void AddChangeEventListener(Action onChanged) => s_control.AddChangeEventListener(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
+
+            public void RemoveChangeEventListener(Action action)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         sealed public class MNISTNumbers : ITaskControl
@@ -220,9 +225,14 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetChangeEvent(Action onChanged) => s_control.SetChangeEvent(onChanged);
+            public void AddChangeEventListener(Action onChanged) => s_control.AddChangeEventListener(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
+
+            public void RemoveChangeEventListener(Action action)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

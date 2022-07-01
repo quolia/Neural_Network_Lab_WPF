@@ -45,7 +45,7 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetChangeEvent(OnChanged));
+            _configParams.ForEach(param => param.AddChangeEventListener(OnChanged));
         }
 
         private void OnChanged()
@@ -257,8 +257,8 @@ namespace Qualia.Controls
             ErrorMatrix matrix = null;
             if (taskFunction != null)
             {
-                matrix = new(taskFunction.VisualControl.GetClasses());
-                ErrorMatrix nextMatrix = new(taskFunction.VisualControl.GetClasses());
+                matrix = new(taskFunction.ITaskControl.GetClasses());
+                ErrorMatrix nextMatrix = new(taskFunction.ITaskControl.GetClasses());
                 matrix.Next = nextMatrix;
                 nextMatrix.Next = matrix;
             }
@@ -266,7 +266,7 @@ namespace Qualia.Controls
             NetworkDataModel networkModel = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
-                Classes = taskFunction?.VisualControl.GetClasses(),
+                Classes = taskFunction?.ITaskControl.GetClasses(),
                 IsEnabled = CtlIsNetworkEnabled.Value,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = RandomizeMode,

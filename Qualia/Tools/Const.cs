@@ -14,11 +14,17 @@ namespace Qualia.Tools
 
         public const double LessThan1 = 1 - 0.000000000000001D;
 
-        public const long LongNaN = 8888888888777777777L;
+        public const double InvalidDouble = double.NaN;
+        public const long InvalidLong = 8888888888777777777L;
 
-        public static bool IsNaN(long value)
+        public static bool IsInvalid(long value)
         {
-            return value == LongNaN;
+            return value == InvalidLong;
+        }
+
+        public static bool IsInvalid(double value)
+        {
+            return double.IsNaN(value);
         }
 
         public enum Toggle

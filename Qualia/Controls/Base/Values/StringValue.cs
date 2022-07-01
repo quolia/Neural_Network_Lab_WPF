@@ -73,7 +73,7 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void SetChangeEvent(Action onChanged)
+        public void AddChangeEventListener(Action onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -88,6 +88,11 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
+        }
+
+        public void RemoveChangeEventListener(Action action)
+        {
+            throw new NotImplementedException();
         }
     }
 }

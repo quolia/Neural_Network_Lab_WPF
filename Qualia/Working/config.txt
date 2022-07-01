@@ -4,8 +4,8 @@ ScreenHeight:1033.33333333333
 ScreenTop:0
 ScreenLeft:0
 OnTop:0
-DataWidth:238
-NetworkHeight:656
+DataWidth:245
+NetworkHeight:457
 UseWeightsColors:0
 OnlyChangedWeights:0
 HighlightChangedWeights:0

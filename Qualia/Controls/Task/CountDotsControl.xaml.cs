@@ -61,12 +61,12 @@ namespace Qualia.Controls
             return false;
         }
 
-        public void SetChangeEvent(Action onChange)
+        public void AddChangeEventListener(Action onChange)
         {
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Parameter_OnChanged));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(Parameter_OnChanged));
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();

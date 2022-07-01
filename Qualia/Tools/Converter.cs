@@ -23,7 +23,7 @@ namespace Qualia.Tools
                 return value;
             }
 
-            if (Constants.IsNaN(defaultValue))
+            if (Constants.IsInvalid(defaultValue))
             {
                 throw new InvalidValueException("long", "NaN");
             }
@@ -33,7 +33,7 @@ namespace Qualia.Tools
 
         public static string IntToText(long value)
         {
-            if (Constants.IsNaN(value))
+            if (Constants.IsInvalid(value))
             {
                 throw new InvalidValueException("long", "NaN");
             }

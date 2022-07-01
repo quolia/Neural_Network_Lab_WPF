@@ -7,8 +7,10 @@ namespace Qualia.Controls
 {
     public partial class BaseUserControl : UserControl, IConfigParam
     {
+        public bool IsLoading;
+
         protected Config _config;
-        protected event Action _onChanged = delegate { };
+        protected event Action _onChanged = delegate {};
 
         public BaseUserControl()
         {
@@ -44,10 +46,12 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
         }
 
-        public void SetChangeEvent(Action onChanged)
+        public virtual void AddChangeEventListener(Action onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
+
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(onChanged));
         }
 
         public void OnChanged()
@@ -55,6 +59,11 @@ namespace Qualia.Controls
             _onChanged();
         }
 
-        public void InvalidateValue() => throw new InvalidOperationException();
+        public virtual void InvalidateValue() => throw new InvalidOperationException();
+
+        public void RemoveChangeEventListener(Action action)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

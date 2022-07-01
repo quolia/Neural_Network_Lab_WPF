@@ -30,7 +30,7 @@ namespace Qualia.Controls
 
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetChangeEvent(Parameter_OnChanged));
+            _configParams.ForEach(param => param.AddChangeEventListener(Parameter_OnChanged));
         }
 
         private void Parameter_OnChanged()
@@ -55,7 +55,7 @@ namespace Qualia.Controls
 
             if (taskFunction != null)
             {
-                Range.For(taskFunction.VisualControl.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
+                Range.For(taskFunction.ITaskControl.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
             }
         }
 

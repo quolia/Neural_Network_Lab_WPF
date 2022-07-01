@@ -268,30 +268,30 @@ namespace Qualia.Controls
             }
         }
 
-        public void SaveConfig()
+        public override void SaveConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
-        public void RemoveFromConfig()
+        public override void RemoveFromConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
-        public void SetChangeEvent(Action onChange)
+        public override void AddChangeEventListener(Action onChange)
         {
             OnChange -= onChange;
             OnChange += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetChangeEvent(Parameter_OnChanged));
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(Parameter_OnChanged));
         }
 
-        public void InvalidateValue() => throw new InvalidOperationException();
+        public override void InvalidateValue() => throw new InvalidOperationException();
 
         private void BrowseImagesPath_OnClick(object sender, RoutedEventArgs e)
         {

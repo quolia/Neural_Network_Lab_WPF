@@ -22,7 +22,7 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetChangeEvent(Neuron_OnChanged));
+            _configParams.ForEach(param => param.AddChangeEventListener(Neuron_OnChanged));
         }
 
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;

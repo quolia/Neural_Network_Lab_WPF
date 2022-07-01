@@ -7,7 +7,7 @@ namespace Qualia.Controls
     sealed public class SelectValueControl : ComboBox, IConfigParam
     {
         private Config _config;
-        private event Action _onChanged = delegate { };
+        private event Action _onChanged = delegate {};
 
         public string DefaultValue { get; set; }
 
@@ -29,32 +29,39 @@ namespace Qualia.Controls
             Margin = new(1);
             MinWidth = 60;
 
-            SelectionChanged += Value_OnChanged;
+            SelectionChanged += Selection_OnChanged;
         }
 
-        private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
+        private void Selection_OnChanged(object sender, SelectionChangedEventArgs e)
         {
-            Text = SelectedItem?.ToString();
-            _onChanged();
+            if (Text != SelectedItem?.ToString())
+            {
+                Text = SelectedItem?.ToString();
+                _onChanged();
+            }
         }
+
         public bool IsValid() => !IsNull();
 
-        public bool IsNull() => string.IsNullOrEmpty(Text) && string.IsNullOrEmpty(DefaultValue);
+        private bool IsNull() => SelectedItem == null;
 
         public string Value
         {
-            get => IsValid() ? Text : throw new InvalidValueException(Name, Text);
+            get => IsValid() ? SelectedItem.ToString() : throw new InvalidValueException(Name, Text);
 
             set
             {
-                Text = value;
-                Value_OnChanged(null, null);
+                if (SelectedItem?.ToString() != value)
+                {
+                    SelectedItem = value;
+                    //Selection_OnChanged(null, null);
+                }
             }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;//.Extend(this);
+            _config = config;
         }
 
         public void LoadConfig()
@@ -64,7 +71,7 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, SelectedItem.ToString());
+            _config.Set(Name, Value);
         }
 
         public void RemoveFromConfig()
@@ -72,7 +79,7 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void SetChangeEvent(Action onChanged)
+        public void AddChangeEventListener(Action onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -84,6 +91,11 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
+        }
+
+        public void RemoveChangeEventListener(Action action)
+        {
+            throw new NotImplementedException();
         }
     }
 }
