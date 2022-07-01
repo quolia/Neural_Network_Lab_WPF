@@ -9,7 +9,7 @@ namespace Qualia.Controls
     {
         private Config _config;
 
-        private event Action _onChanged = delegate { };
+        private event Action<Notification.ParameterChanged> _onChanged = delegate { };
 
         public string DefaultValue { get; set; }
 
@@ -19,18 +19,26 @@ namespace Qualia.Controls
             return this;
         }
 
+        public Notification.ParameterChanged UIParam { get; private set; }
+
+        public StringValueControl SetUIParam(Notification.ParameterChanged param)
+        {
+            UIParam = param;
+            return this;
+        }
+
         public StringValueControl()
         {
             InvalidateValue();
-            TextChanged += OnValueChanged;
+            TextChanged += Value_OnChanged;
         }
 
-        private void OnValueChanged(object sender, EventArgs e)
+        private void Value_OnChanged(object sender, EventArgs e)
         {
             if (IsValid())
             {
                 Background = Brushes.White;
-                _onChanged();
+                _onChanged(UIParam);
             }
             else
             {
@@ -49,13 +57,12 @@ namespace Qualia.Controls
             set
             {
                 Text = value;
-                OnValueChanged(null, null);
             }
         }
 
         public void SetConfig(Config config)
         {
-            _config = config;//.Extend(this);
+            _config = config;
         }
 
         public void LoadConfig()
@@ -73,7 +80,7 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void AddChangeEventListener(Action onChanged)
+        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -88,11 +95,6 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
-        }
-
-        public void RemoveChangeEventListener(Action action)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Qualia.Controls
     sealed public class IntValueControl : TextBox, IConfigParam
     {
         private Config _config;
-        private event Action _onChanged = delegate { };
+        private event Action<Notification.ParameterChanged> _onChanged = delegate { };
 
         public long DefaultValue { get; set; } = Constants.InvalidLong;
 
@@ -36,6 +36,14 @@ namespace Qualia.Controls
 
         public long MaximumValue { get; set; } = long.MaxValue;
 
+        public Notification.ParameterChanged UIParam { get; private set; }
+
+        public IntValueControl SetUIParam(Notification.ParameterChanged param)
+        {
+            UIParam = param;
+            return this;
+        }
+
         public IntValueControl()
         {
             Padding = new(0);
@@ -50,7 +58,7 @@ namespace Qualia.Controls
             if (IsValid())
             {
                 Background = Brushes.White;
-                _onChanged();
+                _onChanged(UIParam);
             }
             else
             {
@@ -89,7 +97,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config;//.Extend(this);
+            _config = config;
         }
 
         public void LoadConfig()
@@ -119,7 +127,7 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void AddChangeEventListener(Action onChanged)
+        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -134,11 +142,6 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
-        }
-
-        public void RemoveChangeEventListener(Action action)
-        {
-            throw new NotImplementedException();
         }
     }
 }

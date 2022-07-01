@@ -14,31 +14,26 @@ namespace Qualia.Controls
             return this;
         }
 
+
         public FunctionControl()
         {
             InitializeComponent();
 
-            CtlFunction.AddChangeEventListener(Function_OnChanged);
-            CtlParam.AddChangeEventListener(Param_OnChanged);
+            CtlFunction.SetOnChangeEvent(Function_OnChanged);
+            CtlParam.SetOnChangeEvent(Param_OnChanged);
         }
 
-        private void Function_OnChanged()
+        private void Function_OnChanged(Notification.ParameterChanged param)
         {
-            if (!IsLoading)
-            { 
-                OnChanged();
-            }
+            OnChanged(param);
         }
 
-        private void Param_OnChanged()
+        private void Param_OnChanged(Notification.ParameterChanged param)
         {
-            if (!IsLoading)
-            {
-                OnChanged();
-            }
+            OnChanged(param);
         }
 
-        public override void AddChangeEventListener(Action onChanged)
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -56,23 +51,8 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            //CtlFunction.SelectionChanged -= Function_OnSelected;
-
-            if (!IsLoading)
-            {
-                IsLoading = true;
-
-                CtlFunction.LoadConfig();
-                CtlParam.LoadConfig();
-
-                IsLoading = false;
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-
-           // CtlFunction.SelectionChanged += Function_OnSelected;
+            CtlFunction.LoadConfig();
+            CtlParam.LoadConfig();
         }
 
         public override void SaveConfig()

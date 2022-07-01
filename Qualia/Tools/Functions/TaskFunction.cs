@@ -148,14 +148,9 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void AddChangeEventListener(Action onChanged) => s_control.AddChangeEventListener(onChanged);
+            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
-
-            public void RemoveChangeEventListener(Action action)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         sealed public class MNISTNumbers : ITaskControl
@@ -225,14 +220,9 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void AddChangeEventListener(Action onChanged) => s_control.AddChangeEventListener(onChanged);
+            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
-
-            public void RemoveChangeEventListener(Action action)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

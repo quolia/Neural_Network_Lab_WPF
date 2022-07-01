@@ -1,101 +1,58 @@
 ﻿using Qualia.Tools;
 using System;
 using System.Linq;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
     sealed public partial class SettingsControl : BaseUserControl
     {
-        private Config _config;
-
-        private event Action Changed = delegate { };
-
-        private readonly object _locker = new();
-        private Settings _settings;
-
-        public Settings Settings
-        {
-            get
-            {
-                //lock (_locker)
-                {
-                    return _settings;
-                }
-            }
-
-            set
-            {
-                //lock (_locker)
-                {
-                    _settings = value;
-                }
-            }
-        }
-
         public SettingsControl()
         {
             InitializeComponent();
 
-            CtlSkipRoundsToDrawErrorMatrix.Initialize(defaultValue: 10000);
-            CtlSkipRoundsToDrawNetworks.Initialize(defaultValue: 10000);
-            CtlSkipRoundsToDrawStatistics.Initialize(defaultValue: 10000);
+            _configParams = new()
+            {
+                CtlSkipRoundsToDrawErrorMatrix
+                    .Initialize(defaultValue: 10000),
+
+                CtlSkipRoundsToDrawNetworks
+                    .Initialize(defaultValue: 10000),
+
+                CtlSkipRoundsToDrawStatistics
+                    .Initialize(defaultValue: 10000),
+
+                new FakeValue()
+            };
         }
 
-        public void SetConfig(Config config)
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _config = config;
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
+
+            _configParams.ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
         }
 
-        public void LoadConfig()
+        private void Value_OnChanged(Notification.ParameterChanged param)
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.AddChangeEventListener(OnChanged));
-
-            OnChanged();
+            if (param == Notification.ParameterChanged.Fake)
+            {
+                OnChanged(Notification.ParameterChanged.Settings);
+            }
         }
 
-        public void SaveConfig()
+        public SettingsModel GetModel()
         {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
-            _config.FlushToDrive();
-        }
-
-        public void RemoveFromConfig()
-        {
-            Range.ForEach(CtlPanel.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
-            _config.FlushToDrive();
-        }
-
-        public bool IsValid()
-        {
-            return CtlPanel.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
-        }
-
-        public void SetChangeEvent(Action action)
-        {
-            Changed -= action;
-            Changed += action;
-        }
-
-        private void OnChanged()
-        {
-            Settings settings = new()
+            return new()
             {
                 SkipRoundsToDrawErrorMatrix = (int)CtlSkipRoundsToDrawErrorMatrix.Value,
                 SkipRoundsToDrawNetworks = (int)CtlSkipRoundsToDrawNetworks.Value,
                 SkipRoundsToDrawStatistics = (int)CtlSkipRoundsToDrawStatistics.Value
             };
-            Settings = settings;
-
-            Changed();
         }
-
-        public void InvalidateValue() => throw new InvalidOperationException();
     }
 
-    sealed public class Settings
+    sealed public class SettingsModel
     {
         public int SkipRoundsToDrawErrorMatrix;
         public int SkipRoundsToDrawNetworks;

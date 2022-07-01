@@ -8,7 +8,7 @@ namespace Qualia.Controls
     sealed public class DoubleValueControl : TextBox, IConfigParam
     {
         private Config _config;
-        private event Action _onChanged = delegate {};
+        private event Action<Notification.ParameterChanged> _onChanged = delegate {};
 
         public double DefaultValue { get; set; } = Constants.InvalidDouble;
 
@@ -36,6 +36,14 @@ namespace Qualia.Controls
 
         public double MaximumValue { get; set; } = double.MaxValue;
 
+        public Notification.ParameterChanged UIParam { get; private set; }
+
+        public DoubleValueControl SetUIParam(Notification.ParameterChanged param)
+        {
+            UIParam = param;
+            return this;
+        }
+
         public DoubleValueControl()
         {
             Padding = new(0);
@@ -50,7 +58,7 @@ namespace Qualia.Controls
             if (IsValidInput(Constants.InvalidDouble))
             {
                 Background = Brushes.White;
-                _onChanged();
+                _onChanged(UIParam);
             }
             else
             {
@@ -99,12 +107,7 @@ namespace Qualia.Controls
 
             set
             {
-                var text = Converter.DoubleToText(value);
-                if (Text != text)
-                {
-                    Text = text;
-                    //Value_OnChanged(null, null);
-                }
+               Text = Converter.DoubleToText(value);
             }
         }
 
@@ -140,15 +143,10 @@ namespace Qualia.Controls
             _config.Remove(Name);
         }
 
-        public void AddChangeEventListener(Action onChanged)
+        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
-        }
-
-        public void RemoveChangeEventListener(Action onChanged)
-        {
-            //_onChanged -= onChanged;
         }
 
         public void InvalidateValue()

@@ -8,13 +8,21 @@ namespace Qualia.Controls
     sealed public class BoolValueControl : CheckBox, IConfigParam
     {
         private Config _config;
-        private event Action _onChanged = delegate { };
+        private event Action<Notification.ParameterChanged> _onChanged = delegate {};
 
         public bool DefaultValue { get; set; }
 
         public BoolValueControl Initialize(bool defaultValue)
         {
             DefaultValue = defaultValue;
+            return this;
+        }
+
+        public Notification.ParameterChanged UIParam { get; private set; }
+
+        public BoolValueControl SetUIParam(Notification.ParameterChanged param)
+        {
+            UIParam = param;
             return this;
         }
 
@@ -32,7 +40,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, RoutedEventArgs e)
         {
-            _onChanged();
+            _onChanged(UIParam);
         }
 
         public void SetConfig(Config config)
@@ -57,9 +65,10 @@ namespace Qualia.Controls
 
         public bool IsValid() => true;
 
-        public void AddChangeEventListener(Action onValueChanged)
+        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onValueChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
@@ -68,11 +77,6 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
-        }
-
-        public void RemoveChangeEventListener(Action action)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Qualia.Tools
             return list.AsEnumerable().All(predicate);
         }
 
-        public static DispatcherOperation Dispatch(this UIElement element, Action action, DispatcherPriority priority)
+        public static DispatcherOperation Dispatch(this UIElement element, Action action, DispatcherPriority priority = DispatcherPriority.Normal)
         {
             return element.Dispatcher.BeginInvoke(action, priority);
         }
