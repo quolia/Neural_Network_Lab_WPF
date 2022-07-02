@@ -62,6 +62,7 @@ namespace Qualia.Tools
             Unknown = 0,
 
             Settings,
+            DynamicSettings,
 
             TaskFunction,
             TaskInputDataFunction,

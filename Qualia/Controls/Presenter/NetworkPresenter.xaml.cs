@@ -28,6 +28,11 @@ namespace Qualia.Controls
         private readonly Pen _penChange = Draw.GetPen(in ColorsX.Lime);
         private readonly Pen _biasPen = Draw.GetPen(in ColorsX.Orange);
 
+        private readonly Typeface _activationLabelsFont = new(new("Tahoma"),
+                                                              FontStyles.Normal,
+                                                              FontWeights.Bold,
+                                                              FontStretches.Normal);
+
         public NetworkPresenter()
         {
             InitializeComponent();
@@ -48,7 +53,8 @@ namespace Qualia.Controls
                                   bool isUseWeightsColors,
                                   bool isOnlyChangedWeights,
                                   bool isHighlightChangedWeights,
-                                  bool isShowOnlyUnchangedWeights)
+                                  bool isShowOnlyUnchangedWeights,
+                                  bool isShowActivationLabels)
         {
             //CtlNetworkPresenter.Height = QMath.Max(CtlNetworkPresenter.Height, 400);
 
@@ -74,7 +80,8 @@ namespace Qualia.Controls
                                   isUseWeightsColors,
                                   isOnlyChangedWeights,
                                   isHighlightChangedWeights,
-                                  isShowOnlyUnchangedWeights);
+                                  isShowOnlyUnchangedWeights,
+                                  isShowActivationLabels);
                 }
                 else
                 {
@@ -109,8 +116,15 @@ namespace Qualia.Controls
             return (MaxHeight(networkModel) - layerModel.Neurons.Count * VerticalDistance(layerModel.Neurons.Count)) / 2;
         }
 
-        private void DrawLayersLinks(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel1, LayerDataModel layerModel2,
-                                     bool isUseColorOfWeight, bool isShowOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
+        private void DrawLayersLinks(bool fullState,
+                                     NetworkDataModel networkModel,
+                                     LayerDataModel layerModel1,
+                                     LayerDataModel layerModel2,
+                                     bool isUseColorOfWeight,
+                                     bool isShowOnlyChangedWeights,
+                                     bool isHighlightChangedWeights,
+                                     bool isShowOnlyUnchangedWeights,
+                                     bool isShowActivationLabels)
         {
             double threshold = networkModel.Layers.First == layerModel1 ? networkModel.InputThreshold : 0;
 
@@ -385,7 +399,72 @@ namespace Qualia.Controls
             }
         }
 
-        private void Render(bool fullState, NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
+        private void DrawNeuronsActivationLabels(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel, bool isShowActivationLabels)
+        {
+            const int TEXT_OFFSET = 6;
+
+            double threshold = networkModel.Layers.First == layerModel ? networkModel.InputThreshold : 0;
+
+            NeuronDataModel prevNeuron = null;
+            NeuronDataModel neuronModel = layerModel.Neurons.First;
+
+            while (neuronModel != null)
+            {
+                if (fullState || neuronModel.IsBias || neuronModel.Activation > threshold || layerModel.Id > 0)
+                {
+                    if (!_coordinator.ContainsKey(neuronModel))
+                    {
+                        _coordinator.Add(neuronModel,
+                                         Points.Get(LayerX(networkModel, layerModel),
+                                         TOP_OFFSET + VerticalShift(networkModel, layerModel) + neuronModel.Id * VerticalDistance(layerModel.Neurons.Count)));
+                    }
+
+                    // Skip intersected neurons on the first layer to improve performance.
+                    if (!fullState && !neuronModel.IsBias && networkModel.Layers.First == layerModel && prevNeuron != null)
+                    {
+                        if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
+                        {
+                            neuronModel = neuronModel.Next;
+                            continue;
+                        }
+                    }
+                    prevNeuron = neuronModel;
+
+                    var centerPoint = _coordinator[neuronModel];
+
+                    FormattedText text = new(Converter.DoubleToText(neuronModel.Activation, "F5"),
+                                             Culture.Current,
+                                             FlowDirection.LeftToRight,
+                                             _activationLabelsFont,
+                                             10,
+                                             Draw.GetBrush(in ColorsX.Black),
+                                             RenderSettings.PixelsPerDip);
+
+                    var x = layerModel.Next == null // Output layer.
+                            ? centerPoint.X - text.Width - TEXT_OFFSET * 2 - NEURON_RADIUS * 2
+                            : centerPoint.X;
+
+                    CtlCanvas.DrawRectangle(Draw.GetBrush(Draw.GetColor(240, in ColorsX.Yellow)),
+                                            null,
+                                            ref Rects.Get(x + NEURON_RADIUS * 2,
+                                                          centerPoint.Y - NEURON_RADIUS * 1.5,
+                                                          text.Width + TEXT_OFFSET,
+                                                          text.Height));
+
+                    CtlCanvas.DrawText(text, ref Points.Get(x + NEURON_RADIUS * 2 + TEXT_OFFSET / 2, centerPoint.Y - NEURON_RADIUS * 1.5));
+                }
+
+                neuronModel = neuronModel.Next;
+            }
+        }
+
+        private void Render(bool fullState,
+                            NetworkDataModel networkModel,
+                            bool isUseWeightsColors,
+                            bool isOnlyChangedWeights,
+                            bool isHighlightChangedWeights,
+                            bool isShowOnlyUnchangedWeights,
+                            bool isShowActivationLabels)
         {
             CtlCanvas.Clear();
 
@@ -413,7 +492,8 @@ namespace Qualia.Controls
                                     isUseWeightsColors,
                                     isOnlyChangedWeights,
                                     isHighlightChangedWeights,
-                                    isShowOnlyUnchangedWeights);
+                                    isShowOnlyUnchangedWeights,
+                                    isShowActivationLabels);
                     
                     layerModel = layerModel.Next;
                 }
@@ -423,6 +503,16 @@ namespace Qualia.Controls
                 {
                     DrawLayerNeurons(fullState, networkModel, layerModel);
                     layerModel = layerModel.Next;
+                }
+
+                if (isShowActivationLabels)
+                {
+                    layerModel = networkModel.Layers.First;
+                    while (layerModel != null)
+                    {
+                        DrawNeuronsActivationLabels(fullState, networkModel, layerModel, isShowActivationLabels);
+                        layerModel = layerModel.Next;
+                    }
                 }
             }
         }
@@ -435,12 +525,23 @@ namespace Qualia.Controls
         public void RenderStanding(NetworkDataModel networkModel)
         {
             ClearCache();
-            Render(false, networkModel, false, false, false, false);
+            Render(false, networkModel, false, false, false, false, false);
         }
 
-        public void RenderRunning(NetworkDataModel networkModel, bool isUseWeightsColors, bool isOnlyChangedWeights, bool isHighlightChangedWeights, bool isShowOnlyUnchangedWeights)
+        public void RenderRunning(NetworkDataModel networkModel,
+                                  bool isUseWeightsColors,
+                                  bool isOnlyChangedWeights,
+                                  bool isHighlightChangedWeights,
+                                  bool isShowOnlyUnchangedWeights,
+                                  bool isShowActivationLabels)
         {
-            Render(false, networkModel, isUseWeightsColors, isOnlyChangedWeights, isHighlightChangedWeights, isShowOnlyUnchangedWeights);
+            Render(false,
+                   networkModel,
+                   isUseWeightsColors,
+                   isOnlyChangedWeights,
+                   isHighlightChangedWeights,
+                   isShowOnlyUnchangedWeights,
+                   isShowActivationLabels);
         }
     }
 }
