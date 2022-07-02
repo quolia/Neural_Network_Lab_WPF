@@ -8,6 +8,7 @@ namespace Qualia.Model
         public readonly int Id;
         public long VisualId;
 
+        public double X;
         public double Activation;
         public double Error;
 

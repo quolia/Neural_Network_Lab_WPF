@@ -341,6 +341,7 @@ namespace Qualia.Controls
 
                         if (!InitializeFunction.IsSkipValue(initValue))
                         {
+                            neuronModel.X = initValue; // ?
                             neuronModel.Activation = initValue;
                         }
                     }

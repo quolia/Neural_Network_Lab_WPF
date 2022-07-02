@@ -432,7 +432,7 @@ namespace Qualia.Controls
 
                     var centerPoint = _coordinator[neuronModel];
 
-                    FormattedText text = new(Converter.DoubleToText(neuronModel.Activation, "F5"),
+                    FormattedText text = new(Converter.DoubleToText(neuronModel.Activation, "auto"),
                                              Culture.Current,
                                              FlowDirection.LeftToRight,
                                              _activationLabelsFont,
