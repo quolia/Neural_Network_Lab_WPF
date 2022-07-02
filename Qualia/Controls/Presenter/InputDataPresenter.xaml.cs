@@ -10,7 +10,7 @@ namespace Qualia.Controls
     {
         private const int CURRENT_POINTS_COUNT = -1;
 
-        public TaskFunction TaskFunction { get; private set; }
+        //public TaskFunction TaskFunction { get; private set; }
 
         private readonly int _pointSize;
         private int _pointsRearrangeSnap;
@@ -51,14 +51,14 @@ namespace Qualia.Controls
                     return;
                 }
 
-                TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+                var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
 
                 var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
-                TaskFunction.InputDataFunction = CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
+                CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
                 CtlInputDataFunction.LoadConfig();
 
-                var taskControl = TaskFunction.ITaskControl;
+                var taskControl = taskFunction.ITaskControl;
 
                 _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
 
@@ -77,7 +77,7 @@ namespace Qualia.Controls
                 }
 
                 var inputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
-
+                /*
                 if (inputDataFunction != TaskFunction.InputDataFunction)
                 {
                     TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
@@ -86,6 +86,7 @@ namespace Qualia.Controls
                     CtlInputDataFunction.SetConfig(taskFunctionConfig);
                     CtlInputDataFunction.LoadConfig();
                 }
+                */
             }
 
             base.OnChanged(Notification.ParameterChanged.TaskInputData);
@@ -93,7 +94,10 @@ namespace Qualia.Controls
 
         private void Size_OnChanged(object sender, EventArgs e)
         {
-            if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
+            var model = GetModel();
+
+            //if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
+            if (model.TaskFunction != null && model.TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
             {
                 Rearrange(CURRENT_POINTS_COUNT);
             }
@@ -107,18 +111,16 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            TaskFunction = CtlTaskFunction.Fill<TaskFunction>(_config);
-            LoadTaskFunctionUI();
-        }
+            CtlTaskFunction.Fill<TaskFunction>(_config);
 
-        private void LoadTaskFunctionUI()
-        {
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
-            TaskFunction.InputDataFunction = CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
+            CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
             CtlInputDataFunction.LoadConfig();
 
-            var taskControl = TaskFunction.ITaskControl;
+            var model = GetModel();
+
+            var taskControl = model.TaskFunction.ITaskControl;
 
             _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
 
@@ -144,7 +146,12 @@ namespace Qualia.Controls
         public override void SaveConfig()
         {
             CtlTaskFunction.SaveConfig();
-            TaskFunction.ITaskControl.SaveConfig();
+
+            var model = GetModel();
+
+            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+            model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
+            model.TaskFunction.ITaskControl.SaveConfig();
             CtlInputDataFunction.SaveConfig();
 
             _config.FlushToDrive();
@@ -205,14 +212,18 @@ namespace Qualia.Controls
         public void RearrangeWithNewPointsCount()
         {
             _data = null;
-            Rearrange(TaskFunction.ITaskControl.GetInputCount());
+
+            var model = GetModel();
+            Rearrange(model.TaskFunction.ITaskControl.GetInputCount());
         }
 
         private int GetSnaps()
         {
             int width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
-            return TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed()
+            var model = GetModel();
+
+            return model.TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed()
                    ? width / (_pointsRearrangeSnap * _pointSize)
                    : 1;
         }
@@ -312,11 +323,21 @@ namespace Qualia.Controls
 
         public TaskModel GetModel()
         {
+            var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+            var inputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction);
+            var inputDataFunctionParam = CtlInputDataFunction.CtlParam.Value;
+
+            if (taskFunction != null)
+            {
+                taskFunction.InputDataFunction = inputDataFunction;
+                taskFunction.InputDataFunctionParam = inputDataFunctionParam;
+            }
+
             return new()
             {
-                TaskFunction = TaskFunction.GetInstance(CtlTaskFunction),
-                InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction),
-                InputDataFunctionParam = CtlInputDataFunction.CtlParam.Value
+                TaskFunction = taskFunction,
+                InputDataFunction = inputDataFunction,
+                InputDataFunctionParam = inputDataFunctionParam
             };
         }
     }
