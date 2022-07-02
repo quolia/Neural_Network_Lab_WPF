@@ -62,8 +62,8 @@
                 </Grid.ColumnDefinitions>
                 <Menu Name="CtlMenu" Background="White">
                     <MenuItem Header="File">
-                        <MenuItem Name="CtlMainMenuNew" Header="New..." />
-                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." />
+                        <MenuItem Name="CtlMainMenuNew" Header="New..." Click="MainMenuNew_OnClick" />
+                        <MenuItem Name="CtlMainMenuLoad" Header="Load..." Click="MainMenuLoad_OnClick" />
                         <MenuItem Name="CtlMainMenuSaveAs" Header="Save As..." IsEnabled="False" Click="MainMenuSaveAs_OnClick" />
                     </MenuItem>
                     <MenuItem Name="CtlMenuNetwork" Header="Network" IsEnabled="False" SubmenuOpened="MenuNetwork_OnSubmenuOpened">

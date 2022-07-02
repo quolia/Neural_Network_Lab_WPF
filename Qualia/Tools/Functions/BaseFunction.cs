@@ -31,11 +31,21 @@ namespace Qualia.Tools
 
         public static T GetInstance(Selector selector)
         {
+            if (selector.SelectedValue == null)
+            {
+                return default(T);
+            }
+
             return GetInstance(selector.SelectedValue.ToString());
         }
 
         public static T GetInstance(FunctionControl function)
         {
+            if (function.SelectedFunction == null)
+            {
+                return default(T);
+            }
+
             return GetInstance(function.SelectedFunction.Name);
         }
 
