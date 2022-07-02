@@ -14,7 +14,7 @@ using System.Windows.Threading;
 
 namespace Qualia.Controls
 {
-    sealed public partial class Main : WindowResizeControl, INetworkTaskChanged, IDisposable
+    sealed public partial class Main : WindowResizeControl, IDisposable
     {
         private Thread _timeThread;
         private Thread _runNetworksThread;
@@ -134,7 +134,7 @@ namespace Qualia.Controls
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
             
             CtlInputDataPresenter.SetConfig(_networksManager.Config);
-            CtlInputDataPresenter.LoadConfig(this);
+            CtlInputDataPresenter.LoadConfig();
 
             ReplaceNetworksManagerControl(_networksManager);
             if (!_networksManager.IsValid())
@@ -198,7 +198,7 @@ namespace Qualia.Controls
 
         private void UI_OnChanged(Notification.ParameterChanged param)
         {
-            ToggleApplyChanges(Constants.Toggle.On);
+            TurnApplyChangesButton(Constants.State.On);
             CtlMenuStart.IsEnabled = false;
 
             if (param == Notification.ParameterChanged.NeuronsCount)
@@ -211,20 +211,20 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        ToggleApplyChanges(Constants.Toggle.Off);
+                        TurnApplyChangesButton(Constants.State.Off);
                     }
                 }
 
                 if (CtlInputDataPresenter.TaskFunction != null && !CtlInputDataPresenter.TaskFunction.ITaskControl.IsValid())
                 {
-                    ToggleApplyChanges(Constants.Toggle.Off);
+                    TurnApplyChangesButton(Constants.State.Off);
                 }
             }
         }
 
-        private void ToggleApplyChanges(Constants.Toggle state)
+        private void TurnApplyChangesButton(Constants.State state)
         {
-            if (state == Constants.Toggle.On)
+            if (state == Constants.State.On)
             {
                 CtlApplyChanges.Background = Brushes.Yellow;
                 CtlApplyChanges.IsEnabled = true;
@@ -234,6 +234,41 @@ namespace Qualia.Controls
                 CtlApplyChanges.Background = Brushes.White;
                 CtlApplyChanges.IsEnabled = false;
             }
+        }
+
+        private void ApplyChanges_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SaveConfig();
+                WorkingModel.Current().Refresh(this).RefreshSettings().RefreshDataPresenter();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                return;
+            }
+
+            if (IsRunning)
+            {
+                if (MessageBox.Show("Would you like running network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    ApplyChangesToRunningNetworks();
+                }
+            }
+            else
+            {
+                if (MessageBoxResult.Yes ==
+                        MessageBox.Show("Would you like network to apply changes?", "Confirm", MessageBoxButton.YesNo))
+                {
+                    ApplyChangesToStandingNetworks();
+                }
+            }
+        }
+
+        private void CancelChanges_OnClick(object sender, RoutedEventArgs e)
+        {
+            LoadConfig();
         }
 
         private void ApplyChangesToRunningNetworks()
@@ -253,7 +288,7 @@ namespace Qualia.Controls
                                                   CtlHighlightChangedWeights.Value,
                                                   CtlShowOnlyUnchangedWeights.Value);
 
-                ToggleApplyChanges(Constants.Toggle.Off);
+                TurnApplyChangesButton(Constants.State.Off);
             }
         }
 
@@ -267,7 +302,7 @@ namespace Qualia.Controls
                 _networksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
-                ToggleApplyChanges(Constants.Toggle.Off);
+                TurnApplyChangesButton(Constants.State.Off);
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuRun.IsEnabled = true;
@@ -901,7 +936,7 @@ namespace Qualia.Controls
                 _networksManager = networksManager;
 
                 CtlInputDataPresenter.SetConfig(_networksManager.Config);
-                CtlInputDataPresenter.LoadConfig(this);
+                CtlInputDataPresenter.LoadConfig();
 
                 ReplaceNetworksManagerControl(_networksManager);
                 if (!_networksManager.IsValid())
@@ -969,8 +1004,9 @@ namespace Qualia.Controls
             }
             else
             {
-                CtlNetworkName.Content =
-                    Path.GetFileNameWithoutExtension(Config.Main.Get(Constants.Param.NetworksManagerName, "").Replace("_", "__"));
+                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(
+                                                  Config.Main.Get(Constants.Param.NetworksManagerName, "")
+                                                             .Replace("_", "__"));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;
@@ -1015,35 +1051,6 @@ namespace Qualia.Controls
         private void MenuReset_OnClick(object sender, RoutedEventArgs e)
         {
             ApplyChangesToStandingNetworks();
-        }
-
-        private void ApplyChanges_OnClick(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                SaveConfig();
-                WorkingModel.Current().Refresh(this);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-                return;
-            }
-
-            if (IsRunning)
-            {
-                if (MessageBox.Show("Would you like running network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    ApplyChangesToRunningNetworks();
-                }
-            }
-            else
-            {
-                if (MessageBox.Show("Would you like network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    ApplyChangesToStandingNetworks();
-                }
-            }
         }
 
         private void NetworkTab_OnChanged(object sender, SelectionChangedEventArgs e)
@@ -1167,14 +1174,6 @@ namespace Qualia.Controls
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
             CtlMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
-        }
-
-        public void TaskChanged()
-        {
-            CtlInputDataPresenter.TaskFunction.ITaskControl.SetConfig(_networksManager.Config);
-            CtlInputDataPresenter.TaskFunction.ITaskControl.LoadConfig();
-
-            TaskParameter_OnChanged();
         }
 
         public void TaskParameter_OnChanged()

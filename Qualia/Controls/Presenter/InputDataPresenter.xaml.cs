@@ -19,8 +19,6 @@ namespace Qualia.Controls
         private double[] _data;
         private double[] _stat;
 
-        private INetworkTaskChanged _onTaskChanged;
-
         private readonly System.Windows.Media.Pen _penBlack = Draw.GetPen(in ColorsX.Black);
 
         public InputDataPresenter()
@@ -28,26 +26,93 @@ namespace Qualia.Controls
             InitializeComponent();
 
             _penBlack.Freeze();
-
             _pointSize = Config.Main.Get(Constants.Param.PointSize, 7);
+            
+            SizeChanged += Size_OnChanged;
 
-            CtlTaskFunction.Initialize(nameof(TaskFunction.CountDots));
-            CtlInputDataFunction.Initialize(defaultFunctionName: nameof(InputDataFunction.FlatRandom), defaultParamValue: 1);
+            _configParams = new()
+            {
+                CtlTaskFunction
+                    .Initialize(nameof(TaskFunction.CountDots))
+                    .SetUIParam(Notification.ParameterChanged.TaskFunction),
 
-            SizeChanged += Presenter_OnSizeChanged;
-            CtlTaskFunction.SetOnChangeEvent(TaskFunction_OnChanged);
-            CtlInputDataFunction.SetOnChangeEvent(InputDataFunction_OnChanged);
+                CtlInputDataFunction
+                    .Initialize(defaultFunction: nameof(InputDataFunction.FlatRandom), defaultParam: 1)
+                    .SetUIParam(Notification.ParameterChanged.TaskInputDataFunction)
+            };
         }
 
-        private void TaskFunction_OnChanged(Notification.ParameterChanged _)
+        private new void OnChanged(Notification.ParameterChanged param)
         {
-            if (CtlTaskFunction.SelectedItem == null)
+            if (param == Notification.ParameterChanged.TaskFunction)
             {
-                return;
+                if (CtlTaskFunction.SelectedItem == null)
+                {
+                    return;
+                }
+
+                TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+
+                var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+
+                TaskFunction.InputDataFunction = CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
+                CtlInputDataFunction.LoadConfig();
+
+                var taskControl = TaskFunction.ITaskControl;
+
+                _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
+
+                taskControl.SetConfig(taskFunctionConfig);
+                taskControl.LoadConfig();
+                taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
+
+                CtlHolder.Children.Clear();
+                CtlHolder.Children.Add(taskControl.GetVisualControl());
+            }
+            else if (param == Notification.ParameterChanged.TaskInputDataFunction)
+            {
+                if (CtlInputDataFunction.SelectedFunction == null)
+                {
+                    return;
+                }
+
+                var inputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+
+                if (inputDataFunction != TaskFunction.InputDataFunction)
+                {
+                    TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+
+                    var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+                    CtlInputDataFunction.SetConfig(taskFunctionConfig);
+                    CtlInputDataFunction.LoadConfig();
+                }
             }
 
-            TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+            base.OnChanged(Notification.ParameterChanged.TaskInputData);
+        }
 
+        private void Size_OnChanged(object sender, EventArgs e)
+        {
+            if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
+            {
+                Rearrange(CURRENT_POINTS_COUNT);
+            }
+        }
+
+        public override void SetConfig(Config config)
+        {
+            _config = config;
+            CtlTaskFunction.SetConfig(_config);
+        }
+
+        public override void LoadConfig()
+        {
+            TaskFunction = CtlTaskFunction.Fill<TaskFunction>(_config);
+            LoadUI();
+        }
+
+        private void LoadUI()
+        {
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
             TaskFunction.InputDataFunction = CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
@@ -63,60 +128,17 @@ namespace Qualia.Controls
 
             CtlHolder.Children.Clear();
             CtlHolder.Children.Add(taskControl.GetVisualControl());
-
-            _onTaskChanged?.TaskChanged();
-        }
-
-        private void InputDataFunction_OnChanged(Notification.ParameterChanged _)
-        {
-            if (CtlInputDataFunction.SelectedFunction == null)
-            {
-                return;
-            }
-
-            var inputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
-
-            if (inputDataFunction != TaskFunction.InputDataFunction)
-            {
-                TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
-
-                var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
-                CtlInputDataFunction.SetConfig(taskFunctionConfig);
-                CtlInputDataFunction.LoadConfig();
-            }
-        }
-
-        private void Presenter_OnSizeChanged(object sender, EventArgs e)
-        {
-            if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
-            {
-                Rearrange(CURRENT_POINTS_COUNT);
-            }
-        }
-
-        public override void SetConfig(Config config)
-        {
-            _config = config;
-            CtlTaskFunction.SetConfig(_config);
-        }
-
-        public void LoadConfig(INetworkTaskChanged taskChanged)
-        {
-            TaskFunction = CtlTaskFunction.Fill<TaskFunction>(_config);
-
-            _onTaskChanged = taskChanged;
-            TaskParameter_OnChanged(Notification.ParameterChanged.Unknown);
         }
 
         void TaskParameter_OnChanged(Notification.ParameterChanged _)
         {
-            if (_onTaskChanged == null)
+            //if (_onTaskChanged == null)
             {
-                return;
+                //return;
             }
 
             RearrangeWithNewPointsCount();
-            _onTaskChanged.TaskParameter_OnChanged();
+            //_onTaskChanged.TaskParameter_OnChanged();
         }
 
         public override void SaveConfig()
@@ -128,6 +150,14 @@ namespace Qualia.Controls
             _config.FlushToDrive();
         }
 
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        {
+            //_onChanged -= onChanged;
+            //_onChanged += onChanged;
+
+            _configParams.ForEach(p => p.SetOnChangeEvent(onChanged));
+        }
+
         private void DrawPoint(double x, double y, double value, bool isData)
         {
             var brush = value == 0
@@ -136,13 +166,18 @@ namespace Qualia.Controls
                            ? Draw.GetBrush(value)
                            : Draw.GetBrush(Draw.GetColor((byte)(255 * value), in ColorsX.Green)));
 
-            CtlCanvas.DrawRectangle(brush, _penBlack, ref Rects.Get(x * _pointSize, y * _pointSize, _pointSize, _pointSize));
+            CtlCanvas.DrawRectangle(brush,
+                                    _penBlack,
+                                    ref Rects.Get(_pointSize * x,
+                                                  _pointSize * y,
+                                                  _pointSize,
+                                                  _pointSize));
         }
 
-        public void SetInputDataAndDraw(NetworkDataModel networkModel)
+        public void SetInputDataAndDraw(NetworkDataModel network)
         {
-            _threshold = networkModel.InputThreshold;
-            var count = networkModel.Layers.First.Neurons.CountIf(n => !n.IsBias);
+            _threshold = network.InputThreshold;
+            var count = network.Layers.First.Neurons.CountIf(n => !n.IsBias);
 
             if (_data == null || _data.Length != count)
             {
@@ -154,14 +189,14 @@ namespace Qualia.Controls
                 Array.Clear(_data, 0, _data.Length);
             }
 
-            var neuronModel = networkModel.Layers.First.Neurons.First;
-            while (neuronModel != null)
+            var neuron = network.Layers.First.Neurons.First;
+            while (neuron != null)
             {
-                if (!neuronModel.IsBias)
+                if (!neuron.IsBias)
                 {
-                    _data[neuronModel.Id] = neuronModel.Activation;
+                    _data[neuron.Id] = neuron.Activation;
                 }
-                neuronModel = neuronModel.Next;
+                neuron = neuron.Next;
             }
 
             Rearrange(_pointsCount);
@@ -248,31 +283,43 @@ namespace Qualia.Controls
             return ref Points.Get(x, y);
         }
 
-        public void SetInputStat(NetworkDataModel networkModel)
+        public void SetInputStat(NetworkDataModel network)
         {
             if (_stat == null)
             {
                 return;
             }
 
-            if (networkModel == null)
+            if (network == null)
             {
-                throw new ArgumentNullException(nameof(networkModel));
+                throw new ArgumentNullException(nameof(network));
             }
 
             int index = 0;
-            var neuronModel = networkModel.Layers.First.Neurons.First;
+            var neuron = network.Layers.First.Neurons.First;
 
-            while (neuronModel != null)
+            while (neuron != null)
             {
-                if (!neuronModel.IsBias)
+                if (!neuron.IsBias)
                 {
-                    _stat[index] += neuronModel.Activation > _threshold ? neuronModel.Activation : 0;
+                    _stat[index] += neuron.Activation > _threshold ? neuron.Activation : 0;
                 }
 
                 ++index;
-                neuronModel = neuronModel.Next;
+                neuron = neuron.Next;
             }
+        }
+
+        public TaskModel GetModel()
+        {
+            TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+            LoadUI();
+
+            return new()
+            {
+                TaskFunction = TaskFunction // TaskFunction.GetInstance(CtlTaskFunction)
+                                           //.SetInputDataFunction(CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig))
+            };
         }
     }
 }

@@ -83,7 +83,10 @@
                 </Menu>
                 <local:TextControl Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
             </Grid>
-            <Button Padding="3" Margin="5" Grid.Row="1" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="ApplyChanges_OnClick" />
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Background="Red">
+                <Button Padding="3" Margin="5" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="ApplyChanges_OnClick" />
+                <Button Padding="3" Margin="5" Name="CtlCancelChanges" Content="Cancel" IsEnabled="True" Click="CancelChanges_OnClick" />
+            </StackPanel>
             <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="NetworkTab_OnChanged" >
                 <TabControl.ContextMenu>
                     <ContextMenu Name="CtlNetworkContextMenu" Opened="NetworkContextMenu_OnOpened">
