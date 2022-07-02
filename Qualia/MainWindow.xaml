@@ -30,6 +30,7 @@
                     <local:BoolValueControl x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                     <local:BoolValueControl x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                     <local:BoolValueControl x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    <local:BoolValueControl x:Name="CtlShowActivationLabels" Content="Show activation labels" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                 </StackPanel>
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
 

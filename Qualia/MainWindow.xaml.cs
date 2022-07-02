@@ -39,10 +39,20 @@ namespace Qualia.Controls
             {
                 CtlSettings,
 
-                CtlUseWeightsColors,
-                CtlOnlyChangedWeights,
-                CtlHighlightChangedWeights,
+                CtlUseWeightsColors
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
+
+                CtlOnlyChangedWeights
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
+
+                CtlHighlightChangedWeights
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
+
                 CtlShowOnlyUnchangedWeights
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
+
+                CtlShowActivationLabels
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
             };
 
             Loaded += MainWindow_OnLoaded;
@@ -64,7 +74,8 @@ namespace Qualia.Controls
                                                   CtlUseWeightsColors.Value,
                                                   CtlOnlyChangedWeights.Value,
                                                   CtlHighlightChangedWeights.Value,
-                                                  CtlShowOnlyUnchangedWeights.Value);
+                                                  CtlShowOnlyUnchangedWeights.Value,
+                                                  CtlShowActivationLabels.Value);
             };
 
             LoadConfig();
@@ -79,6 +90,8 @@ namespace Qualia.Controls
             OnConfigLoaded();
 
             SetOnChangeEvent();
+
+            TurnApplyChangesButton(Constants.State.Off);
         }
 
         private void LoadWindowSettings()
@@ -203,11 +216,15 @@ namespace Qualia.Controls
 
         private void UI_OnChanged(Notification.ParameterChanged param)
         {
-            TurnApplyChangesButton(Constants.State.On);
-            CtlMenuStart.IsEnabled = false;
-
-            if (param == Notification.ParameterChanged.NeuronsCount)
+            if (param == Notification.ParameterChanged.DynamicSettings)
             {
+                //
+            }
+            else if (param == Notification.ParameterChanged.NeuronsCount)
+            {
+                TurnApplyChangesButton(Constants.State.On);
+                CtlMenuStart.IsEnabled = false;
+
                 if (_networksManager != null)
                 {
                     if (_networksManager.IsValid())
@@ -227,6 +244,11 @@ namespace Qualia.Controls
                     TurnApplyChangesButton(Constants.State.Off);
                 }
             }
+            else
+            {
+                TurnApplyChangesButton(Constants.State.On);
+                CtlMenuStart.IsEnabled = false;
+            }
         }
 
         private void TurnApplyChangesButton(Constants.State state)
@@ -235,11 +257,17 @@ namespace Qualia.Controls
             {
                 CtlApplyChanges.Background = Brushes.Yellow;
                 CtlApplyChanges.IsEnabled = true;
+
+                CtlCancelChanges.Background = Brushes.Yellow;
+                CtlCancelChanges.IsEnabled = true;
             }
             else
             {
                 CtlApplyChanges.Background = Brushes.White;
                 CtlApplyChanges.IsEnabled = false;
+
+                CtlCancelChanges.Background = Brushes.White;
+                CtlCancelChanges.IsEnabled = false;
             }
         }
 
@@ -294,7 +322,8 @@ namespace Qualia.Controls
                                                   CtlUseWeightsColors.Value,
                                                   CtlOnlyChangedWeights.Value,
                                                   CtlHighlightChangedWeights.Value,
-                                                  CtlShowOnlyUnchangedWeights.Value);
+                                                  CtlShowOnlyUnchangedWeights.Value,
+                                                  CtlShowActivationLabels.Value);
 
                 TurnApplyChangesButton(Constants.State.Off);
             }
@@ -361,7 +390,8 @@ namespace Qualia.Controls
                                     CtlUseWeightsColors.Value,
                                     CtlOnlyChangedWeights.Value,
                                     CtlHighlightChangedWeights.Value,
-                                    CtlShowOnlyUnchangedWeights.Value);
+                                    CtlShowOnlyUnchangedWeights.Value,
+                                    CtlShowActivationLabels.Value);
 
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
@@ -706,7 +736,8 @@ namespace Qualia.Controls
                                                     CtlUseWeightsColors.Value,
                                                     CtlOnlyChangedWeights.Value,
                                                     CtlHighlightChangedWeights.Value,
-                                                    CtlShowOnlyUnchangedWeights.Value);
+                                                    CtlShowOnlyUnchangedWeights.Value,
+                                                    CtlShowActivationLabels.Value);
 
                             swRenderTime.Stop();
                             RenderTime.Network = swRenderTime.Elapsed.Ticks;
@@ -765,13 +796,15 @@ namespace Qualia.Controls
                                              bool isUseWeightsColors,
                                              bool isOnlyChangedWeights,
                                              bool isHighlightChangedWeights,
-                                             bool isShowOnlyUnchangedWeights)
+                                             bool isShowOnlyUnchangedWeights,
+                                             bool isShowActivationLabels)
         {
             CtlNetworkPresenter.RenderRunning(model,
                                               isUseWeightsColors,
                                               isOnlyChangedWeights,
                                               isHighlightChangedWeights,
-                                              isShowOnlyUnchangedWeights);
+                                              isShowOnlyUnchangedWeights,
+                                              isShowActivationLabels);
 
             CtlInputDataPresenter.SetInputDataAndDraw(model);
         }
@@ -1097,9 +1130,18 @@ namespace Qualia.Controls
                 lock (Locker.ApplyChanges)
                 {
                     CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.NetworkModels.First);
+
                     CtlNetworkPresenter.ClearCache();
-                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel, CtlUseWeightsColors.Value, CtlOnlyChangedWeights.Value, CtlHighlightChangedWeights.Value, CtlShowOnlyUnchangedWeights.Value);
-                    CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, _networksManager.SelectedNetworkModel);
+                    CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel,
+                                                      CtlUseWeightsColors.Value,
+                                                      CtlOnlyChangedWeights.Value,
+                                                      CtlHighlightChangedWeights.Value,
+                                                      CtlShowOnlyUnchangedWeights.Value,
+                                                      CtlShowActivationLabels.Value);
+
+                    CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels,
+                                              _networksManager.SelectedNetworkModel);
+
                     CtlStatisticsPresenter.Draw(_networksManager.SelectedNetworkModel.LastStatistics);
                 }
             }
