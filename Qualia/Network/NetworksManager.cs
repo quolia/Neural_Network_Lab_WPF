@@ -300,6 +300,7 @@ namespace Qualia.Controls
                 {
                     if (!neuron.IsBias)
                     {
+                        neuron.X = baseNeuron.X;
                         neuron.Activation = baseNeuron.Activation;
                     }
 

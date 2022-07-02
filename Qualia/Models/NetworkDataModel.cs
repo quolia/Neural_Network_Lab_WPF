@@ -162,6 +162,7 @@ namespace Qualia.Model
                         AxW = AxW.Next;
                     }
 
+                    nextLayerNeuron.X = sum;
                     nextLayerNeuron.Activation = nextLayerNeuron.ActivationFunction.Do(sum, nextLayerNeuron.ActivationFunctionParam);
                     nextLayerNeuron = nextLayerNeuron.Next;
                 }
@@ -179,7 +180,7 @@ namespace Qualia.Model
 
             while (neuron != null)
             {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFunctionParam);
+                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.X, neuron.Activation, neuron.ActivationFunctionParam);
                 neuron = neuron.Next;
             }
 
@@ -197,7 +198,7 @@ namespace Qualia.Model
                         var prevNeuron = AxW.Neuron;
                         if (prevNeuron.Activation != 0)
                         {
-                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
+                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
                         }
 
                         AxW = AxW.Next;
@@ -356,6 +357,7 @@ namespace Qualia.Model
                                 double initValue = newNeuronModel.ActivationInitializer.Do(newNeuronModel.ActivationInitializerParam);
                                 if (InitializeFunction.IsSkipValue(initValue))
                                 {
+                                    newNeuronModel.X = neuronModel.X;
                                     newNeuronModel.Activation = neuronModel.Activation;
                                 }
                             }
@@ -383,6 +385,7 @@ namespace Qualia.Model
 
                 while (neuronModel != null)
                 {
+                    neuronModelCopy.X = neuronModel.X;
                     neuronModelCopy.Activation = neuronModel.Activation;
 
                     if (neuronModel.Activation != 0 && layerModel != Layers.Last)

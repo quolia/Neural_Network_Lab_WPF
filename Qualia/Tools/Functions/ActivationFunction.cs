@@ -6,9 +6,9 @@ namespace Qualia.Tools
     unsafe public class ActivationFunction : BaseFunction<ActivationFunction>
     {
         public readonly delegate*<double, double, double> Do;
-        public readonly delegate*<double, double, double> Derivative;
+        public readonly delegate*<double, double, double, double> Derivative;
 
-        public ActivationFunction(delegate*<double, double, double> doFunc, delegate*<double, double, double> derivativeFunc)
+        public ActivationFunction(delegate*<double, double, double> doFunc, delegate*<double, double, double, double> derivativeFunc)
             : base(nameof(LogisticSigmoid))
         {
             Do = doFunc;
@@ -26,7 +26,7 @@ namespace Qualia.Tools
             public static double Do(double x, double a) => 1 / (1 + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double z, double a) => z * (1 - z);
+            public static double Derivative(double x, double f, double a) => f * (1 - f);
         }
 
         unsafe sealed public class SymmetricSigmoid
@@ -40,7 +40,7 @@ namespace Qualia.Tools
             public static double Do(double x, double a) => 2 * LogisticSigmoid.Do(x, 1) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double z, double a) => 2 * z * (1 - z);
+            public static double Derivative(double x, double f, double a) => 2 * f * (1 - f);
         }
 
         unsafe sealed public class None
@@ -54,7 +54,7 @@ namespace Qualia.Tools
             private static double Do(double x, double a) => x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Derivative(double z, double a) => 1;
+            private static double Derivative(double x, double f, double a) => 1;
         }
 
         unsafe sealed public class Liner
@@ -68,7 +68,7 @@ namespace Qualia.Tools
             private static double Do(double x, double a) => a * x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static double Derivative(double x, double a) => a;
+            private static double Derivative(double x, double f, double a) => a;
         }
 
         unsafe sealed public class Softsign
@@ -82,7 +82,7 @@ namespace Qualia.Tools
             public static double Do(double x, double a) => x / (1 + MathX.Abs(x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double a) => 1 / Math.Pow(1 + MathX.Abs(x), 2);
+            public static double Derivative(double x, double f, double a) => 1 / Math.Pow(1 + MathX.Abs(f), 2);
         }
 
         unsafe sealed public class Tanh
@@ -96,7 +96,7 @@ namespace Qualia.Tools
             public static double Do(double x, double a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double a) => 4 * Math.Exp(2 * x) / Math.Pow(Math.Exp(2 * x) + 1, 2);
+            public static double Derivative(double x, double f, double a) => 4 * Math.Exp(2 * f) / Math.Pow(Math.Exp(2 * f) + 1, 2);
         }
 
         unsafe sealed public class ReLu
@@ -113,9 +113,9 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double a)
+            public static double Derivative(double x, double f, double a)
             {
-                return x > 0 ? a : 0;
+                return f > 0 ? a : 0;
             }
         }
 
@@ -133,7 +133,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double a) => 0;
+            public static double Derivative(double x, double f, double a) => 0;
         }
     }
 }

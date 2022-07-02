@@ -151,6 +151,7 @@ namespace Qualia.Model
                 {
                     if (!neuron.IsBias)
                     {
+                        neuron.X = baseNeuron.X;
                         neuron.Activation = baseNeuron.Activation;
                     }
 
