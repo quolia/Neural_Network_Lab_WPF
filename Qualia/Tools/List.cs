@@ -97,9 +97,19 @@ namespace Qualia.Tools
         }
     }
 
-    public class ListXNode<T>
+    public class ListXNode<T> where T : class
     {
         public T Next;
         public T Previous;
+
+        public void ForEach(Action<T> action)
+        {
+            T current = this as T;
+            while (current != null)
+            {
+                action(current);
+                current = (current as ListXNode<T>).Next;
+            }
+        }
     }
 }
