@@ -104,6 +104,8 @@ namespace Qualia.Controls
         {
             var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
             LoadNetworksManager(fileName);
+
+            TaskParameter_OnChanged();
         }
 
         private void LoadNetworksManager(string fileName)
@@ -241,7 +243,7 @@ namespace Qualia.Controls
             try
             {
                 SaveConfig();
-                WorkingModel.Current().Refresh(this).RefreshSettings().RefreshDataPresenter();
+                WorkingModel.Current.RefreshAll(this, _networksManager);
             }
             catch (Exception ex)
             {
@@ -251,7 +253,7 @@ namespace Qualia.Controls
 
             if (IsRunning)
             {
-                if (MessageBox.Show("Would you like running network to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Would you like running networks to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     ApplyChangesToRunningNetworks();
                 }
@@ -259,7 +261,7 @@ namespace Qualia.Controls
             else
             {
                 if (MessageBoxResult.Yes ==
-                        MessageBox.Show("Would you like network to apply changes?", "Confirm", MessageBoxButton.YesNo))
+                        MessageBox.Show("Would you like networks to apply changes?", "Confirm", MessageBoxButton.YesNo))
                 {
                     ApplyChangesToStandingNetworks();
                 }
@@ -324,8 +326,6 @@ namespace Qualia.Controls
                 return;
             }
 
-            var model = WorkingModel.Current().Refresh(this);
-
             ApplyChangesToStandingNetworks();
 
             _cancellationTokenSource = new();
@@ -336,13 +336,21 @@ namespace Qualia.Controls
             CtlMenuStop.IsEnabled = true;
             CtlMenuDeleteNetwork.IsEnabled = false;
 
-            _networksManager.PrepareModelsForRun();
-            _networksManager.PrepareModelsForRound();
+            //_networksManager.PrepareModelsForRun();
+            //_networksManager.PrepareModelsForRound();
 
-            CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.SelectedNetworkModel);
-            _networksManager.FeedForward(); // initialize state
+            var model = WorkingModel.Current.RefreshAll(this, _networksManager);
 
-            DrawNetworkAndInputData(_networksManager.SelectedNetworkModel,
+            model.PrepareModelsForRun();
+            model.PrepareModelsForRound();
+
+            //CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.SelectedNetworkModel);
+            CtlInputDataPresenter.SetInputDataAndDraw(model.SelectedNetwork);
+            //_networksManager.FeedForward(); // initialize state
+            model.FeedForward(); // initialize state
+
+            //DrawNetworkAndInputData(_networksManager.SelectedNetworkModel,
+            DrawNetworkAndInputData(model.SelectedNetwork,
                                     CtlUseWeightsColors.Value,
                                     CtlOnlyChangedWeights.Value,
                                     CtlHighlightChangedWeights.Value,
@@ -385,7 +393,7 @@ namespace Qualia.Controls
 
             Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
-            var model = WorkingModel.Current();
+            var model = WorkingModel.Current.RefreshAll(this, _networksManager);
 
             var loopLimits = new LoopsLimit[3]
             {
@@ -427,15 +435,18 @@ namespace Qualia.Controls
 
                 lock (Locker.ApplyChanges)
                 {
-                    //swCurrentPureRoundsPerSecond.Restart();
+                    model = WorkingModel.Current;
 
-                    _networksManager.PrepareModelsForLoop();
+                    //_networksManager.PrepareModelsForLoop();
+                    model.PrepareModelsForLoop();
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
-                        _networksManager.PrepareModelsForRound();
+                        //_networksManager.PrepareModelsForRound();
+                        model.PrepareModelsForRound();
 
-                        network = _networksManager.NetworkModels.First;
+                        //network = _networksManager.NetworkModels.First;
+                        network = model.Network;
                         while (network != null)
                         {
                             if (!network.IsEnabled)
@@ -488,7 +499,8 @@ namespace Qualia.Controls
                         }
                     }
 
-                    network = _networksManager.NetworkModels.First;
+                    //network = _networksManager.NetworkModels.First;
+                    network = model.Network;
                     while (network != null)
                     {
                         if (!network.IsEnabled)
@@ -510,7 +522,8 @@ namespace Qualia.Controls
                     {
                         var totalTicksElapsed = _startTime.Elapsed.Ticks;
 
-                        network = _networksManager.NetworkModels.First;
+                        //network = _networksManager.NetworkModels.First;
+                        network = model.Network;
                         while (network != null)
                         {
                             if (!network.IsEnabled)
@@ -613,7 +626,8 @@ namespace Qualia.Controls
                 {
                     isRendering = true;
 
-                    NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    //NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    NetworkDataModel selectedNetworkModel = model.SelectedNetwork;
                     double learningRate = 0;
 
                     if (isErrorMatrixRenderNeeded)
@@ -636,7 +650,8 @@ namespace Qualia.Controls
                             //selectedNetworkModel.BlockWeights(networkModelToRender);
 
                             networkModelToRender = selectedNetworkModel.GetCopyToDraw();
-                            CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
+                            //CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
+                            CtlInputDataPresenter.SetInputStat(model.Network);
                         }
                     }
 
@@ -646,7 +661,8 @@ namespace Qualia.Controls
 
                         //lock (ApplyChangesLocker)
                         {
-                            CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
+                            //CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
+                            CtlPlotPresenter.OptimizePlotPointsCount(model.Network);
                             {
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
@@ -665,7 +681,9 @@ namespace Qualia.Controls
                         {
                             swRenderTime.Restart();
 
-                            CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender, statisticsToRender.LastInput, statisticsToRender.LastOutput);
+                            CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender,
+                                                               statisticsToRender.LastInput,
+                                                               statisticsToRender.LastOutput);
                             errorMatrixToRender.ClearData();
 
                             swRenderTime.Stop();
@@ -676,7 +694,11 @@ namespace Qualia.Controls
                         {
                             swRenderTime.Restart();
 
-                            DrawNetworkAndInputData(networkModelToRender, CtlUseWeightsColors.Value, CtlOnlyChangedWeights.Value, CtlHighlightChangedWeights.Value, CtlShowOnlyUnchangedWeights.Value);
+                            DrawNetworkAndInputData(networkModelToRender,
+                                                    CtlUseWeightsColors.Value,
+                                                    CtlOnlyChangedWeights.Value,
+                                                    CtlHighlightChangedWeights.Value,
+                                                    CtlShowOnlyUnchangedWeights.Value);
 
                             swRenderTime.Stop();
                             RenderTime.Network = swRenderTime.Elapsed.Ticks;

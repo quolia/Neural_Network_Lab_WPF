@@ -101,17 +101,17 @@ namespace Qualia.Controls
 
         public override void SetConfig(Config config)
         {
-            _config = config;
+            _config = config.Extend(Name);
             CtlTaskFunction.SetConfig(_config);
         }
 
         public override void LoadConfig()
         {
             TaskFunction = CtlTaskFunction.Fill<TaskFunction>(_config);
-            LoadUI();
+            LoadTaskFunctionUI();
         }
 
-        private void LoadUI()
+        private void LoadTaskFunctionUI()
         {
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
@@ -312,13 +312,11 @@ namespace Qualia.Controls
 
         public TaskModel GetModel()
         {
-            TaskFunction = TaskFunction.GetInstance(CtlTaskFunction);
-            LoadUI();
-
             return new()
             {
-                TaskFunction = TaskFunction // TaskFunction.GetInstance(CtlTaskFunction)
-                                           //.SetInputDataFunction(CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig))
+                TaskFunction = TaskFunction.GetInstance(CtlTaskFunction),
+                InputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction),
+                InputDataFunctionParam = CtlInputDataFunction.CtlParam.Value
             };
         }
     }

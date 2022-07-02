@@ -51,8 +51,11 @@ namespace Qualia.Controls
                 throw new ArgumentException("No network models.", nameof(networkModels));
             }
 
-            var networkModel = networkModels.First;
+            OptimizePlotPointsCount(networkModels.First);
+        }
 
+        public void OptimizePlotPointsCount(NetworkDataModel networkModel)
+        {
             while (networkModel != null)
             {
                 if (!networkModel.IsEnabled)

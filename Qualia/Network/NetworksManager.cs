@@ -326,30 +326,30 @@ namespace Qualia.Controls
 
         unsafe public void PrepareModelsForLoop()
         {
-            NetworkModels.ForEach(model => model.BackPropagationStrategy.PrepareForLoop(model));
+            NetworkModels.ForEach(network => network.BackPropagationStrategy.PrepareForLoop(network));
         }
 
         public void FeedForward()
         {
-            NetworkModels.ForEach(model => model.FeedForward());
+            NetworkModels.ForEach(network => network.FeedForward());
         }
 
         public void ResetModelsStatistics()
         {
-            NetworkModels.ForEach(model => model.Statistics = new());
+            NetworkModels.ForEach(network => network.Statistics = new());
         }
 
         private void ResetModelsDynamicStatistics()
         {
-            NetworkModels.ForEach(model => model.DynamicStatistics = new());
+            NetworkModels.ForEach(network => network.DynamicStatistics = new());
         }
 
         public void ResetErrorMatrix()
         {
-            NetworkModels.ForEach(m =>
+            NetworkModels.ForEach(network =>
             {
-                m.ErrorMatrix.ClearData();
-                m.ErrorMatrix.Next.ClearData();
+                network.ErrorMatrix.ClearData();
+                network.ErrorMatrix.Next.ClearData();
             });
         }
     }
