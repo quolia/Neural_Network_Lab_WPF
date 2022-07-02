@@ -1,4 +1,5 @@
-﻿using Qualia.Tools;
+﻿using Qualia.Model;
+using Qualia.Tools;
 using System;
 using System.Linq;
 
@@ -50,12 +51,5 @@ namespace Qualia.Controls
                 SkipRoundsToDrawStatistics = (int)CtlSkipRoundsToDrawStatistics.Value
             };
         }
-    }
-
-    sealed public class SettingsModel
-    {
-        public int SkipRoundsToDrawErrorMatrix;
-        public int SkipRoundsToDrawNetworks;
-        public int SkipRoundsToDrawStatistics;
     }
 }

@@ -1,15 +1,14 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
     public partial class FunctionControl : BaseUserControl
     {
-        public FunctionControl Initialize(string defaultFunctionName, double? defaultParamValue = null)
+        public FunctionControl Initialize(string defaultFunction, double? defaultParam = null)
         {
-            CtlFunction.Initialize(defaultFunctionName);
-            CtlParam.Initialize(defaultValue: defaultParamValue);
+            CtlFunction.Initialize(defaultFunction);
+            CtlParam.Initialize(defaultValue: defaultParam);
 
             return this;
         }
@@ -19,11 +18,17 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
+            _configParams = new()
+            {
+                CtlFunction,
+                CtlParam
+            };
+
             CtlFunction.SetOnChangeEvent(Function_OnChanged);
             CtlParam.SetOnChangeEvent(Param_OnChanged);
         }
 
-        private void Function_OnChanged(Notification.ParameterChanged param)
+    private void Function_OnChanged(Notification.ParameterChanged param)
         {
             OnChanged(param);
         }

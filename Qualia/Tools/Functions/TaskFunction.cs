@@ -28,12 +28,6 @@ namespace Qualia.Tools
         int GetPointsRearrangeSnap();
     }
 
-    public interface INetworkTaskChanged
-    {
-        void TaskChanged();
-        void TaskParameter_OnChanged();
-    }
-
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
         public readonly delegate*<NetworkDataModel, InputDataFunction, double, void> Do;
@@ -48,6 +42,12 @@ namespace Qualia.Tools
         {
             Do = doFunc;
             ITaskControl = visualControl;
+        }
+
+        public TaskFunction SetInputDataFunction(InputDataFunction function)
+        {
+            InputDataFunction = function;     
+            return this;
         }
 
         sealed public class CountDots : ITaskControl

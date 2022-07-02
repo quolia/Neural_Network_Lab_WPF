@@ -27,7 +27,7 @@ namespace Qualia.Tools
             return double.IsNaN(value);
         }
 
-        public enum Toggle
+        public enum State
         {
             On,
             Off
@@ -62,10 +62,15 @@ namespace Qualia.Tools
             Unknown = 0,
 
             Settings,
+
+            TaskFunction,
+            TaskInputDataFunction,
+
             Structure,
             NeuronsCount,
 
-            Fake
+            Fake,
+            TaskInputData
         }
     }
 }
