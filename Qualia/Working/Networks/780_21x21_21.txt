@@ -313,7 +313,7 @@ Networks:637923623704111240
 637923624351785171.IsBias:0
 637923624351785171.IsBiasConnected:0
 637923623704111240.SelectedLayerIndex:1
-SelectedNetworkIndex:-1
+SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:CountDots
 InputDataPresenter.TaskFunction.CountDots.InputDataFunction:FlatRandom
 InputDataPresenter.TaskFunction.CountDots.InputDataFunction.FlatRandom.Param:1

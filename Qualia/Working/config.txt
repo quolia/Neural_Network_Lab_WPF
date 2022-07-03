@@ -10,9 +10,9 @@ Settings.SkipRoundsToDrawErrorMatrix:10000
 Settings.SkipRoundsToDrawNetworks:10000
 Settings.SkipRoundsToDrawStatistics:10000
 Settings.PreventComputerFromSleep:1
-UseWeightsColors:0
-OnlyChangedWeights:0
-HighlightChangedWeights:0
-ShowOnlyUnchangedWeights:0
-ShowActivationLabels:1
+DynamicSettings.UseWeightsColors:0
+DynamicSettings.OnlyChangedWeights:0
+DynamicSettings.HighlightChangedWeights:0
+DynamicSettings.ShowOnlyUnchangedWeights:0
+DynamicSettings.ShowActivationLabels:1
 NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\780_21x21_21.txt
