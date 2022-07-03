@@ -50,7 +50,7 @@ namespace Qualia.Controls
 
         private void SetTitle(string fileName)
         {
-            Title = "Networks - " + Path.GetFileNameWithoutExtension(fileName) + ": " + fileName;
+            Title = "Networks - " + Path.GetFileNameWithoutExtension(fileName) + "      " + fileName;
         }
 
         private void MainWindow_OnLoaded(object sender, EventArgs e)
@@ -1263,6 +1263,12 @@ namespace Qualia.Controls
                 _cancellationTokenSource.Dispose();
                 _cancellationTokenSource = null;
             }
+        }
+
+        private void MenuVersion_OnClick(object sender, RoutedEventArgs e)
+        {
+            var (version, date) = VersionHelper.GetVersion();
+            MessageBox.Show($"Version: {version}\n\nBuilt on: {date}\n\nAuthor: echoviser@gmail.com", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

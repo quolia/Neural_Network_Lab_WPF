@@ -84,10 +84,13 @@
                         <Separator />
                         <MenuItem Name="CtlMainMenuAddNeuron" Header="Add Neuron" Click="MainMenuAddNeuron_OnClick" />
                     </MenuItem>
-                    <MenuItem Name="CtlMenuRun" Header="Run" IsEnabled="False" SubmenuOpened="MenuRun_OnSubmenuOpened">
+                    <MenuItem Name="CtlMenuRun" Header="_Run" IsEnabled="False" SubmenuOpened="MenuRun_OnSubmenuOpened">
                         <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="MenuStart_OnClick" />
                         <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="MenuStop_OnClick" />
                         <MenuItem Name="CtlMenuReset" Header="Reset" Click="MenuReset_OnClick" />
+                    </MenuItem>
+                    <MenuItem Name="CtlMenuHelp" Header="Help" IsEnabled="True">
+                        <MenuItem Name="CtlVersion" Header="Version" Click="MenuVersion_OnClick" />
                     </MenuItem>
                 </Menu>
                 <local:TextControl Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />

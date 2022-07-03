@@ -37,6 +37,8 @@ namespace Qualia.Controls
 
             SizeChanged += RandomizerViewer_OnSizeChanged;
             Loaded += RandomizerViewer_OnLoaded;
+
+            WindowState = WindowState.Maximized;
         }
 
         private void RandomizerViewer_OnLoaded(object sender, RoutedEventArgs e)
