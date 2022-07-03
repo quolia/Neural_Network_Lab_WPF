@@ -21,6 +21,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <local:TextControl HorizontalAlignment="Right" Content="Draw error matrix:" />
@@ -31,6 +32,8 @@
 
                 <local:TextControl HorizontalAlignment="Right" Grid.Row="2" Content="Draw statistics (loop size):" />
                 <local:IntValueControl HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" x:Name="CtlSkipRoundsToDrawStatistics" DefaultValue="10000" Value="10000" MaximumValue="100000" MinimumValue="1" />
+
+                <local:BoolValueControl Grid.Row="3" Grid.ColumnSpan="2" x:Name="CtlPreventComputerFromSleep" Content="Prevent computer from sleep" Margin="0 20 0 0" />
 
             </Grid>
         </StackPanel>   

@@ -7,8 +7,8 @@ Networks:637923623704111240
 637923623704111240.IsNetworkEnabled:1
 637923623704111240.Color:255,100,100,100
 637923623704111240.Layers:637923623704121079,637923624017758468,637923624028936956,637923623704131218
-637923623704121079.ActivationFunction:Liner
-637923623704121079.WeightsInitializeFunction:FlatRandom
+637923623704121079.ActivationFunction:Identiy
+637923623704121079.WeightsInitializeFunction:Skip
 637923623704121079.InputInitial0:0
 637923623704121079.InputInitial1:1
 637923623704121079.ActivationFunctionParam:1
@@ -312,8 +312,8 @@ Networks:637923623704111240
 637923624351785171.WeightsInitializeFunctionParam:1
 637923624351785171.IsBias:0
 637923624351785171.IsBiasConnected:0
-637923623704111240.SelectedLayerIndex:0
-SelectedNetworkIndex:0
+637923623704111240.SelectedLayerIndex:1
+SelectedNetworkIndex:-1
 InputDataPresenter.TaskFunction:CountDots
 InputDataPresenter.TaskFunction.CountDots.InputDataFunction:FlatRandom
 InputDataPresenter.TaskFunction.CountDots.InputDataFunction.FlatRandom.Param:1

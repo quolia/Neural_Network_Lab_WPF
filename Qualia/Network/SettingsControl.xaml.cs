@@ -22,6 +22,10 @@ namespace Qualia.Controls
                 CtlSkipRoundsToDrawStatistics
                     .Initialize(defaultValue: 10000),
 
+                CtlPreventComputerFromSleep
+                    .Initialize(defaultValue: true)
+                    .SetUIParam(Notification.ParameterChanged.PreventComputerFromSleep),
+
                 new FakeValue()
             };
         }
@@ -39,6 +43,11 @@ namespace Qualia.Controls
             if (param == Notification.ParameterChanged.Fake)
             {
                 OnChanged(Notification.ParameterChanged.Settings);
+            }
+
+            if (param == Notification.ParameterChanged.PreventComputerFromSleep)
+            {
+                SystemTools.SetPreventComputerFromSleep(CtlPreventComputerFromSleep.Value);
             }
         }
 

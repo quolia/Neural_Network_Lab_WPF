@@ -33,6 +33,8 @@ namespace Qualia.Controls
             Thread.CurrentThread.CurrentCulture = Culture.Current;
             Logger.Log("Application started.");
 
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
+
             InitializeComponent();
 
             _configParams = new()
@@ -197,6 +199,7 @@ namespace Qualia.Controls
             }
 
             _configParams.ForEach(p => p.SaveConfig());
+            Config.Main.FlushToDrive();
 
             if (_networksManager != null)
             {

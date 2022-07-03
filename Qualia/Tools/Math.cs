@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Qualia.Tools
@@ -62,6 +63,12 @@ namespace Qualia.Tools
         internal static int Sign(double a)
         {
             return a < 0 ? -1 : 1;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static double Exp(double x)
+        {
+            return Math.Exp(x);
         }
     }
 }
