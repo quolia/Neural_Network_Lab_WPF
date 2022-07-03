@@ -41,20 +41,8 @@ namespace Qualia.Controls
             {
                 CtlSettings,
 
-                CtlUseWeightsColors
-                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
-
-                CtlOnlyChangedWeights
-                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
-
-                CtlHighlightChangedWeights
-                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
-
-                CtlShowOnlyUnchangedWeights
-                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
-
-                CtlShowActivationLabels
-                    .SetUIParam(Notification.ParameterChanged.DynamicSettings),
+                new ConfigParamWrapper(CtlDynamicSettings)
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings)
             };
 
             Loaded += MainWindow_OnLoaded;
