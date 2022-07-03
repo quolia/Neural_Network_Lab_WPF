@@ -211,6 +211,14 @@ namespace Qualia.Controls
             {
                 //
             }
+            else if (param == Notification.ParameterChanged.PreventComputerFromSleep)
+            {
+                CtlNoSleepLabel.Visibility = Visibility.Visible;
+            }
+            else if (param == Notification.ParameterChanged.DisablePreventComputerFromSleep)
+            {
+                CtlNoSleepLabel.Visibility = Visibility.Collapsed;
+            }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
                 TurnApplyChangesButton(Constants.State.On);

@@ -25,13 +25,21 @@
                 </Grid.RowDefinitions>
                      
                 <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
-                <StackPanel x:Name="CtlDynamicSettings" Orientation="Horizontal">
-                    <local:BoolValueControl x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                    <local:BoolValueControl x:Name="CtlShowActivationLabels" Content="Show activation labels" VerticalAlignment="Bottom" Margin="3,0,0,5" />
-                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel x:Name="CtlDynamicSettings" Orientation="Horizontal">
+                        <local:BoolValueControl x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                        <local:BoolValueControl x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                        <local:BoolValueControl x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                        <local:BoolValueControl x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                        <local:BoolValueControl x:Name="CtlShowActivationLabels" Content="Show activation labels" VerticalAlignment="Bottom" Margin="3,0,0,5" />
+                    </StackPanel>
+                    <local:TextControl x:Name="CtlNoSleepLabel" Grid.Column="1" Content="No sleep mode" FontSize="10" Padding="0" Margin="0,0,0,5" Background="Yellow" Height="Auto" Width="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+                </Grid>
+
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
 
                 <Grid Grid.Row="1">
@@ -103,10 +111,11 @@
                     <ContentControl>
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
+                            <local:MemoControl x:Name="CtlNotes" Grid.Row="1" Margin="0 20 0 0" Caption="Notes:" />
                         </Grid>
                     </ContentControl>
                 </TabItem>

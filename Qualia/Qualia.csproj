@@ -167,6 +167,9 @@
     <Compile Include="Controls\Base\Values\BoolValue.cs" />
     <Compile Include="Controls\Base\Values\SelectValue.cs" />
     <Compile Include="Controls\Base\Values\StringValue.cs" />
+    <Compile Include="Controls\Misc\MemoControl.xaml.cs">
+      <DependentUpon>MemoControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\WorkingModel.cs" />
     <Compile Include="Network\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
@@ -214,6 +217,10 @@
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="Tools\Unsafe.cs" />
     <Page Include="Controls\Base\FunctionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Misc\MemoControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
