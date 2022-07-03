@@ -63,16 +63,17 @@ namespace Qualia.Tools
 
             Settings,
             DynamicSettings,
+            PreventComputerFromSleep,
+            DisablePreventComputerFromSleep,
 
             TaskFunction,
+            TaskInputData,
             TaskInputDataFunction,
 
             Structure,
             NeuronsCount,
 
-            Fake,
-            TaskInputData,
-            PreventComputerFromSleep
+            Fake
         }
     }
 }

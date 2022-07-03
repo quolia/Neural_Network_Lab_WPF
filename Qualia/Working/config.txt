@@ -5,7 +5,7 @@ ScreenTop:0
 ScreenLeft:0
 OnTop:0
 DataWidth:232
-NetworkHeight:612
+NetworkHeight:615
 Settings.SkipRoundsToDrawErrorMatrix:10000
 Settings.SkipRoundsToDrawNetworks:10000
 Settings.SkipRoundsToDrawStatistics:10000

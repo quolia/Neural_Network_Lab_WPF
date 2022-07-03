@@ -36,6 +36,8 @@ namespace Qualia.Controls
             _onChanged += onChanged;
 
             _configParams.ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
+
+            Value_OnChanged(Notification.ParameterChanged.PreventComputerFromSleep);
         }
 
         private void Value_OnChanged(Notification.ParameterChanged param)
@@ -47,7 +49,20 @@ namespace Qualia.Controls
 
             if (param == Notification.ParameterChanged.PreventComputerFromSleep)
             {
-                SystemTools.SetPreventComputerFromSleep(CtlPreventComputerFromSleep.Value);
+                var yes = CtlPreventComputerFromSleep.Value;
+                try
+                {
+                    SystemTools.SetPreventComputerFromSleep(yes);
+                    OnChanged(yes
+                              ? Notification.ParameterChanged.PreventComputerFromSleep
+                              : Notification.ParameterChanged.DisablePreventComputerFromSleep);
+                }
+                catch
+                {
+                    OnChanged(yes
+                              ? Notification.ParameterChanged.DisablePreventComputerFromSleep
+                              : Notification.ParameterChanged.PreventComputerFromSleep);
+                }
             }
         }
 
