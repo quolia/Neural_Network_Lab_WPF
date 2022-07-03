@@ -20,7 +20,7 @@ namespace Qualia.Tools
 
     sealed public class Config
     {
-        public static Config Main = new(App.WorkingDirectory + "config.txt");
+        public static Config Main = new(FileHelper.ConfigPath);
 
         private readonly string _fileName;
         private readonly Config _parentConfig;

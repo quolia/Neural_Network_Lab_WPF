@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Qualia.Tools;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,11 +21,23 @@ namespace Qualia.Controls
     {
         public string Caption { get; set; } = "Caption";
 
+        public string Text => CtlText.Text;
+
         public MemoControl()
         {
             InitializeComponent();
 
             DataContext = this;
+
+            if (File.Exists(FileHelper.NotesPath))
+            {
+                CtlText.Text = File.ReadAllText(FileHelper.NotesPath);
+            }
+        }
+
+        internal void Save(string fileName)
+        {
+            File.WriteAllText(FileHelper.NotesPath, Text);
         }
     }
 }

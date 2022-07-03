@@ -1270,5 +1270,10 @@ namespace Qualia.Controls
             var (version, date) = VersionHelper.GetVersion();
             MessageBox.Show($"Version: {version}\n\nBuilt on: {date}\n\nAuthor: echoviser@gmail.com", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void CtlNotes_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            CtlNotes.Save(FileHelper.NotesPath);
+        }
     }
 }
