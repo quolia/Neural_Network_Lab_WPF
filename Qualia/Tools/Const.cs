@@ -71,7 +71,8 @@ namespace Qualia.Tools
             NeuronsCount,
 
             Fake,
-            TaskInputData
+            TaskInputData,
+            PreventComputerFromSleep
         }
     }
 }

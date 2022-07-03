@@ -25,7 +25,7 @@
                 </Grid.RowDefinitions>
                      
                 <local:NetworkPresenter  x:Name="CtlNetworkPresenter" Margin="0,0,0,5" />
-                <StackPanel Orientation="Horizontal">
+                <StackPanel x:Name="CtlDynamicSettings" Orientation="Horizontal">
                     <local:BoolValueControl x:Name="CtlUseWeightsColors" Content="Use weights colors" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                     <local:BoolValueControl x:Name="CtlOnlyChangedWeights" Content="Count only weights changed more than 0.001 %" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                     <local:BoolValueControl x:Name="CtlHighlightChangedWeights" Content="Highlight changed weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
@@ -84,10 +84,14 @@
                 </Menu>
                 <local:TextControl Padding="0" Margin="0,0,5,0" FontWeight="Bold" Grid.Column="1" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Right" />
             </Grid>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Background="Red">
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Button Padding="3" Margin="5" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="ApplyChanges_OnClick" />
-                <Button Padding="3" Margin="5" Name="CtlCancelChanges" Content="Cancel" IsEnabled="True" Click="CancelChanges_OnClick" />
-            </StackPanel>
+                <Button Grid.Column="1" Padding="3" Margin="5" Name="CtlCancelChanges" Content="Cancel changes" IsEnabled="False" Click="CancelChanges_OnClick" />
+            </Grid>
             <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="NetworkTab_OnChanged" >
                 <TabControl.ContextMenu>
                     <ContextMenu Name="CtlNetworkContextMenu" Opened="NetworkContextMenu_OnOpened">

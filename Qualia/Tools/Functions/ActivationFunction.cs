@@ -15,15 +15,15 @@ namespace Qualia.Tools
             Derivative = derivativeFunc;
         }
 
-        unsafe sealed public class LogisticSigmoid
+        unsafe sealed public class LogisticSigmoid // Logistic, sigmoid, or soft step.
         {
             public static readonly string Description = "f(x) = 1 / (1 + exp(-x))";
-            public static readonly string DerivativeDescription = "f(z=f(x))' = z * (1 - z)";
+            public static readonly string DerivativeDescription = "f(x)' = f(x) * (1 - f(x))";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double a) => 1 / (1 + Math.Exp(-x));
+            public static double Do(double x, double a) => 1 / (1 + MathX.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Derivative(double x, double f, double a) => f * (1 - f);
@@ -31,8 +31,8 @@ namespace Qualia.Tools
 
         unsafe sealed public class SymmetricSigmoid
         {
-            public static readonly string Description = "f(x) = 2 * LogisticSigmoid(x) - 1";
-            public static readonly string DerivativeDescription = "f(z=f(x))' = 2 * z * (1 - z)";
+            public static readonly string Description = "f(x) = 2 * sigmoid(x) - 1";
+            public static readonly string DerivativeDescription = "f(z=sigmoid(x))' = 2 * z * (1 - z)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -40,13 +40,17 @@ namespace Qualia.Tools
             public static double Do(double x, double a) => 2 * LogisticSigmoid.Do(x, 1) - 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double f, double a) => 2 * f * (1 - f);
+            public static double Derivative(double x, double f, double a)
+            {
+                var sigmoid = LogisticSigmoid.Do(x, 1);
+                return 2 * sigmoid * (1 - sigmoid);
+            }
         }
 
-        unsafe sealed public class None
+        unsafe sealed public class Identiy
         {
             public static readonly string Description = "f(x) = x";
-            public static readonly string DerivativeDescription = "f(z=f(x)=x)' = 1";
+            public static readonly string DerivativeDescription = "f(x)' = 1";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -57,10 +61,10 @@ namespace Qualia.Tools
             private static double Derivative(double x, double f, double a) => 1;
         }
 
-        unsafe sealed public class Liner
+        unsafe sealed public class Linear
         {
             public static readonly string Description = "f(x, a) = ax, (a -> multiplier)";
-            public static readonly string DerivativeDescription = "f(z=f(x, a)=ax, a)' = a, (a -> multiplier)";
+            public static readonly string DerivativeDescription = "f(x, a)' = a, (a -> multiplier)";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
@@ -85,39 +89,49 @@ namespace Qualia.Tools
             public static double Derivative(double x, double f, double a) => 1 / Math.Pow(1 + MathX.Abs(f), 2);
         }
 
-        unsafe sealed public class Tanh
+        unsafe sealed public class Tanh // Hyperbolic tangent.
         {
-            public static readonly string Description = "f(x, a) = 2 / (1 + exp(-2x)) - 1, (a -> not used)";
-            public static readonly string DerivativeDescription = "f(x, a)' = 4 * exp(2x) / ((exp(2x) + 1)^2, (a -> not used)";
+            public static readonly string Description = "f(x) = (exp(x) - exp(-x)) / (exp(x) + exp(-x))";
+            public static readonly string DerivativeDescription = "f(x)' = 1 - f(x)^2";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double a) => 2 / (1 + Math.Exp(-2 * x)) - 1;
+            public static double Do(double x, double a) => (Math.Exp(x) - Math.Exp(-x)) / (Math.Exp(x) + Math.Exp(-x));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double f, double a) => 4 * Math.Exp(2 * f) / Math.Pow(Math.Exp(2 * f) + 1, 2);
+            public static double Derivative(double x, double f, double a) => 1 - f * f;
         }
 
-        unsafe sealed public class ReLu
+        unsafe sealed public class ReLu // Rectified linear unit.
         {
-            public static readonly string Description = "f(x, a) = if (x > 0) => (ax) else => (0), (a -> multiplier)";
-            public static readonly string DerivativeDescription = "f(x, a)' = if (x > 0) => (a) else => (0), (a -> multiplier)";
+            public static readonly string Description = "f(x) = ... 0 if x <= 0 ... x if x > 0";
+            public static readonly string DerivativeDescription = "f(x)' = ... 0 if x < 0 ... 1 if x > 0 ... undefined(0) if x = 0";
 
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double a)
-            {
-                return x > 0 ? a * x : 0;
-            }
+            public static double Do(double x, double a) => x <= 0 ? 0 : x;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Derivative(double x, double f, double a)
-            {
-                return f > 0 ? a : 0;
-            }
+            public static double Derivative(double x, double f, double a) => x <= 0 ? 0 : 1;
         }
+
+        unsafe sealed public class LeakyReLu // Leaky rectified linear unit.
+        {
+            public static readonly string Description = "f(x) = ... 0.01 * x if x < 0 ... x if x >= 0";
+            public static readonly string DerivativeDescription = "f(x)' = ... 0.01 if x < 0 ... 1 if x >= 0";
+
+            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double x, double a) => x < 0 ? 0.01 * x : x;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double f, double a) => x < 0 ? 0.01 : 1;
+        }
+
+        //Gaussian Error Linear Unit (GELU)[5]
 
         unsafe sealed public class StepConst
         {
@@ -134,6 +148,62 @@ namespace Qualia.Tools
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Derivative(double x, double f, double a) => 0;
+        }
+
+        unsafe sealed public class BinaryStep
+        {
+            public static readonly string Description = "f(x) = 0 if x < 0 ... 1 if x >= 0";
+            public static readonly string DerivativeDescription = "f(x)' = 0 if x <> 0 ... undefined(0) if x = 0";
+
+            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double x, double a) => x < 0 ? 0 : 1;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double f, double a) => 0;
+        }
+
+        unsafe sealed public class Softplus
+        {
+            public static readonly string Description = "f(x) = ln(1 + exp(x))";
+            public static readonly string DerivativeDescription = "f(x)' = 1 / (1 + exp(-x))";
+
+            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double x, double a) => Math.Log(1 + Math.Exp(x));
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double f, double a) => 1 / (1 + Math.Exp(-x));
+        }
+
+        unsafe sealed public class ELU // Exponential linear unit.
+        {
+            public static readonly string Description = "f(x) = ... (exp(x) - 1) if x <= 0 ... x if x > 0";
+            public static readonly string DerivativeDescription = "f(x)' = ... exp(x) if x < 0 ... 1 if x >= 0";
+
+            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double x, double a) => x > 0 ? x : Math.Exp(x) - 1;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double f, double a) => x < 0 ? Math.Exp(x) : 1;
+        }
+
+        unsafe sealed public class SELU // Scaled exponential linear unit.
+        {
+            public static readonly string Description = "f(x) = ... 1.0507 * 1.67326 * (exp(x) - 1) if x < 0 ... x if x >= 0";
+            public static readonly string DerivativeDescription = "f(x)' = ... 1.0507 * 1.67326 * exp(x) if x < 0 ... 1.0507 if x >= 0";
+
+            public static readonly ActivationFunction Instance = new(&Do, &Derivative);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Do(double x, double a) => x < 0 ? 1.0507 * 1.67326 * (Math.Exp(x) - 1) : x;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static double Derivative(double x, double f, double a) => x < 0 ? 1.0507 * 1.67326 * Math.Exp(x) : 1.0507;
         }
     }
 }

@@ -1,939 +1,195 @@
-2022-06-30 00:53:58
+2022-07-03 13:10:37
 Application started.
 
-2022-06-30 00:54:35
+2022-07-03 13:53:23
 Application started.
 
-2022-06-30 00:56:40
+2022-07-03 13:53:44
 Application started.
 
-2022-06-30 01:00:37
+2022-07-03 13:54:43
 Application started.
 
-2022-06-30 01:02:05
+2022-07-03 13:55:23
 Application started.
 
-2022-06-30 01:05:22
+2022-07-03 13:56:32
 Application started.
 
-2022-06-30 01:09:18
+2022-07-03 14:12:49
 Application started.
 
-2022-06-30 01:10:16
+2022-07-03 14:13:19
 Application started.
 
-2022-06-30 01:10:44
+2022-07-03 14:16:40
 Application started.
 
-2022-06-30 01:13:02
+2022-07-03 14:18:10
 Application started.
 
-2022-06-30 01:14:38
+2022-07-03 14:18:26
 Application started.
 
-2022-06-30 01:25:50
+2022-07-03 14:18:58
 Application started.
 
-2022-06-30 01:27:31
+2022-07-03 14:19:34
 Application started.
 
-2022-06-30 01:29:06
+2022-07-03 14:20:12
 Application started.
 
-2022-06-30 01:32:18
+2022-07-03 14:21:08
 Application started.
 
-2022-06-30 01:34:24
+2022-07-03 14:21:31
 Application started.
 
-2022-06-30 01:34:52
+2022-07-03 14:24:51
 Application started.
 
-2022-06-30 01:39:22
+2022-07-03 14:32:52
 Application started.
 
-2022-06-30 01:40:03
+2022-07-03 14:34:10
 Application started.
 
-2022-06-30 01:42:44
+2022-07-03 14:35:23
 Application started.
 
-2022-06-30 01:51:01
+2022-07-03 14:35:55
 Application started.
 
-2022-06-30 01:56:53
+2022-07-03 14:37:22
 Application started.
 
-2022-06-30 03:11:38
+2022-07-03 14:37:51
 Application started.
 
-2022-06-30 03:12:41
+2022-07-03 14:38:47
 Application started.
 
-2022-06-30 03:12:55
+2022-07-03 14:40:38
 Application started.
 
-2022-06-30 03:23:51
+2022-07-03 14:41:02
 Application started.
 
-2022-06-30 03:26:59
+2022-07-03 14:44:25
 Application started.
 
-2022-06-30 03:33:57
+2022-07-03 14:46:01
 Application started.
 
-2022-06-30 03:44:55
+2022-07-03 14:46:31
 Application started.
 
-2022-06-30 03:48:48
+2022-07-03 14:46:46
 Application started.
 
-2022-06-30 04:22:21
+2022-07-03 14:47:00
 Application started.
 
-2022-06-30 04:23:37
+2022-07-03 14:47:23
 Application started.
 
-2022-06-30 04:24:08
+2022-07-03 14:47:52
 Application started.
 
-2022-06-30 04:24:35
+2022-07-03 15:00:50
 Application started.
 
-2022-06-30 04:32:07
+2022-07-03 15:03:38
 Application started.
 
-2022-06-30 04:32:55
+2022-07-03 15:05:52
 Application started.
 
-2022-06-30 04:33:59
+2022-07-03 15:06:58
 Application started.
 
-2022-06-30 04:34:49
+2022-07-03 15:07:25
 Application started.
 
-2022-06-30 04:39:51
+2022-07-03 15:07:48
 Application started.
 
-2022-06-30 04:45:24
+2022-07-03 15:08:38
 Application started.
 
-2022-06-30 04:45:51
+2022-07-03 15:10:09
 Application started.
 
-2022-06-30 04:47:27
+2022-07-03 15:10:29
 Application started.
 
-2022-06-30 04:48:10
+2022-07-03 15:13:06
 Application started.
 
-2022-06-30 04:53:19
+2022-07-03 15:13:36
 Application started.
 
-2022-06-30 04:54:02
+2022-07-03 15:15:12
 Application started.
 
-2022-06-30 04:58:08
+2022-07-03 15:16:53
 Application started.
 
-2022-06-30 04:58:38
+2022-07-03 15:31:15
 Application started.
 
-2022-06-30 05:01:22
+2022-07-03 15:32:03
 Application started.
 
-2022-06-30 05:03:08
+2022-07-03 15:33:49
 Application started.
 
-2022-06-30 05:05:54
+2022-07-03 15:34:18
 Application started.
 
-2022-06-30 05:06:54
+2022-07-03 15:35:26
 Application started.
 
-2022-06-30 05:08:18
+2022-07-03 15:36:29
 Application started.
 
-2022-06-30 05:11:13
+2022-07-03 15:37:18
 Application started.
 
-2022-06-30 05:11:57
+2022-07-03 15:38:31
 Application started.
 
-2022-06-30 05:13:47
+2022-07-03 15:39:27
 Application started.
 
-2022-06-30 05:14:45
+2022-07-03 15:40:22
 Application started.
 
-2022-06-30 05:16:01
+2022-07-03 15:40:47
 Application started.
 
-2022-06-30 05:16:49
+2022-07-03 15:41:00
 Application started.
 
-2022-06-30 05:17:58
+2022-07-03 15:41:37
 Application started.
 
-2022-06-30 05:22:47
+2022-07-03 15:42:02
 Application started.
 
-2022-06-30 05:23:33
+2022-07-03 15:42:55
 Application started.
 
-2022-06-30 05:25:59
+2022-07-03 15:46:02
 Application started.
 
-2022-06-30 05:36:00
+2022-07-03 15:46:29
 Application started.
 
-2022-06-30 05:52:05
+2022-07-03 15:46:57
 Application started.
 
-2022-06-30 05:53:19
-Application started.
-
-2022-06-30 05:56:59
-Application started.
-
-2022-06-30 06:01:42
-Application started.
-
-2022-06-30 06:03:10
-Application started.
-
-2022-06-30 06:26:18
-Application started.
-
-2022-06-30 06:28:51
-Application started.
-
-2022-06-30 06:29:32
-Application started.
-
-2022-06-30 06:32:10
-Application started.
-
-2022-06-30 06:35:46
-Application started.
-
-2022-06-30 06:40:30
-Application started.
-
-2022-06-30 06:42:31
-Application started.
-
-2022-06-30 06:53:03
-Application started.
-
-2022-06-30 07:00:05
-Application started.
-
-2022-06-30 07:01:52
-Application started.
-
-2022-06-30 07:02:45
-Application started.
-
-2022-06-30 07:06:51
-Application started.
-
-2022-06-30 07:07:11
-Application started.
-
-2022-06-30 07:11:20
-Application started.
-
-2022-06-30 07:13:16
-Application started.
-
-2022-06-30 07:15:02
-Application started.
-
-2022-06-30 07:15:53
-Application started.
-
-2022-06-30 07:16:38
-Application started.
-
-2022-06-30 07:19:24
-Application started.
-
-2022-06-30 07:50:50
-Application started.
-
-2022-06-30 07:51:57
-Application started.
-
-2022-06-30 07:54:51
-Application started.
-
-2022-06-30 08:02:36
-Application started.
-
-2022-06-30 08:03:15
-Application started.
-
-2022-06-30 08:03:53
-Application started.
-
-2022-06-30 08:05:41
-System.ArgumentNullException
-Value cannot be null.
-Parameter name: value
-   at Qualia.Tools.Config.Set(String paramName, String value) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 210
-   at Qualia.Tools.Config.Get(String paramName, String defaultValue) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 114
-   at Qualia.Controls.StringValueControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\Values\StringValue.cs:line 63
-   at Qualia.Controls.MNISTControl.<>c.<LoadConfig>b__11_0(IConfigParam param) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\MNISTControl.xaml.cs:line 42
-   at Qualia.Tools.Range.ForEach[T](IEnumerable`1 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 23
-   at Qualia.Controls.MNISTControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Task\MNISTControl.xaml.cs:line 42
-   at Qualia.Tools.TaskFunction.MNISTNumbers.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskFunction.cs:line 179
-   at Qualia.Controls.InputDataPresenter.Task_OnChanged() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\InputDataPresenter.xaml.cs:line 66
-   at System.Action.Invoke()
-   at Qualia.Controls.SelectValueControl.Value_OnChanged(Object sender, SelectionChangedEventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\Values\SelectValue.cs:line 38
-   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
-   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
-   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
-   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
-   at System.Windows.Controls.ComboBox.OnSelectionChanged(SelectionChangedEventArgs e)
-   at System.Windows.Controls.Primitives.Selector.SelectionChanger.End()
-   at System.Windows.Controls.Primitives.Selector.SelectionChanger.SelectJustThisItem(ItemInfo info, Boolean assumeInItemsCollection)
-   at System.Windows.Controls.ComboBox.NotifyComboBoxItemMouseUp(ComboBoxItem comboBoxItem)
-   at System.Windows.Controls.ComboBoxItem.OnMouseLeftButtonUp(MouseButtonEventArgs e)
-   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
-   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
-   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
-   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
-   at System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e)
-   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
-   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
-   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
-   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
-   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
-   at System.Windows.Input.InputManager.ProcessStagingArea()
-   at System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
-   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
-   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
-   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
-   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
-   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
-   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
-   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
-   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
-   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
-   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
-   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
-   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
-   at System.Windows.Application.RunDispatcher(Object ignore)
-   at System.Windows.Application.RunInternal(Window window)
-   at Qualia.App.Main()
-
-2022-06-30 08:14:52
-Application started.
-
-2022-06-30 08:15:42
-Application started.
-
-2022-06-30 08:16:43
-Application started.
-
-2022-06-30 08:22:14
-Application started.
-
-2022-06-30 08:25:23
-Application started.
-
-2022-06-30 08:29:29
-Application started.
-
-2022-06-30 08:52:16
-Application started.
-
-2022-06-30 09:33:47
-Application started.
-
-2022-06-30 09:36:34
-Application started.
-
-2022-06-30 09:44:28
-Application started.
-
-2022-06-30 09:45:58
-Application started.
-
-2022-06-30 09:46:07
-Application started.
-
-2022-06-30 09:47:43
-Application started.
-
-2022-06-30 09:51:38
-Application started.
-
-2022-06-30 09:57:01
-Application started.
-
-2022-06-30 09:58:52
-Application started.
-
-2022-06-30 09:59:22
-Application started.
-
-2022-06-30 10:00:04
-Application started.
-
-2022-06-30 10:01:22
-Application started.
-
-2022-06-30 10:03:46
-Application started.
-
-2022-06-30 10:05:11
-Application started.
-
-2022-06-30 10:05:58
-Application started.
-
-2022-06-30 10:07:07
-Application started.
-
-2022-06-30 10:07:31
-Application started.
-
-2022-06-30 10:12:09
-Application started.
-
-2022-06-30 10:12:18
-Application started.
-
-2022-06-30 10:12:27
-Application started.
-
-2022-06-30 10:18:03
-Application started.
-
-2022-06-30 10:19:04
-Application started.
-
-2022-06-30 10:19:15
-Application started.
-
-2022-06-30 10:21:02
-Application started.
-
-2022-06-30 10:21:10
-Application started.
-
-2022-06-30 10:21:16
-Application started.
-
-2022-06-30 10:25:33
-Application started.
-
-2022-06-30 10:25:45
-Application started.
-
-2022-06-30 10:28:23
-Application started.
-
-2022-06-30 10:28:51
-Application started.
-
-2022-06-30 10:30:34
-Application started.
-
-2022-06-30 10:32:56
-Application started.
-
-2022-06-30 10:34:20
-Application started.
-
-2022-06-30 10:35:26
-Application started.
-
-2022-06-30 10:36:49
-Application started.
-
-2022-06-30 10:38:41
-Application started.
-
-2022-06-30 11:00:31
-Application started.
-
-2022-06-30 11:01:36
-Application started.
-
-2022-06-30 11:05:13
-Application started.
-
-2022-06-30 11:19:35
-Application started.
-
-2022-06-30 15:11:24
-Application started.
-
-2022-06-30 15:12:52
-Application started.
-
-2022-06-30 15:20:06
-Application started.
-
-2022-06-30 15:21:31
-Application started.
-
-2022-06-30 15:23:37
-Application started.
-
-2022-06-30 15:25:44
-Application started.
-
-2022-06-30 15:26:41
-Application started.
-
-2022-06-30 15:31:29
-Application started.
-
-2022-06-30 15:31:57
-Application started.
-
-2022-06-30 15:32:49
-Application started.
-
-2022-06-30 15:35:20
-Application started.
-
-2022-06-30 15:44:13
-Application started.
-
-2022-06-30 15:44:46
-Application started.
-
-2022-06-30 15:44:55
-Application started.
-
-2022-06-30 15:46:33
-Application started.
-
-2022-06-30 15:47:41
-Application started.
-
-2022-06-30 15:56:15
-Application started.
-
-2022-06-30 16:13:24
-Application started.
-
-2022-06-30 16:16:16
-Application started.
-
-2022-06-30 16:17:25
-Application started.
-
-2022-06-30 16:17:54
-Application started.
-
-2022-06-30 16:18:44
-Application started.
-
-2022-06-30 16:20:10
-Application started.
-
-2022-06-30 16:20:49
-Application started.
-
-2022-06-30 16:23:59
-Application started.
-
-2022-06-30 16:25:54
-Application started.
-
-2022-06-30 16:28:07
-Application started.
-
-2022-06-30 16:28:22
-Application started.
-
-2022-06-30 16:32:25
-Application started.
-
-2022-06-30 16:34:27
-Application started.
-
-2022-06-30 16:35:21
-Application started.
-
-2022-07-01 05:21:32
-Application started.
-
-2022-07-01 05:23:58
-Application started.
-
-2022-07-01 05:25:05
-Application started.
-
-2022-07-01 05:25:13
-Application started.
-
-2022-07-01 05:26:21
-Application started.
-
-2022-07-01 05:30:21
-Application started.
-
-2022-07-01 05:31:08
-Application started.
-
-2022-07-01 14:52:39
-Application started.
-
-2022-07-01 15:17:28
-Application started.
-
-2022-07-01 15:57:36
-Application started.
-
-2022-07-01 15:58:11
-Application started.
-
-2022-07-01 16:04:05
-Application started.
-
-2022-07-01 17:05:39
-Application started.
-
-2022-07-01 18:34:38
-Application started.
-
-2022-07-01 18:37:59
-Application started.
-
-2022-07-01 18:38:57
-Application started.
-
-2022-07-01 18:39:41
-Application started.
-
-2022-07-02 14:47:27
-Application started.
-
-2022-07-02 15:00:25
-Application started.
-
-2022-07-02 15:02:44
-Application started.
-
-2022-07-02 15:03:08
-Application started.
-
-2022-07-02 15:03:26
-Application started.
-
-2022-07-02 15:03:48
-Application started.
-
-2022-07-02 15:07:58
-Application started.
-
-2022-07-02 15:08:27
-Application started.
-
-2022-07-02 17:00:40
-Application started.
-
-2022-07-02 17:02:36
-Application started.
-
-2022-07-02 17:02:55
-Application started.
-
-2022-07-02 17:05:09
-Application started.
-
-2022-07-02 17:05:44
-Application started.
-
-2022-07-02 17:07:35
-Application started.
-
-2022-07-02 17:26:06
-Application started.
-
-2022-07-02 17:27:54
-Application started.
-
-2022-07-02 17:35:44
-Application started.
-
-2022-07-02 17:38:39
-Application started.
-
-2022-07-02 17:40:30
-Application started.
-
-2022-07-02 17:40:56
-Application started.
-
-2022-07-02 17:45:58
-Application started.
-
-2022-07-02 17:46:57
-Application started.
-
-2022-07-02 17:47:50
-Application started.
-
-2022-07-02 18:09:06
-Application started.
-
-2022-07-02 18:09:53
-Application started.
-
-2022-07-02 18:10:54
-Application started.
-
-2022-07-02 18:25:34
-Application started.
-
-2022-07-02 18:28:34
-Application started.
-
-2022-07-02 18:29:56
-Application started.
-
-2022-07-02 18:30:13
-Application started.
-
-2022-07-02 18:32:52
-Application started.
-
-2022-07-02 18:33:11
-Application started.
-
-2022-07-02 18:33:52
-Application started.
-
-2022-07-02 18:54:48
-Application started.
-
-2022-07-02 19:09:11
-Application started.
-
-2022-07-02 19:10:45
-Application started.
-
-2022-07-02 19:11:02
-Application started.
-
-2022-07-02 19:11:35
-Application started.
-
-2022-07-02 19:11:56
-Application started.
-
-2022-07-02 19:13:20
-Application started.
-
-2022-07-02 19:13:54
-Application started.
-
-2022-07-02 19:15:19
-Application started.
-
-2022-07-02 19:18:20
-Application started.
-
-2022-07-02 19:19:36
-Application started.
-
-2022-07-02 19:20:36
-Application started.
-
-2022-07-02 19:26:10
-Application started.
-
-2022-07-02 19:38:06
-Application started.
-
-2022-07-02 19:39:00
-Application started.
-
-2022-07-02 19:41:14
-Application started.
-
-2022-07-02 19:41:44
-Application started.
-
-2022-07-02 19:46:09
-Application started.
-
-2022-07-02 19:47:14
-Application started.
-
-2022-07-02 19:48:10
-Application started.
-
-2022-07-02 19:48:56
-Application started.
-
-2022-07-02 19:49:46
-Application started.
-
-2022-07-02 19:50:57
-Application started.
-
-2022-07-02 19:55:27
-Application started.
-
-2022-07-02 19:56:03
-Application started.
-
-2022-07-02 19:56:31
-Application started.
-
-2022-07-02 19:57:11
-Application started.
-
-2022-07-02 19:58:24
-Application started.
-
-2022-07-02 20:00:38
-Application started.
-
-2022-07-02 20:01:23
-Application started.
-
-2022-07-02 20:01:47
-Application started.
-
-2022-07-02 20:02:15
-Application started.
-
-2022-07-02 20:03:04
-Application started.
-
-2022-07-02 20:04:02
-Application started.
-
-2022-07-02 20:07:49
-Application started.
-
-2022-07-02 20:08:08
-Application started.
-
-2022-07-02 20:11:51
-Application started.
-
-2022-07-02 20:13:38
-Application started.
-
-2022-07-02 20:13:59
-Application started.
-
-2022-07-02 20:15:08
-Application started.
-
-2022-07-02 20:15:19
-Application started.
-
-2022-07-02 20:23:59
-Application started.
-
-2022-07-02 20:27:34
-Application started.
-
-2022-07-02 20:32:22
-Application started.
-
-2022-07-02 20:35:16
-Application started.
-
-2022-07-02 20:39:50
-Application started.
-
-2022-07-02 21:06:19
-Application started.
-
-2022-07-02 21:12:18
-Application started.
-
-2022-07-02 21:17:08
-Application started.
-
-2022-07-02 21:18:07
-Application started.
-
-2022-07-02 21:19:31
-Application started.
-
-2022-07-02 21:20:19
-Application started.
-
-2022-07-02 21:21:33
-Application started.
-
-2022-07-02 21:21:54
-Application started.
-
-2022-07-02 21:22:20
-Application started.
-
-2022-07-02 21:22:45
-Application started.
-
-2022-07-02 21:28:04
-Application started.
-
-2022-07-02 21:29:36
-Application started.
-
-2022-07-02 21:30:08
-Application started.
-
-2022-07-02 21:31:01
-Application started.
-
-2022-07-02 21:31:24
-Application started.
-
-2022-07-02 21:31:59
-Application started.
-
-2022-07-02 21:35:02
-Application started.
-
-2022-07-02 21:35:28
-Application started.
-
-2022-07-02 21:36:20
-Application started.
-
-2022-07-02 21:37:06
-Application started.
-
-2022-07-02 21:37:48
-Application started.
-
-2022-07-02 21:38:04
-Application started.
-
-2022-07-02 21:39:17
-Application started.
-
-2022-07-02 21:41:25
-Application started.
-
-2022-07-02 21:50:14
-Application started.
-
-2022-07-02 23:13:51
-Application started.
-
-2022-07-03 00:46:09
-Application started.
-
-2022-07-03 01:04:56
-Application started.
-
-2022-07-03 01:15:56
+2022-07-03 15:59:36
 Application started.
 

@@ -65,7 +65,7 @@ namespace Qualia.Tools
                 throw new InvalidValueException("double", "NaN");
             }
 
-            var result = value.ToString(format == "auto" ? "F30" : format, Culture.Current);
+            var result = value.ToString(format == "auto" ? "F50" : format, Culture.Current);
             if (trim && result.Contains(Culture.Current.NumberFormat.NumberDecimalSeparator))
             {
                 result = result.TrimEnd(_0).TrimEnd(_S);
@@ -73,7 +73,7 @@ namespace Qualia.Tools
 
             if (format == "auto")
             {
-                int ind = result.IndexOf('.');
+                int ind = result.IndexOf(Culture.Current.NumberFormat.NumberDecimalSeparator[0]);
                 if (ind > 0)
                 {
                     ++ind;

@@ -83,7 +83,7 @@ namespace Qualia.Tools
         private static string[] _getItems(bool uncludeDescription)
         {
             return typeof(T).GetNestedTypes()
-                            .Select(type => type.Name + (uncludeDescription ? "\n " + GetDescription(type.Name) : ""))
+                            .Select(type => type.Name + (uncludeDescription ? "\n" + GetDescription(type.Name) : ""))
                             .ToArray();
         }
 
@@ -105,10 +105,18 @@ namespace Qualia.Tools
             if (fieldInfo != null)
             {
                 description = (string)fieldInfo.GetValue(null);
-                description = string.IsNullOrEmpty(description) ? null : description;
+                description = string.IsNullOrEmpty(description) ? null : description.Replace(" ... ", "\n");
             }
-            
-            return description ?? "No description.";
+
+            string derivativeDescription = null;
+            fieldInfo = type.GetField("DerivativeDescription");
+            if (fieldInfo != null)
+            {
+                derivativeDescription = (string)fieldInfo.GetValue(null);
+                derivativeDescription = string.IsNullOrEmpty(description) ? null : derivativeDescription.Replace(" ... ", "\n");
+            }
+
+            return (description + "\n" + derivativeDescription) ?? "No description.";
         }
     }
 }

@@ -370,6 +370,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Working\MNIST\images.bin" />
+    <None Include="Working\MNIST\labels.bin" />
+    <None Include="Working\MNIST\train-images-idx3-ubyte.gz" />
+    <None Include="Working\MNIST\train-labels-idx1-ubyte.gz" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -397,6 +401,14 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Working\config.txt" />
+    <Resource Include="Working\Networks\780_15x15_21.txt" />
+    <Resource Include="Working\Networks\780_21x21_21 - Copy.txt" />
+    <Resource Include="Working\Networks\780_21x21_21.txt" />
+    <Resource Include="Working\Networks\780_30x30_21.txt" />
+    <Resource Include="Working\Networks\test.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ILGPU.0.6.0\build\ILGPU.targets" Condition="Exists('..\packages\ILGPU.0.6.0\build\ILGPU.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -412,4 +424,10 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.4\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.4\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <Import Project="..\packages\ILGPU.Lightning.0.3.0\build\ILGPU.Lightning.targets" Condition="Exists('..\packages\ILGPU.Lightning.0.3.0\build\ILGPU.Lightning.targets')" />
+  <Target Name="BeforeBuild">
+    <!-- Remove obj folder -->
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+    <!-- Remove bin folder -->
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
 </Project>
