@@ -1,7 +1,7 @@
 Networks:637923623704111240
 637923623704111240.RandomizeFunction:Centered
 637923623704111240.CostFunction:MeanSquaredError
-637923623704111240.BackPropagationStrategy:Always
+637923623704111240.BackPropagationStrategy:UntilNoErrorInLoop
 637923623704111240.RandomizeFunctionParam:1
 637923623704111240.LearningRate:0.03
 637923623704111240.IsNetworkEnabled:1
