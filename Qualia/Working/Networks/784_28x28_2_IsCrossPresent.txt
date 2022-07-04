@@ -142,7 +142,7 @@ Networks:637015441499727363
 637925598668440005.WeightsInitializeFunctionParam:1
 637925598668440005.IsBias:0
 637925598668440005.IsBiasConnected:0
-637015441499727363.SelectedLayerIndex:0
+637015441499727363.SelectedLayerIndex:3
 SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:IsCrossPresent
 InputDataPresenter.TaskFunction.IsCrossPresent.InputDataFunction:FlatRandom
