@@ -227,5 +227,123 @@ namespace Qualia.Tools
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
+
+        sealed public class IsCrossPresent : ITaskControl
+        {
+            public static readonly string Description = "Network recognizes if a simple croos is present on the field of points.";
+
+            public static readonly TaskFunction Instance = new(&Do, new IsCrossPresent());
+
+            private static readonly IsCrossPresentControl s_control = new();
+
+            public Control GetVisualControl() => s_control;
+
+            public int GetPointsRearrangeSnap() => 28;
+
+            public bool IsGridSnapAdjustmentAllowed() => false;
+
+            public void ApplyChanges()
+            {
+                //
+            }
+
+            public void SetConfig(Config config) => s_control.SetConfig(config);
+
+            public void LoadConfig()
+            {
+                s_control.LoadConfig();
+                ApplyChanges();
+            }
+
+            public void SaveConfig() => s_control.SaveConfig();
+
+            public int GetInputCount() => 28 * 28;
+
+            public List<string> GetClasses()
+            {
+                List<string> classes = new();
+                for (int number = 0; number <= s_control.MaxPointsCount; ++number)
+                {
+                    classes.Add(Converter.IntToText(number));
+                }
+
+                return classes;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
+            {
+                int maxPointsCount = s_control.MaxPointsCount; // 100
+
+                double randNumber = maxPointsCount;// inputDataFunction.Do(inputDataFunctionParam);
+
+                var intNumber = (int)randNumber;
+
+
+                //do
+
+                networkModel.TargetOutput = intNumber;
+
+                var neurons = networkModel.Layers.First.Neurons;
+                var neuron = neurons.First;
+
+                while (neuron != null)
+                {
+                    neuron.X = networkModel.InputInitial0; // ?
+                    neuron.Activation = networkModel.InputInitial0;
+                    neuron = neuron.Next;
+                }
+
+                while (intNumber > 0)
+                {
+                    var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
+
+                    while (active.Activation == networkModel.InputInitial1)
+                    {
+                        active = active.Next;
+                        if (active == null)
+                        {
+                            active = neurons.First;
+                        }
+                    }
+
+                    active.X = networkModel.InputInitial1; // ?
+                    active.Activation = networkModel.InputInitial1;
+                    --intNumber;
+                }
+
+                byte[] array = new byte[networkModel.Layers.Last.Neurons.Count];
+                int ind = 0;
+
+                networkModel.Layers.Last.Neurons.ForEach(n =>
+                {
+                    if (n.Activation == networkModel.InputInitial1)
+                    {
+                        array[ind] = 1;
+                    }
+                    ++ind;
+                });
+
+                bool yes = IsCrossPresentAnswer(array, maxPointsCount);
+
+                neuron = networkModel.Layers.Last.Neurons.First;
+                neuron.Target = !yes ? 1 : 0; // no
+                neuron.Next.Target = yes ? 1 : 0; // no
+            }
+
+            private static bool IsCrossPresentAnswer(byte[] array, int maxPointsCount)
+            {
+
+                return false;
+            }
+
+            public void RemoveFromConfig() => s_control.RemoveFromConfig();
+
+            public bool IsValid() => s_control.IsValid();
+
+            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
+
+            public void InvalidateValue() => throw new InvalidOperationException();
+        }
     }
 }
