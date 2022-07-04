@@ -236,6 +236,8 @@ namespace Qualia.Tools
 
             private static readonly IsCrossPresentControl s_control = new();
 
+            private static int _maxPointsCount;
+
             public Control GetVisualControl() => s_control;
 
             public int GetPointsRearrangeSnap() => 28;
@@ -244,7 +246,7 @@ namespace Qualia.Tools
 
             public void ApplyChanges()
             {
-                //
+                _maxPointsCount = s_control.MaxPointsCount;
             }
 
             public void SetConfig(Config config) => s_control.SetConfig(config);
@@ -262,7 +264,7 @@ namespace Qualia.Tools
             public List<string> GetClasses()
             {
                 List<string> classes = new();
-                for (int number = 0; number <= s_control.MaxPointsCount; ++number)
+                for (int number = 0; number < 2; ++number) // outputs: no, yes
                 {
                     classes.Add(Converter.IntToText(number));
                 }
@@ -273,16 +275,11 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
             {
-                int maxPointsCount = s_control.MaxPointsCount; // 100
+                int maxPointsCount = _maxPointsCount; // 100
 
                 double randNumber = maxPointsCount;// inputDataFunction.Do(inputDataFunctionParam);
 
                 var intNumber = (int)randNumber;
-
-
-                //do
-
-                networkModel.TargetOutput = intNumber;
 
                 var neurons = networkModel.Layers.First.Neurons;
                 var neuron = neurons.First;
@@ -324,15 +321,23 @@ namespace Qualia.Tools
                     ++ind;
                 });
 
-                bool yes = IsCrossPresentAnswer(array, maxPointsCount);
+                bool yes = IsCrossPresentSolution(array, maxPointsCount);
 
                 neuron = networkModel.Layers.Last.Neurons.First;
                 neuron.Target = !yes ? 1 : 0; // no
-                neuron.Next.Target = yes ? 1 : 0; // no
+                neuron.Next.Target = yes ? 1 : 0; // yes
+
+                networkModel.TargetOutput = yes ? 1 : 0;
             }
 
-            private static bool IsCrossPresentAnswer(byte[] array, int maxPointsCount)
+            private static bool IsCrossPresentSolution(byte[] array, int maxPointsCount)
             {
+                var crossPattern = new List<int[]>() { new int[5] { 0, 0, 0, 0, 0 },
+                                                       new int[5] { 0, 0, 1, 0, 0 },
+                                                       new int[5] { 0, 1, 1, 1, 0 },
+                                                       new int[5] { 0, 0, 1, 0, 0 },
+                                                       new int[5] { 0, 0, 0, 0, 0 } };
+
 
                 return false;
             }
