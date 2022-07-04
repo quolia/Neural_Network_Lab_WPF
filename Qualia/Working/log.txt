@@ -694,3 +694,193 @@ Application started.
 2022-07-03 23:57:32
 Application started.
 
+2022-07-05 01:22:27
+Application started.
+
+2022-07-05 01:23:19
+Application started.
+
+2022-07-05 01:28:37
+Application started.
+
+2022-07-05 01:31:08
+Application started.
+
+2022-07-05 01:32:36
+Application started.
+
+2022-07-05 01:33:39
+Application started.
+
+2022-07-05 01:33:53
+Application started.
+
+2022-07-05 01:34:18
+Application started.
+
+2022-07-05 01:35:29
+Application started.
+
+2022-07-05 01:35:59
+Application started.
+
+2022-07-05 01:36:42
+Application started.
+
+2022-07-05 01:37:07
+Application started.
+
+2022-07-05 01:37:55
+Application started.
+
+2022-07-05 01:38:16
+Application started.
+
+2022-07-05 01:39:50
+Application started.
+
+2022-07-05 01:40:16
+Application started.
+
+2022-07-05 01:41:02
+Application started.
+
+2022-07-05 01:41:30
+Application started.
+
+2022-07-05 01:44:54
+Application started.
+
+2022-07-05 01:52:41
+Application started.
+
+2022-07-05 01:53:03
+Application started.
+
+2022-07-05 01:56:37
+Application started.
+
+2022-07-05 01:59:38
+Application started.
+
+2022-07-05 02:00:04
+Application started.
+
+2022-07-05 02:00:48
+Application started.
+
+2022-07-05 02:01:14
+Application started.
+
+2022-07-05 02:01:47
+Application started.
+
+2022-07-05 02:12:14
+Application started.
+
+2022-07-05 02:12:23
+System.NullReferenceException
+Object reference not set to an instance of an object.
+   at Qualia.Controls.NeuronBaseControl.DeleteNeuron() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\NeuronBase.cs:line 109
+   at Qualia.Controls.NeuronBaseControl.OnDeleteNeuronClick(Object sender, RoutedEventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Base\NeuronBase.cs:line 53
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.MenuItem.InvokeClickAfterRender(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at MS.Internal.CulturePreservingExecutionContext.CallbackWrapper(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at MS.Internal.CulturePreservingExecutionContext.Run(CulturePreservingExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+
+2022-07-05 02:13:00
+Application started.
+
+2022-07-05 02:13:24
+Application started.
+
+2022-07-05 02:13:47
+Application started.
+
+2022-07-05 02:15:19
+Application started.
+
+2022-07-05 02:15:35
+Application started.
+
+2022-07-05 02:16:53
+Application started.
+
+2022-07-05 02:17:11
+Application started.
+
+2022-07-05 02:17:27
+Application started.
+
+2022-07-05 02:17:59
+Application started.
+
+2022-07-05 02:19:06
+Application started.
+
+2022-07-05 02:19:43
+Application started.
+
+2022-07-05 02:20:19
+Application started.
+
+2022-07-05 02:20:39
+Application started.
+
+2022-07-05 02:20:54
+Application started.
+
+2022-07-05 02:21:52
+Application started.
+
+2022-07-05 02:22:27
+Application started.
+
+2022-07-05 02:26:00
+Application started.
+
+2022-07-05 02:26:18
+Application started.
+
+2022-07-05 02:27:44
+Application started.
+
+2022-07-05 02:28:55
+Application started.
+
+2022-07-05 02:30:24
+Application started.
+
+2022-07-05 02:31:59
+Application started.
+
+2022-07-05 02:32:43
+Application started.
+
+2022-07-05 02:33:50
+Application started.
+
+2022-07-05 02:34:30
+Application started.
+

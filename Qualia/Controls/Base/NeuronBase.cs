@@ -106,8 +106,9 @@ namespace Qualia.Controls
             Background = Brushes.Tomato;
             if (MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                (Parent as Panel).Children.Remove(this);
+                this.GetParentOfType<LayerBaseControl>().NeuronsHolder.Children.Remove(this);
                 RemoveFromConfig();
+                SaveConfig();
                 layerBase.RefreshOrdinalNumbers();
                 NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
             }
