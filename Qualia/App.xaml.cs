@@ -9,7 +9,7 @@ namespace Qualia
 {
     public partial class App : Application
     {
-        [assembly: System.Reflection.AssemblyVersion("1.0.*")]
+        //[assembly: System.Reflection.AssemblyVersion("1.0.*")]
 
         public App()
         {

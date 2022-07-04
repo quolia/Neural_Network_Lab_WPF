@@ -181,6 +181,9 @@
     <Compile Include="Controls\Base\Values\BoolValue.cs" />
     <Compile Include="Controls\Base\Values\SelectValue.cs" />
     <Compile Include="Controls\Base\Values\StringValue.cs" />
+    <Compile Include="Controls\Misc\FunctionToolTip.xaml.cs">
+      <DependentUpon>FunctionToolTip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Misc\MemoControl.xaml.cs">
       <DependentUpon>MemoControl.xaml</DependentUpon>
     </Compile>
@@ -232,6 +235,10 @@
     <Compile Include="Tools\Unsafe.cs" />
     <Compile Include="Tools\Version.cs" />
     <Page Include="Controls\Base\FunctionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Misc\FunctionToolTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

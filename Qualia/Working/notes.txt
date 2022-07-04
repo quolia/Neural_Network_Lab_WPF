@@ -1,4 +1,4 @@
 TODO:
 
 - Functions tooltips.
-- Function [Description] attributes.
+- Functions [Description] attributes.

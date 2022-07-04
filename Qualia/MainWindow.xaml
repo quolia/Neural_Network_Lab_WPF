@@ -116,9 +116,11 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
                             <local:MemoControl x:Name="CtlNotes" Grid.Row="1" Margin="0 20 0 0" Caption="Notes:" KeyUp="CtlNotes_KeyUp" />
+                            <local:FunctionToolTip Grid.Row="2" />                            
                         </Grid>
                     </ContentControl>
                 </TabItem>
