@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Qualia.Controls
 {
@@ -33,11 +34,6 @@ namespace Qualia.Controls
             return dv.RenderOpen();
         }
 
-        public void AddVisual(Visual visual)
-        {
-            _visuals.Add(visual);
-        }
-
         protected override int VisualChildrenCount => _visuals.Count;
 
         protected override Visual GetVisualChild(int index)
@@ -60,6 +56,8 @@ namespace Qualia.Controls
             rect.Height = _scaleFunc(rect.Height);
 
             g.DrawRectangle(brush, pen, rect);
+
+            //Height = MathX.Max(Height, rect.Y + rect.Height);
         }
 
         public void DrawText(FormattedText text, ref Point point, double angle = 0)
@@ -84,6 +82,8 @@ namespace Qualia.Controls
             {
                 g.Pop();
             }
+
+            //Height = MathX.Max(Height, point.Y);
         }
 
         public void DrawLine(Pen pen, ref Point point1, ref Point point2)
@@ -96,6 +96,8 @@ namespace Qualia.Controls
             point2.Y = _scaleFunc(point2.Y);
 
             g.DrawLine(pen, point1, point2);
+
+            //Height = MathX.Max(Height, MathX.Max(point1.Y, point2.Y));
         }
 
         public void DrawEllipse(Brush brush, Pen pen, ref Point center, double radiusX, double radiusY)
@@ -108,6 +110,8 @@ namespace Qualia.Controls
             radiusY = _scaleFunc(radiusY);
 
             g.DrawEllipse(brush, pen, center, radiusX, radiusY);
+
+            //Height = MathX.Max(Height, center.Y + radiusY);
         }
     }
 }

@@ -1110,3 +1110,691 @@ Application started.
 2022-07-06 12:11:30
 Application started.
 
+2022-07-06 12:54:23
+Application started.
+
+2022-07-06 12:54:56
+Application started.
+
+2022-07-06 13:01:32
+Application started.
+
+2022-07-06 13:02:27
+Application started.
+
+2022-07-06 13:04:13
+Application started.
+
+2022-07-06 13:04:55
+Application started.
+
+2022-07-06 13:05:22
+Application started.
+
+2022-07-06 13:06:04
+Application started.
+
+2022-07-06 13:08:16
+Application started.
+
+2022-07-06 13:08:47
+Application started.
+
+2022-07-06 13:09:40
+Application started.
+
+2022-07-06 13:10:52
+Application started.
+
+2022-07-06 13:11:18
+Application started.
+
+2022-07-06 13:11:56
+Application started.
+
+2022-07-06 13:12:11
+Application started.
+
+2022-07-06 13:12:51
+Application started.
+
+2022-07-06 13:13:17
+Application started.
+
+2022-07-06 13:14:34
+Application started.
+
+2022-07-06 13:15:01
+Application started.
+
+2022-07-06 13:15:39
+Application started.
+
+2022-07-06 13:16:21
+Application started.
+
+2022-07-06 13:19:29
+Application started.
+
+2022-07-06 13:20:20
+Application started.
+
+2022-07-06 13:20:33
+Application started.
+
+2022-07-06 13:21:37
+Application started.
+
+2022-07-06 13:22:19
+Application started.
+
+2022-07-06 13:22:34
+Application started.
+
+2022-07-06 13:22:56
+Application started.
+
+2022-07-06 13:23:30
+Application started.
+
+2022-07-06 13:23:54
+Application started.
+
+2022-07-06 13:24:40
+Application started.
+
+2022-07-06 13:28:52
+Application started.
+
+2022-07-06 13:29:34
+Application started.
+
+2022-07-06 13:29:58
+Application started.
+
+2022-07-06 13:30:21
+Application started.
+
+2022-07-06 13:30:40
+Application started.
+
+2022-07-06 13:31:34
+Application started.
+
+2022-07-06 13:31:56
+Application started.
+
+2022-07-06 13:32:35
+Application started.
+
+2022-07-06 13:32:55
+Application started.
+
+2022-07-06 13:34:31
+Application started.
+
+2022-07-06 13:34:45
+Application started.
+
+2022-07-06 13:35:14
+Application started.
+
+2022-07-06 13:36:15
+Application started.
+
+2022-07-06 13:36:26
+Application started.
+
+2022-07-06 13:36:39
+Application started.
+
+2022-07-06 13:37:07
+Application started.
+
+2022-07-06 13:37:19
+Application started.
+
+2022-07-06 13:37:36
+Application started.
+
+2022-07-06 13:37:46
+Application started.
+
+2022-07-06 13:38:11
+Application started.
+
+2022-07-06 13:39:44
+Application started.
+
+2022-07-06 13:41:53
+Application started.
+
+2022-07-06 13:42:25
+Application started.
+
+2022-07-06 13:43:18
+Application started.
+
+2022-07-06 13:43:53
+Application started.
+
+2022-07-06 13:44:06
+Application started.
+
+2022-07-06 13:44:30
+Application started.
+
+2022-07-06 13:45:11
+Application started.
+
+2022-07-06 13:45:37
+Application started.
+
+2022-07-06 13:46:09
+Application started.
+
+2022-07-06 13:48:06
+Application started.
+
+2022-07-06 13:48:53
+Application started.
+
+2022-07-06 13:49:25
+Application started.
+
+2022-07-06 13:52:39
+Application started.
+
+2022-07-06 13:55:16
+Application started.
+
+2022-07-06 13:55:33
+Application started.
+
+2022-07-06 13:56:35
+Application started.
+
+2022-07-06 13:57:11
+Application started.
+
+2022-07-06 13:57:34
+Application started.
+
+2022-07-06 13:59:28
+Application started.
+
+2022-07-06 13:59:47
+Application started.
+
+2022-07-06 14:01:35
+Application started.
+
+2022-07-06 14:04:42
+Application started.
+
+2022-07-06 14:05:02
+Application started.
+
+2022-07-06 14:08:27
+Application started.
+
+2022-07-06 14:08:41
+Application started.
+
+2022-07-06 14:08:53
+Application started.
+
+2022-07-06 14:09:18
+Application started.
+
+2022-07-06 14:10:27
+Application started.
+
+2022-07-06 14:11:46
+Application started.
+
+2022-07-06 14:14:15
+Application started.
+
+2022-07-06 14:14:49
+Application started.
+
+2022-07-06 14:15:13
+Application started.
+
+2022-07-06 14:16:22
+Application started.
+
+2022-07-06 14:16:53
+Application started.
+
+2022-07-06 14:17:32
+Application started.
+
+2022-07-06 14:17:54
+Application started.
+
+2022-07-06 14:18:28
+Application started.
+
+2022-07-06 14:18:59
+Application started.
+
+2022-07-06 14:19:51
+Application started.
+
+2022-07-06 14:20:40
+Application started.
+
+2022-07-06 14:22:53
+Application started.
+
+2022-07-06 14:23:16
+Application started.
+
+2022-07-06 14:23:28
+Application started.
+
+2022-07-06 14:23:52
+Application started.
+
+2022-07-06 14:24:21
+Application started.
+
+2022-07-06 14:24:40
+Application started.
+
+2022-07-06 14:26:00
+Application started.
+
+2022-07-06 14:26:30
+Application started.
+
+2022-07-06 14:29:38
+Application started.
+
+2022-07-06 14:30:25
+Application started.
+
+2022-07-06 14:38:50
+Application started.
+
+2022-07-06 14:48:04
+Application started.
+
+2022-07-06 14:49:40
+Application started.
+
+2022-07-06 14:50:19
+Application started.
+
+2022-07-06 14:50:37
+Application started.
+
+2022-07-06 14:51:46
+Application started.
+
+2022-07-06 14:52:15
+Application started.
+
+2022-07-06 14:52:52
+Application started.
+
+2022-07-06 14:53:10
+Application started.
+
+2022-07-06 14:53:37
+Application started.
+
+2022-07-06 14:54:07
+Application started.
+
+2022-07-06 14:55:17
+Application started.
+
+2022-07-06 14:55:53
+Application started.
+
+2022-07-06 14:56:06
+Application started.
+
+2022-07-06 14:57:03
+Application started.
+
+2022-07-06 14:57:25
+Application started.
+
+2022-07-06 14:57:45
+Application started.
+
+2022-07-06 14:58:02
+Application started.
+
+2022-07-06 14:58:43
+Application started.
+
+2022-07-06 14:59:04
+Application started.
+
+2022-07-06 14:59:19
+Application started.
+
+2022-07-06 14:59:51
+Application started.
+
+2022-07-06 15:00:07
+Application started.
+
+2022-07-06 15:00:42
+Application started.
+
+2022-07-06 15:01:04
+Application started.
+
+2022-07-06 15:01:22
+Application started.
+
+2022-07-06 15:01:45
+Application started.
+
+2022-07-06 15:02:51
+Application started.
+
+2022-07-06 15:03:54
+Application started.
+
+2022-07-06 15:04:16
+Application started.
+
+2022-07-06 15:04:36
+Application started.
+
+2022-07-06 15:05:04
+Application started.
+
+2022-07-06 15:05:19
+Application started.
+
+2022-07-06 15:05:53
+Application started.
+
+2022-07-06 15:06:09
+Application started.
+
+2022-07-06 15:07:30
+Application started.
+
+2022-07-06 15:07:54
+Application started.
+
+2022-07-06 15:08:17
+Application started.
+
+2022-07-06 15:08:34
+Application started.
+
+2022-07-06 15:08:48
+Application started.
+
+2022-07-06 15:09:08
+Application started.
+
+2022-07-06 15:09:25
+Application started.
+
+2022-07-06 15:09:43
+Application started.
+
+2022-07-06 15:10:04
+Application started.
+
+2022-07-06 15:11:36
+Application started.
+
+2022-07-06 15:11:53
+Application started.
+
+2022-07-06 15:12:04
+Application started.
+
+2022-07-06 15:12:36
+Application started.
+
+2022-07-06 15:12:55
+Application started.
+
+2022-07-06 15:13:16
+Application started.
+
+2022-07-06 15:13:34
+Application started.
+
+2022-07-06 15:14:01
+Application started.
+
+2022-07-06 15:14:32
+Application started.
+
+2022-07-06 15:14:46
+Application started.
+
+2022-07-06 15:14:52
+System.InvalidOperationException
+Collection was modified; enumeration operation may not execute.
+   at System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   at System.Collections.Generic.Dictionary`2.ValueCollection.Enumerator.MoveNext()
+   at System.Linq.Enumerable.Sum(IEnumerable`1 source)
+   at Qualia.Tools.Solution.get_MismatchCount() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskSolution.cs:line 105
+   at Qualia.Tools.SolutionData.get_MismatchCount() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\TaskSolution.cs:line 158
+   at Qualia.Controls.TaskSolutionsPresenter.ShowSolutionsData(SolutionsData data) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\TaskSolutionsPresenter.xaml.cs:line 43
+   at Qualia.Controls.Main.<>c__DisplayClass28_1.<RunNetworks>b__0() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 757
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at MS.Internal.CulturePreservingExecutionContext.CallbackWrapper(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at MS.Internal.CulturePreservingExecutionContext.Run(CulturePreservingExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+
+2022-07-06 15:15:02
+Application started.
+
+2022-07-06 15:15:42
+Application started.
+
+2022-07-06 15:16:51
+Application started.
+
+2022-07-06 15:17:25
+Application started.
+
+2022-07-06 15:17:47
+Application started.
+
+2022-07-06 15:17:57
+Application started.
+
+2022-07-06 15:18:25
+Application started.
+
+2022-07-06 15:18:42
+Application started.
+
+2022-07-06 15:19:01
+Application started.
+
+2022-07-06 15:19:15
+Application started.
+
+2022-07-06 15:19:44
+Application started.
+
+2022-07-06 15:20:00
+Application started.
+
+2022-07-06 15:20:32
+Application started.
+
+2022-07-06 15:20:56
+Application started.
+
+2022-07-06 15:21:13
+Application started.
+
+2022-07-06 15:21:30
+Application started.
+
+2022-07-06 15:21:46
+Application started.
+
+2022-07-06 15:22:14
+Application started.
+
+2022-07-06 15:25:00
+Application started.
+
+2022-07-06 15:25:15
+Application started.
+
+2022-07-06 15:25:56
+Application started.
+
+2022-07-06 15:27:04
+Application started.
+
+2022-07-06 15:27:46
+Application started.
+
+2022-07-06 15:28:04
+Application started.
+
+2022-07-06 15:28:18
+Application started.
+
+2022-07-06 15:28:33
+Application started.
+
+2022-07-06 15:28:52
+Application started.
+
+2022-07-06 15:29:10
+Application started.
+
+2022-07-06 15:31:34
+Application started.
+
+2022-07-06 15:31:41
+System.IO.IOException
+The process cannot access the file 'C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\784_28x28_2_CrossCount.txt' because it is being used by another process.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamWriter.CreateFile(String path, Boolean append, Boolean checkHost)
+   at System.IO.StreamWriter..ctor(String path, Boolean append, Encoding encoding, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamWriter..ctor(String path, Boolean append, Encoding encoding)
+   at System.IO.File.WriteAllLines(String path, IEnumerable`1 contents)
+   at Qualia.Tools.Config.FlushToDrive() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Config.cs:line 289
+   at Qualia.Controls.NetworksManager.SaveConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 208
+   at Qualia.Controls.Main.SaveConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 202
+   at Qualia.Controls.Main.MenuStart_OnClick(Object sender, RoutedEventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 353
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.MenuItem.InvokeClickAfterRender(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at MS.Internal.CulturePreservingExecutionContext.CallbackWrapper(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at MS.Internal.CulturePreservingExecutionContext.Run(CulturePreservingExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at Qualia.App.Main()
+
+2022-07-06 15:31:52
+Application started.
+
+2022-07-06 15:32:38
+Application started.
+
+2022-07-06 15:33:03
+Application started.
+
+2022-07-06 15:33:14
+Application started.
+
+2022-07-06 15:33:38
+Application started.
+
+2022-07-06 15:33:58
+Application started.
+
+2022-07-06 15:35:57
+Application started.
+
+2022-07-06 15:36:12
+Application started.
+
+2022-07-06 15:37:00
+Application started.
+
+2022-07-06 15:37:16
+Application started.
+
+2022-07-06 15:38:01
+Application started.
+
+2022-07-06 15:38:37
+Application started.
+
+2022-07-06 15:42:01
+Application started.
+
+2022-07-06 15:48:35
+Application started.
+
+2022-07-06 15:49:04
+Application started.
+
+2022-07-06 15:49:54
+Application started.
+
+2022-07-06 15:50:21
+Application started.
+
+2022-07-06 15:51:58
+Application started.
+
+2022-07-06 15:53:49
+Application started.
+
+2022-07-06 15:57:09
+Application started.
+
