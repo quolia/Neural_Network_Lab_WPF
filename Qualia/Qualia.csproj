@@ -177,7 +177,7 @@
       <DependentUpon>FunctionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\CanvasControl.cs" />
-    <Compile Include="Controls\Base\Values\Text.cs" />
+    <Compile Include="Controls\Base\Values\Label.cs" />
     <Compile Include="Controls\Base\Values\BoolValue.cs" />
     <Compile Include="Controls\Base\Values\SelectValue.cs" />
     <Compile Include="Controls\Base\Values\StringValue.cs" />
@@ -529,7 +529,7 @@
     <Resource Include="Working\notes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Working\Networks\784_28x28_2_IsCrossPresent.txt" />
+    <Resource Include="Working\Networks\784_28x28_2_CrossCount.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ILGPU.0.6.0\build\ILGPU.targets" Condition="Exists('..\packages\ILGPU.0.6.0\build\ILGPU.targets')" />

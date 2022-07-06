@@ -15,33 +15,33 @@
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <local:BoolValueControl x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
-                    <local:TextControl Content="Color:" Margin="20,0,0,0" />
-                    <local:TextControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="Color_OnClick" />
+                    <local:LabelControl Content="Color:" Margin="20,0,0,0" />
+                    <local:LabelControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Content="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="Color_OnClick" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Content="Weights randomizer:" />
+                <local:LabelControl Content="Weights randomizer:" />
                 <local:SelectValueControl x:Name="CtlRandomizeFunction" />
-                <local:TextControl Content="a:" />
+                <local:LabelControl Content="a:" />
                 <local:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="RandomizerButton_OnClick" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Content="Learning rate:" />
+                <local:LabelControl Content="Learning rate:" />
                 <local:DoubleValueControl x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Content="Cost function:" />
+                <local:LabelControl Content="Cost function:" />
                 <local:SelectValueControl x:Name="CtlCostFunction" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Content="Back propagation strategy:" />
+                <local:LabelControl Content="Back propagation strategy:" />
                 <local:SelectValueControl x:Name="CtlBackPropagationStrategy" />
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <local:TextControl Content="Description:" />
+                <local:LabelControl Content="Description:" />
                 <TextBlock x:Name="CtlBackPropagationStrategyDescription" Padding="3" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>

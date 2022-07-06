@@ -16,13 +16,13 @@
         </Grid.RowDefinitions>
 
         <StackPanel  Orientation="Vertical" >
-            <local:TextControl Content="Task:" />
+            <local:LabelControl Content="Task:" />
             <local:SelectValueControl x:Name="CtlTaskFunction" />
-            <local:TextControl Content="Input data function:" />
+            <local:LabelControl Content="Input data function:" />
             <local:FunctionControl x:Name="CtlInputDataFunction" />
             <Grid Name="CtlHolder">
             </Grid>
-            <local:TextControl Content="Input data:" />
+            <local:LabelControl Content="Input data:" />
         </StackPanel>
         <local:CanvasControl Margin="0,10,0,0" Grid.Row="1" x:Name="CtlCanvas" />
     </Grid>

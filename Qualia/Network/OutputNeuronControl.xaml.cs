@@ -15,8 +15,13 @@ namespace Qualia.Controls
 
             _configParams = new()
             {
-                CtlActivationFunction.Initialize(nameof(ActivationFunction.LogisticSigmoid)),
-                CtlActivationFunctionParam.Initialize(defaultValue: 1)
+                CtlActivationFunction
+                    .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
+
+                CtlActivationFunctionParam
+                    .Initialize(defaultValue: 1),
+
+                CtlLabel
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -32,7 +37,7 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
         public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
 
-        public void LoadConfig()
+        public override void LoadConfig()
         {
             CtlActivationFunction.Fill<ActivationFunction>(Config);
             _configParams.ForEach(param => param.LoadConfig());

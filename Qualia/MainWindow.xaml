@@ -11,7 +11,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="DataWidth" />
             <ColumnDefinition />
-            <ColumnDefinition MinWidth="300" MaxWidth="300" />
+            <ColumnDefinition MinWidth="320" MaxWidth="320" />
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical">
@@ -41,7 +41,7 @@
                         <local:BoolValueControl x:Name="CtlShowOnlyUnchangedWeights" Content="Show only unchanged weights" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                         <local:BoolValueControl x:Name="CtlShowActivationLabels" Content="Show activation labels" VerticalAlignment="Bottom" Margin="3,0,0,5" />
                     </StackPanel>
-                    <local:TextControl x:Name="CtlNoSleepLabel" Grid.Column="1" Content="No sleep mode" FontSize="10" Padding="0" Margin="0,0,0,5" Background="Yellow" Height="Auto" Width="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+                    <local:LabelControl x:Name="CtlNoSleepLabel" Grid.Column="1" Content="No sleep mode" FontSize="10" Padding="0" Margin="0,0,0,5" Background="Yellow" Height="Auto" Width="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
                 </Grid>
 
                 <GridSplitter Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -55,7 +55,7 @@
                     <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
                     <local:StatisticsPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />
                     <local:MatrixPresenter Margin="10 0 0 0" Grid.Column="2" x:Name="CtlMatrixPresenter" />
-                    <local:TextControl Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                    <local:LabelControl Grid.Column="2" x:Name="CtlTime" Content="Time: ..." HorizontalAlignment="Right" VerticalAlignment="Bottom" />
                 </Grid>
             </Grid>
         </ScrollViewer>
@@ -101,7 +101,7 @@
                         <MenuItem Name="CtlVersion" Header="Version" Click="MenuVersion_OnClick" />
                     </MenuItem>
                 </Menu>
-                <local:TextControl Padding="3" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,5,0,0" FontWeight="Bold" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Left" />
+                <local:LabelControl Padding="3" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,5,0,0" FontWeight="Bold" x:Name="CtlNetworkName" Content="..." HorizontalAlignment="Left" />
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
