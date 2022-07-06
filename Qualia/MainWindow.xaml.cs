@@ -455,6 +455,8 @@ namespace Qualia.Controls
             NetworkDataModel networkModelToRender = null;
             Statistics statisticsToRender = null;
 
+            SolutionsData solutionsData = null;
+
             Stopwatch swCurrentMiscCodeTime = new();
             Stopwatch swCurrentPureRoundsPerSecond = new();
             Stopwatch swRenderTime = new();
@@ -703,6 +705,8 @@ namespace Qualia.Controls
                             {
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
+
+                                solutionsData = CtlInputDataPresenter.GetModel().SolutionsData;
                             }
                         }
                     }

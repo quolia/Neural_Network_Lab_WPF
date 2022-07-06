@@ -189,5 +189,6 @@ namespace Qualia.Model
         public TaskFunction TaskFunction;
         public InputDataFunction InputDataFunction;
         public double InputDataFunctionParam;
+        public SolutionsData SolutionsData
     }
 }
