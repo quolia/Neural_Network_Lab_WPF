@@ -25,7 +25,7 @@ namespace Qualia.Controls
         {
             var builder = new StringBuilder();
 
-            var solutions = data.Solutions.OrderBy(s => s.MismatchCount).ThenBy(s => s.AverageTime);
+            var solutions = data.Solutions.OrderBy(s => s.ErrorsCount).ThenBy(s => s.AverageTime);
 
             builder.AppendLine(string.Format(Culture.Current,
                                              "{0, -12} {1} {2, 6}",
@@ -46,10 +46,10 @@ namespace Qualia.Controls
                 builder.AppendLine(string.Format(Culture.Current,
                                                  "{0} {1, 15} {2, 5} {3, 9} {4, 6}",
                                                  solution.Name,
-                                                 solution.MinTime,
-                                                 solution.MaxTime,
-                                                 solution.AverageTime,
-                                                 solution.MismatchCount));
+                                                 Converter.DoubleToText(solution.MinTime, solution.MinTime < 10 ? "F2" : "F0"),
+                                                 Converter.DoubleToText(solution.MaxTime, solution.MaxTime < 10 ? "F2" : "F0"),
+                                                 Converter.DoubleToText(solution.AverageTime, solution.AverageTime < 10 ? "F2" : "F0"),
+                                                 solution.ErrorsCount));
             }
 
             CtlText.Text = builder.ToString();
