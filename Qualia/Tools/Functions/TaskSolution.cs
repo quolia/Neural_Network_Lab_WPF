@@ -103,7 +103,7 @@ namespace Qualia.Tools
         public long ErrorsCount => _errorsCount;
 
         public double MinTime { get; internal set; }
-        public double MaxTime { get; internal set; }
+        public double LastTime => ExecutionMicroseconds;
         public double AverageTime { get; internal set; }
 
         private long _resultsCount;
@@ -122,13 +122,11 @@ namespace Qualia.Tools
 
             if (_resultsCount == 0)
             {
-                MinTime = MaxTime = AverageTime = ExecutionMicroseconds;
+                MinTime = AverageTime = ExecutionMicroseconds;
             }
             else
             {
                 MinTime = MathX.Min(MinTime, ExecutionMicroseconds);
-                MaxTime = MathX.Max(MaxTime, ExecutionMicroseconds);
-
                 AverageTime = ((AverageTime * _resultsCount) + ExecutionMicroseconds) / (_resultsCount + 1);
             }
 
@@ -146,7 +144,7 @@ namespace Qualia.Tools
         public string Name => _solution.Name;
 
         public double MinTime => _solution.MinTime;
-        public double MaxTime => _solution.MaxTime;
+        public double LastTime => _solution.LastTime;
         public double AverageTime => _solution.AverageTime;
         public long ErrorsCount => _solution.ErrorsCount;
 

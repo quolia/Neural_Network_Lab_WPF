@@ -241,6 +241,8 @@ namespace Qualia.Tools
 
         sealed public class CrossCount : ITaskControl
         {
+            private const int SIZE = 28;
+
             public static readonly string Description = "Network counts a simple croosses amount on the field of points.";
 
             public static readonly TaskFunction Instance = new(&Do, new CrossCount());
@@ -251,11 +253,23 @@ namespace Qualia.Tools
 
             public Control GetVisualControl() => s_control;
 
-            public int GetPointsRearrangeSnap() => 28;
+            public int GetPointsRearrangeSnap() => SIZE;
 
             public bool IsGridSnapAdjustmentAllowed() => false;
 
-            private static byte[] s_array = new byte[28 * 28];
+            private static byte[] s_array;
+            private static byte[][] s_array2;
+
+            public CrossCount()
+            {
+                s_array = new byte[SIZE * SIZE];
+                s_array2 = new byte[SIZE][];
+
+                for (int i = 0; i < SIZE; ++i)
+                {
+                    s_array2[i] = new byte[SIZE];
+                }
+            }
 
             public void ApplyChanges()
             {
@@ -336,7 +350,12 @@ namespace Qualia.Tools
                     ++ind;
                 });
 
-                int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array });
+                for (int i = 0; i < SIZE; ++i)
+                {
+                    Array.Copy(s_array, i * 28, s_array2[i], 0, SIZE);
+                }
+
+                int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array, s_array2 });
 
                 neuron = networkModel.Layers.Last.Neurons.First;
                 neuron.Target = targetOutput == 0 ? 1 : 0; // no
@@ -360,7 +379,7 @@ namespace Qualia.Tools
             }
 
             [TaskSolution]
-            private static int S1(byte[] array)
+            private static int S1(byte[] array, byte[][] array2)
             {
                 int len = array.Length;
                 int y_limit = len / 28 - 2;
@@ -453,20 +472,109 @@ namespace Qualia.Tools
 
                 if (count > 3)
                 {
-                    var matrix = GetMatrixFromArray(ref array);
+                    //var matrix = GetMatrixFromArray(ref array);
                 }
 
                 return count > 0 ? 1 : 0;
             }
 
             [TaskSolution]
-            private static int S2(byte[] array)
+            private static int S2(byte[] array, byte[][] array2)
             {
-                return S1(array);
+                int len = array.Length;
+                int y_limit = len / 28 - 2;
+                int x_limit = 28 - 1;
+
+                int count = 0;
+
+                for (int y = 0; y < y_limit; ++y)
+                {
+                    for (int x = 1; x < x_limit;)
+                    {
+                        var top = x + y * 28;
+                        if (array[top] == 0) // top
+                        {
+                            x += 1;
+                            continue;
+                        }
+
+                        var right = (x + 1) + (y + 1) * 28;
+                        if (array[right] == 0) // right
+                        {
+                            x += 2;
+                            continue;
+                        }
+
+                        var center = x + (y + 1) * 28; // center
+                        if (array[center] == 0)
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        var left = (x - 1) + (y + 1) * 28; // left
+                        if (array[left] == 0)
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        var bottom = x + (y + 2) * 28; // bottom
+                        if (array[bottom] == 0)
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        if (x < 28 - 2 && array[right + 1] == 1) // right-right
+                        {
+                            x += 5;
+                            continue;
+                        }
+
+                        if (array[top + 1] == 1) // right-top
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y > 0 && array[top - 28] == 1) // top-top
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (array[top - 1] == 1 // left-top
+                            || array[bottom - 1] == 1 // left-bottom
+                            || array[bottom + 1] == 1) // right-bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (x > 1 && array[left - 1] == 1) // left-left
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y < 28 - 3 && array[bottom + 28] == 1) // bottom-bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        x += 4;
+
+                        ++count;
+                    }
+                }
+
+                return count > 0 ? 1 : 0;
             }
 
             [TaskSolution]
-            private static int M1(byte[] array)
+            private static int M1(byte[] array, byte[][] array2)
             {
                 //Thread.Sleep(2);
 
@@ -483,15 +591,15 @@ namespace Qualia.Tools
             }
 
             [TaskSolution()]
-            private static int A1(byte[] array)
+            private static int A1(byte[] array, byte[][] array2)
             {
-                return M1(array);
+                return M1(array, array2);
             }
 
             [TaskSolution()]
-            private static int P1(byte[] array)
+            private static int P1(byte[] array, byte[][] array2)
             {
-                return M1(array);
+                return M1(array, array2);
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();

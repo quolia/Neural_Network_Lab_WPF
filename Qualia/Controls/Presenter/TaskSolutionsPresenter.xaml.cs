@@ -36,7 +36,7 @@ namespace Qualia.Controls
             builder.AppendLine(string.Format(Culture.Current,
                                              "{0, 18} {1, 5} {2, 9} {3, 6}",
                                              "Min",
-                                             "Max",
+                                             "Last",
                                              "Average",
                                              "count"));
             builder.AppendLine();
@@ -47,7 +47,7 @@ namespace Qualia.Controls
                                                  "{0} {1, 15} {2, 5} {3, 9} {4, 6}",
                                                  solution.Name,
                                                  Converter.DoubleToText(solution.MinTime, solution.MinTime < 10 ? "F2" : "F0"),
-                                                 Converter.DoubleToText(solution.MaxTime, solution.MaxTime < 10 ? "F2" : "F0"),
+                                                 Converter.DoubleToText(solution.LastTime, solution.LastTime < 10 ? "F2" : "F0"),
                                                  Converter.DoubleToText(solution.AverageTime, solution.AverageTime < 10 ? "F2" : "F0"),
                                                  solution.ErrorsCount));
             }
