@@ -377,63 +377,40 @@ namespace Qualia.Tools
                         var left = (x - 1) + (y + 1) * 28;
                         var right = (x + 1) + (y + 1) * 28;
 
-                        var t = array[top];
-                        if (t == 1)
+                        if (array[top] == 0
+                            || array[center] == 0
+                            || array[left] == 0
+                            || array[right] == 0
+                            || array[bottom] == 0)
                         {
-                            bool isCross = array[center] == 1
-                                           && array[left] == 1
-                                           && array[right] == 1
-                                           && array[bottom] == 1;
-
-                            if (isCross)
-                            {
-                                if (x > 1) // left
-                                {
-                                    isCross = array[left - 1] == 0;
-                                }
-
-                                if (isCross) // right
-                                {
-                                    if (x < 28 - 2)
-                                    {
-                                        isCross = array[right + 1] == 0;
-                                    }
-                                }
-
-                                if (isCross) // bottom
-                                {
-                                    if (y < 28 - 3)
-                                    {
-                                        isCross = array[bottom + 28] == 0;
-                                    }
-                                }
-
-                                if (isCross) // left-top
-                                {
-                                    isCross = array[top - 1] == 0;
-                                }
-
-                                if (isCross) // right-top
-                                {
-                                    isCross = array[top + 1] == 0;
-                                }
-
-                                if (isCross) // left-bottom
-                                {
-                                    isCross = array[bottom - 1] == 0;
-                                }
-
-                                if (isCross) // right-bottom
-                                {
-                                    isCross = array[bottom + 1] == 0;
-                                }
-
-                                if (isCross)
-                                {
-                                    ++count;
-                                }
-                            }
+                            continue;
                         }
+
+                        if (array[top - 1] != 0 // left-top
+                            || array[top + 1] != 0 // right-top
+                            || array[bottom - 1] != 0 // left-bottom
+                            || array[bottom + 1] != 0) // right-bottom
+                        {
+                            continue;
+                        }
+
+                        if (x > 1 && array[left - 1] != 0) // left
+                        {
+                            continue;
+                        }
+
+                        
+                        if (x < 28 - 2 && array[right + 1] != 0) // right
+                        {
+                            continue;
+                        }
+
+                        if (y < 28 - 3 && array[bottom + 28] != 0) // bottom
+                        {
+                            continue;
+                        }
+
+                        ++count;
                     }
                 }
 
