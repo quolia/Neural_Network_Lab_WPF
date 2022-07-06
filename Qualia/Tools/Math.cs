@@ -70,5 +70,10 @@ namespace Qualia.Tools
         {
             return Math.Exp(x);
         }
+
+        internal static long Sum(IList<long> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

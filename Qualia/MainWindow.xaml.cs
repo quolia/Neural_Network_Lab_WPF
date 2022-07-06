@@ -706,7 +706,7 @@ namespace Qualia.Controls
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
 
-                                solutionsData = CtlInputDataPresenter.GetModel().SolutionsData;
+                                solutionsData = WorkingModel.Current.RefreshDataPresenter().Task.SolutionsData;
                             }
                         }
                     }
@@ -753,6 +753,8 @@ namespace Qualia.Controls
 
                             var lastStats = DrawStatistics(statisticsToRender, learningRate);
                             selectedNetworkModel.LastStatistics = lastStats;
+
+                            CtlTaskSolutionsPresenter.ShowSolutionsData(solutionsData);
 
                             swRenderTime.Stop();
                             RenderTime.Statistics = swRenderTime.Elapsed.Ticks;

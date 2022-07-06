@@ -187,11 +187,11 @@
     <Compile Include="Controls\Misc\MemoControl.xaml.cs">
       <DependentUpon>MemoControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Task\IsCrossPresent.xaml.cs">
-      <DependentUpon>IsCrossPresent.xaml</DependentUpon>
+    <Compile Include="Controls\Presenter\TaskSolutionsPresenter.xaml.cs">
+      <DependentUpon>TaskSolutionsPresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Task\TaskSolutionCompetitionControl.xaml.cs">
-      <DependentUpon>TaskSolutionCompetitionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Task\CrossCountControl.xaml.cs">
+      <DependentUpon>CrossCountControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\WorkingModel.cs" />
     <Compile Include="Network\InputBiasControl.cs" />
@@ -204,8 +204,8 @@
     <Compile Include="Controls\Presenter\PresenterControlHost.xaml.cs">
       <DependentUpon>PresenterControlHost.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Task\CountDotsControl.xaml.cs">
-      <DependentUpon>CountDotsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Task\DotsCountControl.xaml.cs">
+      <DependentUpon>DotsCountControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Task\MNISTControl.xaml.cs">
       <DependentUpon>MNISTControl.xaml</DependentUpon>
@@ -254,11 +254,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Task\IsCrossPresent.xaml">
+    <Page Include="Controls\Presenter\TaskSolutionsPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Task\TaskSolutionCompetitionControl.xaml">
+    <Page Include="Controls\Task\CrossCountControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -318,7 +318,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Task\CountDotsControl.xaml">
+    <Page Include="Controls\Task\DotsCountControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

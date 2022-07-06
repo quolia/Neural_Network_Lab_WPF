@@ -914,3 +914,76 @@ Application started.
 2022-07-05 08:47:12
 Application started.
 
+2022-07-06 10:12:38
+Application started.
+
+2022-07-06 10:13:17
+Application started.
+
+2022-07-06 10:13:41
+Application started.
+
+2022-07-06 10:20:16
+Application started.
+
+2022-07-06 10:32:05
+Application started.
+
+2022-07-06 10:36:41
+Application started.
+
+2022-07-06 10:36:55
+Application started.
+
+2022-07-06 10:37:43
+Application started.
+
+2022-07-06 10:38:48
+Application started.
+
+2022-07-06 10:41:21
+Application started.
+
+2022-07-06 10:42:07
+Application started.
+
+2022-07-06 10:43:21
+Application started.
+
+2022-07-06 10:44:06
+Application started.
+
+2022-07-06 10:44:27
+Application started.
+
+2022-07-06 10:46:21
+Application started.
+
+2022-07-06 10:46:39
+Application started.
+
+2022-07-06 10:46:58
+System.InvalidOperationException
+The calling thread cannot access this object because a different thread owns it.
+   at System.Windows.Threading.Dispatcher.VerifyAccess()
+   at System.Windows.DependencyObject.GetValue(DependencyProperty dp)
+   at Qualia.Tools.BaseFunction`1.GetInstance(Selector selector) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\BaseFunction.cs:line 34
+   at Qualia.Controls.InputDataPresenter.GetModel() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Controls\Presenter\InputDataPresenter.xaml.cs:line 326
+   at Qualia.Controls.Main.RunNetworks(Object args) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 709
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+
+2022-07-06 10:51:21
+Application started.
+
+2022-07-06 10:51:42
+Application started.
+
+2022-07-06 11:02:46
+Application started.
+
+2022-07-06 11:03:59
+Application started.
+

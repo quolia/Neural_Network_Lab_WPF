@@ -33,7 +33,7 @@ namespace Qualia.Controls
             _configParams = new()
             {
                 CtlTaskFunction
-                    .Initialize(nameof(TaskFunction.CountDots))
+                    .Initialize(nameof(TaskFunction.DotsCount))
                     .SetUIParam(Notification.ParameterChanged.TaskFunction),
 
                 CtlInputDataFunction
@@ -326,7 +326,7 @@ namespace Qualia.Controls
             var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
             var inputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction);
             var inputDataFunctionParam = CtlInputDataFunction.CtlParam.Value;
-            var solutionsData = taskFunction.GetSolutionsData();
+            var solutionsData = taskFunction?.GetSolutionsData();
 
             if (taskFunction != null)
             {
