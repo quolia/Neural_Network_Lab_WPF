@@ -3,6 +3,7 @@ using Qualia.Model;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Controls;
 
 namespace Qualia.Tools
@@ -37,12 +38,16 @@ namespace Qualia.Tools
         public InputDataFunction InputDataFunction;
         public double InputDataFunctionParam;
 
-        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, double, void> doFunc, ITaskControl visualControl)
+        private readonly TaskSolutions _solutions;
+
+        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, double, void> doFunc, ITaskControl taskControl)
             : base(nameof(CountDots))
         {
             Do = doFunc;
-            ITaskControl = visualControl;
-        }
+            ITaskControl = taskControl;
+
+            _solutions = new(ITaskControl.GetType());
+    }
 
         public TaskFunction SetInputDataFunction(InputDataFunction function)
         {
@@ -238,6 +243,13 @@ namespace Qualia.Tools
 
             private static int _maxPointsCount;
 
+            public IsCrossPresent()
+            {
+                Instance._solutions.Add(nameof(IsCrossPresentSolution_Slava_1));
+                Instance._solutions.Add(nameof(IsCrossPresentSolution_Maxim_1));
+                Instance._solutions.Add(nameof(IsCrossPresentSolution_Anton_1));
+            }
+
             public Control GetVisualControl() => s_control;
 
             public int GetPointsRearrangeSnap() => 28;
@@ -321,25 +333,43 @@ namespace Qualia.Tools
                     ++ind;
                 });
 
-                bool yes = IsCrossPresentSolution(array, maxPointsCount);
+                int targetOutput = Instance._solutions.GetTargetOutput(new object[] { array, maxPointsCount });
 
                 neuron = networkModel.Layers.Last.Neurons.First;
-                neuron.Target = !yes ? 1 : 0; // no
-                neuron.Next.Target = yes ? 1 : 0; // yes
+                neuron.Target = targetOutput == 0 ? 1 : 0; // no
+                neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
 
-                networkModel.TargetOutput = yes ? 1 : 0;
+                networkModel.TargetOutput = targetOutput;
             }
 
-            private static bool IsCrossPresentSolution(byte[] array, int maxPointsCount)
+            [TaskSolution]
+            private static bool IsCrossPresentSolution_Slava_1(byte[] array, int maxPointsCount)
             {
-                var crossPattern = new List<int[]>() { new int[5] { 0, 0, 0, 0, 0 },
-                                                       new int[5] { 0, 0, 1, 0, 0 },
+                var crossPattern = new List<int[]>() { new int[5] { 2, 2, 0, 2, 2 },
+                                                       new int[5] { 2, 0, 1, 0, 2 },
                                                        new int[5] { 0, 1, 1, 1, 0 },
-                                                       new int[5] { 0, 0, 1, 0, 0 },
-                                                       new int[5] { 0, 0, 0, 0, 0 } };
+                                                       new int[5] { 2, 0, 1, 0, 2 },
+                                                       new int[5] { 2, 2, 0, 2, 2 }};
 
+                Thread.Sleep(1);
 
-                return false;
+                return Rand.RandomFlat.Next() % 2 == 0;
+            }
+
+            [TaskSolution]
+            private static bool IsCrossPresentSolution_Maxim_1(byte[] array, int maxPointsCount)
+            {
+                Thread.Sleep(2);
+
+                return Rand.RandomFlat.Next() % 2 == 0;
+            }
+
+            [TaskSolution()]
+            private static bool IsCrossPresentSolution_Anton_1(byte[] array, int maxPointsCount)
+            {
+                Thread.Sleep(3);
+
+                return Rand.RandomFlat.Next() % 2 == 0;
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();
@@ -349,6 +379,11 @@ namespace Qualia.Tools
             public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
+        }
+
+        public SolutionsData GetSolutionsData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

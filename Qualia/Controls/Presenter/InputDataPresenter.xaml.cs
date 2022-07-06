@@ -326,6 +326,7 @@ namespace Qualia.Controls
             var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
             var inputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction);
             var inputDataFunctionParam = CtlInputDataFunction.CtlParam.Value;
+            var solutionsData = taskFunction.GetSolutionsData();
 
             if (taskFunction != null)
             {
@@ -337,7 +338,8 @@ namespace Qualia.Controls
             {
                 TaskFunction = taskFunction,
                 InputDataFunction = inputDataFunction,
-                InputDataFunctionParam = inputDataFunctionParam
+                InputDataFunctionParam = inputDataFunctionParam,
+                SolutionsData = solutionsData
             };
         }
     }

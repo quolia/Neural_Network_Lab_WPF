@@ -37,7 +37,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class Always
         {
-            public static readonly string Description = "BP executes every round.";
+            public static readonly string Description = "BP executes on every round.";
 
             public static readonly BackPropagationStrategy Instance = new(&Stub1,
                                                                           &Stub1,

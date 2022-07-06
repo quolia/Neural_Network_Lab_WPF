@@ -190,6 +190,9 @@
     <Compile Include="Controls\Task\IsCrossPresent.xaml.cs">
       <DependentUpon>IsCrossPresent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Task\TaskSolutionCompetitionControl.xaml.cs">
+      <DependentUpon>TaskSolutionCompetitionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\WorkingModel.cs" />
     <Compile Include="Network\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
@@ -212,6 +215,7 @@
     <Compile Include="Controls\Viewer\RandomizerViewer.xaml.cs">
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\Attributes.cs" />
     <Compile Include="Tools\Converter.cs" />
     <Compile Include="Tools\FileHelper.cs" />
     <Compile Include="Tools\Functions\ActivationFunction.cs" />
@@ -224,6 +228,7 @@
     <Compile Include="Tools\Functions\InitializeFunction.cs" />
     <Compile Include="Tools\Functions\InputDataFunction.cs" />
     <Compile Include="Tools\Functions\BackPropagationStrategy.cs" />
+    <Compile Include="Tools\Functions\TaskSolution.cs" />
     <Compile Include="Tools\List.cs" />
     <Compile Include="Tools\Locker.cs" />
     <Compile Include="Tools\Logger.cs" />
@@ -250,6 +255,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Task\IsCrossPresent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Task\TaskSolutionCompetitionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
