@@ -11,7 +11,9 @@ namespace Qualia.Controls
 
         private event Action<Notification.ParameterChanged> _onChanged = delegate { };
 
-        public string DefaultValue { get; set; }
+        public string DefaultValue { get; set; } = string.Empty;
+
+        public bool IsEmptyAllowed { get; set; } = false;
 
         public StringValueControl Initialize(string defaultValue)
         {
@@ -29,7 +31,10 @@ namespace Qualia.Controls
 
         public StringValueControl()
         {
-            InvalidateValue();
+            //InvalidateValue();
+            Padding = new(0);
+            Margin = new(3);
+
             TextChanged += Value_OnChanged;
         }
 
@@ -46,9 +51,9 @@ namespace Qualia.Controls
             }
         }
 
-        public bool IsValid() => !string.IsNullOrEmpty(Text);
+        public bool IsValid() => !IsNull();
 
-        public bool IsNull() => string.IsNullOrEmpty(Text);
+        public bool IsNull() => string.IsNullOrEmpty(Text) && !IsEmptyAllowed;
 
         public string Value
         {

@@ -48,7 +48,7 @@ namespace Qualia.Controls
         {
             Padding = new(0);
             Margin = new(3);
-            MinWidth = 60;
+            MinWidth = 30;
 
             TextChanged += Value_OnChanged;
         }

@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel Orientation="Horizontal">
             <local:SelectValueControl x:Name="CtlFunction" />
-            <local:TextControl Content="a:" />
+            <local:LabelControl Content="a:" />
             <local:DoubleValueControl x:Name="CtlParam" />
         </StackPanel>
     </Grid>

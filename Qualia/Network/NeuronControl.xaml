@@ -13,9 +13,10 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -24,25 +25,25 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
+        <StackPanel Grid.ColumnSpan="4" Orientation="Horizontal">
             <local:BoolValueControl x:Name="CtlIsBias" Content="Is bias" DefaultValue="False" />
             <local:BoolValueControl x:Name="CtlIsBiasConnected" Content="Is bias connected" DefaultValue="False" Margin="10,0,0,0" />
         </StackPanel>
-        <local:TextControl Grid.Column="3" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right"/>
+        <local:LabelControl Grid.Column="4" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right" VerticalAlignment="Top" />
 
-        <local:TextControl Grid.Row="1" Grid.Column="0" Content="Activation init-er:" />
+        <local:LabelControl Grid.Row="1" Content="Activation init-er:" />
         <local:SelectValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializeFunction" />
-        <local:TextControl Grid.Row="1" Grid.Column="2" Content="a:" />
-        <local:DoubleValueControl Grid.Row="1" Grid.Column="3" x:Name="CtlActivationInitializeFunctionParam" MinimumValue="-100" MaximumValue="100" />
+        <local:LabelControl Grid.Row="1" Grid.Column="2" Content="a:" />
+        <local:DoubleValueControl Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlActivationInitializeFunctionParam" MinimumValue="-100" MaximumValue="100" />
 
-        <local:TextControl Grid.Row="2" Grid.Column="0" Content="Weights init-er:" />
+        <local:LabelControl Grid.Row="2" Content="Weights init-er:" />
         <local:SelectValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializeFunction" />
-        <local:TextControl Grid.Row="2" Grid.Column="2" Content="a:" />
-        <local:DoubleValueControl Grid.Row="2" Grid.Column="3" x:Name="CtlWeightsInitializeFunctionParam" MinimumValue="-100" MaximumValue="100" />
+        <local:LabelControl Grid.Row="2" Grid.Column="2" Content="a:" />
+        <local:DoubleValueControl Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlWeightsInitializeFunctionParam" MinimumValue="-100" MaximumValue="100" />
 
-        <local:TextControl Grid.Row="3" Grid.Column="0" Content="Activation func:" />
+        <local:LabelControl Grid.Row="3" Content="Activation func:" />
         <local:SelectValueControl Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunction" />
-        <local:TextControl Grid.Row="3" Grid.Column="2" Content="a:" />
-        <local:DoubleValueControl Grid.Row="3" Grid.Column="3" x:Name="CtlActivationFunctionParam" MinimumValue="-100" MaximumValue="100" />
+        <local:LabelControl Grid.Row="3" Grid.Column="2" Content="a:" />
+        <local:DoubleValueControl Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlActivationFunctionParam" MinimumValue="-100" MaximumValue="100" />
     </Grid>
 </local:NeuronBaseControl>

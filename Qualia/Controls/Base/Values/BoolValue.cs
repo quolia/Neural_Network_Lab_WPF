@@ -34,6 +34,9 @@ namespace Qualia.Controls
 
         public BoolValueControl()
         {
+            Padding = new(0);
+            Margin = new(3);
+
             Checked += Value_OnChanged;
             Unchecked += Value_OnChanged;
         }

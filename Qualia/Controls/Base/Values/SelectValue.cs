@@ -33,8 +33,8 @@ namespace Qualia.Controls
         {
             //ItemTemplate = Main.Instance.Resources["QComboBoxTemplate"] as DataTemplate;
 
-            Padding = new(2);
-            Margin = new(1);
+            Padding = new(1);
+            Margin = new(3);
             MinWidth = 60;
 
             SelectionChanged += Value_OnChanged;

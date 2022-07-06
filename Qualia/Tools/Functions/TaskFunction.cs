@@ -239,7 +239,7 @@ namespace Qualia.Tools
 
         sealed public class CrossCount : ITaskControl
         {
-            public static readonly string Description = "Network counts a simple croosed amount on the field of points.";
+            public static readonly string Description = "Network counts a simple croosses amount on the field of points.";
 
             public static readonly TaskFunction Instance = new(&Do, new CrossCount());
 
