@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Controls;
 using System.Linq;
+using System.Text;
 
 namespace Qualia.Tools
 {
@@ -343,18 +344,32 @@ namespace Qualia.Tools
                 networkModel.TargetOutput = targetOutput;
             }
 
+            private static string GetMatrixFromArray(ref byte[] array)
+            {
+                var s = string.Join("", array);
+
+                StringBuilder builder = new();
+
+                for (int y = 0; y < 28; ++y)
+                {
+                    builder.AppendLine(s.Substring(y * 28, 28));
+                }
+
+                return builder.ToString();
+            }
+
             [TaskSolution]
             private static int S1(byte[] array)
             {
                 int len = array.Length;
-                int height = len / 28 - 2;
-                int width = 28 - 1;
+                int y_limit = len / 28 - 2;
+                int x_limit = 28 - 1;
 
                 int count = 0;
 
-                for (int y = 0; y < height; ++y)
+                for (int y = 0; y < y_limit; ++y)
                 {
-                    for (int x = 1; x < width; ++x)
+                    for (int x = 1; x < x_limit; ++x)
                     {
                         var top = x + y * 28;
                         var center = x + (y + 1) * 28;
@@ -374,43 +389,43 @@ namespace Qualia.Tools
                             {
                                 if (x > 1) // left
                                 {
-                                    isCross = array[x - 2 + y * 28] == 0;
+                                    isCross = array[left - 1] == 0;
                                 }
 
                                 if (isCross) // right
                                 {
-                                    if (x < 28 - 1)
+                                    if (x < 28 - 2)
                                     {
-                                        isCross = array[x + 2 + y * 28] == 0;
+                                        isCross = array[right + 1] == 0;
                                     }
                                 }
 
                                 if (isCross) // bottom
                                 {
-                                    if (y > 28 - 1)
+                                    if (y < 28 - 3)
                                     {
-                                        isCross = array[x + (y + 3) * 28] == 0;
+                                        isCross = array[bottom + 28] == 0;
                                     }
                                 }
 
                                 if (isCross) // left-top
                                 {
-                                    isCross = array[x - 1 + y * 28] == 0;
+                                    isCross = array[top - 1] == 0;
                                 }
 
                                 if (isCross) // right-top
                                 {
-                                    isCross = array[x + 1 + y * 28] == 0;
+                                    isCross = array[top + 1] == 0;
                                 }
 
                                 if (isCross) // left-bottom
                                 {
-                                    isCross = array[x - 1 + (y + 2) * 28] == 0;
+                                    isCross = array[bottom - 1] == 0;
                                 }
 
                                 if (isCross) // right-bottom
                                 {
-                                    isCross = array[x + 1 + (y + 2) * 28] == 0;
+                                    isCross = array[bottom + 1] == 0;
                                 }
 
                                 if (isCross)
@@ -419,13 +434,12 @@ namespace Qualia.Tools
                                 }
                             }
                         }
-                        
                     }
                 }
 
-                if (count > 0)
+                if (count > 1)
                 {
-                    int a = 1;
+                    var matrix = GetMatrixFromArray(ref array);
                 }
 
                 return count;
