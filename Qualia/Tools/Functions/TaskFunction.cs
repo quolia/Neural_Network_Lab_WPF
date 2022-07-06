@@ -263,6 +263,7 @@ namespace Qualia.Tools
 
                 Instance._solutions.Clear();
                 Instance._solutions.Add(nameof(S1));
+                Instance._solutions.Add(nameof(S2));
                 Instance._solutions.Add(nameof(M1));
                 Instance._solutions.Add(nameof(A1));
                 Instance._solutions.Add(nameof(P1));
@@ -369,57 +370,99 @@ namespace Qualia.Tools
 
                 for (int y = 0; y < y_limit; ++y)
                 {
-                    for (int x = 1; x < x_limit; ++x)
+                    for (int x = 1; x < x_limit;)
                     {
                         var top = x + y * 28;
-                        var center = x + (y + 1) * 28;
-                        var bottom = x + (y + 2) * 28;
-                        var left = (x - 1) + (y + 1) * 28;
-                        var right = (x + 1) + (y + 1) * 28;
-
-                        if (array[top] == 0
-                            || array[center] == 0
-                            || array[left] == 0
-                            || array[right] == 0
-                            || array[bottom] == 0)
+                        if (array[top] == 0) // top
                         {
+                            x += 1;
+                            continue;
+                        }
+
+                        if (y > 0 && array[top - 28] == 1) // top-top
+                        {
+                            x += 2;
+                            continue;
+                        }
+
+                        if (array[top + 1] != 0) // right-top
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        var right = (x + 1) + (y + 1) * 28;
+                        if (x < 28 - 2 && array[right + 1] != 0) // right-right
+                        {
+                            x += 5;
+                            continue;
+                        }
+
+                        if (array[right] == 0) // right
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        var center = x + (y + 1) * 28; // center
+                        if (array[center] == 0)
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        var left = (x - 1) + (y + 1) * 28; // left
+                        if (array[left] == 0)
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        var bottom = x + (y + 2) * 28; // bottom
+                        if (array[bottom] == 0)
+                        {
+                            x += 4;
                             continue;
                         }
 
                         if (array[top - 1] != 0 // left-top
-                            || array[top + 1] != 0 // right-top
                             || array[bottom - 1] != 0 // left-bottom
                             || array[bottom + 1] != 0) // right-bottom
                         {
+                            x += 4;
                             continue;
                         }
 
-                        if (x > 1 && array[left - 1] != 0) // left
+                        if (x > 1 && array[left - 1] != 0) // left-left
                         {
+                            x += 4;
                             continue;
                         }
 
-                        
-                        if (x < 28 - 2 && array[right + 1] != 0) // right
+                        if (y < 28 - 3 && array[bottom + 28] != 0) // bottom-bottom
                         {
+                            x += 4;
                             continue;
                         }
 
-                        if (y < 28 - 3 && array[bottom + 28] != 0) // bottom
-                        {
-                            continue;
-                        }
+                        x += 4;
 
                         ++count;
                     }
                 }
 
-                if (count > 1)
+                if (count > 3)
                 {
                     var matrix = GetMatrixFromArray(ref array);
                 }
 
-                return count;
+                return count > 0 ? 1 : 0;
+            }
+
+            [TaskSolution]
+            private static int S2(byte[] array)
+            {
+                return S1(array);
             }
 
             [TaskSolution]

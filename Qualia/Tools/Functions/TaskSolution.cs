@@ -33,10 +33,8 @@ namespace Qualia.Tools
 
         public int GetTargetOutput(object[] solutionParams)
         {
-            for (int i = 0; i < _solutions.Count; ++i)
+            foreach (var solution in _solutions.OrderBy(s => s.AverageTime))
             {
-                var solution = _solutions[i];
-
                 _solutionsTimer.Restart();
                 var yes = (int)solution.Function.Invoke(null, solutionParams) > 0;
                 _solutionsTimer.Stop();
@@ -81,7 +79,7 @@ namespace Qualia.Tools
 
                 if (targetOutput != commonTargetOutput)
                 {
-                    solution.AddMismatch(targetOutput, commonTargetOutput);
+                    solution.AddError(targetOutput, commonTargetOutput);
                 }
             }
 
@@ -100,17 +98,17 @@ namespace Qualia.Tools
         public string Name => Function.Name;
 
         public int TargetOutput { get; private set; }
-        public long ExecutionMicroseconds { get; private set; }
+        public double ExecutionMicroseconds { get; private set; }
 
-        public long MismatchCount => _mismatchCounter.Values.Sum();
+        public long ErrorsCount => _errorsCount;
 
-        public long MinTime { get; internal set; }
-        public long MaxTime { get; internal set; }
-        public long AverageTime { get; internal set; }
+        public double MinTime { get; internal set; }
+        public double MaxTime { get; internal set; }
+        public double AverageTime { get; internal set; }
 
         private long _resultsCount;
 
-        private readonly Dictionary<Tuple<int, int>, int> _mismatchCounter = new(); // targetOutput, commonTargetOutput, count.
+        private int _errorsCount;
 
         public Solution(MethodInfo method)
         {
@@ -120,7 +118,7 @@ namespace Qualia.Tools
         public void AddResult(int targetOutput, TimeSpan executionTime)
         {
             TargetOutput = targetOutput;
-            ExecutionMicroseconds = executionTime.TotalMicroseconds();
+            ExecutionMicroseconds = executionTime.TotalNanoseconds() / (double)1000;
 
             if (_resultsCount == 0)
             {
@@ -137,14 +135,9 @@ namespace Qualia.Tools
             ++_resultsCount;
         }
 
-        internal void AddMismatch(int targetOutput, int commonTargetOutput)
+        internal void AddError(int targetOutput, int commonTargetOutput)
         {
-            var key = Tuple.Create(targetOutput, commonTargetOutput);
-            if (!_mismatchCounter.ContainsKey(key))
-            {
-                _mismatchCounter.Add(key, 0);
-            }
-            ++_mismatchCounter[key];
+            ++_errorsCount;
         }
     }
 
@@ -152,10 +145,10 @@ namespace Qualia.Tools
     {
         public string Name => _solution.Name;
 
-        public long MinTime => _solution.MinTime;
-        public long MaxTime => _solution.MaxTime;
-        public long AverageTime => _solution.AverageTime;
-        public long MismatchCount => _solution.MismatchCount;
+        public double MinTime => _solution.MinTime;
+        public double MaxTime => _solution.MaxTime;
+        public double AverageTime => _solution.AverageTime;
+        public long ErrorsCount => _solution.ErrorsCount;
 
         private readonly Solution _solution;
 
