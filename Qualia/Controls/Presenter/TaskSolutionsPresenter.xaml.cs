@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Qualia.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,16 @@ namespace Qualia.Controls
     /// <summary>
     /// Interaction logic for TaskSolutionCompetitionControl.xaml
     /// </summary>
-    public partial class TaskSolutionCompetitionControl : UserControl
+    public partial class TaskSolutionsPresenter : UserControl
     {
-        public TaskSolutionCompetitionControl()
+        public TaskSolutionsPresenter()
         {
             InitializeComponent();
+        }
+
+        public void ShowSolutionsData(SolutionsData data)
+        {
+
         }
     }
 }

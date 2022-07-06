@@ -1,20 +1,29 @@
-﻿using Qualia.Tools;
+﻿using Microsoft.Win32;
+using Qualia.Tools;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    sealed public partial class CountDotsControl : BaseUserControl
+    sealed public partial class CrossCountControl : BaseUserControl
     {
-        public CountDotsControl()
+        public CrossCountControl()
         {
             InitializeComponent();
+
+            _configParams = new()
+            {
+                CtlMaxPointsCount
+                    .Initialize(defaultValue: 100)
+            };
         }
 
-        public int InputCount => (int)CtlInputCount.Value;
-        public int MaxNumber => (int)CtlMaxNumber.Value;
-        public int MinNumber => (int)CtlMinNumber.Value;
+        public int MaxPointsCount => (int)CtlMaxPointsCount.Value;
 
         private void Parameter_OnChanged(Notification.ParameterChanged param)
         {
@@ -29,11 +38,7 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
-        public override void LoadConfig()
-        {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
-        }
-
+      
         public override void SaveConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
@@ -46,17 +51,7 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            if (this.FindVisualChildren<IConfigParam>().All(param => param.IsValid()))
-            {
-                if (CtlInputCount.Value >= CtlMaxNumber.Value)
-                {
-                    return true;
-                }
-
-                CtlInputCount.InvalidateValue();
-            }
-
-            return false;
+            return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)

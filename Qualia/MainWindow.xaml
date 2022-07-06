@@ -14,7 +14,11 @@
             <ColumnDefinition MinWidth="300" MaxWidth="300" />
         </Grid.ColumnDefinitions>
 
-        <local:InputDataPresenter x:Name="CtlInputDataPresenter" Margin="2,0,7,0" />
+        <StackPanel Orientation="Vertical">
+            <local:InputDataPresenter x:Name="CtlInputDataPresenter" Margin="2,0,7,0" />
+            <local:TaskSolutionsPresenter x:Name="CtlTaskSolutionsPresenter" Margin="2,0,7,0" />
+        </StackPanel>
+
         <GridSplitter Name="DataSplitter" Width="5" VerticalAlignment="Stretch" SnapsToDevicePixels="True" />
 
         <ScrollViewer Background="White" Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,5,0" >

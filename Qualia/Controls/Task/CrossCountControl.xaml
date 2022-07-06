@@ -1,4 +1,4 @@
-﻿<local:BaseUserControl x:Class="Qualia.Controls.CountDotsControl"
+﻿<local:BaseUserControl x:Class="Qualia.Controls.CrossCountControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,12 +16,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <local:TextControl Content="Input count:" />
-        <local:IntValueControl Grid.Column="1" x:Name="CtlInputCount" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
-        <local:TextControl Grid.Row="1" Content="Min number:" />
-        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMinNumber" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
-        <local:TextControl Grid.Row="2" Content="Max number:" />
-        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxNumber" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:TextControl Grid.Row="0" Content="Max points count:" />
+        <local:IntValueControl Grid.Row="0" Grid.Column="1" x:Name="CtlMaxPointsCount" MinimumValue="0" MaximumValue="780" DefaultValue="100" />
     </Grid>
 </local:BaseUserControl>

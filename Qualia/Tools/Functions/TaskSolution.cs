@@ -8,6 +8,8 @@ namespace Qualia.Tools
 {
     public class TaskSolutions
     {
+        public IList<Solution> Solutions => _solutions;
+
         private readonly List<Solution> _solutions = new();
         private readonly Stopwatch _solutionsTimer = new();
         private readonly Type _taskFunctionType;
@@ -19,7 +21,14 @@ namespace Qualia.Tools
 
         public void Add(string functionName)
         {
-            _solutions.Add(new Solution(_taskFunctionType.GetMethod(functionName)));
+            var methodInfo = _taskFunctionType.GetMethod(functionName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+
+            _solutions.Add(new Solution(methodInfo));
+        }
+
+        public void Clear()
+        {
+            _solutions.Clear();
         }
 
         public int GetTargetOutput(object[] solutionParams)
@@ -79,36 +88,70 @@ namespace Qualia.Tools
             return commonTargetOutput;
         }
 
-        public class Solution
+        internal SolutionsData GetSolutionsData(IList<Solution> solutions)
         {
-            public readonly MethodInfo Function;
-            public string Name => Function.Name;
+            return new SolutionsData(solutions);
+        }
+    }
 
-            public int TargetOutput { get; private set; }
-            public long ExecutionMicroseconds { get; private set; }
+    public class Solution
+    {
+        public readonly MethodInfo Function;
+        public string Name => Function.Name;
 
-            private readonly Dictionary<Tuple<int, int>, int> _mismatchCounter = new(); // targetOutput, commonTargetOutput, count.
+        public int TargetOutput { get; private set; }
+        public long ExecutionMicroseconds { get; private set; }
 
-            public Solution(MethodInfo method)
+        public long MismatchCount => _mismatchCounter.Values.Sum();
+
+        private readonly Dictionary<Tuple<int, int>, int> _mismatchCounter = new(); // targetOutput, commonTargetOutput, count.
+
+        public Solution(MethodInfo method)
+        {
+            Function = method;
+        }
+
+        public void AddResult(int targetOutput, TimeSpan executionTime)
+        {
+            TargetOutput = targetOutput;
+            ExecutionMicroseconds = executionTime.TotalMicroseconds();
+        }
+
+        internal void AddMismatch(int targetOutput, int commonTargetOutput)
+        {
+            var key = Tuple.Create(targetOutput, commonTargetOutput);
+            if (!_mismatchCounter.ContainsKey(key))
             {
-                Function = method;
+                _mismatchCounter.Add(key, 0);
             }
+            ++_mismatchCounter[key];
+        }
+    }
 
-            public void AddResult(int targetOutput, TimeSpan executionTime)
-            {
-                TargetOutput = targetOutput;
-                ExecutionMicroseconds = executionTime.TotalMicroseconds();
-            }
+    public class SolutionData
+    {
+        public string Name => _solution.Name;
 
-            internal void AddMismatch(int targetOutput, int commonTargetOutput)
-            {
-                ++_mismatchCounter[Tuple.Create(targetOutput, commonTargetOutput)];
-            }
+        private readonly Solution _solution;
+
+        public SolutionData(Solution solution)
+        {
+            _solution = solution;
         }
     }
 
     public class SolutionsData
     {
+        private List<SolutionData> _solutionsData = new();
 
+        public SolutionsData(IList<Solution> solutions)
+        {
+            _solutionsData.Clear();
+
+            foreach (var solution in solutions)
+            {
+                _solutionsData.Add(new SolutionData(solution));
+            }
+        }
     }
 }

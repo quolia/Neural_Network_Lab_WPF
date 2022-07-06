@@ -41,7 +41,7 @@ namespace Qualia.Tools
         private readonly TaskSolutions _solutions;
 
         public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, double, void> doFunc, ITaskControl taskControl)
-            : base(nameof(CountDots))
+            : base(nameof(DotsCount))
         {
             Do = doFunc;
             ITaskControl = taskControl;
@@ -54,14 +54,18 @@ namespace Qualia.Tools
             InputDataFunction = function;     
             return this;
         }
+        public SolutionsData GetSolutionsData()
+        {
+            return _solutions.GetSolutionsData(_solutions.Solutions);
+        }
 
-        sealed public class CountDots : ITaskControl
+        sealed public class DotsCount : ITaskControl
         {
             public static readonly string Description = "Network counts red dots amount.";
 
-            public static readonly TaskFunction Instance = new(&Do, new CountDots());
+            public static readonly TaskFunction Instance = new(&Do, new DotsCount());
 
-            private static readonly CountDotsControl s_control = new();
+            private static readonly DotsCountControl s_control = new();
 
             private static int _minNumber;
             private static int _maxNumber;
@@ -233,22 +237,15 @@ namespace Qualia.Tools
             public void InvalidateValue() => throw new InvalidOperationException();
         }
 
-        sealed public class IsCrossPresent : ITaskControl
+        sealed public class CrossCount : ITaskControl
         {
-            public static readonly string Description = "Network recognizes if a simple croos is present on the field of points.";
+            public static readonly string Description = "Network counts a simple croosed amount on the field of points.";
 
-            public static readonly TaskFunction Instance = new(&Do, new IsCrossPresent());
+            public static readonly TaskFunction Instance = new(&Do, new CrossCount());
 
-            private static readonly IsCrossPresentControl s_control = new();
+            private static readonly CrossCountControl s_control = new();
 
             private static int _maxPointsCount;
-
-            public IsCrossPresent()
-            {
-                Instance._solutions.Add(nameof(IsCrossPresentSolution_Slava_1));
-                Instance._solutions.Add(nameof(IsCrossPresentSolution_Maxim_1));
-                Instance._solutions.Add(nameof(IsCrossPresentSolution_Anton_1));
-            }
 
             public Control GetVisualControl() => s_control;
 
@@ -259,6 +256,12 @@ namespace Qualia.Tools
             public void ApplyChanges()
             {
                 _maxPointsCount = s_control.MaxPointsCount;
+
+                Instance._solutions.Clear();
+                Instance._solutions.Add(nameof(S1));
+                Instance._solutions.Add(nameof(M1));
+                Instance._solutions.Add(nameof(A1));
+                Instance._solutions.Add(nameof(P1));
             }
 
             public void SetConfig(Config config) => s_control.SetConfig(config);
@@ -343,7 +346,7 @@ namespace Qualia.Tools
             }
 
             [TaskSolution]
-            private static bool IsCrossPresentSolution_Slava_1(byte[] array, int maxPointsCount)
+            private static bool S1(byte[] array, int maxPointsCount)
             {
                 var crossPattern = new List<int[]>() { new int[5] { 2, 2, 0, 2, 2 },
                                                        new int[5] { 2, 0, 1, 0, 2 },
@@ -351,23 +354,31 @@ namespace Qualia.Tools
                                                        new int[5] { 2, 0, 1, 0, 2 },
                                                        new int[5] { 2, 2, 0, 2, 2 }};
 
-                Thread.Sleep(1);
+                //Thread.Sleep(1);
 
                 return Rand.RandomFlat.Next() % 2 == 0;
             }
 
             [TaskSolution]
-            private static bool IsCrossPresentSolution_Maxim_1(byte[] array, int maxPointsCount)
+            private static bool M1(byte[] array, int maxPointsCount)
             {
-                Thread.Sleep(2);
+                //Thread.Sleep(2);
 
                 return Rand.RandomFlat.Next() % 2 == 0;
             }
 
             [TaskSolution()]
-            private static bool IsCrossPresentSolution_Anton_1(byte[] array, int maxPointsCount)
+            private static bool A1(byte[] array, int maxPointsCount)
             {
-                Thread.Sleep(3);
+                //Thread.Sleep(3);
+
+                return Rand.RandomFlat.Next() % 2 == 0;
+            }
+
+            [TaskSolution()]
+            private static bool P1(byte[] array, int maxPointsCount)
+            {
+                //Thread.Sleep(4);
 
                 return Rand.RandomFlat.Next() % 2 == 0;
             }
@@ -379,11 +390,6 @@ namespace Qualia.Tools
             public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
-        }
-
-        public SolutionsData GetSolutionsData()
-        {
-            throw new NotImplementedException();
         }
     }
 }
