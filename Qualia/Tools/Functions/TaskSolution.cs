@@ -38,7 +38,7 @@ namespace Qualia.Tools
                 var solution = _solutions[i];
 
                 _solutionsTimer.Restart();
-                var yes = (bool)solution.Function.Invoke(null, solutionParams);
+                var yes = (int)solution.Function.Invoke(null, solutionParams) > 0;
                 _solutionsTimer.Stop();
 
                 solution.AddResult(yes ? 1 : 0, _solutionsTimer.Elapsed);
@@ -104,6 +104,12 @@ namespace Qualia.Tools
 
         public long MismatchCount => _mismatchCounter.Values.Sum();
 
+        public long MinTime { get; internal set; }
+        public long MaxTime { get; internal set; }
+        public long AverageTime { get; internal set; }
+
+        private long _resultsCount;
+
         private readonly Dictionary<Tuple<int, int>, int> _mismatchCounter = new(); // targetOutput, commonTargetOutput, count.
 
         public Solution(MethodInfo method)
@@ -115,6 +121,20 @@ namespace Qualia.Tools
         {
             TargetOutput = targetOutput;
             ExecutionMicroseconds = executionTime.TotalMicroseconds();
+
+            if (_resultsCount == 0)
+            {
+                MinTime = MaxTime = AverageTime = ExecutionMicroseconds;
+            }
+            else
+            {
+                MinTime = MathX.Min(MinTime, ExecutionMicroseconds);
+                MaxTime = MathX.Max(MaxTime, ExecutionMicroseconds);
+
+                AverageTime = ((AverageTime * _resultsCount) + ExecutionMicroseconds) / (_resultsCount + 1);
+            }
+
+            ++_resultsCount;
         }
 
         internal void AddMismatch(int targetOutput, int commonTargetOutput)
@@ -132,6 +152,11 @@ namespace Qualia.Tools
     {
         public string Name => _solution.Name;
 
+        public long MinTime => _solution.MinTime;
+        public long MaxTime => _solution.MaxTime;
+        public long AverageTime => _solution.AverageTime;
+        public long MismatchCount => _solution.MismatchCount;
+
         private readonly Solution _solution;
 
         public SolutionData(Solution solution)
@@ -142,6 +167,8 @@ namespace Qualia.Tools
 
     public class SolutionsData
     {
+        public IList<SolutionData> Solutions => _solutionsData;
+
         private List<SolutionData> _solutionsData = new();
 
         public SolutionsData(IList<Solution> solutions)

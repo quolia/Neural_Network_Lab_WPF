@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace Qualia.Tools
 {
@@ -253,6 +254,8 @@ namespace Qualia.Tools
 
             public bool IsGridSnapAdjustmentAllowed() => false;
 
+            private static byte[] s_array = new byte[28 * 28];
+
             public void ApplyChanges()
             {
                 _maxPointsCount = s_control.MaxPointsCount;
@@ -324,19 +327,14 @@ namespace Qualia.Tools
                     --intNumber;
                 }
 
-                byte[] array = new byte[networkModel.Layers.Last.Neurons.Count];
                 int ind = 0;
-
-                networkModel.Layers.Last.Neurons.ForEach(n =>
+                networkModel.Layers.First.Neurons.ForEach(n =>
                 {
-                    if (n.Activation == networkModel.InputInitial1)
-                    {
-                        array[ind] = 1;
-                    }
+                    s_array[ind] = (byte)(n.Activation == networkModel.InputInitial1 ? 1 : 0);
                     ++ind;
                 });
 
-                int targetOutput = Instance._solutions.GetTargetOutput(new object[] { array, maxPointsCount });
+                int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array });
 
                 neuron = networkModel.Layers.Last.Neurons.First;
                 neuron.Target = targetOutput == 0 ? 1 : 0; // no
@@ -346,41 +344,120 @@ namespace Qualia.Tools
             }
 
             [TaskSolution]
-            private static bool S1(byte[] array, int maxPointsCount)
+            private static int S1(byte[] array)
             {
-                var crossPattern = new List<int[]>() { new int[5] { 2, 2, 0, 2, 2 },
-                                                       new int[5] { 2, 0, 1, 0, 2 },
-                                                       new int[5] { 0, 1, 1, 1, 0 },
-                                                       new int[5] { 2, 0, 1, 0, 2 },
-                                                       new int[5] { 2, 2, 0, 2, 2 }};
+                int len = array.Length;
+                int height = len / 28 - 2;
+                int width = 28 - 1;
 
-                //Thread.Sleep(1);
+                int count = 0;
 
-                return Rand.RandomFlat.Next() % 2 == 0;
+                for (int y = 0; y < height; ++y)
+                {
+                    for (int x = 1; x < width; ++x)
+                    {
+                        var top = x + y * 28;
+                        var center = x + (y + 1) * 28;
+                        var bottom = x + (y + 2) * 28;
+                        var left = (x - 1) + (y + 1) * 28;
+                        var right = (x + 1) + (y + 1) * 28;
+
+                        var t = array[top];
+                        if (t == 1)
+                        {
+                            bool isCross = array[center] == 1
+                                           && array[left] == 1
+                                           && array[right] == 1
+                                           && array[bottom] == 1;
+
+                            if (isCross)
+                            {
+                                if (x > 1) // left
+                                {
+                                    isCross = array[x - 2 + y * 28] == 0;
+                                }
+
+                                if (isCross) // right
+                                {
+                                    if (x < 28 - 1)
+                                    {
+                                        isCross = array[x + 2 + y * 28] == 0;
+                                    }
+                                }
+
+                                if (isCross) // bottom
+                                {
+                                    if (y > 28 - 1)
+                                    {
+                                        isCross = array[x + (y + 3) * 28] == 0;
+                                    }
+                                }
+
+                                if (isCross) // left-top
+                                {
+                                    isCross = array[x - 1 + y * 28] == 0;
+                                }
+
+                                if (isCross) // right-top
+                                {
+                                    isCross = array[x + 1 + y * 28] == 0;
+                                }
+
+                                if (isCross) // left-bottom
+                                {
+                                    isCross = array[x - 1 + (y + 2) * 28] == 0;
+                                }
+
+                                if (isCross) // right-bottom
+                                {
+                                    isCross = array[x + 1 + (y + 2) * 28] == 0;
+                                }
+
+                                if (isCross)
+                                {
+                                    ++count;
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+
+                if (count > 0)
+                {
+                    int a = 1;
+                }
+
+                return count;
             }
 
             [TaskSolution]
-            private static bool M1(byte[] array, int maxPointsCount)
+            private static int M1(byte[] array)
             {
                 //Thread.Sleep(2);
 
-                return Rand.RandomFlat.Next() % 2 == 0;
+                int b = 0;
+                for (int i = 0; i < 1000 + Rand.RandomFlat.Next() % 2000; ++i)
+                {
+                    b = b * i;
+                    int a = b * b;
+                    a = a - i;
+                    b = a;
+                }
+
+                return Rand.RandomFlat.Next() % 2;
             }
 
             [TaskSolution()]
-            private static bool A1(byte[] array, int maxPointsCount)
+            private static int A1(byte[] array)
             {
-                //Thread.Sleep(3);
-
-                return Rand.RandomFlat.Next() % 2 == 0;
+                return M1(array);
             }
 
             [TaskSolution()]
-            private static bool P1(byte[] array, int maxPointsCount)
+            private static int P1(byte[] array)
             {
-                //Thread.Sleep(4);
-
-                return Rand.RandomFlat.Next() % 2 == 0;
+                return M1(array);
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();

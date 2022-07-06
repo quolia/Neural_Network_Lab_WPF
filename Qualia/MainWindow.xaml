@@ -14,10 +14,14 @@
             <ColumnDefinition MinWidth="320" MaxWidth="320" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <local:InputDataPresenter x:Name="CtlInputDataPresenter" Margin="2,0,7,0" />
-            <local:TaskSolutionsPresenter x:Name="CtlTaskSolutionsPresenter" Margin="2,0,7,0" />
-        </StackPanel>
+            <local:TaskSolutionsPresenter Grid.Row="1" x:Name="CtlTaskSolutionsPresenter" Margin="2,0,7,0" />
+        </Grid>
 
         <GridSplitter Name="DataSplitter" Width="5" VerticalAlignment="Stretch" SnapsToDevicePixels="True" />
 

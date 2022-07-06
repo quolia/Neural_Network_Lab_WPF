@@ -1,34 +1,59 @@
 ﻿using Qualia.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Linq;
 
 namespace Qualia.Controls
 {
-    /// <summary>
-    /// Interaction logic for TaskSolutionCompetitionControl.xaml
-    /// </summary>
-    public partial class TaskSolutionsPresenter : UserControl
+    public partial class TaskSolutionsPresenter : BaseUserControl
     {
         public TaskSolutionsPresenter()
         {
             InitializeComponent();
+
+            _configParams = new()
+            {
+                CtlShowTaskSolutions
+                    .Initialize(false)
+            };
+
+            CtlText.Text = "No data.";
         }
 
         public void ShowSolutionsData(SolutionsData data)
         {
+            var builder = new StringBuilder();
 
+            var solutions = data.Solutions.OrderBy(s => s.MismatchCount).ThenBy(s => s.AverageTime);
+
+            builder.AppendLine(string.Format(Culture.Current,
+                                             "{0, -12} {1} {2, 6}",
+                                             "Function",
+                                             "Execution time, mcsec",
+                                             "Error"));
+
+            builder.AppendLine(string.Format(Culture.Current,
+                                             "{0, 18} {1, 5} {2, 9} {3, 6}",
+                                             "Min",
+                                             "Max",
+                                             "Average",
+                                             "count"));
+            builder.AppendLine();
+
+            foreach (var solution in solutions)
+            {
+                builder.AppendLine(string.Format(Culture.Current,
+                                                 "{0} {1, 15} {2, 5} {3, 9} {4, 6}",
+                                                 solution.Name,
+                                                 solution.MinTime,
+                                                 solution.MaxTime,
+                                                 solution.AverageTime,
+                                                 solution.MismatchCount));
+            }
+
+            CtlText.Text = builder.ToString();
+            CtlText.Background = Brushes.Wheat;
         }
     }
 }

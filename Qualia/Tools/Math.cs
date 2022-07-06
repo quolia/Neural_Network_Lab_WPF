@@ -42,6 +42,12 @@ namespace Qualia.Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static long Min(long a, long b)
+        {
+            return a < b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static float Min(float a, float b)
         {
             return a < b ? a : b;
