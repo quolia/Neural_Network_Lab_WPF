@@ -279,6 +279,7 @@ namespace Qualia.Tools
                 Instance._solutions.Add(nameof(S1));
                 Instance._solutions.Add(nameof(S2));
                 Instance._solutions.Add(nameof(S3));
+                Instance._solutions.Add(nameof(S4));
                 //Instance._solutions.Add(nameof(M1));
                 //Instance._solutions.Add(nameof(A1));
                 Instance._solutions.Add(nameof(P1));
@@ -500,27 +501,27 @@ namespace Qualia.Tools
                 {
                     for (int x = 1; x < x_limit;)
                     {
-                        int top = x + y * 28;
+                        int top = x + y * SIZE;
                         if (array[top] == 0) // top
                         {
                             x += 1;
                             continue;
                         }
 
-                        int right = top + 29;
+                        int right = top + SIZE + 1;
                         if (array[right] == 0) // right
                         {
                             x += 3;
                             continue;
                         }
 
-                        if (x < 28 - 2 && array[right + 1] == 1) // right-right
+                        if (x < SIZE - 2 && array[right + 1] == 1) // right-right
                         {
                             x += 2;
                             continue;
                         }
 
-                        int center = top + 28; 
+                        int center = top + SIZE; 
                         if (array[center] == 0) // center
                         {
                             x += 4;
@@ -534,7 +535,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        int bottom = center + 28;
+                        int bottom = center + SIZE;
                         if (array[bottom] == 0) // bottom
                         {
                             x += 4;
@@ -547,7 +548,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y > 0 && array[top - 28] == 1) // top-top
+                        if (y > 0 && array[top - SIZE] == 1) // top-top
                         {
                             x += 4;
                             continue;
@@ -567,7 +568,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y < 28 - 3 && array[bottom + 28] == 1) // bottom-bottom
+                        if (y < 28 - 3 && array[bottom + SIZE] == 1) // bottom-bottom
                         {
                             x += 4;
                             continue;
@@ -662,6 +663,112 @@ namespace Qualia.Tools
                         {
                             x += 4;
                             continue;
+                        }
+
+                        x += 4;
+
+                        ++count;
+                    }
+                }
+
+                return count;
+            }
+
+            private static int S4(byte[] array, byte[][] array2)
+            {
+                const int y_limit = SIZE - 2;
+                const int x_limit = SIZE - 1;
+
+                int count = 0;
+
+                for (int y = 0; y < y_limit; ++y)
+                {
+                    for (int x = 1; x < x_limit;)
+                    {
+                        int top = x + y * SIZE;
+                        if (array[top] == 0) // top
+                        {
+                            x += 1;
+                            continue;
+                        }
+
+                        if (array[top] > 1)
+                        {
+                            x += array[top]; //4;
+                            array[top] = 1;
+
+                            continue;
+                        }
+
+                        int right = top + SIZE + 1;
+                        if (array[right] == 0) // right
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        if (x < SIZE - 2 && array[right + 1] == 1) // right-right
+                        {
+                            x += 2;
+                            continue;
+                        }
+
+                        int center = top + SIZE;
+                        if (array[center] == 0) // center
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        int left = center - 1;
+                        if (array[left] == 0) // left
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        int bottom = center + SIZE;
+                        if (array[bottom] == 0) // bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (array[top + 1] == 1) // right-top
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y > 0 && array[top - SIZE] == 1) // top-top
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (array[top - 1] == 1 // left-top
+                            || array[bottom - 1] == 1 // left-bottom
+                            || array[bottom + 1] == 1) // right-bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (x > 1 && array[left - 1] == 1) // left-left
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y < 28 - 3 && array[bottom + SIZE] == 1) // bottom-bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y < y_limit - 5 && x > 1 && x < x_limit - 2)
+                        {
+                            array[left] = 4;
                         }
 
                         x += 4;
