@@ -1,11 +1,11 @@
 ﻿
 namespace Qualia.Tools
 {
-    unsafe public class InputDataFunction : BaseFunction<InputDataFunction>
+    unsafe public class DistributionFunction : BaseFunction<DistributionFunction>
     {
         public readonly delegate*<double, double> Do;
 
-        public InputDataFunction(delegate*<double, double> doFunc)
+        public DistributionFunction(delegate*<double, double> doFunc)
             : base(defaultFunction: nameof(FlatRandom))
         {
             Do = doFunc;
@@ -15,28 +15,28 @@ namespace Qualia.Tools
         {
             public static readonly string Description = InitializeFunction.Constant.Description;
 
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.Constant.Do);
+            public static readonly DistributionFunction Instance = new(&InitializeFunction.Constant.Do);
         }
 
         unsafe sealed public class FlatRandom
         {
             public static readonly string Description = InitializeFunction.FlatRandom.Description;
 
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.FlatRandom.Do);
+            public static readonly DistributionFunction Instance = new(&InitializeFunction.FlatRandom.Do);
         }
 
         unsafe sealed public class GaussNormal
         {
             public static readonly string Description = InitializeFunction.GaussNormal.Description;
 
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.GaussNormal.Do);
+            public static readonly DistributionFunction Instance = new(&InitializeFunction.GaussNormal.Do);
         }
 
         unsafe sealed public class GaussNormalInverted
         {
             public static readonly string Description = InitializeFunction.GaussNormalInverted.Description;
 
-            public static readonly InputDataFunction Instance = new(&InitializeFunction.GaussNormalInverted.Do);
+            public static readonly DistributionFunction Instance = new(&InitializeFunction.GaussNormalInverted.Do);
         }
     }
 }

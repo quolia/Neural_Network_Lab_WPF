@@ -18,8 +18,8 @@
         <StackPanel  Orientation="Vertical" >
             <local:LabelControl Content="Task:" />
             <local:SelectValueControl x:Name="CtlTaskFunction" />
-            <local:LabelControl Content="Input data function:" />
-            <local:FunctionControl x:Name="CtlInputDataFunction" />
+            <local:LabelControl Content="Distribution function:" />
+            <local:FunctionControl x:Name="CtlDistributionFunction" />
             <Grid Name="CtlHolder">
             </Grid>
             <local:LabelControl Content="Input data:" />

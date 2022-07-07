@@ -36,9 +36,9 @@ namespace Qualia.Controls
                     .Initialize(nameof(TaskFunction.DotsCount))
                     .SetUIParam(Notification.ParameterChanged.TaskFunction),
 
-                CtlInputDataFunction
-                    .Initialize(defaultFunction: nameof(InputDataFunction.FlatRandom), defaultParam: 1)
-                    .SetUIParam(Notification.ParameterChanged.TaskInputDataFunction)
+                CtlDistributionFunction
+                    .Initialize(defaultFunction: nameof(DistributionFunction.FlatRandom), defaultParam: 1)
+                    .SetUIParam(Notification.ParameterChanged.TaskDistributionFunction)
             };
         }
 
@@ -55,8 +55,8 @@ namespace Qualia.Controls
 
                 var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
-                CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
-                CtlInputDataFunction.LoadConfig();
+                CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
+                CtlDistributionFunction.LoadConfig();
 
                 var taskControl = taskFunction.ITaskControl;
 
@@ -69,22 +69,22 @@ namespace Qualia.Controls
                 CtlHolder.Children.Clear();
                 CtlHolder.Children.Add(taskControl.GetVisualControl());
             }
-            else if (param == Notification.ParameterChanged.TaskInputDataFunction)
+            else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
-                if (CtlInputDataFunction.SelectedFunction == null)
+                if (CtlDistributionFunction.SelectedFunction == null)
                 {
                     return;
                 }
 
-                var inputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+                var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
                 /*
-                if (inputDataFunction != TaskFunction.InputDataFunction)
+                if (distributionFunction != TaskFunction.DistributionFunction)
                 {
-                    TaskFunction.InputDataFunction = CtlInputDataFunction.GetInstance<InputDataFunction>();
+                    TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
 
                     var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
-                    CtlInputDataFunction.SetConfig(taskFunctionConfig);
-                    CtlInputDataFunction.LoadConfig();
+                    CtlDistributionFunction.SetConfig(taskFunctionConfig);
+                    CtlDistributionFunction.LoadConfig();
                 }
                 */
             }
@@ -115,8 +115,8 @@ namespace Qualia.Controls
 
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 
-            CtlInputDataFunction.SetConfig<InputDataFunction>(taskFunctionConfig);
-            CtlInputDataFunction.LoadConfig();
+            CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
+            CtlDistributionFunction.LoadConfig();
 
             var model = GetModel();
 
@@ -152,7 +152,7 @@ namespace Qualia.Controls
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
             model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
             model.TaskFunction.ITaskControl.SaveConfig();
-            CtlInputDataFunction.SaveConfig();
+            CtlDistributionFunction.SaveConfig();
 
             _config.FlushToDrive();
         }
@@ -324,21 +324,21 @@ namespace Qualia.Controls
         public TaskModel GetModel()
         {
             var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
-            var inputDataFunction = InputDataFunction.GetInstance(CtlInputDataFunction);
-            var inputDataFunctionParam = CtlInputDataFunction.CtlParam.Value;
+            var distributionFunction = DistributionFunction.GetInstance(CtlDistributionFunction);
+            var distributionFunctionParam = CtlDistributionFunction.CtlParam.Value;
             var solutionsData = taskFunction?.GetSolutionsData();
 
             if (taskFunction != null)
             {
-                taskFunction.InputDataFunction = inputDataFunction;
-                taskFunction.InputDataFunctionParam = inputDataFunctionParam;
+                taskFunction.DistributionFunction = distributionFunction;
+                taskFunction.DistributionFunctionParam = distributionFunctionParam;
             }
 
             return new()
             {
                 TaskFunction = taskFunction,
-                InputDataFunction = inputDataFunction,
-                InputDataFunctionParam = inputDataFunctionParam,
+                DistributionFunction = distributionFunction,
+                DistributionFunctionParam = distributionFunctionParam,
                 SolutionsData = solutionsData
             };
         }

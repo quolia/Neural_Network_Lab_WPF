@@ -33,16 +33,16 @@ namespace Qualia.Tools
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
     {
-        public readonly delegate*<NetworkDataModel, InputDataFunction, double, void> Do;
+        public readonly delegate*<NetworkDataModel, DistributionFunction, double, void> Do;
 
         public ITaskControl ITaskControl;
 
-        public InputDataFunction InputDataFunction;
-        public double InputDataFunctionParam;
+        public DistributionFunction DistributionFunction;
+        public double DistributionFunctionParam;
 
         private readonly TaskSolutions _solutions;
 
-        public TaskFunction(delegate*<NetworkDataModel, InputDataFunction, double, void> doFunc, ITaskControl taskControl)
+        public TaskFunction(delegate*<NetworkDataModel, DistributionFunction, double, void> doFunc, ITaskControl taskControl)
             : base(nameof(DotsCount))
         {
             Do = doFunc;
@@ -51,9 +51,9 @@ namespace Qualia.Tools
             _solutions = new(ITaskControl.GetType());
     }
 
-        public TaskFunction SetInputDataFunction(InputDataFunction function)
+        public TaskFunction SetInputDataFunction(DistributionFunction distributionFunction)
         {
-            InputDataFunction = function;     
+            DistributionFunction = distributionFunction;     
             return this;
         }
         public SolutionsData GetSolutionsData()
@@ -111,9 +111,9 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
+            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
-                double randNumber = inputDataFunction.Do(inputDataFunctionParam);
+                double randNumber = distributionFunction.Do(distributionFunctionParam);
 
                 randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
 
@@ -209,9 +209,9 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
+            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
-                var image = s_control.Images[(int)(s_control.Images.Count * inputDataFunction.Do(inputDataFunctionParam))];
+                var image = s_control.Images[(int)(s_control.Images.Count * distributionFunction.Do(distributionFunctionParam))];
                 var count = networkModel.Layers.First.Neurons.Count;
 
                 for (int i = 0; i < count; ++i)
@@ -308,11 +308,11 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, InputDataFunction inputDataFunction, double inputDataFunctionParam)
+            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
                 int maxPointsCount = _maxPointsCount; // 100
 
-                double randNumber = maxPointsCount;// inputDataFunction.Do(inputDataFunctionParam);
+                double randNumber = maxPointsCount;// distributionFunction.Do(distributionFunctionParam);
 
                 var intNumber = (int)randNumber;
 
