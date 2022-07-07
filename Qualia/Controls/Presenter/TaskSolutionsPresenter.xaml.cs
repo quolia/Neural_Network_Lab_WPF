@@ -28,7 +28,8 @@ namespace Qualia.Controls
             var solutions = data.Solutions.OrderBy(s => s.ErrorsCount)
                                           .ThenBy(s => s.AverageTime)
                                           .ThenBy(s => s.MinTime)
-                                          .ThenBy(s => s.LastTime).ToList();
+                                          .ThenBy(s => s.LastTime)
+                                          .ToList();
 
             builder.AppendLine(string.Format(Culture.Current,
                                              "{0, -12} {1} {2, 6}",
@@ -47,13 +48,22 @@ namespace Qualia.Controls
             foreach (var solution in solutions)
             {
                 builder.AppendLine(string.Format(Culture.Current,
-                                                 "{0} {1, 15} {2, 5} {3, 9} {4, 6}",
+                                                 "{0, -10} {1, 7} {2, 5} {3, 9} {4, 6}",
                                                  solution.Name,
                                                  solution.MinTime,
                                                  solution.LastTime,
                                                  solution.AverageTime,
                                                  solution.ErrorsCount));
             }
+
+            builder.AppendLine();
+            builder.AppendLine(string.Format(Culture.Current,
+                                             "{0, -10} {1, 7} {2, 5} {3, 9} {4, 6}",
+                                             "Sum",
+                                             Converter.DoubleToText(solutions.Sum(s => Converter.TextToDouble(s.MinTime, 0)), "F2"),
+                                             Converter.DoubleToText(solutions.Sum(s => Converter.TextToDouble(s.LastTime, 0)), "F2"),
+                                             Converter.DoubleToText(solutions.Sum(s => Converter.TextToDouble(s.AverageTime, 0)), "F3"),
+                                             Converter.IntToText(solutions.Sum(s => s.ErrorsCount))));
 
             CtlText.Text = builder.ToString();
             CtlText.Background = Brushes.Lavender;
