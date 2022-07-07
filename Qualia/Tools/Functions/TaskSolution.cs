@@ -141,18 +141,19 @@ namespace Qualia.Tools
 
     public class SolutionData
     {
-        public string Name => _solution.Name;
-
-        public double MinTime => _solution.MinTime;
-        public double LastTime => _solution.LastTime;
-        public double AverageTime => _solution.AverageTime;
-        public long ErrorsCount => _solution.ErrorsCount;
-
-        private readonly Solution _solution;
+        public string Name { get; private set; }
+        public string MinTime { get; private set; }
+        public string LastTime { get; private set; }
+        public string AverageTime { get; private set; }
+        public long ErrorsCount { get; private set; }
 
         public SolutionData(Solution solution)
         {
-            _solution = solution;
+            Name = solution.Name;
+            MinTime = Converter.DoubleToText(solution.MinTime, solution.MinTime < 10 ? "F3" : "F0");
+            LastTime = Converter.DoubleToText(solution.LastTime, solution.LastTime < 10 ? "F3" : "F0");
+            AverageTime = Converter.DoubleToText(solution.AverageTime, solution.AverageTime < 10 ? "F3" : "F0");
+            ErrorsCount = solution.ErrorsCount;
         }
     }
 
