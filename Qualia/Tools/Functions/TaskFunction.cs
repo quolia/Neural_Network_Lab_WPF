@@ -692,9 +692,59 @@ namespace Qualia.Tools
             }
 
             [TaskSolution()]
-            private static int P1(byte[] array, byte[][] array2)
+            unsafe private static int P1(byte[] array, byte[][] array2)
             {
-                return M1(array, array2);
+                const int DIM = 28;
+
+                Func<int, long> BIT = n => ((long)1 << n);
+
+                int result = 0;
+                long[] mask = new long[DIM]; //Матрица - столбец из long, где в каждом mask[i] установленный бит соответствует true из array[28][28]
+
+                for (int s = 0; s < (DIM - 1); s++)           //Подготовка матрицы - столбеца mask[i]
+                {
+                    mask[s] = 0;
+
+                    for (int c = 0; c < DIM - 1; c++)
+                    {
+                        if (array[s * DIM + c] != 0)
+                        {
+                            mask[s] |= BIT(c);
+                        }
+
+                        mask[s] <<= 1;
+                    }
+                }
+
+                long three;
+
+                for (int s = 0; s < DIM - 2; s++)
+                {
+                    three = mask[s + 0] & mask[s + 1] & mask[s + 2]; //if(three) - в очередных трех строках (в array) имеется хотя бы одна вертикальная тройка true
+
+                    while (three != 0)
+                    {
+                        long bit_low = three & (-three);                                //Выделение крайнего справа установленного бита
+
+                        if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(DIM - 1)) == 0))              //На "краях" матрицы креста не может быть
+                        {
+                            long three_bit_low = (bit_low << 1) | (bit_low >> 1);
+
+                            if ((mask[s + 1] & three_bit_low) != 0)                                 //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                                if ((bit_low > BIT(1)) && 0 == (mask[s + 1] & bit_low >> 2))       //Справа нет касания
+                                    if ((bit_low < BIT(DIM - 3)) && 0 == (mask[s + 1] & bit_low << 2)) //Слева нет касания
+                                        if (0 == (mask[s + 0] & three_bit_low))                        //Верхние углы креста нулевые
+                                            if (0 == (mask[s + 2] & three_bit_low))                      //Нижние углы креста нулевые
+                                                if ((s > 0) && 0 == (mask[s - 1] & three_bit_low))         //Сверху нет касания
+                                                    if ((s < (DIM - 3)) && 0 == (mask[s + 3] & three_bit_low)) //Снизу нет касания
+                                                        result++;
+                        }
+
+                        three &= -three;                                                //Обнуление крайнего справа единичного бита
+                    };
+                }
+
+                return result;
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();

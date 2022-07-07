@@ -131,13 +131,15 @@ namespace Qualia.Controls
                                        ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
                                                       AXIS_OFFSET + y * POINTS_SIZE));
             }
-        
+
+            var textOutputX = MathX.Max(0, (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2);
             CtlBaseCanvas.DrawText(_textOutput,
-                                    ref Points.Get(AXIS_OFFSET + (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2,
+                                    ref Points.Get(AXIS_OFFSET + textOutputX,
                                                    AXIS_OFFSET - _textOutput.Height - 1));
 
+            var textInputX = MathX.Max(_textInput.Width, (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2);
             CtlBaseCanvas.DrawText(_textInput,
-                                    ref Points.Get(-AXIS_OFFSET - (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2,
+                                    ref Points.Get(-AXIS_OFFSET - textInputX,
                                                    AXIS_OFFSET - _textInput.Height - 1),
                                     -90);
         }
