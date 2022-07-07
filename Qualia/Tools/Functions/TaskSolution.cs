@@ -12,6 +12,7 @@ namespace Qualia.Tools
 
         private readonly List<Solution> _solutions = new();
         private readonly Stopwatch _solutionTimer = new();
+        private readonly Stopwatch _commonTimer = new();
         private readonly Type _taskFunctionType;
 
         public TaskSolutions(Type taskFunctionType)
@@ -33,6 +34,8 @@ namespace Qualia.Tools
 
         public int GetTargetOutput(object[] solutionParams)
         {
+            _commonTimer.Restart();
+
             foreach (var solution in _solutions.OrderBy(s => s.LastTime)
                                                .ThenBy(s => s.AverageTime))
             {
@@ -42,6 +45,8 @@ namespace Qualia.Tools
 
                 solution.AddResult(yes ? 1 : 0, _solutionTimer.Elapsed);
             }
+
+            _commonTimer.Stop();
 
             return GetFinalTargetOutput();
         }
