@@ -278,9 +278,10 @@ namespace Qualia.Tools
                 Instance._solutions.Clear();
                 Instance._solutions.Add(nameof(S1));
                 Instance._solutions.Add(nameof(S2));
-                Instance._solutions.Add(nameof(M1));
-                Instance._solutions.Add(nameof(A1));
-                Instance._solutions.Add(nameof(P1));
+                Instance._solutions.Add(nameof(S3));
+                //Instance._solutions.Add(nameof(M1));
+                //Instance._solutions.Add(nameof(A1));
+                //Instance._solutions.Add(nameof(P1));
             }
 
             public void SetConfig(Config config) => s_control.SetConfig(config);
@@ -381,6 +382,10 @@ namespace Qualia.Tools
             [TaskSolution]
             private static int S1(byte[] array, byte[][] array2)
             {
+                //var s = "0000000000100000000000000000001000000010000000000001000000010010000001000000000000000110000000000000000000100001000000000000000100000100001000000100000000000000110000000100000000000010001000000011000000100000000000010000001100000001100011000000000000000000000000000010000000001001000000100010000000000000010000000000000000001000000000100000000001001110000000000010000000000000010100001010000000000000000010011000000010000000000000000010000000000000001010100100000001100100000001000000111000010010000000000000000101000100010000000000000000000000010000000011000010000100000010000000001000000000000010000000100000000000100000100100010000000010010001000000000000110000000000000000000000001000001001001000000000000000000000000000000000001100000000000010001000000000010000011001100000000000";
+                //array = s.Select(c => byte.Parse(c.ToString())).ToArray();
+
+
                 int len = array.Length;
                 int y_limit = len / 28 - 2;
                 int x_limit = 28 - 1;
@@ -404,16 +409,16 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (array[top + 1] != 0) // right-top
+                        if (array[top + 1] == 1) // right-top
                         {
                             x += 3;
                             continue;
                         }
 
                         var right = (x + 1) + (y + 1) * 28;
-                        if (x < 28 - 2 && array[right + 1] != 0) // right-right
+                        if (x < 28 - 2 && array[right + 1] == 1) // right-right
                         {
-                            x += 5;
+                            x += 2;
                             continue;
                         }
 
@@ -426,7 +431,7 @@ namespace Qualia.Tools
                         var center = x + (y + 1) * 28; // center
                         if (array[center] == 0)
                         {
-                            x += 4;
+                            x += 2;
                             continue;
                         }
 
@@ -444,9 +449,9 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (array[top - 1] != 0 // left-top
-                            || array[bottom - 1] != 0 // left-bottom
-                            || array[bottom + 1] != 0) // right-bottom
+                        if (array[top - 1] == 1 // left-top
+                            || array[bottom - 1] == 1 // left-bottom
+                            || array[bottom + 1] == 1) // right-bottom
                         {
                             x += 4;
                             continue;
@@ -501,28 +506,28 @@ namespace Qualia.Tools
                         var right = (x + 1) + (y + 1) * 28;
                         if (array[right] == 0) // right
                         {
-                            x += 2;
+                            x += 3;
                             continue;
                         }
 
                         var center = x + (y + 1) * 28; // center
                         if (array[center] == 0)
                         {
-                            x += 3;
+                            x += 2;
                             continue;
                         }
 
                         var left = (x - 1) + (y + 1) * 28; // left
                         if (array[left] == 0)
                         {
-                            x += 3;
+                            x += 4;
                             continue;
                         }
 
                         var bottom = x + (y + 2) * 28; // bottom
                         if (array[bottom] == 0)
                         {
-                            x += 3;
+                            x += 4;
                             continue;
                         }
 
@@ -559,6 +564,96 @@ namespace Qualia.Tools
                         }
 
                         if (y < 28 - 3 && array[bottom + 28] == 1) // bottom-bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        x += 4;
+
+                        ++count;
+                    }
+                }
+
+                return count > 0 ? 1 : 0;
+            }
+
+            [TaskSolution]
+            private static int S3(byte[] array, byte[][] array2)
+            {
+                int len = array.Length;
+                int y_limit = len / 28 - 2;
+                int x_limit = 28 - 1;
+
+                int count = 0;
+
+                for (int y = 0; y < y_limit; ++y)
+                {
+                    for (int x = 1; x < x_limit;)
+                    {
+                        if (array2[y][x] == 0) // top
+                        {
+                            x += 1;
+                            continue;
+                        }
+
+                        if (array2[y + 1][x + 1] == 0) // right
+                        {
+                            x += 3;
+                            continue;
+                        }
+
+                        if (array2[y + 1][x] == 0) // center
+                        {
+                            x += 2;
+                            continue;
+                        }
+
+                        if (array2[y + 1][x - 1] == 0) // left
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (array2[y + 2][x] == 0) // bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (x < 28 - 2 && array2[y + 1][x + 2] == 1) // right-right
+                        {
+                            x += 5;
+                            continue;
+                        }
+
+                        if (array2[y][x + 1] == 1) // right-top
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y > 0 && array2[y - 1][x] == 1) // top-top
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (array2[y][x - 1] == 1 // left-top
+                            || array2[y + 2][x - 1] == 1 // left-bottom
+                            || array2[y + 2][x + 1] == 1) // right-bottom
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (x > 1 && array2[y + 1][x - 2] == 1) // left-left
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        if (y < 28 - 3 && array2[y + 3][x] == 1) // bottom-bottom
                         {
                             x += 4;
                             continue;
