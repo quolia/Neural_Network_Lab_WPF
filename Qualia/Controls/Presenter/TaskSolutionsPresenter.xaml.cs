@@ -56,7 +56,7 @@ namespace Qualia.Controls
             }
 
             CtlText.Text = builder.ToString();
-            CtlText.Background = Brushes.Wheat;
+            CtlText.Background = Brushes.Lavender;
         }
     }
 }
