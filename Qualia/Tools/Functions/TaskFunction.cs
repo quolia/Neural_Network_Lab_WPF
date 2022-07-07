@@ -491,9 +491,8 @@ namespace Qualia.Tools
             [TaskSolution]
             private static int S2(byte[] array, byte[][] array2)
             {
-                int len = array.Length;
-                int y_limit = len / 28 - 2;
-                int x_limit = 28 - 1;
+                const int y_limit = SIZE - 2;
+                const int x_limit = SIZE - 1;
 
                 int count = 0;
 
@@ -501,14 +500,14 @@ namespace Qualia.Tools
                 {
                     for (int x = 1; x < x_limit;)
                     {
-                        var top = x + y * 28;
+                        int top = x + y * 28;
                         if (array[top] == 0) // top
                         {
                             x += 1;
                             continue;
                         }
 
-                        var right = top + 29;
+                        int right = top + 29;
                         if (array[right] == 0) // right
                         {
                             x += 3;
@@ -521,22 +520,22 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        var center = top + 28; // center
-                        if (array[center] == 0)
+                        int center = top + 28; 
+                        if (array[center] == 0) // center
                         {
                             x += 4;
                             continue;
                         }
 
-                        var left = center - 1; // left
-                        if (array[left] == 0)
+                        int left = center - 1; 
+                        if (array[left] == 0) // left
                         {
                             x += 4;
                             continue;
                         }
 
-                        var bottom = center + 28; // bottom
-                        if (array[bottom] == 0)
+                        int bottom = center + 28;
+                        if (array[bottom] == 0) // bottom
                         {
                             x += 4;
                             continue;
@@ -697,47 +696,60 @@ namespace Qualia.Tools
                 return M1(array, array2);
             }
 
+            private static uint[] mask = new uint[SIZE];
+            static Func<int, uint> BIT = n => ((uint)((1 << n)));
+
+            static bool first = true;
+
             [TaskSolution()]
             unsafe private static int P1(byte[] array, byte[][] array2)
             {
-                Func<int, ulong> BIT = n => ((ulong)1 << n);
+
 
                 int result = 0;
-                ulong[] mask = new ulong[SIZE]; //Матрица - столбец из long, где в каждом mask[i] установленный бит соответствует true из array[28][28]
-
-                for (int s = 0; s < SIZE; s++)           //Подготовка матрицы - столбеца mask[i]
+                //uint[] mask = new uint[SIZE]; //Матрица - столбец из long, где в каждом mask[i] установленный бит соответствует true из array[28][28]
+                //for (int i = 0; i < SIZE; ++i)
                 {
-                    mask[s] = 0;
+                    //  mask[i] = 0;
+                }
 
-                    for (int c = 0; c < SIZE; c++)
+                //if (first)
+                {
+                    first = false;
+                    for (int s = 0; s < SIZE; s++)           //Подготовка матрицы - столбеца mask[i]
                     {
-                        mask[s] <<= 1;
-                        if (array[s * SIZE + c] != 0)
+                        mask[s] = 0;
+
+                        for (int c = 0; c < SIZE; c++)
                         {
-                            mask[s] |= BIT(0);
-                        };
+                            mask[s] <<= 1;
+                            if (array[s * SIZE + c] != 0)
+                            {
+                                mask[s] |= 1;
+                            };
+                        }
                     }
                 }
 
-                ulong three;
+                uint three;
 
                 //Обработка первых трех строк матрицы (s == 0)
                 three = mask[0] & mask[1] & mask[2];                          //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
 
                 while (three != 0)
                 {
-                    ulong bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
+                    uint bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
 
-                    if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
+                    if (((bit_low & 1) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
                     {
-                        ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
+                        uint three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
                         if ((mask[1] & three_bit_low) == three_bit_low)                               //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
                             if ((mask[0] & three_bit_low) == 0)                        //Верхние углы креста нулевые
                                 if ((mask[2] & three_bit_low) == 0)                      //Нижние углы креста нулевые
                                     if ((mask[3] & bit_low) == 0)                          //Снизу нет касания
 
-                                        if ((bit_low == BIT(1)) || ((bit_low > BIT(1)) && ((mask[1] & (bit_low >> 2)) == 0)))             //Справа нет касания
+                                        if ((bit_low == 2) || ((bit_low > 2) && ((mask[1] & (bit_low >> 2)) == 0)))             //Справа нет касания
                                             if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[1] & (bit_low << 2)) == 0))) //Слева нет касания
                                                 result++;
                     }
@@ -750,18 +762,18 @@ namespace Qualia.Tools
 
                 while (three != 0)
                 {
-                    ulong bit_low = three & (0-three);                            //Выделение крайнего справа установленного бита
+                    uint bit_low = three & (0-three);                            //Выделение крайнего справа установленного бита
 
-                    if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(SIZE - 1)) == 0))  //На "краях" матрицы креста не может быть
+                    if (((bit_low & 1) == 0) && ((bit_low & BIT(SIZE - 1)) == 0))  //На "краях" матрицы креста не может быть
                     {
-                        ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
+                        uint three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
                         if ((mask[SIZE - 2] & three_bit_low) == three_bit_low)                       //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
                             if ((mask[SIZE - 3] & three_bit_low) == 0)                //Верхние углы креста нулевые
                                 if ((mask[SIZE - 1] & three_bit_low) == 0)              //Нижние углы креста нулевые
                                     if ((mask[SIZE - 4] & bit_low) == 0)                  //Сверху нет касания
 
-                                        if ((bit_low == BIT(1)) || ((bit_low > BIT(1)) && ((mask[SIZE - 2] & (bit_low >> 2)) == 0)))             //Справа нет касания
+                                        if ((bit_low == 2) || ((bit_low > 2) && ((mask[SIZE - 2] & (bit_low >> 2)) == 0)))             //Справа нет касания
                                             if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[SIZE - 2] & (bit_low << 2)) == 0))) //Слева нет касания
                                                 result++;
                     }
@@ -776,11 +788,11 @@ namespace Qualia.Tools
 
                     while (three != 0)
                     {
-                        ulong bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
+                        uint bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
 
-                        if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
+                        if (((bit_low & 1) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
                         {
-                            ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
+                            uint three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
                             if ((mask[s + 1] & three_bit_low) == three_bit_low)                         //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
                                 if ((mask[s + 0] & three_bit_low) == 0)                  //Верхние углы креста нулевые
@@ -788,7 +800,7 @@ namespace Qualia.Tools
                                         if ((mask[s - 1] & bit_low) == 0)                    //Сверху нет касания
                                             if ((mask[s + 3] & bit_low) == 0)                  //Снизу нет касания
 
-                                                if ((bit_low == BIT(1)) || ((bit_low > BIT(1)) && ((mask[s + 1] & (bit_low >> 2)) == 0)))             //Справа нет касания
+                                                if ((bit_low == 2) || ((bit_low > 2) && ((mask[s + 1] & (bit_low >> 2)) == 0)))             //Справа нет касания
                                                     if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[s + 1] & (bit_low << 2)) == 0))) //Слева нет касания
                                                         result++;
                         }
