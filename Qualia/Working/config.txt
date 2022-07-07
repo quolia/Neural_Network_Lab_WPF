@@ -9,7 +9,7 @@ NetworkHeight:584
 Settings.SkipRoundsToDrawErrorMatrix:10000
 Settings.SkipRoundsToDrawNetworks:10000
 Settings.SkipRoundsToDrawStatistics:10000
-Settings.PreventComputerFromSleep:0
+Settings.PreventComputerFromSleep:1
 DynamicSettings.UseWeightsColors:0
 DynamicSettings.OnlyChangedWeights:1
 DynamicSettings.HighlightChangedWeights:0

@@ -706,7 +706,7 @@ namespace Qualia.Controls
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
 
-                                solutionsData = WorkingModel.Current.RefreshDataPresenter().Task.SolutionsData;
+                                solutionsData = WorkingModel.Current.Task.TaskFunction.GetSolutionsData();
                             }
                         }
                     }
