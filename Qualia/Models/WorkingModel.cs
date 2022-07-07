@@ -129,7 +129,7 @@ namespace Qualia.Model
         unsafe public void PrepareModelsForRound()
         {
             var baseNetwork = Network;
-            Task.TaskFunction.Do(baseNetwork, Task.InputDataFunction, Task.InputDataFunctionParam);
+            Task.TaskFunction.Do(baseNetwork, Task.DistributionFunction, Task.DistributionFunctionParam);
 
             // copy first layer state and last layer targets to other networks
 
@@ -187,8 +187,8 @@ namespace Qualia.Model
     sealed public class TaskModel
     {
         public TaskFunction TaskFunction;
-        public InputDataFunction InputDataFunction;
-        public double InputDataFunctionParam;
+        public DistributionFunction DistributionFunction;
+        public double DistributionFunctionParam;
         public SolutionsData SolutionsData;
     }
 }

@@ -68,7 +68,7 @@ namespace Qualia.Tools
 
             TaskFunction,
             TaskInputData,
-            TaskInputDataFunction,
+            TaskDistributionFunction,
 
             Structure,
             NeuronsCount,

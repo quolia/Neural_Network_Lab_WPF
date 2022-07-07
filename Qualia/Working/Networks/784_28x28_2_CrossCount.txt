@@ -147,6 +147,6 @@ Networks:637015441499727363
 637015441499727363.SelectedLayerIndex:1
 SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:CrossCount
-InputDataPresenter.TaskFunction.CrossCount.InputDataFunction:FlatRandom
-InputDataPresenter.TaskFunction.CrossCount.InputDataFunction.FlatRandom.Param:1
+InputDataPresenter.TaskFunction.CrossCount.DistributionFunction:FlatRandom
+InputDataPresenter.TaskFunction.CrossCount.DistributionFunction.FlatRandom.Param:1
 InputDataPresenter.TaskFunction.CrossCount.MaxPointsCount:200
