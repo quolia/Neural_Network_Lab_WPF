@@ -583,6 +583,7 @@ namespace Qualia.Tools
                 return count;
             }
 
+
             [TaskSolution]
             private static int S3(byte[] array, byte[][] array2)
             {
@@ -731,7 +732,7 @@ namespace Qualia.Tools
                     {
                         ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
-                        if ((mask[1] & three_bit_low) != 0)                               //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                        if ((mask[1] & three_bit_low) == three_bit_low)                               //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
                             if ((mask[0] & three_bit_low) == 0)                        //Верхние углы креста нулевые
                                 if ((mask[2] & three_bit_low) == 0)                      //Нижние углы креста нулевые
                                     if ((mask[3] & bit_low) == 0)                          //Снизу нет касания
@@ -755,7 +756,7 @@ namespace Qualia.Tools
                     {
                         ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
-                        if ((mask[SIZE - 2] & three_bit_low) != 0)                       //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                        if ((mask[SIZE - 2] & three_bit_low) == three_bit_low)                       //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
                             if ((mask[SIZE - 3] & three_bit_low) == 0)                //Верхние углы креста нулевые
                                 if ((mask[SIZE - 1] & three_bit_low) == 0)              //Нижние углы креста нулевые
                                     if ((mask[SIZE - 4] & bit_low) == 0)                  //Сверху нет касания
@@ -781,7 +782,7 @@ namespace Qualia.Tools
                         {
                             ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
-                            if ((mask[s + 1] & three_bit_low) != 0)                         //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                            if ((mask[s + 1] & three_bit_low) == three_bit_low)                         //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
                                 if ((mask[s + 0] & three_bit_low) == 0)                  //Верхние углы креста нулевые
                                     if ((mask[s + 2] & three_bit_low) == 0)                //Нижние углы креста нулевые
                                         if ((mask[s - 1] & bit_low) == 0)                    //Сверху нет касания
