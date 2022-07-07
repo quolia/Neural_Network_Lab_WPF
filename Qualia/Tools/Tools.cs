@@ -84,7 +84,9 @@ namespace Qualia.Tools
 
         public static void SetPreventComputerFromSleep(bool yes)
         {
-            SetThreadExecutionState(yes ? EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS : 0);
+            var prev = SetThreadExecutionState(yes
+                                               ? EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS
+                                               : EXECUTION_STATE.ES_CONTINUOUS);
         }
     }
 }
