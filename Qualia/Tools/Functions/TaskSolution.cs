@@ -11,7 +11,7 @@ namespace Qualia.Tools
         public IList<Solution> Solutions => _solutions;
 
         private readonly List<Solution> _solutions = new();
-        private readonly Stopwatch _solutionsTimer = new();
+        private readonly Stopwatch _solutionTimer = new();
         private readonly Type _taskFunctionType;
 
         public TaskSolutions(Type taskFunctionType)
@@ -33,13 +33,14 @@ namespace Qualia.Tools
 
         public int GetTargetOutput(object[] solutionParams)
         {
-            foreach (var solution in _solutions.OrderBy(s => s.AverageTime))
+            foreach (var solution in _solutions.OrderBy(s => s.LastTime)
+                                               .ThenBy(s => s.AverageTime))
             {
-                _solutionsTimer.Restart();
+                _solutionTimer.Restart();
                 var yes = (int)solution.Function.Invoke(null, solutionParams) > 0;
-                _solutionsTimer.Stop();
+                _solutionTimer.Stop();
 
-                solution.AddResult(yes ? 1 : 0, _solutionsTimer.Elapsed);
+                solution.AddResult(yes ? 1 : 0, _solutionTimer.Elapsed);
             }
 
             return GetFinalTargetOutput();
