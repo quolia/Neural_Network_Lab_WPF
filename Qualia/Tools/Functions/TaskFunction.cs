@@ -508,37 +508,37 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        var right = (x + 1) + (y + 1) * 28;
+                        var right = top + 29;
                         if (array[right] == 0) // right
                         {
                             x += 3;
                             continue;
                         }
 
-                        var center = x + (y + 1) * 28; // center
-                        if (array[center] == 0)
+                        if (x < 28 - 2 && array[right + 1] == 1) // right-right
                         {
                             x += 2;
                             continue;
                         }
 
-                        var left = (x - 1) + (y + 1) * 28; // left
+                        var center = top + 28; // center
+                        if (array[center] == 0)
+                        {
+                            x += 4;
+                            continue;
+                        }
+
+                        var left = center - 1; // left
                         if (array[left] == 0)
                         {
                             x += 4;
                             continue;
                         }
 
-                        var bottom = x + (y + 2) * 28; // bottom
+                        var bottom = center + 28; // bottom
                         if (array[bottom] == 0)
                         {
                             x += 4;
-                            continue;
-                        }
-
-                        if (x < 28 - 2 && array[right + 1] == 1) // right-right
-                        {
-                            x += 5;
                             continue;
                         }
 
@@ -702,9 +702,9 @@ namespace Qualia.Tools
                 Func<int, ulong> BIT = n => ((ulong)1 << n);
 
                 int result = 0;
-                ulong[] mask = new ulong[SIZE];              //Матрица - столбец из long, где в каждом mask[i] установленный бит соответствует true из array[28][28]
+                ulong[] mask = new ulong[SIZE]; //Матрица - столбец из long, где в каждом mask[i] установленный бит соответствует true из array[28][28]
 
-                for (int s = 0; s < SIZE; s++) //Подготовка матрицы - столбеца mask[i]
+                for (int s = 0; s < SIZE; s++)           //Подготовка матрицы - столбеца mask[i]
                 {
                     mask[s] = 0;
 
@@ -714,36 +714,85 @@ namespace Qualia.Tools
                         if (array[s * SIZE + c] != 0)
                         {
                             mask[s] |= BIT(0);
-                        }
+                        };
                     }
                 }
 
-                long three;
+                ulong three;
 
-                for (int s = 0; s < SIZE - 2; s++)
+                //Обработка первых трех строк матрицы (s == 0)
+                three = mask[0] & mask[1] & mask[2];                          //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
+
+                while (three != 0)
                 {
-                    three = (long)(mask[s + 0] & mask[s + 1] & mask[s + 2]);            //if(three) - в очередных трех строках (в array) имеется хотя бы одна вертикальная тройка true
+                    ulong bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
+
+                    if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
+                    {
+                        ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
+
+                        if ((mask[1] & three_bit_low) != 0)                               //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                            if ((mask[0] & three_bit_low) == 0)                        //Верхние углы креста нулевые
+                                if ((mask[2] & three_bit_low) == 0)                      //Нижние углы креста нулевые
+                                    if ((mask[3] & bit_low) == 0)                          //Снизу нет касания
+
+                                        if ((bit_low == BIT(1)) || ((bit_low > BIT(1)) && ((mask[1] & (bit_low >> 2)) == 0)))             //Справа нет касания
+                                            if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[1] & (bit_low << 2)) == 0))) //Слева нет касания
+                                                result++;
+                    }
+
+                    three &= (three - 1);                                    //Обнуление крайнего справа единичного бита
+                };
+
+                //Обработка последних трех строк матрицы (s == SIZE-3)
+                three = mask[SIZE - 3] & mask[SIZE - 2] & mask[SIZE - 1];        //if(three)- в очередных трех строках имеется хотя бы одна вертикальная тройка true
+
+                while (three != 0)
+                {
+                    ulong bit_low = three & (0-three);                            //Выделение крайнего справа установленного бита
+
+                    if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(SIZE - 1)) == 0))  //На "краях" матрицы креста не может быть
+                    {
+                        ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
+
+                        if ((mask[SIZE - 2] & three_bit_low) != 0)                       //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                            if ((mask[SIZE - 3] & three_bit_low) == 0)                //Верхние углы креста нулевые
+                                if ((mask[SIZE - 1] & three_bit_low) == 0)              //Нижние углы креста нулевые
+                                    if ((mask[SIZE - 4] & bit_low) == 0)                  //Сверху нет касания
+
+                                        if ((bit_low == BIT(1)) || ((bit_low > BIT(1)) && ((mask[SIZE - 2] & (bit_low >> 2)) == 0)))             //Справа нет касания
+                                            if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[SIZE - 2] & (bit_low << 2)) == 0))) //Слева нет касания
+                                                result++;
+                    }
+
+                    three &= (three - 1);                                     //Обнуление крайнего справа единичного бита
+                };
+
+                //Обработка остальных строк матрицы
+                for (int s = 1; s < SIZE - 3; s++)
+                {
+                    three = mask[s + 0] & mask[s + 1] & mask[s + 2];                //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
 
                     while (three != 0)
                     {
-                        long bit_low = three & (-three);                    //Выделение крайнего справа установленного бита
+                        ulong bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
 
-                        //if (0 == (bit_low & BIT(0)) && !(bit_low & !BIT(SIZE - 1))) //На "краях" матрицы креста не может быть
-                        if (0 == ((ulong)bit_low & BIT(0)) && 0 == ((ulong)bit_low & BIT(SIZE - 1))) //На "краях" матрицы креста не может быть
+                        if (((bit_low & BIT(0)) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
                         {
-                            long three_bit_low = (bit_low << 1) | (bit_low >> 1);
+                            ulong three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
-                            if ((mask[s + 1] & (ulong)three_bit_low) != 0)  //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
-                                if (((ulong)bit_low == BIT(1)) || (((ulong)bit_low > BIT(1)) && 0 != (mask[s + 1] & ((ulong)bit_low >> 2))))           //Справа нет касания
-                                    if (((ulong)bit_low == BIT(SIZE - 2)) || (((ulong)bit_low < BIT(SIZE - 2)) && 0 == (mask[s + 1] & ((ulong)bit_low << 2)))) //Слева нет касания
-                                        if (0 == (mask[s + 0] & (ulong)three_bit_low))                                                       //Верхние углы креста нулевые
-                                            if (0 == (mask[s + 2] & (ulong)three_bit_low))                                                     //Нижние углы креста нулевые
-                                                if (0 == s || (s != 0 && 0 == (mask[s - 1] & (ulong)bit_low)))                                             //Сверху нет касания
-                                                    if ((s == (SIZE - 3)) || ((s < (SIZE - 3)) && 0 == (mask[s + 3] & (ulong)bit_low)))                  //Снизу нет касания
+                            if ((mask[s + 1] & three_bit_low) != 0)                         //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                                if ((mask[s + 0] & three_bit_low) == 0)                  //Верхние углы креста нулевые
+                                    if ((mask[s + 2] & three_bit_low) == 0)                //Нижние углы креста нулевые
+                                        if ((mask[s - 1] & bit_low) == 0)                    //Сверху нет касания
+                                            if ((mask[s + 3] & bit_low) == 0)                  //Снизу нет касания
+
+                                                if ((bit_low == BIT(1)) || ((bit_low > BIT(1)) && ((mask[s + 1] & (bit_low >> 2)) == 0)))             //Справа нет касания
+                                                    if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[s + 1] & (bit_low << 2)) == 0))) //Слева нет касания
                                                         result++;
                         }
 
-                        three &= (three - 1);            //Обнуление крайнего справа единичного бита
+                        three &= (three - 1);                                   //Обнуление крайнего справа единичного бита
                     };
                 }
 
