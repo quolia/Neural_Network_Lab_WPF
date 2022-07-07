@@ -358,6 +358,8 @@ namespace Qualia.Tools
 
                 int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array, s_array2 });
 
+                targetOutput = targetOutput > 1 ? 1 : targetOutput;
+
                 neuron = networkModel.Layers.Last.Neurons.First;
                 neuron.Target = targetOutput == 0 ? 1 : 0; // no
                 neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
@@ -480,7 +482,7 @@ namespace Qualia.Tools
                     //var matrix = GetMatrixFromArray(ref array);
                 }
 
-                return count > 0 ? 1 : 0;
+                return count;
             }
 
             [TaskSolution]
@@ -575,7 +577,7 @@ namespace Qualia.Tools
                     }
                 }
 
-                return count > 0 ? 1 : 0;
+                return count;
             }
 
             [TaskSolution]
@@ -665,7 +667,7 @@ namespace Qualia.Tools
                     }
                 }
 
-                return count > 0 ? 1 : 0;
+                return count;
             }
 
             [TaskSolution]
