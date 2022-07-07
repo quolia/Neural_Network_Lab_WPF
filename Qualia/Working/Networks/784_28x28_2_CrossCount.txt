@@ -149,4 +149,4 @@ SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:CrossCount
 InputDataPresenter.TaskFunction.CrossCount.InputDataFunction:FlatRandom
 InputDataPresenter.TaskFunction.CrossCount.InputDataFunction.FlatRandom.Param:1
-InputDataPresenter.TaskFunction.CrossCount.MaxPointsCount:100
+InputDataPresenter.TaskFunction.CrossCount.MaxPointsCount:200

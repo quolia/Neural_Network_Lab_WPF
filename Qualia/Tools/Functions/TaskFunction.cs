@@ -294,7 +294,7 @@ namespace Qualia.Tools
 
             public void SaveConfig() => s_control.SaveConfig();
 
-            public int GetInputCount() => 28 * 28;
+            public int GetInputCount() => SIZE * SIZE;
 
             public List<string> GetClasses()
             {
@@ -353,7 +353,7 @@ namespace Qualia.Tools
 
                 for (int i = 0; i < SIZE; ++i)
                 {
-                    Array.Copy(s_array, i * 28, s_array2[i], 0, SIZE);
+                    Array.Copy(s_array, i * SIZE, s_array2[i], 0, SIZE);
                 }
 
                 int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array, s_array2 });
