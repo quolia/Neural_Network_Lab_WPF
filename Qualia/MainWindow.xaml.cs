@@ -43,6 +43,9 @@ namespace Qualia.Controls
 
                 new ConfigParamWrapper(CtlDynamicSettings)
                     .SetUIParam(Notification.ParameterChanged.DynamicSettings),
+
+                CtlTaskSolutionsPresenter
+                    .SetUIParam(Notification.ParameterChanged.DynamicSettings)
             };
 
             Loaded += MainWindow_OnLoaded;

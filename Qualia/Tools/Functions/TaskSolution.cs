@@ -38,8 +38,9 @@ namespace Qualia.Tools
         {
             _commonTimer.Restart();
 
-            foreach (var solution in _solutions.OrderBy(s => s.LastTime)
-                                               .ThenBy(s => s.AverageTime))
+            //foreach (var solution in _solutions.OrderBy(s => s.LastTime)
+            //                                   .ThenBy(s => s.AverageTime))
+            foreach (var solution in _solutions)
             {
                 _solutionTimer.Restart();
                 var yes = (int)solution.Function.Invoke(null, solutionParams) > 0;

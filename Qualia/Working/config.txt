@@ -15,4 +15,5 @@ DynamicSettings.OnlyChangedWeights:0
 DynamicSettings.HighlightChangedWeights:0
 DynamicSettings.ShowOnlyUnchangedWeights:0
 DynamicSettings.ShowActivationLabels:1
+TaskSolutionsPresenter.ShowTaskSolutions:0
 NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\784_28x28_2_CrossCount.txt
