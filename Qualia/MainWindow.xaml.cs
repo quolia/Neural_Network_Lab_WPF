@@ -130,6 +130,7 @@ namespace Qualia.Controls
             {
                 MessageBox.Show($"Network '{fileName}' is not found!", "Error", MessageBoxButton.OK);
                 Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
+                Config.Main.FlushToDrive();
                 return;
             }
 
@@ -140,6 +141,7 @@ namespace Qualia.Controls
 
             _networksManager = new(CtlTabs, fileName, UI_OnChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
+            Config.Main.FlushToDrive();
             
             CtlInputDataPresenter.SetConfig(_networksManager.Config);
             CtlInputDataPresenter.LoadConfig();
