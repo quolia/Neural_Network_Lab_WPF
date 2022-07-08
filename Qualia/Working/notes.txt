@@ -5,3 +5,4 @@ TODO:
 - Output neurons should not be able to be deleted via UI.
 It's a number of output classed.
 - Atfer file load it saves with previouse name.
+- Memory layer.

@@ -108,5 +108,16 @@ namespace Qualia.Tools
 
             return s + _postfixes[postfixId];
         }
+
+        public static double TruncateDouble(double value, int fractionLength)
+        {
+            int factor = 1;
+            for (int i = 0; i < fractionLength; ++i)
+            {
+                factor *= 10;
+            }
+
+            return Math.Round(value * factor) / factor;
+        }
     }
 }

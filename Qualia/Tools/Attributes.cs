@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Qualia.Tools
+﻿namespace Qualia.Tools
 {
-    internal class TaskSolutionAttribute : Attribute
-    {
-        public TaskSolutionAttribute()
-        {
 
-        }
-    }
 }

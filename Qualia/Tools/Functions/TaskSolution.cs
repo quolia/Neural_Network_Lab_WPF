@@ -22,7 +22,9 @@ namespace Qualia.Tools
 
         public void Add(string functionName)
         {
-            var methodInfo = _taskFunctionType.GetMethod(functionName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            var methodInfo = _taskFunctionType.GetMethod(functionName, BindingFlags.Public
+                                                                       | BindingFlags.NonPublic
+                                                                       | BindingFlags.Static);
 
             _solutions.Add(new Solution(methodInfo));
         }
