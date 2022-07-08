@@ -33,6 +33,10 @@ namespace Qualia.Controls
                                                               FontWeights.Bold,
                                                               FontStretches.Normal);
 
+        private readonly Typeface _neuronLabelsFont = new(new("Tahoma"),
+                                                          FontStyles.Normal,
+                                                          FontWeights.Bold,
+                                                          FontStretches.Normal);
         public NetworkPresenter()
         {
             InitializeComponent();
@@ -336,66 +340,80 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLayerNeurons(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel)
+        private void DrawLayerNeurons(bool fullState, NetworkDataModel network, LayerDataModel layer)
         {
-            double threshold = networkModel.Layers.First == layerModel ? networkModel.InputThreshold : 0;
+            double threshold = network.Layers.First == layer ? network.InputThreshold : 0;
 
             NeuronDataModel prevNeuron = null;
-            NeuronDataModel neuronModel = layerModel.Neurons.First;
+            NeuronDataModel neuron = layer.Neurons.First;
 
-            var output = networkModel.GetMaxActivatedOutputNeuron().Id;
+            var output = network.GetMaxActivatedOutputNeuron().Id;
 
-            while (neuronModel != null)
+            while (neuron != null)
             {
-                if (fullState || neuronModel.IsBias || neuronModel.Activation > threshold || layerModel.Id > 0)
+                if (fullState || neuron.IsBias || neuron.Activation > threshold || layer.Id > 0)
                 {
-                    if (!_coordinator.ContainsKey(neuronModel))
+                    if (!_coordinator.ContainsKey(neuron))
                     {
-                        _coordinator.Add(neuronModel,
-                                         Points.Get(LayerX(networkModel, layerModel),
-                                         TOP_OFFSET + VerticalShift(networkModel, layerModel) + neuronModel.Id * VerticalDistance(layerModel.Neurons.Count)));
+                        _coordinator.Add(neuron,
+                                         Points.Get(LayerX(network, layer),
+                                         TOP_OFFSET + VerticalShift(network, layer) + neuron.Id * VerticalDistance(layer.Neurons.Count)));
                     }
 
                     // Skip intersected neurons on the first layer to improve performance.
-                    if (!fullState && !neuronModel.IsBias && networkModel.Layers.First == layerModel && prevNeuron != null)
+                    if (!fullState && !neuron.IsBias && network.Layers.First == layer && prevNeuron != null)
                     {
-                        if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
+                        if (_coordinator[neuron].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                         {
-                            neuronModel = neuronModel.Next;
+                            neuron = neuron.Next;
                             continue;
                         }
                     }
-                    prevNeuron = neuronModel;
+                    prevNeuron = neuron;
 
-                    var pen = Draw.GetPen(neuronModel.Activation);
+                    var pen = Draw.GetPen(neuron.Activation);
                     var brush = pen.Brush;
 
-                    var centerPoint = _coordinator[neuronModel];
+                    var centerPoint = _coordinator[neuron];
 
-                    if (neuronModel.IsBias)
+                    if (neuron.IsBias)
                     {
                         CtlCanvas.DrawEllipse(Brushes.Orange, _biasPen, ref centerPoint, BIAS_RADIUS, BIAS_RADIUS);
                     }
 
                     var radius = NEURON_RADIUS;
 
-                    if (layerModel == networkModel.Layers.Last)
+                    if (layer == network.Layers.Last)
                     {
-                        if (neuronModel.Id == networkModel.TargetOutput)
+                        if (neuron.Id == network.TargetOutput)
                         {
                             brush = Draw.GetBrush(in ColorsX.Yellow);
                         }
 
-                        if (neuronModel.Id == output)
+                        if (neuron.Id == output)
                         {
                             radius *= 1.5;
                         }
                     }
 
-                    CtlCanvas.DrawEllipse(brush, pen, ref centerPoint, radius, radius);  
+                    CtlCanvas.DrawEllipse(brush, pen, ref centerPoint, radius, radius);
+                    
+                    if (layer.Next == null // Output layer.
+                        && !string.IsNullOrEmpty(neuron.Label)) 
+                    {
+                        FormattedText text = new(neuron.Label,
+                                                 Culture.Current,
+                                                 FlowDirection.LeftToRight,
+                                                 _neuronLabelsFont,
+                                                 10,
+                                                 Draw.GetBrush(in ColorsX.Black),
+                                                 RenderSettings.PixelsPerDip);
+
+                        CtlCanvas.DrawText(text, ref Points.Get(centerPoint.X - text.Width / 2, centerPoint.Y + NEURON_RADIUS + 3));
+                    }
                 }
 
-                neuronModel = neuronModel.Next;
+                neuron = neuron.Next;
             }
         }
 

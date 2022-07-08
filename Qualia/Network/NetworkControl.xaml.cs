@@ -263,7 +263,7 @@ namespace Qualia.Controls
                 nextMatrix.Next = matrix;
             }
 
-            NetworkDataModel networkModel = new(Id, GetLayersSizes())
+            NetworkDataModel network = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
                 Classes = taskFunction?.ITaskControl.GetClasses(),
@@ -283,79 +283,85 @@ namespace Qualia.Controls
                 IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
             };
 
-            networkModel.ActivateNetwork();
+            network.ActivateNetwork();
 
-            LayerDataModel prevLayerModel = null;
+            LayerDataModel prevLayer = null;
 
             var ctlLayers = GetLayersControls();
             for (int layerInd = 0; layerInd < ctlLayers.Count; ++layerInd)
             {
                 if (layerInd > 0)
                 {
-                    prevLayerModel = networkModel.Layers[layerInd - 1];
+                    prevLayer = network.Layers[layerInd - 1];
                 }
 
-                networkModel.Layers[layerInd].VisualId = ctlLayers[layerInd].Id;
+                var layer = network.Layers[layerInd];
+
+                layer.VisualId = ctlLayers[layerInd].Id;
 
                 var ctlNeurons = ctlLayers[layerInd].GetNeuronsControls().ToArray();
 
                 for (int neuronInd = 0; neuronInd < ctlNeurons.Length; ++neuronInd)
                 {
-                    var neuronModel = networkModel.Layers[layerInd].Neurons[neuronInd];
-                    neuronModel.VisualId = ctlNeurons[neuronInd].Id;
-                    neuronModel.IsBias = ctlNeurons[neuronInd].IsBias;
-                    neuronModel.IsBiasConnected = ctlNeurons[neuronInd].IsBiasConnected;
+                    var neuron = network.Layers[layerInd].Neurons[neuronInd];
+                    neuron.VisualId = ctlNeurons[neuronInd].Id;
+                    neuron.IsBias = ctlNeurons[neuronInd].IsBias;
+                    neuron.IsBiasConnected = ctlNeurons[neuronInd].IsBiasConnected;
 
-                    neuronModel.ActivationFunction = ctlNeurons[neuronInd].ActivationFunction;
-                    neuronModel.ActivationFunctionParam = ctlNeurons[neuronInd].ActivationFunctionParam;
+                    neuron.ActivationFunction = ctlNeurons[neuronInd].ActivationFunction;
+                    neuron.ActivationFunctionParam = ctlNeurons[neuronInd].ActivationFunctionParam;
 
-
-                    if (layerInd == 0 && !neuronModel.IsBias)
+                    if (layer.Next == null) // Output layer.
                     {
-                        neuronModel.WeightsInitializer = InputLayer.WeightsInitializeFunction;
-                        neuronModel.WeightsInitializerParam = InputLayer.WeightsInitializeFunctionParam;
+                        neuron.Label = ctlNeurons[neuronInd].Label;
+                    }
 
-                        double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
+                    if (layerInd == 0 && !neuron.IsBias)
+                    {
+                        neuron.WeightsInitializer = InputLayer.WeightsInitializeFunction;
+                        neuron.WeightsInitializerParam = InputLayer.WeightsInitializeFunctionParam;
+
+                        double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
                         if (!InitializeFunction.IsSkipValue(initValue))
                         {
-                            neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
+                            neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
                         }
                     }
                     else
                     {
-                        neuronModel.WeightsInitializer = ctlNeurons[neuronInd].WeightsInitializeFunction;
-                        neuronModel.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializeFunctionParam;
+                        neuron.WeightsInitializer = ctlNeurons[neuronInd].WeightsInitializeFunction;
+                        neuron.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializeFunctionParam;
 
-                        double initValue = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam);
+                        double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
                         if (!InitializeFunction.IsSkipValue(initValue))
                         {
-                            neuronModel.Weights.ForEach(w => w.Weight = neuronModel.WeightsInitializer.Do(neuronModel.WeightsInitializerParam));
+                            neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
                         }
                     }
 
-                    if (neuronModel.IsBias)
+                    if (neuron.IsBias)
                     {
-                        neuronModel.ActivationInitializer = ctlNeurons[neuronInd].ActivationInitializeFunction;
-                        neuronModel.ActivationInitializerParam = ctlNeurons[neuronInd].ActivationInitializeFunctionParam;
+                        neuron.ActivationInitializer = ctlNeurons[neuronInd].ActivationInitializeFunction;
+                        neuron.ActivationInitializerParam = ctlNeurons[neuronInd].ActivationInitializeFunctionParam;
                         double initValue = ctlNeurons[neuronInd].ActivationInitializeFunction.Do(ctlNeurons[neuronInd].ActivationInitializeFunctionParam);
 
                         if (!InitializeFunction.IsSkipValue(initValue))
                         {
-                            neuronModel.X = initValue; // ?
-                            neuronModel.Activation = initValue;
+                            neuron.X = initValue; // ?
+                            neuron.Activation = initValue;
                         }
                     }
                     
-                    if (!isCopy && prevLayerModel != null && prevLayerModel.Neurons.Count > 0)
+                    if (!isCopy && prevLayer != null && prevLayer.Neurons.Count > 0)
                     {
-                        neuronModel.WeightsToPreviousLayer = new(prevLayerModel.Neurons.Count);
+                        neuron.WeightsToPreviousLayer = new(prevLayer.Neurons.Count);
 
-                        var prevNeuronModel = prevLayerModel.Neurons.First;
+                        var prevNeuronModel = prevLayer.Neurons.First;
                         while (prevNeuronModel != null)
                         {
-                            if (!neuronModel.IsBias || (neuronModel.IsBiasConnected && prevNeuronModel.IsBias))
+                            if (!neuron.IsBias || (neuron.IsBiasConnected && prevNeuronModel.IsBias))
                             {
-                                neuronModel.WeightsToPreviousLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuronModel)));
+                                neuron.WeightsToPreviousLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuron)));
                             }
 
                             prevNeuronModel = prevNeuronModel.Next;
@@ -364,7 +370,7 @@ namespace Qualia.Controls
                 }
             }
 
-            var lastLayer = networkModel.Layers.Last;
+            var lastLayer = network.Layers.Last;
             lastLayer.VisualId = Constants.OutputLayerId;
             {
                 var ctlNeurons = _outputLayer.GetNeuronsControls().ToArray();
@@ -377,10 +383,10 @@ namespace Qualia.Controls
             if (!isCopy)
             {
                 var copy = CreateNetworkDataModel(taskFunction, true);
-                networkModel.SetCopy(copy);
+                network.SetCopy(copy);
             }
 
-            return networkModel;
+            return network;
         }
 
         private void Color_OnClick(object sender, MouseButtonEventArgs e)

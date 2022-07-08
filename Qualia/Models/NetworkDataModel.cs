@@ -310,27 +310,27 @@ namespace Qualia.Model
         }
         */
 
-        public NetworkDataModel Merge(NetworkDataModel newNetworkModel)
+        public NetworkDataModel Merge(NetworkDataModel newNetwork)
         {
-            newNetworkModel.Statistics = Statistics;
-            newNetworkModel.DynamicStatistics = DynamicStatistics;
+            newNetwork.Statistics = Statistics;
+            newNetwork.DynamicStatistics = DynamicStatistics;
 
-            var newLayerModel = newNetworkModel.Layers.First;
-            while (newLayerModel != null)
+            var newLayer = newNetwork.Layers.First;
+            while (newLayer != null)
             {
-                var layerModel = Layers.Find(l => l.VisualId == newLayerModel.VisualId);
-                if (layerModel != null)
+                var layer = Layers.Find(l => l.VisualId == newLayer.VisualId);
+                if (layer != null)
                 {
-                    var newNeuronModel = newLayerModel.Neurons.First;
-                    while (newNeuronModel != null)
+                    var newNeuron = newLayer.Neurons.First;
+                    while (newNeuron != null)
                     {
-                        var neuronModel = layerModel.Neurons.Find(n => n.VisualId == newNeuronModel.VisualId);
+                        var neuronModel = layer.Neurons.Find(n => n.VisualId == newNeuron.VisualId);
                         if (neuronModel == null)
                         {
-                            double initValue = newNeuronModel.WeightsInitializer.Do(newNeuronModel.WeightsInitializerParam);
+                            double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
                             if (!InitializeFunction.IsSkipValue(initValue))
                             {
-                                var newWeightModel = newNeuronModel.Weights.First;
+                                var newWeightModel = newNeuron.Weights.First;
                                 while (newWeightModel != null)
                                 {
                                     newWeightModel.Weight = initValue;
@@ -340,74 +340,84 @@ namespace Qualia.Model
                         }
                         else
                         {
-                            var newWeightModel = newNeuronModel.Weights.First;
-                            while (newWeightModel != null)
+                            var newWeight = newNeuron.Weights.First;
+                            while (newWeight != null)
                             {
-                                var weightModel = neuronModel.Weights.Find(w => w.Id == newWeightModel.Id);
-                                if (weightModel != null)
+                                var weight = neuronModel.Weights.Find(w => w.Id == newWeight.Id);
+                                if (weight != null)
                                 {
-                                    newWeightModel.Weight = weightModel.Weight;
+                                    newWeight.Weight = weight.Weight;
                                 }
 
-                                newWeightModel = newWeightModel.Next;
+                                newWeight = newWeight.Next;
                             }
 
-                            if (newNeuronModel.IsBias)
+                            if (newNeuron.IsBias)
                             {
-                                double initValue = newNeuronModel.ActivationInitializer.Do(newNeuronModel.ActivationInitializerParam);
+                                double initValue = newNeuron.ActivationInitializer.Do(newNeuron.ActivationInitializerParam);
                                 if (InitializeFunction.IsSkipValue(initValue))
                                 {
-                                    newNeuronModel.X = neuronModel.X;
-                                    newNeuronModel.Activation = neuronModel.Activation;
+                                    newNeuron.X = neuronModel.X;
+                                    newNeuron.Activation = neuronModel.Activation;
+
+                                    if (layer.Next == null) // Output layer.
+                                    {
+                                        newNeuron.Label = neuronModel.Label;
+                                    }
                                 }
                             }
                         }
 
-                        newNeuronModel = newNeuronModel.Next;
+                        newNeuron = newNeuron.Next;
                     }
                 }
 
-                newLayerModel = newLayerModel.Next;
+                newLayer = newLayer.Next;
             }
 
-            return newNetworkModel;
+            return newNetwork;
         }
 
         public NetworkDataModel GetCopyToDraw()
         {
-            var layerModel = Layers.First;
-            var layerModelCopy = _copy.Layers.First;
+            var layer = Layers.First;
+            var layerCopy = _copy.Layers.First;
 
-            while (layerModel != null)
+            while (layer != null)
             {
-                var neuronModel = layerModel.Neurons.First;
-                var neuronModelCopy = layerModelCopy.Neurons.First;
+                var neuron = layer.Neurons.First;
+                var neuronCopy = layerCopy.Neurons.First;
 
-                while (neuronModel != null)
+                while (neuron != null)
                 {
-                    neuronModelCopy.X = neuronModel.X;
-                    neuronModelCopy.Activation = neuronModel.Activation;
+                    neuronCopy.X = neuron.X;
+                    neuronCopy.Activation = neuron.Activation;
 
-                    if (neuronModel.Activation != 0 && layerModel != Layers.Last)
+                    if (layer.Next == null) // Output layer.
                     {
-                        var weightModel = neuronModel.Weights.First;
-                        var weightModelCopy = neuronModelCopy.Weights.First;
+                        neuronCopy.Label = neuron.Label;
+                    }
 
-                        while (weightModel != null)
+                    if (neuron.Activation != 0 && layer != Layers.Last)
+                    {
+                        var weight = neuron.Weights.First;
+                        var weightCopy = neuronCopy.Weights.First;
+
+                        while (weight != null)
                         {
-                            weightModelCopy.Weight = weightModel.Weight;
+                            weightCopy.Weight = weight.Weight;
                            
-                            weightModel = weightModel.Next;
-                            weightModelCopy = weightModelCopy.Next;
+                            weight = weight.Next;
+                            weightCopy = weightCopy.Next;
                         }
                     }
 
-                    neuronModel = neuronModel.Next;
-                    neuronModelCopy = neuronModelCopy.Next;
+                    neuron = neuron.Next;
+                    neuronCopy = neuronCopy.Next;
                 }
 
-                layerModel = layerModel.Next;
-                layerModelCopy = layerModelCopy.Next;
+                layer = layer.Next;
+                layerCopy = layerCopy.Next;
             }
 
             _copy.TargetOutput = TargetOutput;

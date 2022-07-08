@@ -37,6 +37,8 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
         public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
 
+        public override string Label => CtlLabel.Text;
+
         public override void LoadConfig()
         {
             CtlActivationFunction.Fill<ActivationFunction>(Config);

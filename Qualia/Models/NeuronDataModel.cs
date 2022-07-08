@@ -8,7 +8,7 @@ namespace Qualia.Model
         public readonly int Id;
         public long VisualId;
 
-        public double X;
+        public double X; // Values used as a parameter of activation function.
         public double Activation;
         public double Error;
 
@@ -29,6 +29,8 @@ namespace Qualia.Model
         public double Target;
 
         public ListX<ForwardNeuron> WeightsToPreviousLayer;
+
+        public string Label; // Neuron text description.
 
         public NeuronDataModel(int id, int weightsCount)
         {
