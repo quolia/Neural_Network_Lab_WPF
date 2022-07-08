@@ -910,7 +910,9 @@ namespace Qualia.Tools
 
                 var mask = _mask;
 
-                for (int y = 0; y < SIZE; ++y) //Подготовка матрицы - столбеца mask[i].
+                // Подготовка матрицы - столбеца mask[i].
+
+                for (int y = 0; y < SIZE; ++y) 
                 {
                     mask[y] = 0;
 
@@ -929,80 +931,140 @@ namespace Qualia.Tools
 
                 int three;
 
-                //Обработка первых трех строк матрицы (s == 0)
-                three = mask[0] & mask[1] & mask[2];                          //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
+                //Обработка первых трех строк матрицы (s == 0).
 
-                while (three != 0)
+                three = mask[0] & mask[1] & mask[2]; 
+
+                while (three != 0) // В очередных трех строках имеется хотя бы одна вертикальная тройка true.
                 {
-                    int bit_low = three & (0 - three);                           //Выделение крайнего справа установленного бита
+                    // Выделение крайнего справа установленного бита.
+                    int bit_low = three & (0 - three);
 
-                    if (bit_low > 1 && bit_low < BIT_SIZE_1) //На "краях" матрицы креста не может быть
+                    // На "краях" матрицы креста не может быть.
+                    if (bit_low > 1 && bit_low < BIT_SIZE_1) 
                     {
                         int three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
-                        if ((mask[1] & three_bit_low) == three_bit_low)                               //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
-                            if ((mask[0] & three_bit_low) == 0)                        //Верхние углы креста нулевые
-                                if ((mask[2] & three_bit_low) == 0)                      //Нижние углы креста нулевые
-                                    if ((mask[3] & bit_low) == 0)                          //Снизу нет касания
+                        // Верхние углы креста нулевые.
+                        if ((mask[0] & three_bit_low) == 0)
 
-                                        if ((bit_low == 2) || ((bit_low > 2) && ((mask[1] & (bit_low >> 2)) == 0)))             //Справа нет касания
-                                            if ((bit_low == BIT_SIZE_2) || ((bit_low < BIT_SIZE_2) && ((mask[1] & (bit_low << 2)) == 0))) //Слева нет касания
+                            // Нижние углы креста нулевые.
+                            if ((mask[2] & three_bit_low) == 0)
+
+                                // Снизу нет касания.
+                                if ((mask[3] & bit_low) == 0)
+
+                                    // Справа нет касания.
+                                    if (bit_low == 2
+                                        || (bit_low > 2
+                                            && (mask[1] & (bit_low >> 2)) == 0))
+
+                                        // Слева нет касания.
+                                        if (bit_low == BIT_SIZE_2
+                                            || (bit_low < BIT_SIZE_2
+                                                && (mask[1] & (bit_low << 2)) == 0)) 
+
+                                            // Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true).
+                                            if ((mask[1] & three_bit_low) == three_bit_low) 
+                                            {
                                                 result++;
+                                            }
                     }
 
-                    three &= (three - 1);                                    //Обнуление крайнего справа единичного бита
+                    // Обнуление крайнего справа единичного бита.
+                    three &= three - 1; 
                 };
 
-                //Обработка последних трех строк матрицы (s == SIZE-3)
-                three = mask[SIZE - 3] & mask[SIZE - 2] & mask[SIZE - 1];        //if(three)- в очередных трех строках имеется хотя бы одна вертикальная тройка true
+                // Обработка последних трех строк матрицы (s == SIZE-3).
 
-                while (three != 0)
+                three = mask[SIZE - 3] & mask[SIZE - 2] & mask[SIZE - 1];
+
+                while (three != 0) // В очередных трех строках имеется хотя бы одна вертикальная тройка true.
                 {
-                    int bit_low = three & (0 - three);                            //Выделение крайнего справа установленного бита
+                    // Выделение крайнего справа установленного бита.
+                    int bit_low = three & (0 - three);
 
-                    if (bit_low > 1 && bit_low < BIT_SIZE_1)  //На "краях" матрицы креста не может быть
+                    // На "краях" матрицы креста не может быть.
+                    if (bit_low > 1 && bit_low < BIT_SIZE_1) 
                     {
                         int three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
-                        if ((mask[SIZE - 2] & three_bit_low) == three_bit_low)                       //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
-                            if ((mask[SIZE - 3] & three_bit_low) == 0)                //Верхние углы креста нулевые
-                                if ((mask[SIZE - 1] & three_bit_low) == 0)              //Нижние углы креста нулевые
-                                    if ((mask[SIZE - 4] & bit_low) == 0)                  //Сверху нет касания
+                        // Верхние углы креста нулевые.
+                        if ((mask[SIZE - 3] & three_bit_low) == 0)
 
-                                        if ((bit_low == 2) || ((bit_low > 2) && ((mask[SIZE - 2] & (bit_low >> 2)) == 0)))             //Справа нет касания
-                                            if ((bit_low == BIT_SIZE_2) || ((bit_low < BIT_SIZE_2) && ((mask[SIZE - 2] & (bit_low << 2)) == 0))) //Слева нет касания
+                            // Нижние углы креста нулевые.
+                            if ((mask[SIZE - 1] & three_bit_low) == 0)
+
+                                // Сверху нет касания.
+                                if ((mask[SIZE - 4] & bit_low) == 0)
+
+                                    // Справа нет касания.
+                                    if (bit_low == 2
+                                        || (bit_low > 2
+                                            && (mask[SIZE - 2] & (bit_low >> 2)) == 0))
+
+                                        // Слева нет касания.
+                                        if (bit_low == BIT_SIZE_2
+                                            || (bit_low < BIT_SIZE_2
+                                                && ((mask[SIZE - 2] & (bit_low << 2)) == 0)))
+
+                                            // Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true).
+                                            if ((mask[SIZE - 2] & three_bit_low) == three_bit_low)
+                                            {
                                                 result++;
+                                            }
                     }
 
-                    three &= (three - 1);                                     //Обнуление крайнего справа единичного бита
+                    // Обнуление крайнего справа единичного бита.
+                    three &= three - 1; 
                 };
 
-                //Обработка остальных строк матрицы
+                //Обработка остальных строк матрицы.
+
                 for (int s = 1; s < SIZE - 3; ++s)
                 {
-                    three = mask[s + 0] & mask[s + 1] & mask[s + 2];                //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
+                    three = mask[s + 0] & mask[s + 1] & mask[s + 2];
 
-                    while (three != 0)
+                    while (three != 0) // В очередных трех строках имеется хотя бы одна вертикальная тройка true.
                     {
-                        int bit_low = three & (0 - three);                           //Выделение крайнего справа установленного бита
+                        // Выделение крайнего справа установленного бита.
+                        int bit_low = three & (0 - three);
 
-                        if (bit_low > 1 && bit_low < BIT_SIZE_1) //На "краях" матрицы креста не может быть
+                        // На "краях" матрицы креста не может быть.
+                        if (bit_low > 1 && bit_low < BIT_SIZE_1) 
                         {
                             int three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
+                            // Верхние углы креста нулевые.
+                            if ((mask[s + 0] & three_bit_low) == 0)
 
-                                if ((mask[s + 0] & three_bit_low) == 0)                  //Верхние углы креста нулевые
-                                    if ((mask[s + 2] & three_bit_low) == 0)                //Нижние углы креста нулевые
-                                        if ((mask[s - 1] & bit_low) == 0)                    //Сверху нет касания
-                                            if ((mask[s + 3] & bit_low) == 0)                  //Снизу нет касания
-                                            if ((mask[s + 1] & three_bit_low) == three_bit_low)                         //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
+                                // Нижние углы креста нулевые.
+                                if ((mask[s + 2] & three_bit_low) == 0)
 
-                                                if ((bit_low == 2) || ((bit_low > 2) && ((mask[s + 1] & (bit_low >> 2)) == 0)))             //Справа нет касания
-                                                    if ((bit_low == BIT_SIZE_2) || ((bit_low < BIT_SIZE_2) && ((mask[s + 1] & (bit_low << 2)) == 0))) //Слева нет касания
+                                    // Сверху нет касания.
+                                    if ((mask[s - 1] & bit_low) == 0)
+
+                                        // Снизу нет касания.
+                                        if ((mask[s + 3] & bit_low) == 0)
+
+                                            //Справа нет касания.
+                                            if (bit_low == 2
+                                                || (bit_low > 2
+                                                    && ((mask[s + 1] & (bit_low >> 2)) == 0)))
+
+                                                //Слева нет касания.
+                                                if (bit_low == BIT_SIZE_2
+                                                    || (bit_low < BIT_SIZE_2
+                                                        && ((mask[s + 1] & (bit_low << 2)) == 0)))
+
+                                                    // Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true).
+                                                    if ((mask[s + 1] & three_bit_low) == three_bit_low) 
+                                                    {
                                                         result++;
+                                                    }
                         }
 
-                        three &= (three - 1);                                   //Обнуление крайнего справа единичного бита
+                        three &= three - 1; // Обнуление крайнего справа единичного бита.
                     };
                 }
 
