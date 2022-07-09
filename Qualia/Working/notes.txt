@@ -10,3 +10,4 @@ It's a number of output classed.
 - Save config on dynamic settings change.
 - Redraw network after ApplyChanges clicked.
 - With "yes/no"-type solution network cannot learn.
+- ErrorMatrixs  is null after file load.

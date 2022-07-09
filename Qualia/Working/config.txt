@@ -4,8 +4,8 @@ ScreenHeight:1033.33333333333
 ScreenTop:0
 ScreenLeft:0
 OnTop:0
-DataWidth:277
-NetworkHeight:580
+DataWidth:231
+NetworkHeight:611
 Settings.SkipRoundsToDrawErrorMatrix:10000
 Settings.SkipRoundsToDrawNetworks:10000
 Settings.SkipRoundsToDrawStatistics:10000
@@ -16,4 +16,4 @@ DynamicSettings.HighlightChangedWeights:0
 DynamicSettings.ShowOnlyUnchangedWeights:0
 DynamicSettings.ShowActivationLabels:1
 TaskSolutionsPresenter.ShowTaskSolutions:0
-NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\784_28x28_2_CrossCount.txt
+NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\780_21x21_21.txt

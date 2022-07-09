@@ -325,7 +325,7 @@ namespace Qualia.Tools
             public List<string> GetClasses()
             {
                 List<string> classes = new();
-                for (int number = 0; number < 3; ++number) // outputs: no, yes, i-don't-know
+                for (int number = 0; number < 2; ++number) // outputs: no, yes, i-don't-know
                 {
                     classes.Add(Converter.IntToText(number));
                 }
@@ -397,7 +397,7 @@ namespace Qualia.Tools
                         neuron = networkModel.Layers.Last.Neurons.First;
                         neuron.Target = targetOutput == 0 ? 1 : 0; // no
                         neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
-                        neuron.Next.Next.Target = 0.5; // i-don't-know
+                        //neuron.Next.Next.Target = 0.5; // i-don't-know
 
                         networkModel.TargetOutput = targetOutput;
 
