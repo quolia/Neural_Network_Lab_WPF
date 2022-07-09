@@ -17,11 +17,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <local:LabelControl Content="Input count:" />
-        <local:IntValueControl Grid.Column="1" x:Name="CtlInputCount" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
-        <local:LabelControl Grid.Row="1" Content="Min number:" />
-        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMinNumber" MinimumValue="0" MaximumValue="1000000" DefaultValue="0" />
-        <local:LabelControl Grid.Row="2" Content="Max number:" />
-        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxNumber" MinimumValue="1" MaximumValue="1000000" DefaultValue="10" />
+        <local:LabelControl Content="Common dots amount:" />
+        <local:IntValueControl Grid.Column="1" x:Name="CtlCommonDotsAmount" />
+        <local:LabelControl Grid.Row="1" Content="Min amount of dots to count:" />
+        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMinDotsAmountToCount" />
+        <local:LabelControl Grid.Row="2" Content="Max amount of dots to count:" />
+        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxDotsAmoutToCount" />
     </Grid>
 </local:BaseUserControl>

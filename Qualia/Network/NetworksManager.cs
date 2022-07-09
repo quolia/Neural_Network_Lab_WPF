@@ -319,7 +319,7 @@ namespace Qualia.Controls
                     baseNeuron = baseNeuron.Next;
                 }
 
-                network.TargetOutput = baseNetwork.TargetOutput;
+                network.TargetOutputNeuronId = baseNetwork.TargetOutputNeuronId;
 
                 network = network.Next;
             }

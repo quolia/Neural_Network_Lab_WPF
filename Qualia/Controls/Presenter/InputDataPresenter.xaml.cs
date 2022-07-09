@@ -12,8 +12,10 @@ namespace Qualia.Controls
 
         public bool IsPreventDataRepetition => CtlIsPreventRepetition.Value;
 
-        private readonly int _pointSize;
         private int _pointsRearrangeSnap;
+        private bool _isGridSnapAdjustmentAllowed;
+
+        private readonly int _pointSize;
         private int _pointsCount;
         private double _threshold;
         private double[] _data;
@@ -38,13 +40,23 @@ namespace Qualia.Controls
 
                 CtlDistributionFunction
                     .Initialize(defaultFunction: nameof(DistributionFunction.FlatRandom),
-                                defaultParam: 1)
-                    .SetUIParam(Notification.ParameterChanged.TaskDistributionFunction),
+                                defaultParam: 1,
+                                paramMinValue: 0,
+                                paramMaxValue: 1)
+                    .SetUIParam(Notification.ParameterChanged.TaskDistributionFunction,
+                                Notification.ParameterChanged.TaskDistributionFunctionParam),
 
                 CtlIsPreventRepetition
                     .Initialize(false)
                     .SetUIParam(Notification.ParameterChanged.IsPreventRepetition)
             };
+
+            CtlTaskFunction.SelectionChanged += TaskFunction_OnChanged;
+        }
+
+        private void TaskFunction_OnChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            CtlTaskDescription.Content = TaskFunction.GetDescription(CtlTaskFunction.Value);
         }
 
         private new void OnChanged(Notification.ParameterChanged param)
@@ -66,13 +78,14 @@ namespace Qualia.Controls
                 var taskControl = taskFunction.ITaskControl;
 
                 _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
+                _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
 
                 taskControl.SetConfig(taskFunctionConfig);
                 taskControl.LoadConfig();
                 taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
 
-                CtlHolder.Children.Clear();
-                CtlHolder.Children.Add(taskControl.GetVisualControl());
+                CtlTaskControlHolder.Children.Clear();
+                CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
@@ -82,19 +95,18 @@ namespace Qualia.Controls
                 }
 
                 var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
-                /*
-                if (distributionFunction != TaskFunction.DistributionFunction)
+                
+                //if (distributionFunction != TaskFunction.DistributionFunction)
                 {
-                    TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
+                    //TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
 
                     var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
                     CtlDistributionFunction.SetConfig(taskFunctionConfig);
                     CtlDistributionFunction.LoadConfig();
                 }
-                */
             }
 
-            base.OnChanged(Notification.ParameterChanged.TaskInputData);
+            base.OnChanged(Notification.ParameterChanged.TaskParameter);
         }
 
         private void Size_OnChanged(object sender, EventArgs e)
@@ -128,16 +140,17 @@ namespace Qualia.Controls
             var taskControl = model.TaskFunction.ITaskControl;
 
             _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
+            _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
 
             taskControl.SetConfig(taskFunctionConfig);
             taskControl.LoadConfig();
             taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
 
-            CtlHolder.Children.Clear();
-            CtlHolder.Children.Add(taskControl.GetVisualControl());
+            CtlTaskControlHolder.Children.Clear();
+            CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
         }
 
-        void TaskParameter_OnChanged(Notification.ParameterChanged _)
+        void TaskParameter_OnChanged(Notification.ParameterChanged param)
         {
             //if (_onTaskChanged == null)
             {
@@ -145,6 +158,7 @@ namespace Qualia.Controls
             }
 
             RearrangeWithNewPointsCount();
+            OnChanged(param);
             //_onTaskChanged.TaskParameter_OnChanged();
         }
 
@@ -164,10 +178,10 @@ namespace Qualia.Controls
 
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            //_onChanged -= onChanged;
-            //_onChanged += onChanged;
+            _onChanged -= onChanged;
+            _onChanged += onChanged;
 
-            _configParams.ForEach(p => p.SetOnChangeEvent(onChanged));
+            _configParams.ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 
         private void DrawPoint(double x, double y, double value, bool isData)
@@ -226,9 +240,7 @@ namespace Qualia.Controls
         {
             int width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
 
-            var model = GetModel();
-
-            return model.TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed()
+            return _isGridSnapAdjustmentAllowed
                    ? width / (_pointsRearrangeSnap * _pointSize)
                    : 1;
         }

@@ -7,10 +7,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel Orientation="Horizontal">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
             <local:SelectValueControl x:Name="CtlFunction" />
-            <local:LabelControl Content="a:" />
-            <local:DoubleValueControl x:Name="CtlParam" />
-        </StackPanel>
+            <local:LabelControl Content="a:" Grid.Column="1" />
+            <local:DoubleValueControl x:Name="CtlParam" Grid.Column="2" />
+        </Grid>
     </Grid>
 </local:BaseUserControl>

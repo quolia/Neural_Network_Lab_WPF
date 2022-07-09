@@ -66,14 +66,18 @@ namespace Qualia.Tools
             PreventComputerFromSleep,
             DisablePreventComputerFromSleep,
 
+            //FunctionName,
+            //FunctionParam,
+
             TaskFunction,
-            TaskInputData,
+            TaskParameter,
             TaskDistributionFunction,
+            TaskDistributionFunctionParam,
 
             Structure,
             NeuronsCount,
 
-            Fake,
+            //Fake,
             IsPreventRepetition
         }
     }

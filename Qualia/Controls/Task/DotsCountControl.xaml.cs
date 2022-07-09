@@ -1,20 +1,41 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Linq;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
     sealed public partial class DotsCountControl : BaseUserControl
     {
+        private const int SQUARE_ROOT = 32;
+
         public DotsCountControl()
         {
             InitializeComponent();
+
+            _configParams = new()
+            {
+                CtlCommonDotsAmount
+                    .Initialize(defaultValue: 10,
+                                minValue: 1,
+                                maxValue: SQUARE_ROOT * SQUARE_ROOT)
+                    .SetUIParam(Notification.ParameterChanged.TaskParameter),
+
+                CtlMinDotsAmountToCount
+                    .Initialize(defaultValue: 0,
+                                minValue: 0,
+                                maxValue: SQUARE_ROOT * SQUARE_ROOT)
+                    .SetUIParam(Notification.ParameterChanged.TaskParameter),
+
+                CtlMaxDotsAmoutToCount
+                    .Initialize(defaultValue: 10,
+                                minValue: 1,
+                                maxValue: SQUARE_ROOT * SQUARE_ROOT)
+                    .SetUIParam(Notification.ParameterChanged.TaskParameter)
+            };
         }
 
-        public int InputCount => (int)CtlInputCount.Value;
-        public int MaxNumber => (int)CtlMaxNumber.Value;
-        public int MinNumber => (int)CtlMinNumber.Value;
+        public int CommonDotsAmount => (int)CtlCommonDotsAmount.Value;
+        public int MaxDotsAmountToCount => (int)CtlMaxDotsAmoutToCount.Value;
+        public int MinDotsAmountToCount => (int)CtlMinDotsAmountToCount.Value;
 
         private void Parameter_OnChanged(Notification.ParameterChanged param)
         {
@@ -26,34 +47,36 @@ namespace Qualia.Controls
 
         public override void SetConfig(Config config)
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
+            _configParams.ForEach(p => p.SetConfig(config));
         }
 
         public override void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
+            _configParams.ForEach(p => p.LoadConfig());
         }
 
         public override void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
+            _configParams.ForEach(p => p.RemoveFromConfig());
         }
 
         public override bool IsValid()
         {
-            if (this.FindVisualChildren<IConfigParam>().All(param => param.IsValid()))
+            if (_configParams.TrueForAll(p => p.IsValid()))
             {
-                if (CtlInputCount.Value >= CtlMaxNumber.Value)
+                if (CtlCommonDotsAmount.Value >= CtlMaxDotsAmoutToCount.Value
+                    && CtlMaxDotsAmoutToCount.Value >= CtlMinDotsAmountToCount.Value
+                    && CtlMaxDotsAmoutToCount.Value - CtlMinDotsAmountToCount.Value <= SQUARE_ROOT)
                 {
                     return true;
                 }
 
-                CtlInputCount.InvalidateValue();
+                InvalidateValue();
             }
 
             return false;
@@ -64,9 +87,12 @@ namespace Qualia.Controls
             _onChanged -= onChange;
             _onChanged += onChange;
 
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
+            _configParams.ForEach(p => p.SetOnChangeEvent(Parameter_OnChanged));
         }
 
-        public override void InvalidateValue() => throw new InvalidOperationException();
+        public override void InvalidateValue()
+        {
+            _configParams.ForEach(p => p.InvalidateValue());
+        }
     }
 }

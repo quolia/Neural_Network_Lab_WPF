@@ -23,14 +23,14 @@
                 <local:LabelControl Content="Weights randomizer:" />
                 <local:SelectValueControl x:Name="CtlRandomizeFunction" />
                 <local:LabelControl Content="a:" />
-                <local:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaximumValue="1000" MinimumValue="-1000" />
+                <local:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaxValue="1000" MinValue="-1000" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="RandomizerButton_OnClick" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:LabelControl Content="Learning rate:" />
-                <local:DoubleValueControl x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaximumValue="100" MinimumValue="-1" />
+                <local:DoubleValueControl x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaxValue="100" MinValue="-1" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <local:LabelControl Content="Cost function:" />

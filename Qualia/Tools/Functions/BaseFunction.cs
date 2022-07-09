@@ -116,7 +116,17 @@ namespace Qualia.Tools
                 derivativeDescription = string.IsNullOrEmpty(description) ? null : derivativeDescription.Replace(" ... ", "\n");
             }
 
-            return (description + "\n" + derivativeDescription) ?? "No description.";
+            if (!string.IsNullOrEmpty(derivativeDescription))
+            {
+                if (!string.IsNullOrEmpty(description))
+                {
+                    description += "\n";
+                }
+
+                description += derivativeDescription;
+            }
+
+            return description ?? "No description.";
         }
     }
 }

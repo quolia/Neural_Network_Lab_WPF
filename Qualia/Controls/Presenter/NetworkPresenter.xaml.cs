@@ -385,7 +385,7 @@ namespace Qualia.Controls
 
                     if (layer == network.Layers.Last)
                     {
-                        if (neuron.Id == network.TargetOutput)
+                        if (neuron.Id == network.TargetOutputNeuronId)
                         {
                             brush = Draw.GetBrush(in ColorsX.Yellow);
                         }

@@ -509,7 +509,7 @@ namespace Qualia.Controls
                             
                             var output = network.GetMaxActivatedOutputNeuron();
                             var outputId = output.Id;
-                            var input = network.TargetOutput;
+                            var input = network.TargetOutputNeuronId;
                             var cost = network.CostFunction.Do(network);
                             var statistics = network.Statistics;
 

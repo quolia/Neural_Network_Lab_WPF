@@ -26,7 +26,7 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: true)
                     .SetUIParam(Notification.ParameterChanged.PreventComputerFromSleep),
 
-                new FakeValue()
+                new FakeValue(Notification.ParameterChanged.Settings)
             };
         }
 
@@ -42,9 +42,10 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(Notification.ParameterChanged param)
         {
-            if (param == Notification.ParameterChanged.Fake)
+            if (param == Notification.ParameterChanged.Settings)
             {
                 OnChanged(Notification.ParameterChanged.Settings);
+                return;
             }
 
             if (param == Notification.ParameterChanged.PreventComputerFromSleep)

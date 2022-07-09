@@ -8,7 +8,7 @@ namespace Qualia.Controls
     sealed public class DoubleValueControl : TextBox, IConfigParam
     {
         private Config _config;
-        private event Action<Notification.ParameterChanged> _onChanged = delegate {};
+        private event Action<Notification.ParameterChanged> _onChanged = delegate { };
 
         public double DefaultValue { get; set; } = Constants.InvalidDouble;
 
@@ -21,20 +21,20 @@ namespace Qualia.Controls
 
             if (minValue.HasValue)
             {
-                MinimumValue = minValue.Value;
+                MinValue = minValue.Value;
             }
 
             if (maxValue.HasValue)
             {
-                MaximumValue = maxValue.Value;
+                MaxValue = maxValue.Value;
             }
 
             return this;
         }
 
-        public double MinimumValue { get; set; } = double.MinValue;
+        public double MinValue { get; set; } = double.MinValue;
 
-        public double MaximumValue { get; set; } = double.MaxValue;
+        public double MaxValue { get; set; } = double.MaxValue;
 
         public Notification.ParameterChanged UIParam { get; private set; }
 
@@ -48,7 +48,7 @@ namespace Qualia.Controls
         {
             Padding = new(0);
             Margin = new(3);
-            MinWidth = 30;
+            //MinWidth = 30;
 
             TextChanged += Value_OnChanged;
         }
@@ -57,31 +57,31 @@ namespace Qualia.Controls
         {
             if (IsValidInput(Constants.InvalidDouble))
             {
-                Background = Brushes.White;
                 _onChanged(UIParam);
-            }
-            else
-            {
-                Background = Brushes.Tomato;
             }
         }
 
         private bool IsValidInput(double defaultValue)
         {
-            if (IsNull(defaultValue))
-            {
-                return false;
-            }
-
             try
             {
-                var value = Converter.TextToDouble(Text, defaultValue);
-                return value >= MinimumValue && value <= MaximumValue;
+                if (!IsNull(defaultValue))
+                {
+                    var value = Converter.TextToDouble(Text, defaultValue);
+                    if (value >= MinValue && value <= MaxValue)
+                    {
+                        Background = Brushes.White;
+                        return true;
+                    }
+                }
             }
             catch
             {
-                return false;
+                //
             }
+
+            InvalidateValue();
+            return false;
         }
 
         public bool IsValid()
@@ -95,19 +95,19 @@ namespace Qualia.Controls
         {
             get
             {
-                if (string.IsNullOrEmpty(Text) && !double.IsNaN(DefaultValue))
+                if (string.IsNullOrEmpty(Text) && !Constants.IsInvalid(DefaultValue))
                 {
                     Text = Converter.DoubleToText(DefaultValue);
                 }
 
                 return IsValid()
-                       ? Converter.TextToDouble(Text, DefaultValue)
+                       ? Converter.TextToDouble (Text, DefaultValue)
                        : throw new InvalidValueException(Name, Text);
             }
 
             set
             {
-               Text = Converter.DoubleToText(value);
+                Text = Converter.DoubleToText(value);
             }
         }
 
@@ -120,14 +120,14 @@ namespace Qualia.Controls
         {
             var value = _config.Get(Name, DefaultValue);
 
-            if (value < MinimumValue)
+            if (value < MinValue)
             {
-                value = MinimumValue;
+                value = MinValue;
             }
 
-            if (value > MaximumValue)
+            if (value > MaxValue)
             {
-                value = MaximumValue;
+                value = MaxValue;
             }
 
             Value = value;

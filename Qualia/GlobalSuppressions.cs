@@ -230,7 +230,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NetworkDataModel.RandomizeMode")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NetworkDataModel.RandomizerParam")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NetworkDataModel.Statistics")]
-[assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NetworkDataModel.TargetOutput")]
+[assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NetworkDataModel.TargetOutputNeuronId")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NetworkDataModel.VisualId")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NeuronDataModel.Activation")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.NeuronDataModel.ActivationFunction")]

@@ -9,7 +9,7 @@ namespace Qualia.Model
     {
         public readonly long VisualId;
         public readonly ListX<LayerDataModel> Layers;
-        public int TargetOutput;
+        public int TargetOutputNeuronId;
         public List<string> Classes;
 
         public bool IsEnabled;
@@ -420,7 +420,7 @@ namespace Qualia.Model
                 layerCopy = layerCopy.Next;
             }
 
-            _copy.TargetOutput = TargetOutput;
+            _copy.TargetOutputNeuronId = TargetOutputNeuronId;
 
             return _copy;
         }

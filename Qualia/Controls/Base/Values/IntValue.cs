@@ -21,20 +21,20 @@ namespace Qualia.Controls
 
             if (minValue.HasValue)
             {
-                MinimumValue = minValue.Value;
+                MinValue = minValue.Value;
             }
 
             if (maxValue.HasValue)
             {
-                MaximumValue = maxValue.Value;
+                MaxValue = maxValue.Value;
             }
 
             return this;
         }
 
-        public long MinimumValue { get; set; } = long.MinValue;
+        public long MinValue { get; set; } = long.MinValue;
 
-        public long MaximumValue { get; set; } = long.MaxValue;
+        public long MaxValue { get; set; } = long.MaxValue;
 
         public Notification.ParameterChanged UIParam { get; private set; }
 
@@ -48,50 +48,66 @@ namespace Qualia.Controls
         {
             Padding = new(0);
             Margin = new(3);
-            MinWidth = 60;
+            //MinWidth = 30;
 
-            TextChanged += OnValueChanged;
+            TextChanged += Value_OnChanged;
         }
 
-        private void OnValueChanged(object sender, EventArgs e)
+        private void Value_OnChanged(object sender, EventArgs e)
         {
-            if (IsValid())
+            if (IsValidInput(Constants.InvalidLong))
             {
-                Background = Brushes.White;
                 _onChanged(UIParam);
             }
-            else
+        }
+
+        private bool IsValidInput(long defaultValue)
+        {
+            try
             {
-                Background = Brushes.Tomato;
+                if (!IsNull(defaultValue))
+                {
+                    var value = Converter.TextToInt(Text, defaultValue);
+                    if (value >= MinValue && value <= MaxValue)
+                    {
+                        Background = Brushes.White;
+                        return true;
+                    }
+                }
             }
+            catch
+            {
+                //
+            }
+
+            InvalidateValue();
+            return false;
         }
 
         public bool IsValid()
         {
-            if (IsNull())
-            {
-                return false;
-            }
-
-            long value = Converter.TextToInt(Text, DefaultValue);
-            return value >= MinimumValue && value <= MaximumValue;
+            return IsValidInput(DefaultValue);
         }
 
-        public bool IsNull() => string.IsNullOrEmpty(Text) && Constants.IsInvalid(DefaultValue);
+        private bool IsNull(long defaultValue) => string.IsNullOrEmpty(Text) && Constants.IsInvalid(defaultValue);
 
         public long Value
         {
             get
             {
+                if (string.IsNullOrEmpty(Text) && !Constants.IsInvalid(DefaultValue))
+                {
+                    Text = Converter.IntToText(DefaultValue);
+                }
+
                 return IsValid()
-                       ? (IsNull() ? throw new InvalidValueException(Name, "null") : Converter.TextToInt(Text, DefaultValue))
+                       ? Converter.TextToInt(Text, DefaultValue)
                        : throw new InvalidValueException(Name, Text);
             }
 
             set
             {
                 Text = Converter.IntToText(value);
-                OnValueChanged(null, null);
             }
         }
 
@@ -104,14 +120,14 @@ namespace Qualia.Controls
         {
             var value = _config.Get(Name, DefaultValue);
 
-            if (value < MinimumValue)
+            if (value < MinValue)
             {
-                value = MinimumValue;
+                value = MinValue;
             }
 
-            if (value > MaximumValue)
+            if (value > MaxValue)
             {
-                value = MaximumValue;
+                value = MaxValue;
             }
 
             Value = value;
@@ -145,3 +161,4 @@ namespace Qualia.Controls
         }
     }
 }
+

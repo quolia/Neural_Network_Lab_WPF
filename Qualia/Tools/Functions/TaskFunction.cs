@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Qualia.Tools
 {
@@ -86,8 +87,8 @@ namespace Qualia.Tools
 
             public void ApplyChanges()
             {
-                _minNumber = s_control.MinNumber;
-                _maxNumber = s_control.MaxNumber;
+                _minNumber = s_control.MinDotsAmountToCount;
+                _maxNumber = s_control.MaxDotsAmountToCount;
             }
 
             public void SetIsPreventRepetition(bool isPreventDataRepetition)
@@ -106,14 +107,14 @@ namespace Qualia.Tools
                 ApplyChanges();
             }
 
-            public int GetInputCount() => s_control.InputCount;
+            public int GetInputCount() => s_control.CommonDotsAmount;
 
             public void SaveConfig() => s_control.SaveConfig();
 
             public List<string> GetClasses()
             {
                 List<string> classes = new();
-                for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
+                for (int number = s_control.MinDotsAmountToCount; number <= s_control.MaxDotsAmountToCount; ++number)
                 {
                     classes.Add(Converter.IntToText(number));
                 }
@@ -122,7 +123,7 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
+            public static void Do(NetworkDataModel network, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
                 double randNumber = distributionFunction.Do(distributionFunctionParam);
 
@@ -130,15 +131,24 @@ namespace Qualia.Tools
 
                 var intNumber = (int)randNumber;
 
-                networkModel.TargetOutput = intNumber;
+                if (intNumber > _maxNumber)
+                {
+                    intNumber = _maxNumber;
+                }
+                else if (intNumber < _minNumber)
+                {
+                    intNumber = _minNumber;
+                }
 
-                var neurons = networkModel.Layers.First.Neurons;
+                network.TargetOutputNeuronId = intNumber - _minNumber;
+
+                var neurons = network.Layers.First.Neurons;
                 var neuron = neurons.First;
 
                 while (neuron != null)
                 {
-                    neuron.X = networkModel.InputInitial0; // ?
-                    neuron.Activation = networkModel.InputInitial0;
+                    neuron.X = network.InputInitial0; // ?
+                    neuron.Activation = network.InputInitial0;
                     neuron = neuron.Next;
                 }
 
@@ -146,7 +156,7 @@ namespace Qualia.Tools
                 {
                     var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
 
-                    while (active.Activation == networkModel.InputInitial1)
+                    while (active.Activation == network.InputInitial1)
                     {
                         active = active.Next;
                         if (active == null)
@@ -155,15 +165,15 @@ namespace Qualia.Tools
                         }
                     }
 
-                    active.X = networkModel.InputInitial1; // ?
-                    active.Activation = networkModel.InputInitial1;
+                    active.X = network.InputInitial1; // ?
+                    active.Activation = network.InputInitial1;
                     --intNumber;
                 }
 
-                neuron = networkModel.Layers.Last.Neurons.First;
+                neuron = network.Layers.Last.Neurons.First;
                 while (neuron != null)
                 {
-                    neuron.Target = (neuron.Id == networkModel.TargetOutput) ? 1 : 0;
+                    neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? 1 : 0;
                     neuron = neuron.Next;
                 }
             }
@@ -243,7 +253,7 @@ namespace Qualia.Tools
                     neuron = neuron.Next;
                 }
 
-                networkModel.TargetOutput = image.Label;
+                networkModel.TargetOutputNeuronId = image.Label;
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();
@@ -399,7 +409,7 @@ namespace Qualia.Tools
                         neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
                         //neuron.Next.Next.Target = 0.5; // i-don't-know
 
-                        networkModel.TargetOutput = targetOutput;
+                        networkModel.TargetOutputNeuronId = targetOutput;
 
 
                         break;

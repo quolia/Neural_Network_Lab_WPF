@@ -5,14 +5,26 @@ namespace Qualia.Controls
 {
     public partial class FunctionControl : BaseUserControl
     {
-        public FunctionControl Initialize(string defaultFunction, double? defaultParam = null)
+        public FunctionControl Initialize(string defaultFunction, double? defaultParam = null, double? paramMinValue = null, double? paramMaxValue = null)
         {
-            CtlFunction.Initialize(defaultFunction);
-            CtlParam.Initialize(defaultValue: defaultParam);
+            CtlFunction
+                .Initialize(defaultFunction);
+
+            CtlParam
+                .Initialize(defaultValue: defaultParam,
+                            minValue: paramMinValue,
+                            maxValue: paramMaxValue);
 
             return this;
         }
 
+        public FunctionControl SetUIParam(Notification.ParameterChanged functionUIParam, Notification.ParameterChanged functionParamUIParam)
+        {
+            CtlFunction.SetUIParam(functionUIParam);
+            CtlParam.SetUIParam(functionParamUIParam);
+
+            return this;
+        }
 
         public FunctionControl()
         {
@@ -23,12 +35,9 @@ namespace Qualia.Controls
                 CtlFunction,
                 CtlParam
             };
-
-            CtlFunction.SetOnChangeEvent(Function_OnChanged);
-            CtlParam.SetOnChangeEvent(Param_OnChanged);
         }
 
-    private void Function_OnChanged(Notification.ParameterChanged param)
+        private void Function_OnChanged(Notification.ParameterChanged param)
         {
             OnChanged(param);
         }
@@ -42,6 +51,9 @@ namespace Qualia.Controls
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
+
+            CtlFunction.SetOnChangeEvent(Function_OnChanged);
+            CtlParam.SetOnChangeEvent(Param_OnChanged);
         }
 
         public override void SetConfig(Config config)

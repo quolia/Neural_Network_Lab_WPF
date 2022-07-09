@@ -61,7 +61,7 @@ namespace Qualia.Controls
 
         public void OnChanged(Notification.ParameterChanged param)
         {
-            _onChanged(param == Notification.ParameterChanged.Fake ? UIParam : param);
+            _onChanged(param == Notification.ParameterChanged.Unknown ? UIParam : param);
         }
 
         public virtual void InvalidateValue() => throw new InvalidOperationException();

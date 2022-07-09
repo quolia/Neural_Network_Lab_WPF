@@ -20,9 +20,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:LabelControl Grid.Row="0" Content="Min number:" />
-        <local:IntValueControl Grid.Row="0" Grid.Column="1" x:Name="CtlMinNumber" MinimumValue="0" MaximumValue="8" DefaultValue="0" />
+        <local:IntValueControl Grid.Row="0" Grid.Column="1" x:Name="CtlMinNumber" MinValue="0" MaxValue="8" DefaultValue="0" />
         <local:LabelControl Grid.Row="1" Content="Max number:" />
-        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMaxNumber" MinimumValue="1" MaximumValue="9" DefaultValue="9" />
+        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMaxNumber" MinValue="1" MaxValue="9" DefaultValue="9" />
         <local:LabelControl Grid.Row="2" Grid.ColumnSpan="2" Content="Path to train images (*.gz):" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
