@@ -73,7 +73,8 @@ namespace Qualia.Tools
             Structure,
             NeuronsCount,
 
-            Fake
+            Fake,
+            IsPreventRepetition
         }
     }
 }

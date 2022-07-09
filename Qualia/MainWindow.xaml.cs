@@ -224,6 +224,12 @@ namespace Qualia.Controls
             {
                 CtlNoSleepLabel.Visibility = Visibility.Collapsed;
             }
+            else if (param == Notification.ParameterChanged.IsPreventRepetition)
+            {
+                var model = CtlInputDataPresenter.GetModel();
+
+                model.TaskFunction.ITaskControl.SetIsPreventRepetition(CtlInputDataPresenter.IsPreventDataRepetition);
+            }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
                 TurnApplyChangesButton(Constants.State.On);

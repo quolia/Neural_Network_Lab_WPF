@@ -22,7 +22,10 @@
             <local:FunctionControl x:Name="CtlDistributionFunction" />
             <Grid Name="CtlHolder">
             </Grid>
-            <local:LabelControl Content="Input data:" />
+            <StackPanel Orientation="Horizontal">
+                <local:LabelControl Content="Input data:" />
+                <local:BoolValueControl x:Name="CtlIsPreventRepetition" Content="Prevent repetition" VerticalAlignment="Center" />
+            </StackPanel>
         </StackPanel>
         <local:CanvasControl Margin="0,10,0,0" Grid.Row="1" x:Name="CtlCanvas" />
     </Grid>

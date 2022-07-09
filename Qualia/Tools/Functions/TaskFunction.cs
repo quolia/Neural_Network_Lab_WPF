@@ -31,6 +31,9 @@ namespace Qualia.Tools
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int GetPointsRearrangeSnap();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        void SetIsPreventRepetition(bool isPreventDataRepetition);
     }
 
     unsafe public class TaskFunction : BaseFunction<TaskFunction>
@@ -58,6 +61,7 @@ namespace Qualia.Tools
             DistributionFunction = distributionFunction;     
             return this;
         }
+
         public SolutionsData GetSolutionsData()
         {
             return _solutions.GetSolutionsData(_solutions.Solutions);
@@ -84,6 +88,11 @@ namespace Qualia.Tools
             {
                 _minNumber = s_control.MinNumber;
                 _maxNumber = s_control.MaxNumber;
+            }
+
+            public void SetIsPreventRepetition(bool isPreventDataRepetition)
+            {
+                //TODO
             }
 
             public void SetConfig(Config config)
@@ -187,6 +196,11 @@ namespace Qualia.Tools
                 //
             }
 
+            public void SetIsPreventRepetition(bool isPreventDataRepetition)
+            {
+                //TODO
+            }
+
             public void SetConfig(Config config) => s_control.SetConfig(config);
 
             public void LoadConfig()
@@ -253,6 +267,9 @@ namespace Qualia.Tools
 
             private static int _maxPointsCount;
 
+            private static bool _isPreventRepetition;
+            private static int _prevValue = int.MinValue;
+
             public Control GetVisualControl() => s_control;
 
             public int GetPointsRearrangeSnap() => SIZE;
@@ -288,6 +305,11 @@ namespace Qualia.Tools
                 Instance._solutions.Add(nameof(P2));
             }
 
+            public void SetIsPreventRepetition(bool isPreventDataRepetition)
+            {
+                _isPreventRepetition = isPreventDataRepetition;
+            }
+
             public void SetConfig(Config config) => s_control.SetConfig(config);
 
             public void LoadConfig()
@@ -303,7 +325,7 @@ namespace Qualia.Tools
             public List<string> GetClasses()
             {
                 List<string> classes = new();
-                for (int number = 0; number < 2; ++number) // outputs: no, yes
+                for (int number = 0; number < 3; ++number) // outputs: no, yes, i-don't-know
                 {
                     classes.Add(Converter.IntToText(number));
                 }
@@ -320,55 +342,69 @@ namespace Qualia.Tools
 
                 var intNumber = (int)randNumber;
 
-                var neurons = networkModel.Layers.First.Neurons;
-                var neuron = neurons.First;
-
-                while (neuron != null)
+                while (true)
                 {
-                    neuron.X = networkModel.InputInitial0; // ?
-                    neuron.Activation = networkModel.InputInitial0;
-                    neuron = neuron.Next;
-                }
+                    var neurons = networkModel.Layers.First.Neurons;
+                    var neuron = neurons.First;
 
-                while (intNumber > 0)
-                {
-                    var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
-
-                    while (active.Activation == networkModel.InputInitial1)
+                    while (neuron != null)
                     {
-                        active = active.Next;
-                        if (active == null)
-                        {
-                            active = neurons.First;
-                        }
+                        neuron.X = networkModel.InputInitial0; // ?
+                        neuron.Activation = networkModel.InputInitial0;
+                        neuron = neuron.Next;
                     }
 
-                    active.X = networkModel.InputInitial1; // ?
-                    active.Activation = networkModel.InputInitial1;
-                    --intNumber;
+                    var number = intNumber;
+
+                    while (number > 0)
+                    {
+                        var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
+
+                        while (active.Activation == networkModel.InputInitial1)
+                        {
+                            active = active.Next;
+                            if (active == null)
+                            {
+                                active = neurons.First;
+                            }
+                        }
+
+                        active.X = networkModel.InputInitial1; // ?
+                        active.Activation = networkModel.InputInitial1;
+                        --number;
+                    }
+
+                    int ind = 0;
+                    networkModel.Layers.First.Neurons.ForEach(n =>
+                    {
+                        s_array[ind] = (byte)(n.Activation == networkModel.InputInitial1 ? 1 : 0);
+                        ++ind;
+                    });
+
+                    for (int i = 0; i < SIZE; ++i)
+                    {
+                        Array.Copy(s_array, i * SIZE, s_array2[i], 0, SIZE);
+                    }
+
+                    int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array, s_array2 });
+
+                    targetOutput = targetOutput > 1 ? 1 : targetOutput;
+
+                    if (!_isPreventRepetition || targetOutput != _prevValue)
+                    {
+                        _prevValue = targetOutput;
+
+                        neuron = networkModel.Layers.Last.Neurons.First;
+                        neuron.Target = targetOutput == 0 ? 1 : 0; // no
+                        neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
+                        neuron.Next.Next.Target = 0.5; // i-don't-know
+
+                        networkModel.TargetOutput = targetOutput;
+
+
+                        break;
+                    }
                 }
-
-                int ind = 0;
-                networkModel.Layers.First.Neurons.ForEach(n =>
-                {
-                    s_array[ind] = (byte)(n.Activation == networkModel.InputInitial1 ? 1 : 0);
-                    ++ind;
-                });
-
-                for (int i = 0; i < SIZE; ++i)
-                {
-                    Array.Copy(s_array, i * SIZE, s_array2[i], 0, SIZE);
-                }
-
-                int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array, s_array2 });
-
-                targetOutput = targetOutput > 1 ? 1 : targetOutput;
-
-                neuron = networkModel.Layers.Last.Neurons.First;
-                neuron.Target = targetOutput == 0 ? 1 : 0; // no
-                neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
-
-                networkModel.TargetOutput = targetOutput;
             }
 
             private static string GetMatrixFromArray(ref byte[] array)

@@ -10,7 +10,7 @@ namespace Qualia.Controls
     {
         private const int CURRENT_POINTS_COUNT = -1;
 
-        //public TaskFunction TaskFunction { get; private set; }
+        public bool IsPreventDataRepetition => CtlIsPreventRepetition.Value;
 
         private readonly int _pointSize;
         private int _pointsRearrangeSnap;
@@ -37,8 +37,13 @@ namespace Qualia.Controls
                     .SetUIParam(Notification.ParameterChanged.TaskFunction),
 
                 CtlDistributionFunction
-                    .Initialize(defaultFunction: nameof(DistributionFunction.FlatRandom), defaultParam: 1)
-                    .SetUIParam(Notification.ParameterChanged.TaskDistributionFunction)
+                    .Initialize(defaultFunction: nameof(DistributionFunction.FlatRandom),
+                                defaultParam: 1)
+                    .SetUIParam(Notification.ParameterChanged.TaskDistributionFunction),
+
+                CtlIsPreventRepetition
+                    .Initialize(false)
+                    .SetUIParam(Notification.ParameterChanged.IsPreventRepetition)
             };
         }
 
