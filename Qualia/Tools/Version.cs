@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Qualia.Tools
 {
-    internal static class VersionHelper
+    public static class VersionHelper
     {
         public static (string, string) GetVersion()
         {

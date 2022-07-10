@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Qualia.Tools
 {
-    internal static class Logger
+    public static class Logger
     {
         private static readonly object s_locker = new();
         private static string s_logFileName = "log.txt";

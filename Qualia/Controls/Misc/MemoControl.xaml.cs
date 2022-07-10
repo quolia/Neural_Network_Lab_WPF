@@ -35,7 +35,7 @@ namespace Qualia.Controls
             }
         }
 
-        internal void Save(string fileName)
+        public void Save(string fileName)
         {
             File.WriteAllText(FileHelper.NotesPath, Text);
         }

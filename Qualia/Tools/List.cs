@@ -33,22 +33,22 @@ namespace Qualia.Tools
             Last = node;
         }
 
-        internal T FirstOrDefault(Predicate<T> match)
+        public T FirstOrDefault(Predicate<T> match)
         {
             return Array.Find(_array, match);
         }
 
-        internal bool Any()
+        public bool Any()
         {
             return First != null;
         }
 
-        internal bool Any(Predicate<T> match)
+        public bool Any(Predicate<T> match)
         {
             return Array.Find(_array, match) != null;
         }
 
-        internal int CountIf(Func<T, bool> value)
+        public int CountIf(Func<T, bool> value)
         {
             int count = 0;
 
@@ -67,7 +67,7 @@ namespace Qualia.Tools
             return count;
         }
 
-        internal float Max(Func<T, float> value)
+        public float Max(Func<T, float> value)
         {
             float max = 0;
 
@@ -86,12 +86,12 @@ namespace Qualia.Tools
             return max;
         }
 
-        internal void ForEach(Action<T> action)
+        public void ForEach(Action<T> action)
         {
             Array.ForEach(_array, action);
         }
 
-        internal T Find(Predicate<T> match)
+        public T Find(Predicate<T> match)
         {
             return Array.Find(_array, match);
         }

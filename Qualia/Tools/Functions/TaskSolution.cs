@@ -95,7 +95,7 @@ namespace Qualia.Tools
             return commonTargetOutput;
         }
 
-        internal SolutionsData GetSolutionsData(IList<Solution> solutions)
+        public SolutionsData GetSolutionsData(IList<Solution> solutions)
         {
             return new SolutionsData(solutions);
         }
@@ -142,7 +142,7 @@ namespace Qualia.Tools
             ++_resultsCount;
         }
 
-        internal void AddError(int targetOutput, int commonTargetOutput)
+        public void AddError(int targetOutput, int commonTargetOutput)
         {
             ++_errorsCount;
         }
