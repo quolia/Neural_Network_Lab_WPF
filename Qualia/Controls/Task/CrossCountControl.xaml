@@ -15,10 +15,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <local:LabelControl Content="Min amount of crosses to count:" />
+
+        <local:LabelControl Text="Min amount of crosses to count:" />
         <local:IntValueControl Grid.Column="1" x:Name="CtlMinCrossesAmountToCount" />
-        <local:LabelControl Grid.Row="2" Content="Max amount of crosses to count:" />
+        <local:LabelControl Grid.Row="2" Text="Max amount of crosses to count:" />
         <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxCrossesAmoutToCount" />
     </Grid>
 </local:BaseUserControl>

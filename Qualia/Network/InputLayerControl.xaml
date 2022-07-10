@@ -18,11 +18,11 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                
-                <local:LabelControl Content="Initial 0:" />
+
+                <local:LabelControl Text="Initial 0:" />
                 <local:DoubleValueControl Grid.Column="1" x:Name="CtlInputInitial0" DefaultValue="0" MinValue="-100" MaxValue="100" />
-                
-                <local:LabelControl Grid.Row="1" Content="Initial 1:" />
+
+                <local:LabelControl Grid.Row="1" Text="Initial 1:" />
                 <local:DoubleValueControl x:Name="CtlInputInitial1" Grid.Row="1" Grid.Column="1" DefaultValue="1" MinValue="-100" MaxValue="100" />
             </Grid>
             <Grid>
@@ -36,14 +36,14 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <local:LabelControl Content="Activation func:" />
+                <local:LabelControl Text="Activation func:" />
                 <local:SelectValueControl Grid.Column="1" x:Name="CtlActivationFunction" />
-                <local:LabelControl Grid.Column="2" Content="a:" />
+                <local:LabelControl Grid.Column="2" Text="a:" />
                 <local:DoubleValueControl Grid.Column="3" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
 
-                <local:LabelControl Grid.Row="1" Content="Weights init-er:" />
+                <local:LabelControl Grid.Row="1" Text="Weights init-er:" />
                 <local:SelectValueControl Grid.Column="1" Grid.Row="1" x:Name="CtlWeightsInitializeFunction" />
-                <local:LabelControl Grid.Column="2" Grid.Row="1" Content="a:" />
+                <local:LabelControl Grid.Column="2" Grid.Row="1" Text="a:" />
                 <local:DoubleValueControl Grid.Column="3" Grid.Row="1" x:Name="CtlWeightsInitializeFunctionParam" MinValue="-100" MaxValue="100" />
             </Grid>
             <StackPanel Orientation="Horizontal">

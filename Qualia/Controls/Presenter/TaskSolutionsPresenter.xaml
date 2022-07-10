@@ -12,8 +12,8 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <local:BoolValueControl x:Name="CtlShowTaskSolutions" Content="Show task solutions" />
+
+        <local:LabelControl Text="Task solutions:" />
         
         <local:StringValueControl x:Name="CtlText" Margin="3" Grid.Row="1" Text="No data." AcceptsReturn="True" BorderThickness="0" FontFamily="Consolas" FontSize="11" />
         

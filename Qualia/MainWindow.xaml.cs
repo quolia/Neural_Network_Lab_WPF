@@ -815,7 +815,7 @@ namespace Qualia.Controls
                     prevTime = now;
                     Dispatcher.BeginInvoke(() =>
                     {
-                        CtlTime.Content = "Time: " + _startTime.Elapsed.ToString(Culture.TimeFormat, Culture.Current);
+                        CtlTime.Text = "Time: " + _startTime.Elapsed.ToString(Culture.TimeFormat, Culture.Current);
                     });
                 }
 
@@ -1088,7 +1088,7 @@ namespace Qualia.Controls
         {
             if (manager == null)
             {
-                CtlNetworkName.Content = "...";
+                CtlNetworkName.Text = "...";
 
                 CtlMenuStart.IsEnabled = false;
                 CtlMenuReset.IsEnabled = false;
@@ -1098,9 +1098,8 @@ namespace Qualia.Controls
             }
             else
             {
-                CtlNetworkName.Content = Path.GetFileNameWithoutExtension(
-                                                  Config.Main.Get(Constants.Param.NetworksManagerName, "")
-                                                             .Replace("_", "__"));
+                CtlNetworkName.Text = Path.GetFileNameWithoutExtension(Config.Main.Get(Constants.Param.NetworksManagerName, "")
+                                                                                  .Replace("_", "__"));
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuReset.IsEnabled = true;

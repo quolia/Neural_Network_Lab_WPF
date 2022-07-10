@@ -29,21 +29,21 @@
             <local:BoolValueControl x:Name="CtlIsBias" Content="Is bias" DefaultValue="False" />
             <local:BoolValueControl x:Name="CtlIsBiasConnected" Content="Is bias connected" DefaultValue="False" Margin="10,0,0,0" />
         </StackPanel>
-        <local:LabelControl Grid.Column="4" x:Name="CtlNumber" Content="1" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <local:LabelControl Grid.Column="4" x:Name="CtlNumber" Text="1" HorizontalAlignment="Right" VerticalAlignment="Top" />
 
-        <local:LabelControl Grid.Row="1" Content="Activation init-er:" />
+        <local:LabelControl Grid.Row="1" Text="Activation init-er:" />
         <local:SelectValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlActivationInitializeFunction" />
-        <local:LabelControl Grid.Row="1" Grid.Column="2" Content="a:" />
+        <local:LabelControl Grid.Row="1" Grid.Column="2" Text="a:" />
         <local:DoubleValueControl Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlActivationInitializeFunctionParam" MinValue="-100" MaxValue="100" />
 
-        <local:LabelControl Grid.Row="2" Content="Weights init-er:" />
+        <local:LabelControl Grid.Row="2" Text="Weights init-er:" />
         <local:SelectValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlWeightsInitializeFunction" />
-        <local:LabelControl Grid.Row="2" Grid.Column="2" Content="a:" />
+        <local:LabelControl Grid.Row="2" Grid.Column="2" Text="a:" />
         <local:DoubleValueControl Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlWeightsInitializeFunctionParam" MinValue="-100" MaxValue="100" />
 
-        <local:LabelControl Grid.Row="3" Content="Activation func:" />
+        <local:LabelControl Grid.Row="3" Text="Activation func:" />
         <local:SelectValueControl Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunction" />
-        <local:LabelControl Grid.Row="3" Grid.Column="2" Content="a:" />
+        <local:LabelControl Grid.Row="3" Grid.Column="2" Text="a:" />
         <local:DoubleValueControl Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
     </Grid>
 </local:NeuronBaseControl>

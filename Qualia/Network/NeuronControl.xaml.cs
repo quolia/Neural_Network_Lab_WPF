@@ -54,7 +54,7 @@ namespace Qualia.Controls
 
         public override void OrdinalNumber_OnChanged(int number)
         {
-            CtlNumber.Content = Converter.IntToText(number);
+            CtlNumber.Text = Converter.IntToText(number);
         }
 
         private void IsBias_OnCheckedChanged()

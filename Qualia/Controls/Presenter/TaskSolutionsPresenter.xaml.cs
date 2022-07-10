@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
+using System;
 
 namespace Qualia.Controls
 {
@@ -14,11 +15,10 @@ namespace Qualia.Controls
 
             _configParams = new()
             {
-                CtlShowTaskSolutions
-                    .Initialize(false)
+
             };
 
-            CtlText.Text = "No data.";
+            ShowSolutionsData(new SolutionsData(Array.Empty<Solution>().ToList()));
         }
 
         public void ShowSolutionsData(SolutionsData data)

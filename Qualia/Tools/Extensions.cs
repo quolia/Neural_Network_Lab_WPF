@@ -160,8 +160,6 @@ namespace Qualia.Tools
 
             private static void FillComboBox(in string[] items, SelectValueControl comboBox, Config config, string paramName)
             {
-                //comboBox.SetConfig(config.Extend(comboBox.Name));
-
                 comboBox.Items.Clear();
 
                 foreach (var item in items)
@@ -176,7 +174,7 @@ namespace Qualia.Tools
                     paramName = comboBox.Name;
                 }
 
-                var selectedItem = config.Get(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : (string)null);
+                var selectedItem = config.Get(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
 
                 if (comboBox.Items.Count > 0)
                 {

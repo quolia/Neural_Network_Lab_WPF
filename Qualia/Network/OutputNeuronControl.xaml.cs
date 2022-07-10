@@ -56,7 +56,7 @@ namespace Qualia.Controls
 
         public override void OrdinalNumber_OnChanged(int number)
         {
-            CtlNumber.Content = Converter.IntToText(number);
+            CtlNumber.Text = Converter.IntToText(number);
         }
 
         public override bool IsValid()
