@@ -53,31 +53,31 @@ namespace Qualia.Model
 
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
-            var maxNeuronModel = Layers.Last.Neurons.First;
-            var neuronModel = maxNeuronModel;
+            var maxNeuron = Layers.Last.Neurons.First;
+            var neuron = maxNeuron;
 
-            while (neuronModel != null)
+            while (neuron != null)
             {
-                if (neuronModel.Activation > maxNeuronModel.Activation)
+                if (neuron.Activation > maxNeuron.Activation)
                 {
-                    maxNeuronModel = neuronModel;
+                    maxNeuron = neuron;
                 }
 
-                neuronModel = neuronModel.Next;
+                neuron = neuron.Next;
             };
 
-            return maxNeuronModel;
+            return maxNeuron;
         }
 
         public void ActivateFirstLayer()
         {
-            Layers.First.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1);
+            Layers.First.Neurons.ForEach(neuron => neuron.Activation = InputInitial1);
             RandomizeMode.Do(this, RandomizerParam);
         }
 
         public void ActivateNetwork()
         {
-            Layers.ForEach(layer => layer.Neurons.ForEach(neuronModel => neuronModel.Activation = InputInitial1));
+            Layers.ForEach(layer => layer.Neurons.ForEach(neuron => neuron.Activation = InputInitial1));
             RandomizeMode.Do(this, RandomizerParam);
         }
 

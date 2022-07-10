@@ -84,7 +84,8 @@ namespace Qualia.Controls
 
             SetOnChangeEvent();
 
-            TurnApplyChangesButton(Constants.State.Off);
+            ApplyChangesToStandingNetworks();
+            //TurnApplyChangesButton(Constants.State.Off);
         }
 
         private void LoadWindowSettings()
@@ -110,11 +111,6 @@ namespace Qualia.Controls
         {
             var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
             LoadNetworksManager(fileName);
-
-            if (_networksManager != null)
-            {
-                TaskParameter_OnChanged();
-            }
         }
 
         private void LoadNetworksManager(string fileName)
@@ -165,6 +161,19 @@ namespace Qualia.Controls
             CtlMenuRun.IsEnabled = _networksManager != null
                                    && _networksManager.NetworkModels != null
                                    && _networksManager.NetworkModels.Any();
+
+            //ApplyChangesToStandingNetworks();
+
+            if (_networksManager != null)
+            {
+                //var model = CtlInputDataPresenter.GetModel();
+                //_networksManager.RebuildNetworksForTask(model.TaskFunction);
+                //_networksManager.ResetLayersTabsNames();
+
+                //CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+            }
+
+            
         }
 
         private void SetOnChangeEvent()
@@ -341,11 +350,17 @@ namespace Qualia.Controls
 
         private void ApplyChangesToStandingNetworks()
         {
+            CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
             lock (Locker.ApplyChanges)
             {
                 var model = CtlInputDataPresenter.GetModel();
                 model.TaskFunction.ITaskControl.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
+
+                //TaskParameter_OnChanged();
+                //var model = CtlInputDataPresenter.GetModel();
+                _networksManager.RebuildNetworksForTask(model.TaskFunction);
+                _networksManager.ResetLayersTabsNames(); // ?
 
                 _networksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);

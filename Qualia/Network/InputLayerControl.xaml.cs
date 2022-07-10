@@ -17,13 +17,26 @@ namespace Qualia.Controls
 
             _configParams = new()
             {
-                CtlInputInitial0.Initialize(defaultValue: 0),
-                CtlInputInitial1.Initialize(defaultValue: 1),
-                CtlActivationFunction.Initialize(nameof(ActivationFunction.LogisticSigmoid)),
-                CtlActivationFunctionParam.Initialize(defaultValue: 1),
-                CtlAdjustFirstLayerWeights.Initialize(true),
-                CtlWeightsInitializeFunction.Initialize(nameof(InitializeFunction.FlatRandom)),
-                CtlWeightsInitializeFunctionParam.Initialize(defaultValue: 1)
+                CtlInputInitial0
+                    .Initialize(defaultValue: 0),
+
+                CtlInputInitial1
+                    .Initialize(defaultValue: 1),
+
+                CtlActivationFunction
+                    .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
+
+                CtlActivationFunctionParam
+                    .Initialize(defaultValue: 1),
+
+                CtlAdjustFirstLayerWeights
+                    .Initialize(true),
+
+                CtlWeightsInitializeFunction
+                    .Initialize(nameof(InitializeFunction.FlatRandom)),
+
+                CtlWeightsInitializeFunctionParam
+                    .Initialize(defaultValue: 1)
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -61,8 +74,11 @@ namespace Qualia.Controls
 
         private void LoadConfig()
         {
-            CtlActivationFunction.Fill<ActivationFunction>(Config);
-            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config);
+            CtlActivationFunction
+                .Fill<ActivationFunction>(Config);
+
+            CtlWeightsInitializeFunction
+                 .Fill<InitializeFunction>(Config);
 
             _configParams.ForEach(param => param.LoadConfig());
 

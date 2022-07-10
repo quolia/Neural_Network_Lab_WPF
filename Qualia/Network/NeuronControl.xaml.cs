@@ -77,9 +77,14 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            CtlWeightsInitializeFunction.Fill<InitializeFunction>(Config);
-            CtlActivationInitializeFunction.Fill<InitializeFunction>(Config);
-            CtlActivationFunction.Fill<ActivationFunction>(Config);
+            CtlWeightsInitializeFunction
+                .Fill<InitializeFunction>(Config);
+
+            CtlActivationInitializeFunction
+                .Fill<InitializeFunction>(Config);
+
+            CtlActivationFunction
+                .Fill<ActivationFunction>(Config);
 
             _configParams.ForEach(param => param.LoadConfig());
 

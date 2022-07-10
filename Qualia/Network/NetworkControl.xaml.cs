@@ -169,22 +169,27 @@ namespace Qualia.Controls
             return ctlLayers;
         }
 
-        private void LoadConfig()
+        public override void LoadConfig()
         {
-            CtlRandomizeFunction.Fill<RandomizeFunction>(Config);
-            CtlCostFunction.Fill<CostFunction>(Config);
-            CtlBackPropagationStrategy.Fill<BackPropagationStrategy>(Config);
+            CtlRandomizeFunction
+                .Fill<RandomizeFunction>(Config);
+
+            CtlCostFunction
+                .Fill<CostFunction>(Config);
+
+            CtlBackPropagationStrategy
+                .Fill<BackPropagationStrategy>(Config);
+
             var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy);
             CtlBackPropagationStrategyDescription.Text = description;
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var color = Config.Get(Constants.Param.Color, new long[] { 255,100,100,100 });
+            var color = Config.Get(Constants.Param.Color, new long[] { 255, 100, 100, 100 });
             CtlColor.Foreground = Draw.GetBrush(Color.FromArgb((byte)color[0],
                                                                (byte)color[1],
                                                                (byte)color[2],
                                                                (byte)color[3]));
-
             //
 
             var layerIds = Config.Get(Constants.Param.Layers, Array.Empty<long>());

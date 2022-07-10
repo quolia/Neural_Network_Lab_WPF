@@ -56,7 +56,7 @@ namespace Qualia.Controls
 
         private void TaskFunction_OnChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            CtlTaskDescription.Content = TaskFunction.GetDescription(CtlTaskFunction.Value);
+            CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction.Value);
         }
 
         private new void OnChanged(Notification.ParameterChanged param)
@@ -134,7 +134,8 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            CtlTaskFunction.Fill<TaskFunction>(_config);
+            CtlTaskFunction
+                .Fill<TaskFunction>(_config);
 
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
 

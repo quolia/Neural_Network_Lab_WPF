@@ -41,7 +41,9 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            CtlActivationFunction.Fill<ActivationFunction>(Config);
+            CtlActivationFunction
+                .Fill<ActivationFunction>(Config);
+
             _configParams.ForEach(param => param.LoadConfig());
 
             StateChanged();

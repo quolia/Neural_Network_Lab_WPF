@@ -3,13 +3,8 @@ using Qualia.Model;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows.Controls;
-using System.Linq;
 using System.Text;
-using System.Collections;
-using System.Collections.Specialized;
-using System.ComponentModel;
+using System.Windows.Controls;
 
 namespace Qualia.Tools
 {

@@ -18,7 +18,7 @@
         <StackPanel  Orientation="Vertical" >
             <local:LabelControl Content="Task:" />
             <local:SelectValueControl x:Name="CtlTaskFunction" />
-            <local:LabelControl x:Name="CtlTaskDescription" Content="TODO: task description" />
+            <TextBlock x:Name="CtlTaskDescription" TextWrapping="Wrap" />
 
             <local:LabelControl Content="Task solution value distribution function:" />
             <local:FunctionControl x:Name="CtlDistributionFunction" />

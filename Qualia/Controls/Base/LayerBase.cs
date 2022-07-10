@@ -37,6 +37,7 @@ namespace Qualia.Controls
         public virtual bool IsInput => false;
         public virtual bool IsHidden => false;
         public virtual bool IsOutput => false;
+
         public virtual Panel NeuronsHolder => throw new InvalidOperationException();
         public virtual int NeuronsCount => GetNeuronsControls().Count();
 

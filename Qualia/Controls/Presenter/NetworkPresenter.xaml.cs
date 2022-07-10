@@ -543,7 +543,7 @@ namespace Qualia.Controls
         public void RenderStanding(NetworkDataModel networkModel)
         {
             ClearCache();
-            Render(false, networkModel, false, false, false, false, false);
+            Render(true, networkModel, false, false, false, false, false);
         }
 
         public void RenderRunning(NetworkDataModel networkModel,
