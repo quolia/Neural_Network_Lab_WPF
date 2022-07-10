@@ -5,8 +5,6 @@ namespace Qualia.Controls
 {
     sealed public partial class DotsCountControl : BaseUserControl
     {
-        private const int SQUARE_ROOT = 32;
-
         public DotsCountControl()
         {
             InitializeComponent();
@@ -16,19 +14,19 @@ namespace Qualia.Controls
                 CtlCommonDotsAmount
                     .Initialize(defaultValue: 10,
                                 minValue: 1,
-                                maxValue: SQUARE_ROOT * SQUARE_ROOT)
+                                maxValue: Constants.SquareRoot * Constants.SquareRoot)
                     .SetUIParam(Notification.ParameterChanged.TaskParameter),
 
                 CtlMinDotsAmountToCount
                     .Initialize(defaultValue: 0,
                                 minValue: 0,
-                                maxValue: SQUARE_ROOT * SQUARE_ROOT)
+                                maxValue: Constants.SquareRoot - 1)
                     .SetUIParam(Notification.ParameterChanged.TaskParameter),
 
                 CtlMaxDotsAmoutToCount
                     .Initialize(defaultValue: 10,
                                 minValue: 1,
-                                maxValue: SQUARE_ROOT * SQUARE_ROOT)
+                                maxValue: Constants.SquareRoot)
                     .SetUIParam(Notification.ParameterChanged.TaskParameter)
             };
         }
@@ -71,7 +69,7 @@ namespace Qualia.Controls
             {
                 if (CtlCommonDotsAmount.Value >= CtlMaxDotsAmoutToCount.Value
                     && CtlMaxDotsAmoutToCount.Value >= CtlMinDotsAmountToCount.Value
-                    && CtlMaxDotsAmoutToCount.Value - CtlMinDotsAmountToCount.Value <= SQUARE_ROOT)
+                    && CtlMaxDotsAmoutToCount.Value - CtlMinDotsAmountToCount.Value <= Constants.SquareRoot)
                 {
                     return true;
                 }

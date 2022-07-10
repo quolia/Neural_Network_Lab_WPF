@@ -14,12 +14,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <local:LabelControl Grid.Row="0" Content="Max points count:" />
-        <local:IntValueControl Grid.Row="0" Grid.Column="1" x:Name="CtlMaxPointsCount" MinValue="0" MaxValue="780" DefaultValue="100" />
+        
+        <local:LabelControl Content="Min amount of crosses to count:" />
+        <local:IntValueControl Grid.Column="1" x:Name="CtlMinCrossesAmountToCount" />
+        <local:LabelControl Grid.Row="2" Content="Max amount of crosses to count:" />
+        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxCrossesAmoutToCount" />
     </Grid>
 </local:BaseUserControl>

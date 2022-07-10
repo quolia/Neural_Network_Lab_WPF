@@ -76,8 +76,11 @@ namespace Qualia.Tools
 
             private static readonly DotsCountControl s_control = new();
 
-            private static int _minNumber;
-            private static int _maxNumber;
+            private static int _minDotsAmountToCount;
+            private static int _maxDotsAmountToCount;
+
+            private static bool _isPreventRepetition;
+            private static int _prevTargetOutputNeuronId = -1;
 
             public Control GetVisualControl() => s_control;
 
@@ -87,13 +90,13 @@ namespace Qualia.Tools
 
             public void ApplyChanges()
             {
-                _minNumber = s_control.MinDotsAmountToCount;
-                _maxNumber = s_control.MaxDotsAmountToCount;
+                _minDotsAmountToCount = s_control.MinDotsAmountToCount;
+                _maxDotsAmountToCount = s_control.MaxDotsAmountToCount;
             }
 
             public void SetIsPreventRepetition(bool isPreventDataRepetition)
             {
-                //TODO
+                _isPreventRepetition = isPreventDataRepetition;
             }
 
             public void SetConfig(Config config)
@@ -125,22 +128,24 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel network, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
-                double randNumber = distributionFunction.Do(distributionFunctionParam);
+                int intNumber;
 
-                randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
-
-                var intNumber = (int)randNumber;
-
-                if (intNumber > _maxNumber)
+                while (true)
                 {
-                    intNumber = _maxNumber;
-                }
-                else if (intNumber < _minNumber)
-                {
-                    intNumber = _minNumber;
-                }
+                    double randNumber = distributionFunction.Do(distributionFunctionParam);
 
-                network.TargetOutputNeuronId = intNumber - _minNumber;
+                    randNumber = (1 + _maxDotsAmountToCount - _minDotsAmountToCount) * randNumber + _minDotsAmountToCount;
+
+                    intNumber = (int)randNumber;
+
+                    network.TargetOutputNeuronId = intNumber - _minDotsAmountToCount;
+
+                    if (!_isPreventRepetition || network.TargetOutputNeuronId != _prevTargetOutputNeuronId)
+                    {
+                        _prevTargetOutputNeuronId = network.TargetOutputNeuronId;
+                        break;
+                    }
+                }
 
                 var neurons = network.Layers.First.Neurons;
                 var neuron = neurons.First;
@@ -187,132 +192,51 @@ namespace Qualia.Tools
             public void InvalidateValue() => throw new InvalidOperationException();
         }
 
-        sealed public class MNISTNumbers : ITaskControl
-        {
-            public static readonly string Description = "Network recognizes hand-written numbers.";
-
-            public static readonly TaskFunction Instance = new(&Do, new MNISTNumbers());
-
-            private static readonly MNISTControl s_control = new();
-
-            public Control GetVisualControl() => s_control;
-
-            public int GetPointsRearrangeSnap() => 28;
-
-            public bool IsGridSnapAdjustmentAllowed() => false;
-
-            public void ApplyChanges()
-            {
-                //
-            }
-
-            public void SetIsPreventRepetition(bool isPreventDataRepetition)
-            {
-                //TODO
-            }
-
-            public void SetConfig(Config config) => s_control.SetConfig(config);
-
-            public void LoadConfig()
-            {
-                s_control.LoadConfig();
-                ApplyChanges();
-            }
-
-            public void SaveConfig() => s_control.SaveConfig();
-
-            public int GetInputCount() => 28 * 28;
-
-            public List<string> GetClasses()
-            {
-                List<string> classes = new();
-                for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
-                {
-                    classes.Add(Converter.IntToText(number));
-                }
-
-                return classes;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
-            {
-                var image = s_control.Images[(int)(s_control.Images.Count * distributionFunction.Do(distributionFunctionParam))];
-                var count = networkModel.Layers.First.Neurons.Count;
-
-                for (int i = 0; i < count; ++i)
-                {
-                    networkModel.Layers.First.Neurons[i].X = networkModel.InputInitial1 * image.Image[i]; // ?
-                    networkModel.Layers.First.Neurons[i].Activation = networkModel.InputInitial1 * image.Image[i];
-                }
-
-                var neuron = networkModel.Layers.Last.Neurons.First;
-                while (neuron != null)
-                {
-                    neuron.Target = (neuron.Id == image.Label) ? 1 : 0;
-                    neuron = neuron.Next;
-                }
-
-                networkModel.TargetOutputNeuronId = image.Label;
-            }
-
-            public void RemoveFromConfig() => s_control.RemoveFromConfig();
-
-            public bool IsValid() => s_control.IsValid();
-
-            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
-
-            public void InvalidateValue() => throw new InvalidOperationException();
-        }
-
         sealed public class CrossCount : ITaskControl
         {
-            private const int SIZE = 28;
-
             public static readonly string Description = "Network counts a simple croosses amount on the field of points.";
 
             public static readonly TaskFunction Instance = new(&Do, new CrossCount());
 
             private static readonly CrossCountControl s_control = new();
 
-            private static int _maxPointsCount;
+            private static int _minCrossesAmountToCount;
+            private static int _maxCrossesAmountToCount;
 
             private static bool _isPreventRepetition;
-            private static int _prevValue = int.MinValue;
-
-            public Control GetVisualControl() => s_control;
-
-            public int GetPointsRearrangeSnap() => SIZE;
-
-            public bool IsGridSnapAdjustmentAllowed() => false;
+            private static int _prevTargetOutputNeuronId = -1;
 
             private static byte[] s_array;
             private static byte[][] s_array2;
 
-            public CrossCount()
-            {
-                s_array = new byte[SIZE * SIZE];
-                s_array2 = new byte[SIZE][];
+            public Control GetVisualControl() => s_control;
 
-                for (int i = 0; i < SIZE; ++i)
-                {
-                    s_array2[i] = new byte[SIZE];
-                }
-            }
+            public int GetPointsRearrangeSnap() => Constants.SquareRootMNIST;
+
+            public bool IsGridSnapAdjustmentAllowed() => false;
 
             public void ApplyChanges()
             {
-                _maxPointsCount = s_control.MaxPointsCount;
+                _minCrossesAmountToCount = s_control.MinCrossesAmountToCount;
+                _maxCrossesAmountToCount = s_control.MaxCrossesAmountToCount;
 
                 Instance._solutions.Clear();
                 Instance._solutions.Add(nameof(S1));
                 Instance._solutions.Add(nameof(S2));
                 Instance._solutions.Add(nameof(S3));
                 Instance._solutions.Add(nameof(S4));
-                //Instance._solutions.Add(nameof(M1));
-                //Instance._solutions.Add(nameof(A1));
                 Instance._solutions.Add(nameof(P1));
-                Instance._solutions.Add(nameof(P2));
+            }
+
+            public CrossCount()
+            {
+                s_array = new byte[Constants.SquareRootMNIST * Constants.SquareRootMNIST];
+                s_array2 = new byte[Constants.SquareRootMNIST][];
+
+                for (int i = 0; i < Constants.SquareRootMNIST; ++i)
+                {
+                    s_array2[i] = new byte[Constants.SquareRootMNIST];
+                }
             }
 
             public void SetIsPreventRepetition(bool isPreventDataRepetition)
@@ -320,7 +244,10 @@ namespace Qualia.Tools
                 _isPreventRepetition = isPreventDataRepetition;
             }
 
-            public void SetConfig(Config config) => s_control.SetConfig(config);
+            public void SetConfig(Config config)
+            {
+                s_control.SetConfig(config);
+            }
 
             public void LoadConfig()
             {
@@ -328,14 +255,14 @@ namespace Qualia.Tools
                 ApplyChanges();
             }
 
-            public void SaveConfig() => s_control.SaveConfig();
+            public int GetInputCount() => Constants.SquareRootMNIST * Constants.SquareRootMNIST;
 
-            public int GetInputCount() => SIZE * SIZE;
+            public void SaveConfig() => s_control.SaveConfig();
 
             public List<string> GetClasses()
             {
                 List<string> classes = new();
-                for (int number = 0; number < 2; ++number) // outputs: no, yes, i-don't-know
+                for (int number = s_control.MinCrossesAmountToCount; number <= s_control.MaxCrossesAmountToCount; ++number)
                 {
                     classes.Add(Converter.IntToText(number));
                 }
@@ -344,23 +271,23 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
+            public static void Do(NetworkDataModel network, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
-                int maxPointsCount = _maxPointsCount; // 100
-
-                double randNumber = maxPointsCount;// distributionFunction.Do(distributionFunctionParam);
-
-                var intNumber = (int)randNumber;
-
                 while (true)
                 {
-                    var neurons = networkModel.Layers.First.Neurons;
+                    double randNumber = distributionFunction.Do(distributionFunctionParam);
+
+                    randNumber = (1 + _maxCrossesAmountToCount - _minCrossesAmountToCount) * randNumber + _minCrossesAmountToCount;
+
+                    var intNumber = (int)randNumber;
+
+                    var neurons = network.Layers.First.Neurons;
                     var neuron = neurons.First;
 
                     while (neuron != null)
                     {
-                        neuron.X = networkModel.InputInitial0; // ?
-                        neuron.Activation = networkModel.InputInitial0;
+                        neuron.X = network.InputInitial0; // ?
+                        neuron.Activation = network.InputInitial0;
                         neuron = neuron.Next;
                     }
 
@@ -370,7 +297,7 @@ namespace Qualia.Tools
                     {
                         var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
 
-                        while (active.Activation == networkModel.InputInitial1)
+                        while (active.Activation == network.InputInitial1)
                         {
                             active = active.Next;
                             if (active == null)
@@ -379,38 +306,37 @@ namespace Qualia.Tools
                             }
                         }
 
-                        active.X = networkModel.InputInitial1; // ?
-                        active.Activation = networkModel.InputInitial1;
+                        active.X = network.InputInitial1; // ?
+                        active.Activation = network.InputInitial1;
                         --number;
                     }
 
                     int ind = 0;
-                    networkModel.Layers.First.Neurons.ForEach(n =>
+                    network.Layers.First.Neurons.ForEach(n =>
                     {
-                        s_array[ind] = (byte)(n.Activation == networkModel.InputInitial1 ? 1 : 0);
+                        s_array[ind] = (byte)(n.Activation == network.InputInitial1 ? 1 : 0);
                         ++ind;
                     });
 
-                    for (int i = 0; i < SIZE; ++i)
+                    for (int i = 0; i < Constants.SquareRootMNIST; ++i)
                     {
-                        Array.Copy(s_array, i * SIZE, s_array2[i], 0, SIZE);
+                        Array.Copy(s_array, i * Constants.SquareRootMNIST, s_array2[i], 0, Constants.SquareRootMNIST);
                     }
 
-                    int targetOutput = Instance._solutions.GetTargetOutput(new object[] { s_array, s_array2 });
+                    int targetOutputNeuronId = Instance._solutions.GetTargetOutputNeuronId(new object[] { s_array, s_array2 });
 
-                    targetOutput = targetOutput > 1 ? 1 : targetOutput;
-
-                    if (!_isPreventRepetition || targetOutput != _prevValue)
+                    if (!_isPreventRepetition || targetOutputNeuronId != _prevTargetOutputNeuronId)
                     {
-                        _prevValue = targetOutput;
+                        _prevTargetOutputNeuronId = targetOutputNeuronId;
 
-                        neuron = networkModel.Layers.Last.Neurons.First;
-                        neuron.Target = targetOutput == 0 ? 1 : 0; // no
-                        neuron.Next.Target = targetOutput == 1 ? 1 : 0; // yes
-                        //neuron.Next.Next.Target = 0.5; // i-don't-know
+                        neuron = network.Layers.Last.Neurons.First;
+                        while (neuron != null)
+                        {
+                            neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? 1 : 0;
+                            neuron = neuron.Next;
+                        }
 
-                        networkModel.TargetOutputNeuronId = targetOutput;
-
+                        network.TargetOutputNeuronId = targetOutputNeuronId;
 
                         break;
                     }
@@ -423,9 +349,9 @@ namespace Qualia.Tools
 
                 StringBuilder builder = new();
 
-                for (int y = 0; y < 28; ++y)
+                for (int y = 0; y < Constants.SquareRootMNIST; ++y)
                 {
-                    builder.AppendLine(s.Substring(y * 28, 28));
+                    builder.AppendLine(s.Substring(y * Constants.SquareRootMNIST, Constants.SquareRootMNIST));
                 }
 
                 return builder.ToString();
@@ -433,16 +359,8 @@ namespace Qualia.Tools
 
             unsafe private static int S1(byte[] array, byte[][] array2)
             {
-                //var s = "0000000000100000000000000000001000000010000000000001000000010010000001000000000000000110000000000000000000100001000000000000000100000100001000000100000000000000110000000100000000000010001000000011000000100000000000010000001100000001100011000000000000000000000000000010000000001001000000100010000000000000010000000000000000001000000000100000000001001110000000000010000000000000010100001010000000000000000010011000000010000000000000000010000000000000001010100100000001100100000001000000111000010010000000000000000101000100010000000000000000000000010000000011000010000100000010000000001000000000000010000000100000000000100000100100010000000010010001000000000000110000000000000000000000001000001001001000000000000000000000000000000000001100000000000010001000000000010000011001100000000000";
-                //array = s.Select(c => byte.Parse(c.ToString())).ToArray();
-
-                //array = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1 };
-
-
-
-                int len = array.Length;
-                int y_limit = len / 28 - 2;
-                int x_limit = 28 - 1;
+                const int y_limit = Constants.SquareRootMNIST - 2;
+                const int x_limit = Constants.SquareRootMNIST - 1;
 
                 int count = 0;
 
@@ -450,14 +368,14 @@ namespace Qualia.Tools
                 {
                     for (int x = 1; x < x_limit;)
                     {
-                        var top = x + y * 28;
+                        var top = x + y * Constants.SquareRootMNIST;
                         if (array[top] == 0) // top
                         {
                             x += 1;
                             continue;
                         }
 
-                        if (y > 0 && array[top - 28] == 1) // top-top
+                        if (y > 0 && array[top - Constants.SquareRootMNIST] == 1) // top-top
                         {
                             x += 2;
                             continue;
@@ -469,8 +387,8 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        var right = (x + 1) + (y + 1) * 28;
-                        if (x < 28 - 2 && array[right + 1] == 1) // right-right
+                        var right = (x + 1) + (y + 1) * Constants.SquareRootMNIST;
+                        if (x < Constants.SquareRootMNIST - 2 && array[right + 1] == 1) // right-right
                         {
                             x += 2;
                             continue;
@@ -482,21 +400,21 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        var center = x + (y + 1) * 28; // center
+                        var center = x + (y + 1) * Constants.SquareRootMNIST; // center
                         if (array[center] == 0)
                         {
                             x += 4;
                             continue;
                         }
 
-                        var left = (x - 1) + (y + 1) * 28; // left
+                        var left = (x - 1) + (y + 1) * Constants.SquareRootMNIST; // left
                         if (array[left] == 0)
                         {
                             x += 4;
                             continue;
                         }
 
-                        var bottom = x + (y + 2) * 28; // bottom
+                        var bottom = x + (y + 2) * Constants.SquareRootMNIST; // bottom
                         if (array[bottom] == 0)
                         {
                             x += 4;
@@ -517,7 +435,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y < 28 - 3 && array[bottom + 28] != 0) // bottom-bottom
+                        if (y < Constants.SquareRootMNIST - 3 && array[bottom + Constants.SquareRootMNIST] != 0) // bottom-bottom
                         {
                             x += 4;
                             continue;
@@ -539,8 +457,8 @@ namespace Qualia.Tools
 
             unsafe private static int S2(byte[] array, byte[][] array2)
             {
-                const int y_limit = SIZE - 2;
-                const int x_limit = SIZE - 1;
+                const int y_limit = Constants.SquareRootMNIST - 2;
+                const int x_limit = Constants.SquareRootMNIST - 1;
 
                 int count = 0;
 
@@ -548,41 +466,41 @@ namespace Qualia.Tools
                 {
                     for (int x = 1; x < x_limit;)
                     {
-                        int top = x + y * SIZE;
+                        int top = x + y * Constants.SquareRootMNIST;
                         if (array[top] == 0) // top
                         {
                             x += 1;
                             continue;
                         }
 
-                        int right = top + SIZE + 1;
+                        int right = top + Constants.SquareRootMNIST + 1;
                         if (array[right] == 0) // right
                         {
                             x += 3;
                             continue;
                         }
 
-                        if (x < SIZE - 2 && array[right + 1] == 1) // right-right
+                        if (x < Constants.SquareRootMNIST - 2 && array[right + 1] == 1) // right-right
                         {
                             x += 2;
                             continue;
                         }
 
-                        int center = top + SIZE; 
+                        int center = top + Constants.SquareRootMNIST;
                         if (array[center] == 0) // center
                         {
                             x += 4;
                             continue;
                         }
 
-                        int left = center - 1; 
+                        int left = center - 1;
                         if (array[left] == 0) // left
                         {
                             x += 4;
                             continue;
                         }
 
-                        int bottom = center + SIZE;
+                        int bottom = center + Constants.SquareRootMNIST;
                         if (array[bottom] == 0) // bottom
                         {
                             x += 4;
@@ -595,7 +513,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y > 0 && array[top - SIZE] == 1) // top-top
+                        if (y > 0 && array[top - Constants.SquareRootMNIST] == 1) // top-top
                         {
                             x += 4;
                             continue;
@@ -615,7 +533,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y < 28 - 3 && array[bottom + SIZE] == 1) // bottom-bottom
+                        if (y < 28 - 3 && array[bottom + Constants.SquareRootMNIST] == 1) // bottom-bottom
                         {
                             x += 4;
                             continue;
@@ -632,9 +550,8 @@ namespace Qualia.Tools
 
             unsafe private static int S3(byte[] array, byte[][] array2)
             {
-                int len = array.Length;
-                int y_limit = len / 28 - 2;
-                int x_limit = 28 - 1;
+                const int y_limit = Constants.SquareRootMNIST - 2;
+                const int x_limit = Constants.SquareRootMNIST - 1;
 
                 int count = 0;
 
@@ -721,8 +638,8 @@ namespace Qualia.Tools
 
             unsafe private static int S4(byte[] array, byte[][] array2)
             {
-                const int y_limit = SIZE - 2;
-                const int x_limit = SIZE - 1;
+                const int y_limit = Constants.SquareRootMNIST - 2;
+                const int x_limit = Constants.SquareRootMNIST - 1;
 
                 int count = 0;
 
@@ -730,7 +647,7 @@ namespace Qualia.Tools
                 {
                     for (int x = 1; x < x_limit;)
                     {
-                        int top = x + y * SIZE;
+                        int top = x + y * Constants.SquareRootMNIST;
                         if (array[top] == 0) // top
                         {
                             x += 1;
@@ -745,20 +662,20 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        int right = top + SIZE + 1;
+                        int right = top + Constants.SquareRootMNIST + 1;
                         if (array[right] == 0) // right
                         {
                             x += 3;
                             continue;
                         }
 
-                        if (x < SIZE - 2 && array[right + 1] == 1) // right-right
+                        if (x < Constants.SquareRootMNIST - 2 && array[right + 1] == 1) // right-right
                         {
                             x += 2;
                             continue;
                         }
 
-                        int center = top + SIZE;
+                        int center = top + Constants.SquareRootMNIST;
                         if (array[center] == 0) // center
                         {
                             x += 4;
@@ -772,7 +689,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        int bottom = center + SIZE;
+                        int bottom = center + Constants.SquareRootMNIST;
                         if (array[bottom] == 0) // bottom
                         {
                             x += 4;
@@ -785,7 +702,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y > 0 && array[top - SIZE] == 1) // top-top
+                        if (y > 0 && array[top - Constants.SquareRootMNIST] == 1) // top-top
                         {
                             x += 4;
                             continue;
@@ -805,7 +722,7 @@ namespace Qualia.Tools
                             continue;
                         }
 
-                        if (y < 28 - 3 && array[bottom + SIZE] == 1) // bottom-bottom
+                        if (y < 28 - 3 && array[bottom + Constants.SquareRootMNIST] == 1) // bottom-bottom
                         {
                             x += 4;
                             continue;
@@ -825,28 +742,7 @@ namespace Qualia.Tools
                 return count;
             }
 
-            unsafe private static int M1(byte[] array, byte[][] array2)
-            {
-                //Thread.Sleep(2);
-
-                int b = 0;
-                for (int i = 0; i < 1000 + Rand.RandomFlat.Next() % 2000; ++i)
-                {
-                    b = b * i;
-                    int a = b * b;
-                    a = a - i;
-                    b = a;
-                }
-
-                return Rand.RandomFlat.Next() % 2;
-            }
-
-            unsafe private static int A1(byte[] array, byte[][] array2)
-            {
-                return M1(array, array2);
-            }
-
-            private static int[] _mask = new int[SIZE];
+            private static int[] _mask = new int[Constants.SquareRootMNIST];
             static Func<int, int> BIT = n => 1 << n;
 
             unsafe private static int P1(byte[] array, byte[][] array2)
@@ -855,131 +751,30 @@ namespace Qualia.Tools
 
                 var mask = _mask;
 
-                for (int s = 0; s < SIZE; s++)           //Подготовка матрицы - столбеца mask[i]
-                {
-                    mask[s] = 0;
-
-                    for (int c = 0; c < SIZE; c++)
-                    {
-                        mask[s] <<= 1;
-                        if (array[s * SIZE + c] != 0)
-                        {
-                            mask[s] |= 1;
-                        };
-                    }
-                }
-
-                int three;
-
-                //Обработка первых трех строк матрицы (s == 0)
-                three = mask[0] & mask[1] & mask[2];                          //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
-
-                while (three != 0)
-                {
-                    int bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
-
-                    if (((bit_low & 1) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
-                    {
-                        int three_bit_low = (bit_low << 1) | (bit_low >> 1);
-
-                        if ((mask[1] & three_bit_low) == three_bit_low)                               //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
-                            if ((mask[0] & three_bit_low) == 0)                        //Верхние углы креста нулевые
-                                if ((mask[2] & three_bit_low) == 0)                      //Нижние углы креста нулевые
-                                    if ((mask[3] & bit_low) == 0)                          //Снизу нет касания
-
-                                        if ((bit_low == 2) || ((bit_low > 2) && ((mask[1] & (bit_low >> 2)) == 0)))             //Справа нет касания
-                                            if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[1] & (bit_low << 2)) == 0))) //Слева нет касания
-                                                result++;
-                    }
-
-                    three &= (three - 1);                                    //Обнуление крайнего справа единичного бита
-                };
-
-                //Обработка последних трех строк матрицы (s == SIZE-3)
-                three = mask[SIZE - 3] & mask[SIZE - 2] & mask[SIZE - 1];        //if(three)- в очередных трех строках имеется хотя бы одна вертикальная тройка true
-
-                while (three != 0)
-                {
-                    int bit_low = three & (0-three);                            //Выделение крайнего справа установленного бита
-
-                    if (((bit_low & 1) == 0) && ((bit_low & BIT(SIZE - 1)) == 0))  //На "краях" матрицы креста не может быть
-                    {
-                        int three_bit_low = (bit_low << 1) | (bit_low >> 1);
-
-                        if ((mask[SIZE - 2] & three_bit_low) == three_bit_low)                       //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
-                            if ((mask[SIZE - 3] & three_bit_low) == 0)                //Верхние углы креста нулевые
-                                if ((mask[SIZE - 1] & three_bit_low) == 0)              //Нижние углы креста нулевые
-                                    if ((mask[SIZE - 4] & bit_low) == 0)                  //Сверху нет касания
-
-                                        if ((bit_low == 2) || ((bit_low > 2) && ((mask[SIZE - 2] & (bit_low >> 2)) == 0)))             //Справа нет касания
-                                            if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[SIZE - 2] & (bit_low << 2)) == 0))) //Слева нет касания
-                                                result++;
-                    }
-
-                    three &= (three - 1);                                     //Обнуление крайнего справа единичного бита
-                };
-
-                //Обработка остальных строк матрицы
-                for (int s = 1; s < SIZE - 3; s++)
-                {
-                    three = mask[s + 0] & mask[s + 1] & mask[s + 2];                //if(three) - в очередных трех строках имеется хотя бы одна вертикальная тройка true
-
-                    while (three != 0)
-                    {
-                        int bit_low = three & (0-three);                           //Выделение крайнего справа установленного бита
-
-                        if (((bit_low & 1) == 0) && ((bit_low & BIT(SIZE - 1)) == 0)) //На "краях" матрицы креста не может быть
-                        {
-                            int three_bit_low = (bit_low << 1) | (bit_low >> 1);
-
-                            if ((mask[s + 1] & three_bit_low) == three_bit_low)                         //Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true)
-                                if ((mask[s + 0] & three_bit_low) == 0)                  //Верхние углы креста нулевые
-                                    if ((mask[s + 2] & three_bit_low) == 0)                //Нижние углы креста нулевые
-                                        if ((mask[s - 1] & bit_low) == 0)                    //Сверху нет касания
-                                            if ((mask[s + 3] & bit_low) == 0)                  //Снизу нет касания
-
-                                                if ((bit_low == 2) || ((bit_low > 2) && ((mask[s + 1] & (bit_low >> 2)) == 0)))             //Справа нет касания
-                                                    if ((bit_low == BIT(SIZE - 2)) || ((bit_low < BIT(SIZE - 2)) && ((mask[s + 1] & (bit_low << 2)) == 0))) //Слева нет касания
-                                                        result++;
-                        }
-
-                        three &= (three - 1);                                   //Обнуление крайнего справа единичного бита
-                    };
-                }
-
-                return result;
-            }
-
-            unsafe private static int P2(byte[] array, byte[][] array2)
-            {
-                int result = 0;
-
-                var mask = _mask;
-
                 // Подготовка матрицы - столбеца mask[i].
 
-                for (int y = 0; y < SIZE; ++y) 
+                for (int y = 0; y < Constants.SquareRootMNIST; ++y)
                 {
                     mask[y] = 0;
 
-                    for (int x = 0; x < SIZE; ++x)
+                    for (int x = 0; x < Constants.SquareRootMNIST; ++x)
                     {
                         mask[y] <<= 1;
-                        if (array[y * SIZE + x] != 0)
+                        if (array[y * Constants.SquareRootMNIST + x] != 0)
                         {
                             mask[y] |= 1;
                         };
                     }
                 }
 
-                int BIT_SIZE_1 = 1 << SIZE - 1;
-                int BIT_SIZE_2 = 1 << SIZE - 2;
+                int BIT_SIZE_1 = 1 << Constants.SquareRootMNIST - 1;
+                int BIT_SIZE_2 = 1 << Constants.SquareRootMNIST - 2;
 
                 int three;
 
                 //Обработка первых трех строк матрицы (s == 0).
 
-                three = mask[0] & mask[1] & mask[2]; 
+                three = mask[0] & mask[1] & mask[2];
 
                 while (three != 0) // В очередных трех строках имеется хотя бы одна вертикальная тройка true.
                 {
@@ -987,7 +782,7 @@ namespace Qualia.Tools
                     int bit_low = three & (0 - three);
 
                     // На "краях" матрицы креста не может быть.
-                    if (bit_low > 1 && bit_low < BIT_SIZE_1) 
+                    if (bit_low > 1 && bit_low < BIT_SIZE_1)
                     {
                         int three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
@@ -1008,22 +803,22 @@ namespace Qualia.Tools
                                         // Слева нет касания.
                                         if (bit_low == BIT_SIZE_2
                                             || (bit_low < BIT_SIZE_2
-                                                && (mask[1] & (bit_low << 2)) == 0)) 
+                                                && (mask[1] & (bit_low << 2)) == 0))
 
                                             // Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true).
-                                            if ((mask[1] & three_bit_low) == three_bit_low) 
+                                            if ((mask[1] & three_bit_low) == three_bit_low)
                                             {
                                                 result++;
                                             }
                     }
 
                     // Обнуление крайнего справа единичного бита.
-                    three &= three - 1; 
+                    three &= three - 1;
                 };
 
                 // Обработка последних трех строк матрицы (s == SIZE-3).
 
-                three = mask[SIZE - 3] & mask[SIZE - 2] & mask[SIZE - 1];
+                three = mask[Constants.SquareRootMNIST - 3] & mask[Constants.SquareRootMNIST - 2] & mask[Constants.SquareRootMNIST - 1];
 
                 while (three != 0) // В очередных трех строках имеется хотя бы одна вертикальная тройка true.
                 {
@@ -1031,43 +826,43 @@ namespace Qualia.Tools
                     int bit_low = three & (0 - three);
 
                     // На "краях" матрицы креста не может быть.
-                    if (bit_low > 1 && bit_low < BIT_SIZE_1) 
+                    if (bit_low > 1 && bit_low < BIT_SIZE_1)
                     {
                         int three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
                         // Верхние углы креста нулевые.
-                        if ((mask[SIZE - 3] & three_bit_low) == 0)
+                        if ((mask[Constants.SquareRootMNIST - 3] & three_bit_low) == 0)
 
                             // Нижние углы креста нулевые.
-                            if ((mask[SIZE - 1] & three_bit_low) == 0)
+                            if ((mask[Constants.SquareRootMNIST - 1] & three_bit_low) == 0)
 
                                 // Сверху нет касания.
-                                if ((mask[SIZE - 4] & bit_low) == 0)
+                                if ((mask[Constants.SquareRootMNIST - 4] & bit_low) == 0)
 
                                     // Справа нет касания.
                                     if (bit_low == 2
                                         || (bit_low > 2
-                                            && (mask[SIZE - 2] & (bit_low >> 2)) == 0))
+                                            && (mask[Constants.SquareRootMNIST - 2] & (bit_low >> 2)) == 0))
 
                                         // Слева нет касания.
                                         if (bit_low == BIT_SIZE_2
                                             || (bit_low < BIT_SIZE_2
-                                                && ((mask[SIZE - 2] & (bit_low << 2)) == 0)))
+                                                && ((mask[Constants.SquareRootMNIST - 2] & (bit_low << 2)) == 0)))
 
                                             // Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true).
-                                            if ((mask[SIZE - 2] & three_bit_low) == three_bit_low)
+                                            if ((mask[Constants.SquareRootMNIST - 2] & three_bit_low) == three_bit_low)
                                             {
                                                 result++;
                                             }
                     }
 
                     // Обнуление крайнего справа единичного бита.
-                    three &= three - 1; 
+                    three &= three - 1;
                 };
 
                 //Обработка остальных строк матрицы.
 
-                for (int s = 1; s < SIZE - 3; ++s)
+                for (int s = 1; s < Constants.SquareRootMNIST - 3; ++s)
                 {
                     three = mask[s + 0] & mask[s + 1] & mask[s + 2];
 
@@ -1077,7 +872,7 @@ namespace Qualia.Tools
                         int bit_low = three & (0 - three);
 
                         // На "краях" матрицы креста не может быть.
-                        if (bit_low > 1 && bit_low < BIT_SIZE_1) 
+                        if (bit_low > 1 && bit_low < BIT_SIZE_1)
                         {
                             int three_bit_low = (bit_low << 1) | (bit_low >> 1);
 
@@ -1104,7 +899,7 @@ namespace Qualia.Tools
                                                         && ((mask[s + 1] & (bit_low << 2)) == 0)))
 
                                                     // Есть горизонтальная часть креста из трех бит (mask[s+1] & bit_low заведомо == true).
-                                                    if ((mask[s + 1] & three_bit_low) == three_bit_low) 
+                                                    if ((mask[s + 1] & three_bit_low) == three_bit_low)
                                                     {
                                                         result++;
                                                     }
@@ -1115,6 +910,85 @@ namespace Qualia.Tools
                 }
 
                 return result;
+            }
+
+            public void RemoveFromConfig() => s_control.RemoveFromConfig();
+
+            public bool IsValid() => s_control.IsValid();
+
+            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
+
+            public void InvalidateValue() => throw new InvalidOperationException();
+        }
+
+
+        sealed public class MNISTNumbers : ITaskControl
+        {
+            public static readonly string Description = "Network recognizes hand-written numbers.";
+
+            public static readonly TaskFunction Instance = new(&Do, new MNISTNumbers());
+
+            private static readonly MNISTControl s_control = new();
+
+            public Control GetVisualControl() => s_control;
+
+            public int GetPointsRearrangeSnap() => 28;
+
+            public bool IsGridSnapAdjustmentAllowed() => false;
+
+            public void ApplyChanges()
+            {
+                //
+            }
+
+            public void SetIsPreventRepetition(bool isPreventDataRepetition)
+            {
+                //TODO
+            }
+
+            public void SetConfig(Config config) => s_control.SetConfig(config);
+
+            public void LoadConfig()
+            {
+                s_control.LoadConfig();
+                ApplyChanges();
+            }
+
+            public void SaveConfig() => s_control.SaveConfig();
+
+            public int GetInputCount() => 28 * 28;
+
+            public List<string> GetClasses()
+            {
+                List<string> classes = new();
+                for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)
+                {
+                    classes.Add(Converter.IntToText(number));
+                }
+
+                return classes;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
+            {
+                var image = s_control.Images[(int)(s_control.Images.Count * distributionFunction.Do(distributionFunctionParam))];
+                var count = networkModel.Layers.First.Neurons.Count;
+
+                for (int i = 0; i < count; ++i)
+                {
+                    networkModel.Layers.First.Neurons[i].X = networkModel.InputInitial1 * image.Image[i]; // ?
+                    networkModel.Layers.First.Neurons[i].Activation = networkModel.InputInitial1 * image.Image[i];
+                }
+
+                var neuron = networkModel.Layers.Last.Neurons.First;
+                while (neuron != null)
+                {
+                    neuron.Target = (neuron.Id == image.Label) ? 1 : 0;
+                    neuron = neuron.Next;
+                }
+
+                networkModel.TargetOutputNeuronId = image.Label;
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();

@@ -75,6 +75,9 @@ namespace Qualia.Controls
                 CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
                 CtlDistributionFunction.LoadConfig();
 
+                CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+                CtlIsPreventRepetition.LoadConfig();
+
                 var taskControl = taskFunction.ITaskControl;
 
                 _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
@@ -103,6 +106,9 @@ namespace Qualia.Controls
                     var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
                     CtlDistributionFunction.SetConfig(taskFunctionConfig);
                     CtlDistributionFunction.LoadConfig();
+
+                    CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+                    CtlIsPreventRepetition.LoadConfig();
                 }
             }
 
@@ -134,6 +140,9 @@ namespace Qualia.Controls
 
             CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
             CtlDistributionFunction.LoadConfig();
+
+            CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+            CtlIsPreventRepetition.LoadConfig();
 
             var model = GetModel();
 
@@ -172,6 +181,7 @@ namespace Qualia.Controls
             model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
             model.TaskFunction.ITaskControl.SaveConfig();
             CtlDistributionFunction.SaveConfig();
+            CtlIsPreventRepetition.SaveConfig();
 
             _config.FlushToDrive();
         }
