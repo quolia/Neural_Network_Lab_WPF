@@ -11,3 +11,4 @@ It's a number of output classed.
 - Redraw network after ApplyChanges clicked.
 - With "yes/no"-type solution network cannot learn.
 - ErrorMatrixs  is null after file load.
+- Add learning limit activation.

@@ -60,6 +60,23 @@ namespace Qualia.Controls
             //Height = MathX.Max(Height, rect.Y + rect.Height);
         }
 
+
+        public void DrawRectangle(Brush brush, Pen pen, ref Point leftUpConer, double width, double height)
+        {
+            using var g = G();
+
+            ref var rect = ref Rects.Get(leftUpConer.X, leftUpConer.Y, width, height);
+
+            rect.X = _scaleFunc(rect.X);
+            rect.Y = _scaleFunc(rect.Y);
+            rect.Width = _scaleFunc(rect.Width);
+            rect.Height = _scaleFunc(rect.Height);
+
+            g.DrawRectangle(brush, pen, rect);
+
+            //Height = MathX.Max(Height, rect.Y + rect.Height);
+        }
+
         public void DrawText(FormattedText text, ref Point point, double angle = 0)
         {
             using var g = G();
