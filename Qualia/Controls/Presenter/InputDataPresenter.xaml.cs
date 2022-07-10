@@ -70,7 +70,8 @@ namespace Qualia.Controls
 
                 var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
 
-                var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+                var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
+                                                .Extend(CtlTaskFunction.Value);
 
                 CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
                 CtlDistributionFunction.LoadConfig();
@@ -103,7 +104,9 @@ namespace Qualia.Controls
                 {
                     //TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
 
-                    var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+                    var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
+                                                    .Extend(CtlTaskFunction.Value);
+
                     CtlDistributionFunction.SetConfig(taskFunctionConfig);
                     CtlDistributionFunction.LoadConfig();
 
@@ -137,7 +140,8 @@ namespace Qualia.Controls
             CtlTaskFunction
                 .Fill<TaskFunction>(_config);
 
-            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
+                                            .Extend(CtlTaskFunction.Value);
 
             CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
             CtlDistributionFunction.LoadConfig();
@@ -178,7 +182,9 @@ namespace Qualia.Controls
 
             var model = GetModel();
 
-            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name).Extend(CtlTaskFunction.Value);
+            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
+                                            .Extend(CtlTaskFunction.Value);
+
             model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
             model.TaskFunction.ITaskControl.SaveConfig();
             CtlDistributionFunction.SaveConfig();
@@ -201,7 +207,8 @@ namespace Qualia.Controls
                         ? System.Windows.Media.Brushes.CornflowerBlue
                         : (isData
                            ? Draw.GetBrush(value)
-                           : Draw.GetBrush(Draw.GetColor((byte)(255 * value), in ColorsX.Green)));
+                           : Draw.GetBrush(Draw.GetColor((byte)(255 * value),
+                                                         in ColorsX.Green)));
 
             CtlCanvas.DrawRectangle(brush,
                                     _penBlack,
