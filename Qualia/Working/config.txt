@@ -11,7 +11,7 @@ Settings.SkipRoundsToDrawNetworks:10000
 Settings.SkipRoundsToDrawStatistics:10000
 Settings.PreventComputerFromSleep:1
 DynamicSettings.UseWeightsColors:0
-DynamicSettings.OnlyChangedWeights:1
+DynamicSettings.OnlyChangedWeights:0
 DynamicSettings.HighlightChangedWeights:0
 DynamicSettings.ShowOnlyUnchangedWeights:0
 DynamicSettings.ShowActivationLabels:1

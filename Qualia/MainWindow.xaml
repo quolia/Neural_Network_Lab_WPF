@@ -11,6 +11,23 @@
         <DataTemplate x:Key="SelectableItemTemplate">
             <ContentPresenter Content="{Binding Control}" />
         </DataTemplate>
+        <!--
+        <Style x:Name="SelectValueStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+        </Style>
+        <Style x:Name="SelectValueItemStyle" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Margin" Value="1"/>
+        </Style>
+        -->
+        <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Yellow"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFB0F0F"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Transparent"/>
     </Window.Resources>
     
     <Grid>
@@ -138,7 +155,7 @@
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
                             <local:MemoControl x:Name="CtlNotes" Grid.Row="1" Margin="0 20 0 0" Caption="Notes:" KeyUp="CtlNotes_KeyUp" />
-                            <local:SelectableFunctionControl Grid.Row="2" />                            
+                            <local:FunctionPresenter Grid.Row="2" />                            
                         </Grid>
                     </ContentControl>
                 </TabItem>

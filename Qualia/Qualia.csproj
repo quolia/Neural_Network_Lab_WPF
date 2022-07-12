@@ -137,6 +137,7 @@
       <HintPath>..\packages\ILGPU.Lightning.0.3.0\lib\netstandard2.0\Release\ILGPU.Lightning.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
@@ -180,6 +181,9 @@
     <Compile Include="Controls\Base\Values\BoolValue.cs" />
     <Compile Include="Controls\Base\Values\SelectValue.cs" />
     <Compile Include="Controls\Base\Values\StringValue.cs" />
+    <Compile Include="Controls\Presenter\DefaultSelectableItemPresenter.xaml.cs">
+      <DependentUpon>DefaultSelectableItemPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ToolTips\BaseToolTip.cs" />
     <Compile Include="Controls\ToolTips\FunctionToolTip.xaml.cs">
       <DependentUpon>FunctionToolTip.xaml</DependentUpon>
@@ -244,6 +248,10 @@
     <Compile Include="Tools\Unsafe.cs" />
     <Compile Include="Tools\Version.cs" />
     <Page Include="Controls\Base\FunctionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Presenter\DefaultSelectableItemPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -158,12 +158,7 @@ namespace Qualia.Tools
                 return BaseFunction<T>.GetInstance(comboBoxWrapper);
             }
 
-            //private static void FillComboBox(Func<SelectValueItem[]> getItemsFunc, SelectValueWrapper comboBoxWrapper, Config config, string paramName)
-            //{
-            //    FillComboBox(getItemsFunc(), comboBoxWrapper, config, paramName);
-            //}
-
-            private static void FillComboBox(in IEnumerable<SelectableItem> items, SelectValueWrapper comboBox, Config config, string paramName)
+            private static void FillComboBox(in IEnumerable<ISelectableItem> items, SelectValueWrapper comboBox, Config config, string paramName)
             {
                 comboBox.Clear();
 

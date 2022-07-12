@@ -5,10 +5,11 @@ namespace Qualia.Tools
 {
     unsafe public class ActivationFunction : BaseFunction<ActivationFunction>
     {
-        public readonly delegate*<double, double, double> Do;
-        public readonly delegate*<double, double, double, double> Derivative;
+        public readonly delegate*<double, double, double> Do; // x, a, f
+        public readonly delegate*<double, double, double, double> Derivative; // x, f, a
 
-        public ActivationFunction(delegate*<double, double, double> doFunc, delegate*<double, double, double, double> derivativeFunc)
+        public ActivationFunction(delegate*<double, double, double> doFunc,
+                                  delegate*<double, double, double, double> derivativeFunc)
             : base(nameof(LogisticSigmoid))
         {
             Do = doFunc;

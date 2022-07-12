@@ -1,8 +1,8 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
-using System.Windows;
 
 namespace Qualia.Controls
 {
@@ -31,19 +31,27 @@ namespace Qualia.Controls
             return this;
         }
 
-        public SelectValueControl SetToolTip(SelectableItem toolTip)
-        {
+        //public SelectValueControl SetToolTip(SelectableItem toolTip)
+        //{
             //ToolTip = toolTip;
-            return this;
-        }
+        //    return this;
+        //}
 
         public SelectValueControl()
         {
-            ItemTemplate = Main.Instance.Resources["SelectableItemTemplate"] as DataTemplate;
-
+            //ItemTemplate = Main.Instance.Resources["SelectableItemTemplate"] as DataTemplate;
+            //Style = Main.Instance.Resources["SelectValueStyle"] as Style;
+                 
             Padding = new(1);
             Margin = new(3);
             MinWidth = 60;
+
+            //Background = Draw.GetBrush(ColorsX.Lime);
+
+            //Background = Draw.GetBrush(in ColorsX.Yellow);
+            //Foreground = Draw.GetBrush(in ColorsX.Green);
+            //Resources.Add(SystemColors.WindowBrushKey, Draw.GetBrush(ColorsX.Yellow));
+            //Resources.Add(SystemColors.HighlightBrushKey, Draw.GetBrush(ColorsX.Red));
 
             SelectionChanged += Value_OnChanged;
         }
@@ -53,9 +61,9 @@ namespace Qualia.Controls
              _onChanged(UIParam);
         }
 
-        public new SelectableItem SelectedItem
+        public new ISelectableItem SelectedItem
         {
-            get => base.SelectedItem as SelectableItem;
+            get => base.SelectedItem as ISelectableItem;
             set => base.SelectedItem = value;
         }
 
@@ -63,16 +71,15 @@ namespace Qualia.Controls
 
         private bool IsNull() => SelectedItem == null;
 
-        public SelectableItem Value
+        public ISelectableItem Value
         {
             get => IsValid() ? SelectedItem : throw new InvalidValueException(Name, Text);
 
             set
             {
-                SelectedItem = value as SelectableItem;
+                SelectedItem = value;
             }
         }
-
 
         public void SetConfig(Config config)
         {
@@ -81,7 +88,7 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            Value = SelectedItem;//.ToString();
+            Value = SelectedItem;
         }
 
         public void SaveConfig()
@@ -123,9 +130,21 @@ namespace Qualia.Controls
             return new SelectValueWrapper(control);
         }
 
-        public static SelectableItem GetSelectableItem<T>(string name) where T : class
+        public static ISelectableItem GetSelectableItem<T>(string name) where T : class
         {
-            return SelectableItemsProvider.GetSelectableFunctionItem<T>(name);
+            var instance = BaseFunction<T>.GetInstance(name);
+
+            var type = typeof(T);
+
+            if (type == typeof(ActivationFunction))
+            {
+                return PresenterProvider.GetPresenter(instance as ActivationFunction, name);
+            }
+            else
+            {
+                return PresenterProvider.GetDefaultSelectableItemPresenter(name);
+                //throw new Exception($"Unknown type '{type.Name}' is trying to get presenter.");
+            }
         }
 
         public void Clear()
@@ -133,7 +152,7 @@ namespace Qualia.Controls
             _control.Items.Clear();
         }
 
-        public void AddItem(SelectableItem item)
+        public void AddItem(ISelectableItem item)
         {
             _control.Items.Add(item);
         }
@@ -153,17 +172,17 @@ namespace Qualia.Controls
             get => _control.Items.Count;
         }
 
-        public bool Contains(SelectableItem item)
+        public bool Contains(ISelectableItem item)
         {
             return _control.Items.Contains(item);
         }
 
-        public SelectableItem GetItemAt(int index)
+        public ISelectableItem GetItemAt(int index)
         {
-            return null;
+            return _control.Items.GetItemAt(index) as ISelectableItem;
         }
 
-        public SelectableItem SelectedItem
+        public ISelectableItem SelectedItem
         {
             get => _control.SelectedItem;
             set => _control.SelectedItem = value;
@@ -175,21 +194,5 @@ namespace Qualia.Controls
         string Text { get; }
         string Value { get; }
         Control Control { get; }
-    }
-
-    sealed public class SelectableItem
-    {
-        public string Text => _item.Text;
-        public string Value => _item.Value;
-
-        public Control Control => _item.Control;
-
-
-        private ISelectableItem _item;
-
-        public SelectableItem(ISelectableItem item)
-        {
-            _item = item;
-        }
     }
 }
