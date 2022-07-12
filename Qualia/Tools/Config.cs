@@ -66,7 +66,7 @@ namespace Qualia.Tools
         public Config Extend(SelectValueControl select)
         {
             return Extend(select.Name)
-                  .Extend(select.Value);
+                  .Extend(select.Value.Text);
         }
 
         public Config ExtendWithId(long extender)

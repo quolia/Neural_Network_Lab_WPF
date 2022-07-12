@@ -19,7 +19,7 @@ namespace Qualia.Controls
             CtlIsBias.Value = true;
             CtlIsBiasConnected.Value = false;
             CtlIsBias.IsEnabled = false;
-            CtlIsBiasConnected.Visible(CtlIsBias.Value);
+            CtlIsBiasConnected.SetVisible(CtlIsBias.Value);
             CtlIsBiasConnected.IsEnabled = false;
         }
     }

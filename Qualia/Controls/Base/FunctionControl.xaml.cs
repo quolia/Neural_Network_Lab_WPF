@@ -74,7 +74,7 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            _config.Set(Name, CtlFunction.Value);
+            _config.Set(Name, CtlFunction.Value.Text);
             CtlParam.SaveConfig();
         }
 
@@ -99,7 +99,7 @@ namespace Qualia.Controls
                     return null;
                 }
 
-                return new SelectedFunction(CtlFunction.Value, CtlParam.Value);
+                return new SelectedFunction(CtlFunction.Value.Text, CtlParam.Value);
             }
         }
         

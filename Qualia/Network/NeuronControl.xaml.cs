@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
@@ -18,6 +19,7 @@ namespace Qualia.Controls
             {
                 CtlActivationFunction
                     .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
+                    //.SetToolTip(SelectableItemsProvider.GetSelectableItem(null)),
 
                 CtlActivationFunctionParam
                     .Initialize(defaultValue: 1),
@@ -45,6 +47,11 @@ namespace Qualia.Controls
             LoadConfig();
 
             _configParams.ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
+        }
+
+        private void ActivationFunction_OnToolTipOpening(object sender, System.Windows.Controls.ToolTipEventArgs e)
+        {
+            //(sender as Control).ToolTip = ToolTipsProvider.GetFunctionToolTip();
         }
 
         private void Neuron_OnChanged(Notification.ParameterChanged _)

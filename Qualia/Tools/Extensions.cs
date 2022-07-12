@@ -22,7 +22,7 @@ namespace Qualia.Tools
             return element.Dispatcher.BeginInvoke(action, priority);
         }
 
-        public static void Visible(this UIElement element, bool visible)
+        public static void SetVisible(this UIElement element, bool visible)
         {
             element.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -137,34 +137,39 @@ namespace Qualia.Tools
         /// <returns>Selected function instance.</returns>
         public static T Fill<T>(this SelectValueControl comboBox, Config config, string paramName = null) where T : class
         {
-            return Initializer.FillComboBox<T>(comboBox, config, paramName);
+            return Initializer.FillComboBox<T>(SelectValueWrapper.Wrap(comboBox), config, paramName);
         }
 
         static class Initializer
         {
-            public static T FillComboBox<T>(SelectValueControl comboBox, Config config, string paramName) where T : class
+            public static T FillComboBox<T>(SelectValueWrapper comboBoxWrapper, Config config, string paramName) where T : class
             {
 
-                var items = BaseFunction<T>.GetItems();
-                FillComboBox(items, comboBox, config, paramName);
+                var items = BaseFunction<T>.GetItems()
+                                           .Select(SelectValueWrapper.GetSelectableItem<T>)
+                                           .ToList();
 
-                comboBox.ToolTip = string.Join("\n\n", BaseFunction<T>.GetItemsWithDescription());
 
-                return BaseFunction<T>.GetInstance(comboBox);
+                FillComboBox(items, comboBoxWrapper, config, paramName);
+
+                //comboBox.ToolTip = string.Join("\n\n", BaseFunction<T>.GetItemsWithDescription());
+                //comboBox.ToolTip = ToolTipsProvider.GetFunctionToolTip();
+
+                return BaseFunction<T>.GetInstance(comboBoxWrapper);
             }
 
-            private static void FillComboBox(Func<string[]> getItemsFunc, SelectValueControl comboBox, Config config, string paramName)
-            {
-                FillComboBox(getItemsFunc(), comboBox, config, paramName);
-            }
+            //private static void FillComboBox(Func<SelectValueItem[]> getItemsFunc, SelectValueWrapper comboBoxWrapper, Config config, string paramName)
+            //{
+            //    FillComboBox(getItemsFunc(), comboBoxWrapper, config, paramName);
+            //}
 
-            private static void FillComboBox(in string[] items, SelectValueControl comboBox, Config config, string paramName)
+            private static void FillComboBox(in IEnumerable<SelectableItem> items, SelectValueWrapper comboBox, Config config, string paramName)
             {
-                comboBox.Items.Clear();
+                comboBox.Clear();
 
                 foreach (var item in items)
                 {
-                    comboBox.Items.Add(item);
+                    comboBox.AddItem(item);
                 }
 
                 var defaultValue = comboBox.DefaultValue;
@@ -174,13 +179,14 @@ namespace Qualia.Tools
                     paramName = comboBox.Name;
                 }
 
-                var selectedItem = config.Get(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Length > 0 ? items[0] : null);
+                var selectedItemName = config.Get(paramName, !string.IsNullOrEmpty(defaultValue) ? defaultValue : items.Count() > 0 ? items.First().Text : null);
+                var selectedItem = items.First(i => i.Text == selectedItemName);
 
-                if (comboBox.Items.Count > 0)
+                if (comboBox.Count > 0)
                 {
-                    if (!comboBox.Items.Contains(selectedItem))
+                    if (!comboBox.Contains(selectedItem))
                     {
-                        selectedItem = (string)comboBox.Items.GetItemAt(0);
+                        selectedItem = comboBox.GetItemAt(0);
                     }
                 }
                 else
@@ -188,7 +194,7 @@ namespace Qualia.Tools
                     selectedItem = null;
                 }
 
-                if (!string.IsNullOrEmpty(selectedItem))
+                if (selectedItem != null)
                 {
                     comboBox.SelectedItem = selectedItem;
                 }

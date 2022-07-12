@@ -7,12 +7,18 @@
         Closing="MainWindow_OnClosing"
         mc:Ignorable="d" Height="450" Width="800" Title="Networks">
 
+    <Window.Resources>
+        <DataTemplate x:Key="SelectableItemTemplate">
+            <ContentPresenter Content="{Binding Control}" />
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="DataWidth" />
             <ColumnDefinition />
             <ColumnDefinition MinWidth="320" MaxWidth="320" />
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>   
 
         <Grid>
             <Grid.RowDefinitions>
@@ -132,7 +138,7 @@
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
                             <local:MemoControl x:Name="CtlNotes" Grid.Row="1" Margin="0 20 0 0" Caption="Notes:" KeyUp="CtlNotes_KeyUp" />
-                            <local:FunctionToolTip Grid.Row="2" />                            
+                            <local:SelectableFunctionControl Grid.Row="2" />                            
                         </Grid>
                     </ContentControl>
                 </TabItem>

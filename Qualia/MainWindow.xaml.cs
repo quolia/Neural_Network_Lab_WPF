@@ -16,6 +16,8 @@ namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, IDisposable
     {
+        public static Main Instance;
+
         private Thread _timeThread;
         private Thread _runNetworksThread;
         private CancellationToken _cancellationToken;
@@ -30,6 +32,8 @@ namespace Qualia.Controls
 
         public Main()
         {
+            Instance = this;
+
             Thread.CurrentThread.CurrentCulture = Culture.Current;
             Logger.Log("Application started.");
 

@@ -29,14 +29,25 @@ namespace Qualia.Tools
             return (GetInstance(functions[0]) as BaseFunction<T>).DefaultFunction;
         }
 
-        public static T GetInstance(Selector selector)
+        public static T GetInstance(SelectValueControl selector)
         {
-            if (selector.SelectedValue == null)
+            if (selector.SelectedItem == null)
             {
                 return default(T);
             }
 
-            return GetInstance(selector.SelectedValue.ToString());
+            //return GetInstance(selector.SelectedItem.ToString());
+            return GetInstance(selector.SelectedItem.Text);
+        }
+
+        public static T GetInstance(SelectValueWrapper selector)
+        {
+            if (selector.SelectedItem == null)
+            {
+                return default(T);
+            }
+
+            return GetInstance(selector.SelectedItem.Text);
         }
 
         public static T GetInstance(FunctionControl function)
@@ -51,6 +62,7 @@ namespace Qualia.Tools
 
         public static T GetInstance(string name)
         {
+            //var funcName = Config.PrepareParamName(name);
             var funcName = name;
 
             if (!GetItems().Contains(funcName)) // Call it just to tell compiler to compile GetItems, but not to exclude it.
@@ -87,12 +99,12 @@ namespace Qualia.Tools
                             .ToArray();
         }
 
-        public static string GetDescription(Selector selector)
+        public static string GetDescription(SelectValueControl selector)
         {
-            return GetDescription(selector.SelectedValue);
+            return GetDescription(selector.SelectedItem.Text);
         }
 
-        public static string GetDescription(object name)
+        private static string GetDescription(object name)
         {
             var funcName = name.ToString();
 

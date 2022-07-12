@@ -1,6 +1,8 @@
 ﻿using Qualia.Tools;
 using System;
 using System.Windows.Controls;
+using System.Linq;
+using System.Windows;
 
 namespace Qualia.Controls
 {
@@ -29,9 +31,15 @@ namespace Qualia.Controls
             return this;
         }
 
+        public SelectValueControl SetToolTip(SelectableItem toolTip)
+        {
+            //ToolTip = toolTip;
+            return this;
+        }
+
         public SelectValueControl()
         {
-            //ItemTemplate = Main.Instance.Resources["QComboBoxTemplate"] as DataTemplate;
+            ItemTemplate = Main.Instance.Resources["SelectableItemTemplate"] as DataTemplate;
 
             Padding = new(1);
             Margin = new(3);
@@ -45,19 +53,26 @@ namespace Qualia.Controls
              _onChanged(UIParam);
         }
 
+        public new SelectableItem SelectedItem
+        {
+            get => base.SelectedItem as SelectableItem;
+            set => base.SelectedItem = value;
+        }
+
         public bool IsValid() => !IsNull();
 
         private bool IsNull() => SelectedItem == null;
 
-        public string Value
+        public SelectableItem Value
         {
-            get => IsValid() ? SelectedItem.ToString() : throw new InvalidValueException(Name, Text);
+            get => IsValid() ? SelectedItem : throw new InvalidValueException(Name, Text);
 
             set
             {
-                SelectedItem = value;
+                SelectedItem = value as SelectableItem;
             }
         }
+
 
         public void SetConfig(Config config)
         {
@@ -66,12 +81,12 @@ namespace Qualia.Controls
 
         public void LoadConfig()
         {
-            Value = SelectedItem.ToString();
+            Value = SelectedItem;//.ToString();
         }
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value);
+            _config.Set(Name, Value.Text);
         }
 
         public void RemoveFromConfig()
@@ -91,6 +106,90 @@ namespace Qualia.Controls
         {
             string name = Config.PrepareParamName(Name);
             return $"<{name} Value=\"{Value}\" /> \n";
+        }
+    }
+
+    sealed public class SelectValueWrapper
+    {
+        private SelectValueControl _control;
+
+        private SelectValueWrapper(SelectValueControl control)
+        {
+            _control = control;
+        }
+
+        public static SelectValueWrapper Wrap(SelectValueControl control)
+        {
+            return new SelectValueWrapper(control);
+        }
+
+        public static SelectableItem GetSelectableItem<T>(string name) where T : class
+        {
+            return SelectableItemsProvider.GetSelectableFunctionItem<T>(name);
+        }
+
+        public void Clear()
+        {
+            _control.Items.Clear();
+        }
+
+        public void AddItem(SelectableItem item)
+        {
+            _control.Items.Add(item);
+        }
+
+        public string DefaultValue
+        {
+            get => _control.DefaultValue;
+        }
+
+        public string Name
+        {
+            get => _control.Name;
+        }
+
+        public int Count
+        {
+            get => _control.Items.Count;
+        }
+
+        public bool Contains(SelectableItem item)
+        {
+            return _control.Items.Contains(item);
+        }
+
+        public SelectableItem GetItemAt(int index)
+        {
+            return null;
+        }
+
+        public SelectableItem SelectedItem
+        {
+            get => _control.SelectedItem;
+            set => _control.SelectedItem = value;
+        }
+    }
+
+    public interface ISelectableItem
+    {
+        string Text { get; }
+        string Value { get; }
+        Control Control { get; }
+    }
+
+    sealed public class SelectableItem
+    {
+        public string Text => _item.Text;
+        public string Value => _item.Value;
+
+        public Control Control => _item.Control;
+
+
+        private ISelectableItem _item;
+
+        public SelectableItem(ISelectableItem item)
+        {
+            _item = item;
         }
     }
 }

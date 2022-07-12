@@ -56,7 +56,7 @@ namespace Qualia.Controls
 
         private void TaskFunction_OnChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction.Value);
+            CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
         private new void OnChanged(Notification.ParameterChanged param)
@@ -71,7 +71,7 @@ namespace Qualia.Controls
                 var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
 
                 var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                                .Extend(CtlTaskFunction.Value);
+                                                .Extend(CtlTaskFunction.Value.Text);
 
                 CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
                 CtlDistributionFunction.LoadConfig();
@@ -105,7 +105,7 @@ namespace Qualia.Controls
                     //TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
 
                     var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                                    .Extend(CtlTaskFunction.Value);
+                                                    .Extend(CtlTaskFunction.Value.Text);
 
                     CtlDistributionFunction.SetConfig(taskFunctionConfig);
                     CtlDistributionFunction.LoadConfig();
@@ -141,7 +141,7 @@ namespace Qualia.Controls
                 .Fill<TaskFunction>(_config);
 
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                            .Extend(CtlTaskFunction.Value);
+                                            .Extend(CtlTaskFunction.Value.Text);
 
             CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
             CtlDistributionFunction.LoadConfig();
@@ -183,7 +183,7 @@ namespace Qualia.Controls
             var model = GetModel();
 
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                            .Extend(CtlTaskFunction.Value);
+                                            .Extend(CtlTaskFunction.Value.Text);
 
             model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
             model.TaskFunction.ITaskControl.SaveConfig();

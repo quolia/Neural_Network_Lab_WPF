@@ -3145,3 +3145,346 @@ Application started.
 2022-07-10 18:28:59
 Application started.
 
+2022-07-10 18:48:14
+Application started.
+
+2022-07-10 18:56:33
+Application started.
+
+2022-07-10 18:57:03
+Application started.
+
+2022-07-10 18:58:31
+Application started.
+
+2022-07-10 19:02:58
+Application started.
+
+2022-07-10 19:37:03
+Application started.
+
+2022-07-10 19:38:35
+Application started.
+
+2022-07-10 19:38:53
+Application started.
+
+2022-07-10 19:39:41
+Application started.
+
+2022-07-10 19:43:51
+Application started.
+
+2022-07-10 19:44:08
+Application started.
+
+2022-07-10 19:45:18
+Application started.
+
+2022-07-10 19:46:31
+Application started.
+
+2022-07-10 19:46:54
+Application started.
+
+2022-07-10 19:47:10
+Application started.
+
+2022-07-10 19:47:28
+Application started.
+
+2022-07-10 19:47:48
+Application started.
+
+2022-07-10 19:48:02
+Application started.
+
+2022-07-10 19:48:49
+Application started.
+
+2022-07-10 19:49:20
+Application started.
+
+2022-07-10 19:49:48
+Application started.
+
+2022-07-10 19:50:05
+Application started.
+
+2022-07-10 19:50:29
+Application started.
+
+2022-07-10 19:51:04
+Application started.
+
+2022-07-10 19:51:32
+Application started.
+
+2022-07-10 19:52:20
+Application started.
+
+2022-07-10 19:53:02
+Application started.
+
+2022-07-10 19:53:41
+Application started.
+
+2022-07-10 19:54:27
+Application started.
+
+2022-07-10 19:54:44
+Application started.
+
+2022-07-10 19:55:48
+Application started.
+
+2022-07-10 19:56:59
+Application started.
+
+2022-07-10 19:57:17
+Application started.
+
+2022-07-10 19:58:02
+Application started.
+
+2022-07-10 19:58:45
+Application started.
+
+2022-07-10 20:03:29
+Application started.
+
+2022-07-10 20:04:54
+Application started.
+
+2022-07-11 13:13:14
+Application started.
+
+2022-07-11 13:14:30
+Application started.
+
+2022-07-11 13:16:09
+Application started.
+
+2022-07-11 13:16:24
+Application started.
+
+2022-07-11 13:17:11
+Application started.
+
+2022-07-11 13:18:20
+Application started.
+
+2022-07-11 13:20:44
+Application started.
+
+2022-07-11 13:21:04
+Application started.
+
+2022-07-11 13:22:45
+Application started.
+
+2022-07-11 13:23:18
+Application started.
+
+2022-07-11 13:23:37
+Application started.
+
+2022-07-11 13:24:04
+Application started.
+
+2022-07-11 13:24:44
+Application started.
+
+2022-07-11 13:24:56
+Application started.
+
+2022-07-11 13:27:14
+Application started.
+
+2022-07-11 13:27:46
+Application started.
+
+2022-07-11 13:28:15
+Application started.
+
+2022-07-11 13:28:55
+Application started.
+
+2022-07-11 13:29:13
+Application started.
+
+2022-07-11 13:29:32
+Application started.
+
+2022-07-11 13:32:23
+Application started.
+
+2022-07-11 13:34:47
+Application started.
+
+2022-07-11 13:37:17
+Application started.
+
+2022-07-11 13:38:26
+Application started.
+
+2022-07-11 18:51:03
+Application started.
+
+2022-07-12 11:04:37
+Application started.
+
+2022-07-12 11:39:47
+Application started.
+
+2022-07-12 11:43:28
+Application started.
+
+2022-07-12 11:47:31
+Application started.
+
+2022-07-12 11:47:37
+System.InvalidOperationException
+Unknown function name: Qualia.Controls.SelectValueItemControl.
+   at Qualia.Tools.BaseFunction`1.GetInstance(String name) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\BaseFunction.cs:line 61
+   at Qualia.Tools.BaseFunction`1.GetInstance(Selector selector) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Functions\BaseFunction.cs:line 39
+   at Qualia.Tools.Extension.Initializer.FillComboBox[T](SelectValueControl comboBox, Config config, String paramName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 154
+   at Qualia.Tools.Extension.Fill[T](SelectValueControl comboBox, Config config, String paramName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Extensions.cs:line 140
+   at Qualia.Controls.NetworkControl.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 174
+   at Qualia.Controls.NetworkControl..ctor(Int64 id, Config config, Action`1 onNetworkUIChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworkControl.xaml.cs:line 46
+   at Qualia.Controls.NetworksManager.AddNetwork(Int64 networkId) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 153
+   at Qualia.Controls.NetworksManager.<>c__DisplayClass18_0.<LoadConfig>b__0(Int32 i) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 132
+   at Qualia.Tools.Range.For(Int32 range, Action`1 action) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Tools\Range.cs:line 14
+   at Qualia.Controls.NetworksManager.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 132
+   at Qualia.Controls.NetworksManager..ctor(TabControl tabs, String fileName, Action`1 networkUI_OnChanged) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Network\NetworksManager.cs:line 36
+   at Qualia.Controls.Main.LoadNetworksManager(String fileName) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 141
+   at Qualia.Controls.Main.LoadNetworks() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 113
+   at Qualia.Controls.Main.LoadConfig() in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 81
+   at Qualia.Controls.Main.MainWindow_OnLoaded(Object sender, EventArgs e) in C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\MainWindow.xaml.cs:line 74
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.BroadcastEventHelper.BroadcastEvent(DependencyObject root, RoutedEvent routedEvent)
+   at System.Windows.BroadcastEventHelper.BroadcastLoadedEvent(Object root)
+   at MS.Internal.LoadedOrUnloadedOperation.DoWork()
+   at System.Windows.Media.MediaContext.FireLoadedPendingCallbacks()
+   at System.Windows.Media.MediaContext.FireInvokeOnRenderCallbacks()
+   at System.Windows.Media.MediaContext.RenderMessageHandlerCore(Object resizedCompositionTarget)
+   at System.Windows.Media.MediaContext.RenderMessageHandler(Object resizedCompositionTarget)
+   at System.Windows.Interop.HwndTarget.OnResize()
+   at System.Windows.Interop.HwndTarget.HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Interop.HwndSource.HwndTargetFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+
+2022-07-12 11:47:45
+Application started.
+
+2022-07-12 11:48:58
+Application started.
+
+2022-07-12 11:49:53
+Application started.
+
+2022-07-12 11:50:33
+Application started.
+
+2022-07-12 11:54:01
+Application started.
+
+2022-07-12 13:07:35
+Application started.
+
+2022-07-12 13:08:00
+Application started.
+
+2022-07-12 13:08:43
+Application started.
+
+2022-07-12 13:29:07
+Application started.
+
+2022-07-12 13:30:58
+Application started.
+
+2022-07-12 13:38:44
+Application started.
+
+2022-07-12 13:40:21
+Application started.
+
+2022-07-12 13:41:44
+Application started.
+
+2022-07-12 13:43:28
+Application started.
+
+2022-07-12 13:44:04
+Application started.
+
+2022-07-12 13:45:14
+Application started.
+
+2022-07-12 13:45:42
+Application started.
+
+2022-07-12 13:49:37
+Application started.
+
+2022-07-12 13:49:48
+Application started.
+
+2022-07-12 13:50:27
+Application started.
+
+2022-07-12 13:52:20
+Application started.
+
+2022-07-12 13:52:46
+Application started.
+
+2022-07-12 13:53:31
+Application started.
+
+2022-07-12 13:55:22
+Application started.
+
+2022-07-12 13:55:55
+Application started.
+
+2022-07-12 13:56:17
+Application started.
+
+2022-07-12 13:58:19
+Application started.
+
+2022-07-12 13:59:45
+Application started.
+
+2022-07-12 14:01:38
+Application started.
+
+2022-07-12 14:02:48
+Application started.
+
+2022-07-12 14:03:51
+Application started.
+
+2022-07-12 14:14:41
+Application started.
+
+2022-07-12 14:15:44
+Application started.
+
+2022-07-12 14:28:10
+Application started.
+
+2022-07-12 14:29:10
+Application started.
+
+2022-07-12 14:31:47
+Application started.
+
