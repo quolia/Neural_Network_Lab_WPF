@@ -23,6 +23,8 @@
             <RowDefinition Name="CtlActivation" Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.ColumnSpan="4" Orientation="Horizontal">
@@ -41,9 +43,9 @@
         <local:LabelControl Grid.Row="2" Grid.Column="2" Text="a:" />
         <local:DoubleValueControl Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlWeightsInitializeFunctionParam" MinValue="-100" MaxValue="100" />
 
-        <local:LabelControl Grid.Row="3" Text="Activation func:" />
-        <local:SelectValueControl Grid.Row="3" Grid.Column="1" x:Name="CtlActivationFunction" />
-        <local:LabelControl Grid.Row="3" Grid.Column="2" Text="a:" />
-        <local:DoubleValueControl Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
+        <local:LabelControl Grid.Row="3" Grid.ColumnSpan="2" Text="Activation function:" />
+        <local:SelectValueControl Grid.Row="4" Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="CtlActivationFunction" />
+        <local:LabelControl Grid.Row="4" Grid.Column="2" Text="a:" />
+        <local:DoubleValueControl Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" x:Name="CtlActivationFunctionParam" VerticalAlignment="Top" MinValue="-100" MaxValue="100" />
     </Grid>
 </local:NeuronBaseControl>

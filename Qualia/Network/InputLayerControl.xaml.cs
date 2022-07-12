@@ -107,8 +107,8 @@ namespace Qualia.Controls
 
         public void AddBias(long biasNeuronId)
         {
-            InputBiasControl ctlNeuron = new(biasNeuronId, Config, NetworkUI_OnChanged);
-            NeuronsHolder.Children.Add(ctlNeuron);
+            InputBiasControl neuron = new(biasNeuronId, Config, NetworkUI_OnChanged);
+            NeuronsHolder.Children.Add(neuron);
 
             if (biasNeuronId == Constants.UnknownId)
             {

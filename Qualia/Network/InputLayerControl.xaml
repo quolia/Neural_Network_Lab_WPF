@@ -33,26 +33,27 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <local:LabelControl Text="Activation func:" />
-                <local:SelectValueControl Grid.Column="1" x:Name="CtlActivationFunction" />
-                <local:LabelControl Grid.Column="2" Text="a:" />
-                <local:DoubleValueControl Grid.Column="3" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
 
-                <local:LabelControl Grid.Row="1" Text="Weights init-er:" />
-                <local:SelectValueControl Grid.Column="1" Grid.Row="1" x:Name="CtlWeightsInitializeFunction" />
-                <local:LabelControl Grid.Column="2" Grid.Row="1" Text="a:" />
-                <local:DoubleValueControl Grid.Column="3" Grid.Row="1" x:Name="CtlWeightsInitializeFunctionParam" MinValue="-100" MaxValue="100" />
+                <local:LabelControl Text="Activation function:" />
+                <local:SelectValueControl Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" x:Name="CtlActivationFunction" />
+                <local:LabelControl Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Text="a:" />
+                <local:DoubleValueControl Grid.Column="3" Grid.Row="1" VerticalAlignment="Top" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
+
+                <local:LabelControl Grid.Row="3" Text="Weights init-er:" />
+                <local:SelectValueControl Grid.Column="1" Grid.Row="3" x:Name="CtlWeightsInitializeFunction" />
+                <local:LabelControl Grid.Column="2" Grid.Row="3" Text="a:" />
+                <local:DoubleValueControl Grid.Column="3" Grid.Row="3" x:Name="CtlWeightsInitializeFunctionParam" MinValue="-100" MaxValue="100" />
             </Grid>
             <StackPanel Orientation="Horizontal">
                 <local:BoolValueControl x:Name="CtlAdjustFirstLayerWeights" Margin="5" Content="Adjust first layer weights" DefaultValue="True" />
             </StackPanel>
-            <StackPanel Name="CtlNeuronsHolder" Orientation="Vertical">
-                
+            <StackPanel x:Name="CtlNeuronsHolder" Orientation="Vertical">
             </StackPanel>
         </StackPanel>
-            
     </Grid>
 </local:LayerBaseControl>

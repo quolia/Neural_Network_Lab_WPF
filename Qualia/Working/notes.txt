@@ -13,3 +13,4 @@ It's a number of output classed.
 - ErrorMatrixs  is null after file load.
 - Add learning limit activation.
 - Add datasets.
+- If ApplyChanges is On - do not save config on exit.

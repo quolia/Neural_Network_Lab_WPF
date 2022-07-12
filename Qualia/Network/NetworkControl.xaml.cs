@@ -34,12 +34,23 @@ namespace Qualia.Controls
 
             _configParams = new()
             {
-                CtlRandomizeFunction.Initialize(nameof(RandomizeFunction.Centered)),
-                CtlRandomizeFunctionParam.Initialize(defaultValue: 1),
-                CtlLearningRate.Initialize(defaultValue: 0.03),
-                CtlIsNetworkEnabled.Initialize(true),
-                CtlCostFunction.Initialize(nameof(CostFunction.MeanSquaredError)),
-                CtlBackPropagationStrategy.Initialize(nameof(BackPropagationStrategy.Always))
+                CtlRandomizeFunction
+                    .Initialize(nameof(RandomizeFunction.Centered)),
+
+                CtlRandomizeFunctionParam
+                    .Initialize(defaultValue: 1),
+
+                CtlLearningRate
+                    .Initialize(defaultValue: 0.03),
+
+                CtlIsNetworkEnabled
+                    .Initialize(true),
+
+                CtlCostFunction
+                    .Initialize(nameof(CostFunction.MeanSquaredError)),
+
+                CtlBackPropagationStrategy
+                    .Initialize(nameof(BackPropagationStrategy.Always))
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -114,12 +125,12 @@ namespace Qualia.Controls
             CtlTabsLayers.SelectedIndex = selectedIndex;
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             return _configParams.All(param => param.IsValid()) && GetLayersControls().All(control => control.IsValid());
         }
 
-        public void SaveConfig()
+        public override void SaveConfig()
         {
             Config.Set(Constants.Param.SelectedLayerIndex,
                        CtlTabsLayers.SelectedIndex);
@@ -147,7 +158,7 @@ namespace Qualia.Controls
             _outputLayer.NetworkTask_OnChanged(taskFunction);
         }
 
-        public void RemoveFromConfig()
+        public override void RemoveFromConfig()
         {
             Config.Remove(Constants.Param.SelectedLayerIndex);
             Config.Remove(Constants.Param.Color);
@@ -226,7 +237,7 @@ namespace Qualia.Controls
                 }
             }
 
-            CtlTabsLayers.SelectedIndex = (int)Config.Get(Constants.Param.SelectedLayerIndex, 0);
+            CtlTabsLayers.SelectedIndex = Config.Get(Constants.Param.SelectedLayerIndex, 0);
         }
 
         public int[] GetLayersSizes()

@@ -12,8 +12,8 @@ namespace Qualia.Tools
             {
                 control.CtlDescription.Text = name;
                 control.DrawBase();
-                control.DrawFunction(x => instance.Do(x, 1), in ColorsX.Red);
-                control.DrawFunction(x => instance.Derivative(x, instance.Do(x, 1), 1), in ColorsX.Blue);
+                control.DrawFunction(x => instance.Do(x, 1), in ColorsX.Red, 0);
+                control.DrawFunction(x => instance.Derivative(x, instance.Do(x, 1), 1), in ColorsX.Blue, 1);
             };
 
             return control;

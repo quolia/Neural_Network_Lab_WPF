@@ -32,8 +32,8 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long neuronId)
         {
-            OutputNeuronControl ctlNeuron = new(neuronId, Config, NetworkUI_OnChanged);
-            NeuronsHolder.Children.Add(ctlNeuron);
+            OutputNeuronControl neuron = new(neuronId, Config, NetworkUI_OnChanged);
+            NeuronsHolder.Children.Add(neuron);
 
             if (neuronId == Constants.UnknownId)
             {

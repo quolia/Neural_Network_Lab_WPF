@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Qualia.Tools
 {
@@ -61,6 +62,11 @@ namespace Qualia.Tools
                     return;
                 }
             }
+        }
+
+        public static void Sleep(int millisecondsTimeout)
+        {
+            Thread.Sleep(millisecondsTimeout);
         }
     }
 }

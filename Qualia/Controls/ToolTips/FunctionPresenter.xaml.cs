@@ -8,7 +8,8 @@ namespace Qualia.Controls
 {
     public partial class FunctionPresenter : UserControl, ISelectableItem
     {
-        const double AXIS_OFFSET = 6;
+        private const double AXIS_OFFSET = 6;
+        private const double DATA_STEP = 0.1;
 
         private readonly Typeface _font = new(new("Tahoma"),
                                               FontStyles.Normal,
@@ -35,13 +36,13 @@ namespace Qualia.Controls
             Value = name;
         }
 
-        public void DrawFunction(Func<double, double> func, in Color color)
+        public void DrawFunction(Func<double, double> func, in Color color, int dataShiftFactor)
         {
             double step = 40;
             double yc = CtlCanvas.Height / 2;
             double xc = CtlCanvas.Width / 2;
 
-            for (double x = -2.5; x <= 2.5; x += 0.08)
+            for (double x = -2.5 + DATA_STEP / 2 * dataShiftFactor; x <= 2.5; x += DATA_STEP)
             {
                 double y = func(x);
 
