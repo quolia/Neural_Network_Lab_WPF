@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
@@ -13,13 +12,18 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
+            LoadConfig();
+        }
+
+        public override void LoadConfig()
+        {
             var neuronIds = Config.Get(Constants.Param.Neurons, Array.Empty<long>());
             neuronIds.ToList().ForEach(AddNeuron);
 
-            if (neuronIds.Length == 0)
-            {
-                Range.For(Constants.DefaultOutputNeuronsCount, _ => AddNeuron(Constants.UnknownId));
-            }
+            //if (neuronIds.Length == 0)
+            //{
+            //    Range.For(Constants.DefaultOutputNeuronsCount, _ => AddNeuron(Constants.UnknownId));
+            //}
         }
 
         public override void LayerControl_OnLoaded()
@@ -42,19 +46,19 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long neuronId)
         {
-            OutputNeuronControl neuron = new(neuronId, Config, NetworkUI_OnChanged, this);
+            OutputNeuronControl neuron = new(neuronId, Config, _onChanged, this);
             
-            CtlContent.Content = null;
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
-            CtlContent.Content = CtlNeurons;
+
+            RefreshContent();
 
             if (neuronId == Constants.UnknownId)
             {
-                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+                _onChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
-            RefreshOrdinalNumbers();
+            RefreshNeuronsOrdinalNumbers();
         }
 
         public override bool RemoveNeuron(NeuronBaseControl neuron)
@@ -82,18 +86,31 @@ namespace Qualia.Controls
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            var ctlNeurons = Neurons;// NeuronsHolder.Items.OfType<OutputNeuronControl>().ToList();
-
-            for (int i = ctlNeurons.Count; i < taskFunction.ITaskControl.GetClasses().Count; ++i)
+            for (int i = Neurons.Count; i < taskFunction.ITaskControl.GetClasses().Count; ++i)
             {
                 AddNeuron();
             }
 
-            for (int i = taskFunction.ITaskControl.GetClasses().Count; i < ctlNeurons.Count; ++i)
+            for (int i = taskFunction.ITaskControl.GetClasses().Count; i < Neurons.Count; ++i)
             {
                 CtlNeurons.Items.RemoveAt(CtlNeurons.Items.Count - 1);
                 Neurons.RemoveAt(Neurons.Count - 1);
             }
+        }
+
+        public override void SetConfig(Config config)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override void InvalidateValue()
+        {
+            throw new InvalidOperationException();
         }
     }
 }

@@ -117,7 +117,7 @@ Networks:637929663525374560
 637933015398307547.WeightsInitializeFunctionParam:1
 637933015398307547.IsBias:0
 637933015398307547.IsBiasConnected:0
-637929663525374560.SelectedLayerIndex:3
+637929663525374560.SelectedLayerIndex:2
 SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:DotsCount
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom

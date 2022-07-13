@@ -1,6 +1,7 @@
 ﻿using Qualia.Tools;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -10,25 +11,32 @@ namespace Qualia.Controls
         public readonly long Id;
         public readonly Config Config;
          
-        public readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
+        public readonly Action<Notification.ParameterChanged> _onChanged;
 
-        public LayerBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public ObservableCollection<NeuronBaseControl> Neurons { get; }
+
+        public LayerBaseControl(long configId, Config config, Action<Notification.ParameterChanged> onChanged)
         {
-            Neurons = new ObservableCollection<NeuronBaseControl>();
-
-            Neurons.CollectionChanged += Neurons_CollectionChanged;
-
-            if (config is null)
+            if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
-            NetworkUI_OnChanged = onNetworkUIChanged;
+            Neurons = new ObservableCollection<NeuronBaseControl>();
+            Neurons.CollectionChanged += Neurons_CollectionChanged;
 
-            Id = UniqId.GetNextId(id);
+            _onChanged = onChanged;
+
+            Id = UniqId.GetNextId(configId);
             Config = config.ExtendWithId(Id);
 
             Loaded += LayerBaseControl_Loaded;
+        }
+
+        public void RefreshNeuronsOrdinalNumbers()
+        {
+            int ordinalNumber = 0;
+            Range.ForEach(Neurons, n => n.OrdinalNumber_OnChanged(++ordinalNumber));
         }
 
         private void LayerBaseControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
@@ -36,72 +44,38 @@ namespace Qualia.Controls
             LayerControl_OnLoaded();
         }
 
+        private void Neurons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+
+        }
+
+        public void Scroll_OnChanged(object sender, ScrollChangedEventArgs e)
+        {
+            MaxWidth = (sender as ScrollViewer).ViewportWidth;
+        }
+
+        public void AddNeuron() => AddNeuron(Constants.UnknownId);
+
+        public virtual bool CanNeuronBeRemoved() => Neurons.Count > 1;
+
         public abstract void LayerControl_OnLoaded();
+        public abstract void AddNeuron(long id);
+        public abstract bool RemoveNeuron(NeuronBaseControl neuron);
 
-        private void Neurons_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            
-        }
-
-        public ObservableCollection<NeuronBaseControl> Neurons { get; set; }
-
-        public void RefreshOrdinalNumbers()
-        {
-            int ordinalNumber = 0;
-            Range.ForEach(Neurons, n => n.OrdinalNumber_OnChanged(++ordinalNumber));
-        }
+        // Layer type.
 
         public virtual bool IsInput => false;
         public virtual bool IsHidden => false;
         public virtual bool IsOutput => false;
 
-        //public virtual ItemsControl NeuronsHolder => throw new InvalidOperationException();
-        //public virtual int NeuronsCount => Neurons.Count;// GetNeuronsControls().Count();
+        // IConfigParam
 
-        //public IEnumerable<NeuronBaseControl> GetNeuronsControls() => Neurons;// NeuronsHolder.Items.OfType<NeuronBaseControl>();
-
-        public void AddNeuron() => AddNeuron(Constants.UnknownId);
-
-        public bool CanNeuronBeRemoved()
-        {
-            return Neurons.Count > 1;
-        }
-
-        public abstract bool RemoveNeuron(NeuronBaseControl neuron);
-
-        public virtual void AddNeuron(long id) => throw new InvalidOperationException();
-        public virtual bool IsValid() => throw new InvalidOperationException();
-        public virtual void SaveConfig() => throw new InvalidOperationException();
-        public virtual void RemoveFromConfig() => throw new InvalidOperationException();
-
-        public void Scroll_OnChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (sender is null)
-            {
-                throw new ArgumentNullException(nameof(sender));
-            }
-
-            MaxWidth = (sender as ScrollViewer).ViewportWidth;
-        }
-
-        public void SetConfig(Config config)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LoadConfig()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void InvalidateValue()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void SetConfig(Config config);
+        public abstract void LoadConfig();
+        public abstract void SaveConfig();
+        public abstract void RemoveFromConfig();
+        public abstract bool IsValid();
+        public abstract void SetOnChangeEvent(Action<Notification.ParameterChanged> action);
+        public abstract void InvalidateValue();
     }
 }

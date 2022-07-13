@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
@@ -11,8 +10,8 @@ namespace Qualia.Controls
     {
         private readonly List<IConfigParam> _configParams;
 
-        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
+            : base(id, config, onChanged)
         {
             InitializeComponent();
 
@@ -47,44 +46,7 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetOnChangeEvent(Parameter_OnChanged));
         }
 
-        public override void LayerControl_OnLoaded()
-        {
-            RefreshContent();
-        }
-
-        public void RefreshContent()
-        {
-            CtlContent.Content = null;
-            CtlContent.Content = CtlNeurons;
-        }
-
-        private void Parameter_OnChanged(Notification.ParameterChanged _)
-        {
-            NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
-        }
-
-        public override bool IsInput => true;
-        public double Initial0 => CtlInputInitial0.Value;
-        public double Initial1 => CtlInputInitial1.Value;
-        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
-        public double ActivationFunctionParam => CtlActivationFunctionParam.Value;
-        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
-        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
-        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.Value;
-
-        public void NetworkTask_OnChanged(TaskFunction taskFunction)
-        {
-            //var ctlNeurons = Neurons;// NeuronsHolder.Items.OfType<InputNeuronControl>().ToList();
-            CtlNeurons.Items.Clear();// .ForEach(Neurons.Remove);
-            Neurons.Clear();
-
-            if (taskFunction != null)
-            {
-                Range.For(taskFunction.ITaskControl.GetInputCount(), _ => Neurons.Insert(0, AddNeuron()));
-            }
-        }
-
-        private void LoadConfig()
+        public override void LoadConfig()
         {
             CtlActivationFunction
                 .Fill<ActivationFunction>(Config);
@@ -101,15 +63,52 @@ namespace Qualia.Controls
             }
         }
 
+        public override void LayerControl_OnLoaded()
+        {
+            RefreshContent();
+        }
+
+        public void RefreshContent()
+        {
+            CtlContent.Content = null;
+            CtlContent.Content = CtlNeurons;
+        }
+
+        private void Parameter_OnChanged(Notification.ParameterChanged _)
+        {
+            _onChanged(Notification.ParameterChanged.Structure);
+        }
+
+        public override bool IsInput => true;
+
+        public double Initial0 => CtlInputInitial0.Value;
+        public double Initial1 => CtlInputInitial1.Value;
+        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
+        public double ActivationFunctionParam => CtlActivationFunctionParam.Value;
+        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
+        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
+        public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.Value;
+
+        public void NetworkTask_OnChanged(TaskFunction taskFunction)
+        {
+            CtlNeurons.Items.Clear();
+            Neurons.Clear();
+
+            if (taskFunction != null)
+            {
+                Range.For(taskFunction.ITaskControl.GetInputCount(), _ => Neurons.Insert(0, AddNeuron()));
+            }
+        }
+
         public new InputNeuronControl AddNeuron()
         {
-            InputNeuronControl ctlNeuron = new(Neurons.Count, this)
+            InputNeuronControl neuron = new(Neurons.Count, this)
             {
                 ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction),
                 ActivationFunctionParam = CtlActivationFunctionParam.Value
             };
 
-            return ctlNeuron;
+            return neuron;
         }
 
         public override void AddNeuron(long biasNeuronid)
@@ -119,19 +118,19 @@ namespace Qualia.Controls
 
         public void AddBias(long biasNeuronId)
         {
-            InputBiasControl neuron = new(biasNeuronId, Config, NetworkUI_OnChanged, this);
+            InputBiasControl neuron = new(biasNeuronId, Config, _onChanged, this);
 
-            CtlContent.Content = null;
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
-            CtlContent.Content = CtlNeurons;
+
+            RefreshContent();
 
             if (biasNeuronId == Constants.UnknownId)
             {
-                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+                _onChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
-            RefreshOrdinalNumbers();
+            RefreshNeuronsOrdinalNumbers();
         }
 
         public override bool RemoveNeuron(NeuronBaseControl neuron)
@@ -164,6 +163,21 @@ namespace Qualia.Controls
         private void MenuAddBias_OnClick(object sender, EventArgs e)
         {
             AddBias(Constants.UnknownId);
+        }
+
+        public override void SetConfig(Config config)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override void InvalidateValue()
+        {
+            throw new InvalidOperationException();
         }
     }
 }

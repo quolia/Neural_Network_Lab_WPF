@@ -1,11 +1,7 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
@@ -17,17 +13,31 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public HiddenLayerControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public HiddenLayerControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
+            : base(id, config, onChanged)
         {
             InitializeComponent();
 
-            var neuronsIds = Config.Get(Constants.Param.Neurons, new long[] { Constants.UnknownId });
+            LoadConfig();
+        }
 
+        public override void LoadConfig()
+        {
+            var neuronsIds = Config.Get(Constants.Param.Neurons, new long[] { Constants.UnknownId });
             foreach (var neuronId in neuronsIds)
             {
                 AddNeuron(neuronId);
             }
+        }
+
+        public override void SetConfig(Config config)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
+        {
+            throw new InvalidOperationException();
         }
 
         public override void LayerControl_OnLoaded()
@@ -45,7 +55,7 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long id)
         {
-            NeuronControl neuron = new(id, Config, NetworkUI_OnChanged, this);
+            NeuronControl neuron = new(id, Config, _onChanged, this);
 
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
@@ -54,10 +64,10 @@ namespace Qualia.Controls
 
             if (id == Constants.UnknownId)
             {
-                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+                _onChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
-            RefreshOrdinalNumbers();
+            RefreshNeuronsOrdinalNumbers();
         }
 
         public override bool RemoveNeuron(NeuronBaseControl neuron)
@@ -76,8 +86,8 @@ namespace Qualia.Controls
                 CtlNeurons.Items.Remove(neuron);
                 neuron.RemoveFromConfig();
                 neuron.SaveConfig();
-                RefreshOrdinalNumbers();
-                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+                RefreshNeuronsOrdinalNumbers();
+                _onChanged(Notification.ParameterChanged.NeuronsCount);
                 return true;
             }
 
@@ -102,6 +112,11 @@ namespace Qualia.Controls
         {
             Config.Remove(Constants.Param.Neurons);
             Neurons.ToList().ForEach(n => n.RemoveFromConfig());
+        }
+
+        public override void InvalidateValue()
+        {
+            throw new InvalidOperationException();
         }
     }
 }
