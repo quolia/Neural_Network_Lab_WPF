@@ -107,7 +107,11 @@ namespace Qualia.Controls
 
         private void LoadMainConfigParams()
         {
-            _configParams.ForEach(p => p.SetConfig(Config.Main));
+            _configParams.ForEach(p =>
+            {
+                p.SetConfig(Config.Main);
+            });
+
             _configParams.ForEach(p => p.LoadConfig());
         }
 

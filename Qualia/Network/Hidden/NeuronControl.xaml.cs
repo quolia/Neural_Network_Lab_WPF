@@ -1,15 +1,13 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
     public partial class NeuronControl : NeuronBaseControl
     {
-        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged, LayerBaseControl parentLayer)
-            : base(id, config, networkUI_OnChanged, parentLayer)
+        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
+            : base(id, config, onChanged, parentLayer)
         {
             InitializeComponent();
 

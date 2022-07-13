@@ -18,12 +18,14 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
+            _onChangedLocal = onChanged;
+
             LoadConfig();
         }
 
         public override void LoadConfig()
         {
-            var neuronsIds = Config.Get(Constants.Param.Neurons, new long[] { Constants.UnknownId });
+            var neuronsIds = _config.Get(Constants.Param.Neurons, new long[] { Constants.UnknownId });
             foreach (var neuronId in neuronsIds)
             {
                 AddNeuron(neuronId);
@@ -55,7 +57,7 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long id)
         {
-            NeuronControl neuron = new(id, Config, _onChanged, this);
+            NeuronControl neuron = new(id, _config, _onChangedLocal, this);
 
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
@@ -64,7 +66,7 @@ namespace Qualia.Controls
 
             if (id == Constants.UnknownId)
             {
-                _onChanged(Notification.ParameterChanged.NeuronsCount);
+                OnChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
             RefreshNeuronsOrdinalNumbers();
@@ -80,14 +82,19 @@ namespace Qualia.Controls
 
             var color = neuron.Background;
             neuron.Background = Draw.GetBrush(in ColorsX.Tomato);
-            if (MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+
+            if (MessageBoxResult.OK == 
+                    MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel))
             {
                 Neurons.Remove(neuron);
                 CtlNeurons.Items.Remove(neuron);
+
                 neuron.RemoveFromConfig();
                 neuron.SaveConfig();
+
                 RefreshNeuronsOrdinalNumbers();
-                _onChanged(Notification.ParameterChanged.NeuronsCount);
+
+                OnChanged(Notification.ParameterChanged.NeuronsCount);
                 return true;
             }
 
@@ -103,14 +110,14 @@ namespace Qualia.Controls
         public override void SaveConfig()
         {
             var ids = Neurons.Select(ctlNeuron => ctlNeuron.Id);
-            Config.Set(Constants.Param.Neurons, ids);
+            _config.Set(Constants.Param.Neurons, ids);
 
             Neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
-            Config.Remove(Constants.Param.Neurons);
+            _config.Remove(Constants.Param.Neurons);
             Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 

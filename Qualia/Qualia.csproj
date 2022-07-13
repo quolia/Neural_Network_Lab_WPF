@@ -197,7 +197,7 @@
       <DependentUpon>CrossCountControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\WorkingModel.cs" />
-    <Compile Include="Network\InputBiasControl.cs" />
+    <Compile Include="Network\Input\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -270,15 +270,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Network\HiddenLayerControl.xaml">
+    <Page Include="Network\Hidden\HiddenLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Network\InputLayerControl.xaml">
+    <Page Include="Network\Input\InputLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Network\InputNeuronControl.xaml">
+    <Page Include="Network\Input\InputNeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -286,15 +286,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Network\NeuronControl.xaml">
+    <Page Include="Network\Hidden\NeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Network\OutputLayerControl.xaml">
+    <Page Include="Network\Output\OutputLayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Network\OutputNeuronControl.xaml">
+    <Page Include="Network\Output\OutputNeuronControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -346,26 +346,26 @@
     <Compile Include="Controls\Base\Values\IntValue.cs" />
     <Compile Include="Network\Base\LayerBase.cs" />
     <Compile Include="Network\Base\NeuronBase.cs" />
-    <Compile Include="Network\HiddenLayerControl.xaml.cs">
+    <Compile Include="Network\Hidden\HiddenLayerControl.xaml.cs">
       <DependentUpon>HiddenLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Network\InputLayerControl.xaml.cs">
+    <Compile Include="Network\Input\InputLayerControl.xaml.cs">
       <DependentUpon>InputLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Network\InputNeuronControl.xaml.cs">
+    <Compile Include="Network\Input\InputNeuronControl.xaml.cs">
       <DependentUpon>InputNeuronControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Network\NetworkControl.xaml.cs">
       <DependentUpon>NetworkControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Network\NetworksManager.cs" />
-    <Compile Include="Network\NeuronControl.xaml.cs">
+    <Compile Include="Network\Hidden\NeuronControl.xaml.cs">
       <DependentUpon>NeuronControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Network\OutputLayerControl.xaml.cs">
+    <Compile Include="Network\Output\OutputLayerControl.xaml.cs">
       <DependentUpon>OutputLayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Network\OutputNeuronControl.xaml.cs">
+    <Compile Include="Network\Output\OutputNeuronControl.xaml.cs">
       <DependentUpon>OutputNeuronControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Presenter\InputDataPresenter.xaml.cs">

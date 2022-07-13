@@ -7,8 +7,8 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputLayerControl : LayerBaseControl
     {
-        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
+            : base(id, config, onChanged)
         {
             InitializeComponent();
 
@@ -17,7 +17,7 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            var neuronIds = Config.Get(Constants.Param.Neurons, Array.Empty<long>());
+            var neuronIds = _config.Get(Constants.Param.Neurons, Array.Empty<long>());
             neuronIds.ToList().ForEach(AddNeuron);
 
             //if (neuronIds.Length == 0)
@@ -46,7 +46,7 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long neuronId)
         {
-            OutputNeuronControl neuron = new(neuronId, Config, _onChanged, this);
+            OutputNeuronControl neuron = new(neuronId, _config, _onChangedLocal, this);
             
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
@@ -55,7 +55,7 @@ namespace Qualia.Controls
 
             if (neuronId == Constants.UnknownId)
             {
-                _onChanged(Notification.ParameterChanged.NeuronsCount);
+                OnChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
             RefreshNeuronsOrdinalNumbers();
@@ -74,13 +74,13 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            Config.Set(Constants.Param.Neurons, Neurons.Select(n => n.Id));
+            _config.Set(Constants.Param.Neurons, Neurons.Select(n => n.Id));
             Neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
-            Config.Remove(Constants.Param.Neurons);
+            _config.Remove(Constants.Param.Neurons);
             Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 

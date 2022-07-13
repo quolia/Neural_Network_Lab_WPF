@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public partial class BaseUserControl : UserControl, IConfigParam
+    abstract public partial class BaseUserControl : UserControl, IConfigParam
     {
         protected Config _config;
         protected List<IConfigParam> _configParams;
@@ -24,34 +24,39 @@ namespace Qualia.Controls
             
         }
 
-        public virtual bool IsValid()
+        public void OnChanged(Notification.ParameterChanged param)
+        {
+            _onChanged(param == Notification.ParameterChanged.Unknown ? UIParam : param);
+        }
+
+        virtual public bool IsValid()
         {
             return _configParams.TrueForAll(p => p.IsValid());
         }
 
-        public virtual void SetConfig(Config config)
+        virtual public void SetConfig(Config config)
         {
             _config = config.Extend(Name);
             _configParams.ForEach(p => p.SetConfig(_config));
         }
 
-        public virtual void LoadConfig()
+        virtual public void LoadConfig()
         {
             _configParams.ForEach(p => p.LoadConfig());
         }
 
-        public virtual void SaveConfig()
+        virtual public void SaveConfig()
         {
             _configParams.ForEach(p => p.SaveConfig());
         }
 
-        public virtual void RemoveFromConfig()
+        virtual public void RemoveFromConfig()
         {
             _config.Remove(Name);
             _configParams.ForEach(p => p.RemoveFromConfig());
         }
 
-        public virtual void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        virtual public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -59,11 +64,10 @@ namespace Qualia.Controls
             _configParams.ForEach(p => p.SetOnChangeEvent(onChanged));
         }
 
-        public void OnChanged(Notification.ParameterChanged param)
+       
+        virtual public void InvalidateValue()
         {
-            _onChanged(param == Notification.ParameterChanged.Unknown ? UIParam : param);
+            _configParams.ForEach(p => p.InvalidateValue());
         }
-
-        public virtual void InvalidateValue() => throw new InvalidOperationException();
     }
 }

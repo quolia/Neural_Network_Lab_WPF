@@ -6,12 +6,10 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    abstract public partial class LayerBaseControl : StackPanel, IConfigParam
+    abstract public partial class LayerBaseControl : BaseUserControl, IConfigParam
     {
         public readonly long Id;
-        public readonly Config Config;
-         
-        public readonly Action<Notification.ParameterChanged> _onChanged;
+        protected Action<Notification.ParameterChanged> _onChangedLocal;
 
         public ObservableCollection<NeuronBaseControl> Neurons { get; }
 
@@ -22,13 +20,13 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(config));
             }
 
+            _onChangedLocal = onChanged;
+
             Neurons = new ObservableCollection<NeuronBaseControl>();
             Neurons.CollectionChanged += Neurons_CollectionChanged;
 
-            _onChanged = onChanged;
-
             Id = UniqId.GetNextId(configId);
-            Config = config.ExtendWithId(Id);
+            _config = config.ExtendWithId(Id);
 
             Loaded += LayerBaseControl_Loaded;
         }
@@ -67,15 +65,5 @@ namespace Qualia.Controls
         virtual public bool IsInput => false;
         virtual public bool IsHidden => false;
         virtual public bool IsOutput => false;
-
-        // IConfigParam
-
-        abstract public void SetConfig(Config config);
-        abstract public void LoadConfig();
-        abstract public void SaveConfig();
-        abstract public void RemoveFromConfig();
-        abstract public bool IsValid();
-        abstract public void SetOnChangeEvent(Action<Notification.ParameterChanged> action);
-        abstract public void InvalidateValue();
     }
 }
