@@ -36,27 +36,29 @@ namespace Qualia.Controls
             }
         }
 
-        public override void SetConfig(Config config)
+        // IConfigParam
+
+        override public void SetConfig(Config config)
         {
             _configParams.ForEach(p => p.SetConfig(config));
         }
 
-        public override void LoadConfig()
+        override public void LoadConfig()
         {
             _configParams.ForEach(p => p.LoadConfig());
         }
 
-        public override void SaveConfig()
+        override public void SaveConfig()
         {
             _configParams.ForEach(p => p.SaveConfig());
         }
 
-        public override void RemoveFromConfig()
+        override public void RemoveFromConfig()
         {
             _configParams.ForEach(p => p.RemoveFromConfig());
         }
 
-        public override bool IsValid()
+        override public bool IsValid()
         {
             if (_configParams.TrueForAll(p => p.IsValid()))
             {
@@ -72,7 +74,7 @@ namespace Qualia.Controls
             return false;
         }
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
+        override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
         {
             _onChanged -= onChange;
             _onChanged += onChange;
@@ -80,9 +82,11 @@ namespace Qualia.Controls
             _configParams.ForEach(p => p.SetOnChangeEvent(Parameter_OnChanged));
         }
 
-        public override void InvalidateValue()
+        override public void InvalidateValue()
         {
             _configParams.ForEach(p => p.InvalidateValue());
         }
+
+        //
     }
 }

@@ -6,8 +6,14 @@ namespace Qualia.Controls
 {
     public partial class NeuronControl : NeuronBaseControl
     {
-        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
-            : base(id, config, onChanged, parentLayer)
+        public NeuronControl(long id,
+                             Config config,
+                             Action<Notification.ParameterChanged> onChanged,
+                             LayerBaseControl parentLayer)
+            : base(id,
+                   config,
+                   onChanged,
+                   parentLayer)
         {
             InitializeComponent();
 
@@ -89,6 +95,8 @@ namespace Qualia.Controls
 
         public override string Label => null;
 
+        // IConfigParam
+
         public override void LoadConfig()
         {
             CtlWeightsInitializeFunction
@@ -129,5 +137,7 @@ namespace Qualia.Controls
         {
             _configParams.ForEach(param => param.RemoveFromConfig());
         }
+
+        //
     }
 }

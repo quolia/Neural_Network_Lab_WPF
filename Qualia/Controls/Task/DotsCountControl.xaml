@@ -18,10 +18,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:TextControl Text="Common dots amount:" />
-        <local:IntValueControl Grid.Column="1" x:Name="CtlCommonDotsAmount" />
-        <local:TextControl Grid.Row="1" Text="Min amount of dots to count:" />
-        <local:IntValueControl Grid.Row="1" Grid.Column="1" x:Name="CtlMinDotsAmountToCount" />
-        <local:TextControl Grid.Row="2" Text="Max amount of dots to count:" />
-        <local:IntValueControl Grid.Row="2" Grid.Column="1" x:Name="CtlMaxDotsAmoutToCount" />
+        
+        <local:IntValueControl Grid.Column="1"
+                               x:Name="CtlCommonDotsAmount" />
+        
+        <local:TextControl Grid.Row="1"
+                           Text="Min amount of dots to count:" />
+        
+        <local:IntValueControl Grid.Row="1"
+                               Grid.Column="1"
+                               x:Name="CtlMinDotsAmountToCount" />
+        
+        <local:TextControl Grid.Row="2"
+                           Text="Max amount of dots to count:" />
+        
+        <local:IntValueControl Grid.Row="2"
+                               Grid.Column="1"
+                               x:Name="CtlMaxDotsAmoutToCount" />
     </Grid>
 </local:BaseUserControl>

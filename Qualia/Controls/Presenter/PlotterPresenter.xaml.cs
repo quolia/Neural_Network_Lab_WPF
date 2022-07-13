@@ -77,7 +77,8 @@ namespace Qualia.Controls
             }
         }
 
-        public void DrawPlot(ListX<NetworkDataModel> networks, NetworkDataModel selectedNetwork)
+        public void DrawPlot(ListX<NetworkDataModel> networks,
+                             NetworkDataModel selectedNetwork)
         {
             if (_isBaseRedrawNeeded)
             {
@@ -237,7 +238,10 @@ namespace Qualia.Controls
             }
         }
 
-        private void RenderData(DynamicStatistics.PlotPointsList pointsData, in Color color, GetPointDelegate getPoint, bool isRect)
+        private void RenderData(DynamicStatistics.PlotPointsList pointsData,
+                                in Color color,
+                                GetPointDelegate getPoint,
+                                bool isRect)
         {
             if (pointsData == null || !pointsData.Any())
             {
@@ -284,7 +288,8 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPointsList pointsData, in Color color)
+        private void DrawLabel(DynamicStatistics.PlotPointsList pointsData,
+                               in Color color)
         {
             FormattedText text = new(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks)
                                              .ToString(Culture.TimeFormat, Culture.Current)
@@ -310,7 +315,9 @@ namespace Qualia.Controls
                                                   ActualHeight - AXIS_OFFSET - 20));
         }
 
-        private ref Point GetPointPercentData(DynamicStatistics.PlotPointsList pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
+        private ref Point GetPointPercentData(DynamicStatistics.PlotPointsList pointsData,
+                                              DynamicStatistics.PlotPoint plotPoint,
+                                              long ticks)
         {
             var pointData0 = pointsData[0];
 
@@ -323,7 +330,9 @@ namespace Qualia.Controls
             return ref Points.Get(pointX, pointY);
         }
 
-        private ref Point GetPointCostData(DynamicStatistics.PlotPointsList pointsData, DynamicStatistics.PlotPoint plotPoint, long ticks)
+        private ref Point GetPointCostData(DynamicStatistics.PlotPointsList pointsData,
+                                           DynamicStatistics.PlotPoint plotPoint,
+                                           long ticks)
         {
             var pointData0 = pointsData[0];
             var pointX = ticks == 0
@@ -335,7 +344,8 @@ namespace Qualia.Controls
             return ref Points.Get(pointX, pointY);
         }
 
-        private void OptimizePointsCount(DynamicStatistics.PlotPointsList pointsData, GetPointDelegate getPoint)
+        private void OptimizePointsCount(DynamicStatistics.PlotPointsList pointsData,
+                                         GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 14;
             const int MIN_POINTS_COUNT = 10;

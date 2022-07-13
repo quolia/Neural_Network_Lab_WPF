@@ -187,6 +187,7 @@ namespace Qualia.Controls
 
             model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
             model.TaskFunction.ITaskControl.SaveConfig();
+
             CtlDistributionFunction.SaveConfig();
             CtlIsPreventRepetition.SaveConfig();
 

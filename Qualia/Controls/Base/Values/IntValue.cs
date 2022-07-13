@@ -111,6 +111,8 @@ namespace Qualia.Controls
             }
         }
 
+        // IConfigParam
+
         public void SetConfig(Config config)
         {
             _config = config;
@@ -153,6 +155,8 @@ namespace Qualia.Controls
         {
             Background = Brushes.Tomato;
         }
+
+        //
 
         public string ToXml()
         {

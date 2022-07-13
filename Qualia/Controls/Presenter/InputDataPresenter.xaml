@@ -18,15 +18,20 @@
         <StackPanel  Orientation="Vertical" >
             <local:TextControl Text="Task:" />
             <local:SelectorControl x:Name="CtlTaskFunction" />
-            <TextBlock x:Name="CtlTaskDescription" TextWrapping="Wrap" />
+            <TextBlock x:Name="CtlTaskDescription"
+                       TextWrapping="Wrap" />
 
             <local:TextControl Text="Task solution value distribution function:" />
             <local:FunctionControl x:Name="CtlDistributionFunction" />
             <local:TextControl Text="Parameters:" />
-            <Grid Name="CtlTaskControlHolder">
-            </Grid>
+            
+            <Grid Name="CtlTaskControlHolder" />
+
             <StackPanel Orientation="Vertical">
-                <local:BoolValueControl x:Name="CtlIsPreventRepetition" Content="Prevent task solution value repetition" VerticalAlignment="Center" />
+                <local:BoolValueControl x:Name="CtlIsPreventRepetition"
+                                        Content="Prevent task solution value repetition"
+                                        VerticalAlignment="Center" />
+                
                 <local:TextControl Text="Input data view:" />
             </StackPanel>
             <local:CanvasControl x:Name="CtlCanvas" />

@@ -14,7 +14,15 @@
 
         <local:TextControl Content="{Binding Caption}" />
 
-        <TextBox x:Name="CtlText" Grid.Row="1" FontFamily="Consolas" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGoldenrodYellow" />
+        <TextBox x:Name="CtlText"
+                 Grid.Row="1"
+                 FontFamily="Consolas"
+                 AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto"
+                 HorizontalScrollBarVisibility="Auto"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Background="LightGoldenrodYellow" />
 
     </Grid>
 </local:BaseUserControl>

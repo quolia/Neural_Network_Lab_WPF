@@ -17,7 +17,10 @@ namespace Qualia.Controls
 
         private readonly LayerBaseControl _parentLayer;
 
-        public NeuronBaseControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
+        public NeuronBaseControl(long id,
+                                 Config config,
+                                 Action<Notification.ParameterChanged> onChanged,
+                                 LayerBaseControl parentLayer)
         {
             _parentLayer = parentLayer;
 

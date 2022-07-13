@@ -5,7 +5,10 @@ namespace Qualia.Controls
 {
     public partial class FunctionControl : BaseUserControl
     {
-        public FunctionControl Initialize(string defaultFunction, double? defaultParam = null, double? paramMinValue = null, double? paramMaxValue = null)
+        public FunctionControl Initialize(string defaultFunction,
+                                          double? defaultParam = null,
+                                          double? paramMinValue = null,
+                                          double? paramMaxValue = null)
         {
             CtlFunction
                 .Initialize(defaultFunction);
@@ -18,7 +21,8 @@ namespace Qualia.Controls
             return this;
         }
 
-        public FunctionControl SetUIParam(Notification.ParameterChanged functionUIParam, Notification.ParameterChanged functionParamUIParam)
+        public FunctionControl SetUIParam(Notification.ParameterChanged functionUIParam,
+                                          Notification.ParameterChanged functionParamUIParam)
         {
             CtlFunction.SetUIParam(functionUIParam);
             CtlParam.SetUIParam(functionParamUIParam);
@@ -47,7 +51,9 @@ namespace Qualia.Controls
             OnChanged(param);
         }
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        // IConfigParam
+
+        override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged -= onChanged;
             _onChanged += onChanged;
@@ -56,7 +62,7 @@ namespace Qualia.Controls
             CtlParam.SetOnChangeEvent(Param_OnChanged);
         }
 
-        public override void SetConfig(Config config)
+        override public void SetConfig(Config config)
         {
             _config = config;
 
@@ -66,17 +72,19 @@ namespace Qualia.Controls
             CtlParam.SetConfig(config.Extend(SelectedFunction.Name));
         }
 
-        public override void LoadConfig()
+        override public void LoadConfig()
         {
             CtlFunction.LoadConfig();
             CtlParam.LoadConfig();
         }
 
-        public override void SaveConfig()
+        override public void SaveConfig()
         {
             _config.Set(Name, CtlFunction.Value.Text);
             CtlParam.SaveConfig();
         }
+
+        //
 
         public T SetConfig<T>(Config config) where T : class
         {

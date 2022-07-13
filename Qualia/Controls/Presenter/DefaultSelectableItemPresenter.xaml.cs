@@ -12,6 +12,7 @@ namespace Qualia.Controls
         public DefaultSelectableItemPresenter(string name)
         {
             InitializeComponent();
+
             CtlText.Text = name;
         }
 

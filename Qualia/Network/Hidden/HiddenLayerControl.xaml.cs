@@ -23,6 +23,8 @@ namespace Qualia.Controls
             LoadConfig();
         }
 
+        // IConfigParam
+
         public override void LoadConfig()
         {
             var neuronsIds = _config.Get(Constants.Param.Neurons, new long[] { Constants.UnknownId });
@@ -41,6 +43,32 @@ namespace Qualia.Controls
         {
             throw new InvalidOperationException();
         }
+
+        public override bool IsValid()
+        {
+            return Neurons.All(neuron => neuron.IsValid());
+        }
+
+        public override void SaveConfig()
+        {
+            var ids = Neurons.Select(n => n.Id);
+            _config.Set(Constants.Param.Neurons, ids);
+
+            Neurons.ToList().ForEach(n => n.SaveConfig());
+        }
+
+        public override void RemoveFromConfig()
+        {
+            _config.Remove(Constants.Param.Neurons);
+            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
+        }
+
+        public override void InvalidateValue()
+        {
+            throw new InvalidOperationException();
+        }
+
+        //
 
         public override void LayerControl_OnLoaded()
         {
@@ -100,30 +128,6 @@ namespace Qualia.Controls
 
             neuron.Background = color;
             return false;
-        }
-
-        public override bool IsValid()
-        {
-            return Neurons.All(neuron => neuron.IsValid());
-        }
-
-        public override void SaveConfig()
-        {
-            var ids = Neurons.Select(n => n.Id);
-            _config.Set(Constants.Param.Neurons, ids);
-
-            Neurons.ToList().ForEach(n => n.SaveConfig());
-        }
-
-        public override void RemoveFromConfig()
-        {
-            _config.Remove(Constants.Param.Neurons);
-            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
-        }
-
-        public override void InvalidateValue()
-        {
-            throw new InvalidOperationException();
         }
     }
 }

@@ -36,12 +36,14 @@ namespace Qualia.Controls
             }
         }
 
-        public override void SetConfig(Config config)
+        // IConfigParam
+
+        override public void SetConfig(Config config)
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
-        public override void LoadConfig()
+        override public void LoadConfig()
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
@@ -132,6 +134,33 @@ namespace Qualia.Controls
 
             CtlLabelsPath.Text = fileNameLabelsGz;
         }
+
+        override public void SaveConfig()
+        {
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
+        }
+
+        override public void RemoveFromConfig()
+        {
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
+        }
+
+        override public bool IsValid()
+        {
+            return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
+        }
+
+        override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
+        {
+            _onChanged -= onChange;
+            _onChanged += onChange;
+
+            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
+        }
+
+        override public void InvalidateValue() => throw new InvalidOperationException();
+
+        //
 
         private void LoadImages(string fileName)
         {
@@ -268,31 +297,6 @@ namespace Qualia.Controls
                 image.Label = (byte)file.ReadByte();
             }
         }
-
-        public override void SaveConfig()
-        {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
-        }
-
-        public override void RemoveFromConfig()
-        {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
-        }
-
-        public override bool IsValid()
-        {
-            return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
-        }
-
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
-        {
-            _onChanged -= onChange;
-            _onChanged += onChange;
-
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
-        }
-
-        public override void InvalidateValue() => throw new InvalidOperationException();
 
         private void BrowseImagesPath_OnClick(object sender, RoutedEventArgs e)
         {

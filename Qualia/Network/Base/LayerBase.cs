@@ -13,7 +13,9 @@ namespace Qualia.Controls
 
         public ObservableCollection<NeuronBaseControl> Neurons { get; }
 
-        public LayerBaseControl(long configId, Config config, Action<Notification.ParameterChanged> onChanged)
+        public LayerBaseControl(long configId,
+                                Config config,
+                                Action<Notification.ParameterChanged> onChanged)
         {
             if (config == null)
             {

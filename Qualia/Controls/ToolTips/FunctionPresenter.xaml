@@ -7,8 +7,13 @@
              mc:Ignorable="d">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <TextBlock x:Name="CtlDescription" Text="Description" />
-            <local:CanvasControl x:Name="CtlCanvas" Width="200" Height="200" />
+            
+            <TextBlock x:Name="CtlDescription"
+                       Text="Description" />
+            
+            <local:CanvasControl x:Name="CtlCanvas"
+                                 Width="200"
+                                 Height="200" />
         </StackPanel>
     </Grid>
 </UserControl>

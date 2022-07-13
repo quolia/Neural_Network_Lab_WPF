@@ -46,6 +46,8 @@ namespace Qualia.Controls
             _onChanged(UIParam);
         }
 
+        // IConfigParam
+
         public void SetConfig(Config config)
         {
             _config = config;
@@ -75,6 +77,8 @@ namespace Qualia.Controls
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();
+
+        //
 
         public string ToXml()
         {

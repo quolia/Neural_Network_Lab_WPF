@@ -32,11 +32,11 @@ namespace Qualia.Model
 
         private NetworkDataModel _copy;
 
-        public NetworkDataModel(long visualId, int[] layerSizes)
+        public NetworkDataModel(long visualId, int[] layersSizes)
         {
             VisualId = visualId;
-            Layers = new(layerSizes.Length);
-            Range.For(layerSizes.Length, i => CreateLayer(layerSizes[i], i < layerSizes.Length - 1 ? layerSizes[i + 1] : 0));
+            Layers = new(layersSizes.Length);
+            Range.For(layersSizes.Length, i => CreateLayer(layersSizes[i], i < layersSizes.Length - 1 ? layersSizes[i + 1] : 0));
         }
 
         public void SetCopy(NetworkDataModel networkModelCopy)

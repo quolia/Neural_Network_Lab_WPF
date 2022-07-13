@@ -15,7 +15,14 @@
 
         <local:TextControl Text="Task solutions:" />
         
-        <local:StringValueControl x:Name="CtlText" Margin="3" Grid.Row="1" Text="No data." AcceptsReturn="True" BorderThickness="0" FontFamily="Consolas" FontSize="11" />
+        <local:StringValueControl x:Name="CtlText"
+                                  Margin="3"
+                                  Grid.Row="1"
+                                  Text="No data."
+                                  AcceptsReturn="True"
+                                  BorderThickness="0"
+                                  FontFamily="Consolas"
+                                  FontSize="11" />
         
     </Grid>
 </local:BaseUserControl>

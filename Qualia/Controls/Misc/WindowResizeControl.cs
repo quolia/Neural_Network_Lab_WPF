@@ -15,19 +15,19 @@ namespace Qualia.Controls
             SourceInitialized += Window_OnSourceInitialized;
         }
 
-        internal enum SWP
+        private enum SWP
         {
             NOMOVE = 0x0002
         }
 
-        internal enum WM
+        private enum WM
         {
             WINDOWPOSCHANGING = 0x0046,
             EXITSIZEMOVE = 0x0232,
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct WINDOWPOS
+        private struct WINDOWPOS
         {
             public IntPtr hwnd;
             public IntPtr hwndInsertAfter;
@@ -40,10 +40,10 @@ namespace Qualia.Controls
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetCursorPos(ref Win32Point pt);
+        private static extern bool GetCursorPos(ref Win32Point pt);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct Win32Point
+        private struct Win32Point
         {
             public Int32 X;
             public Int32 Y;

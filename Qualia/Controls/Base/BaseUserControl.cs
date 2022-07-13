@@ -34,6 +34,8 @@ namespace Qualia.Controls
             return _configParams.TrueForAll(p => p.IsValid());
         }
 
+        // IConfigParam
+
         virtual public void SetConfig(Config config)
         {
             _config = config.Extend(Name);
@@ -64,10 +66,11 @@ namespace Qualia.Controls
             _configParams.ForEach(p => p.SetOnChangeEvent(onChanged));
         }
 
-       
         virtual public void InvalidateValue()
         {
             _configParams.ForEach(p => p.InvalidateValue());
         }
+
+        //
     }
 }

@@ -282,9 +282,9 @@ namespace Qualia.Controls
 
         public long Count { get; private set; }
 
-        public ErrorMatrix(List<string> classes!!)
+        public ErrorMatrix(List<string> outputClasses)
         {
-            OutputClasses = classes;
+            OutputClasses = outputClasses;
             var count = OutputClasses.Count;
 
             Input = new long[count];

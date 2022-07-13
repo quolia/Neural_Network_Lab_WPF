@@ -12,22 +12,27 @@ namespace Qualia.Tools
 {
     public static class Extension
     {
-        public static bool All<T>(this List<T> list, Func<T, bool> predicate)
+        public static bool All<T>(this List<T> list,
+                                  Func<T, bool> predicate)
         {
             return list.AsEnumerable().All(predicate);
         }
 
-        public static DispatcherOperation Dispatch(this UIElement element, Action action, DispatcherPriority priority = DispatcherPriority.Normal)
+        public static DispatcherOperation Dispatch(this DispatcherObject obj,
+                                                   Action action,
+                                                   DispatcherPriority priority = DispatcherPriority.Normal)
         {
-            return element.Dispatcher.BeginInvoke(action, priority);
+            return obj.Dispatcher.BeginInvoke(action, priority);
         }
 
-        public static void SetVisible(this UIElement element, bool visible)
+        public static void SetVisible(this UIElement element,
+                                      bool visible)
         {
             element.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public static TabItem Tab(this TabControl tab, int index)
+        public static TabItem Tab(this TabControl tab,
+                                  int index)
         {
             return (tab.Items[index] as TabItem);
         }
@@ -117,7 +122,8 @@ namespace Qualia.Tools
             return (long)(span.TotalMilliseconds * 1000 * 1000);
         }
 
-        public static string GetDirectoryName(string path, string defaultePath)
+        public static string GetDirectoryName(string path,
+                                              string defaultePath)
         {
             try
             {
@@ -129,24 +135,29 @@ namespace Qualia.Tools
             }
         }
 
-        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> to, Dictionary<TKey, TValue> from)
+        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> to,
+                                                                   Dictionary<TKey, TValue> from)
         {
             return to.Union(from).ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <returns>Selected function instance.</returns>
-        public static T Fill<T>(this SelectorControl comboBox, Config config, string paramName = null) where T : class
+        public static T Fill<T>(this SelectorControl comboBox,
+                                Config config,
+                                string paramName = null) where T : class
         {
             return Initializer.FillComboBox<T>(SelectorControlWrapper.Wrap(comboBox), config, paramName);
         }
 
         static class Initializer
         {
-            public static T FillComboBox<T>(SelectorControlWrapper comboBoxWrapper, Config config, string paramName) where T : class
+            public static T FillComboBox<T>(SelectorControlWrapper comboBoxWrapper,
+                                            Config config,
+                                            string paramName) where T : class
             {
 
                 var items = BaseFunction<T>.GetItems()
-                                           .Select(SelectorControlWrapper.GetSelectableItem<T>)
+                                           .Select(SelectorControlWrapper.GetSelectableItemForName<T>)
                                            .ToList();
 
 
@@ -158,7 +169,10 @@ namespace Qualia.Tools
                 return BaseFunction<T>.GetInstance(comboBoxWrapper);
             }
 
-            private static void FillComboBox(in IEnumerable<ISelectableItem> items, SelectorControlWrapper comboBox, Config config, string paramName)
+            private static void FillComboBox(in IEnumerable<ISelectableItem> items,
+                                             SelectorControlWrapper comboBox,
+                                             Config config,
+                                             string paramName)
             {
                 comboBox.Clear();
 

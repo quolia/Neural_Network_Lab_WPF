@@ -12,6 +12,8 @@ namespace Qualia.Controls
             UIParam = param;
         }
 
+        // IConfigParam
+
         public void SetConfig(Config config)
         {
             //
@@ -43,5 +45,7 @@ namespace Qualia.Controls
         {
             //
         }
+
+        //
     }
 }

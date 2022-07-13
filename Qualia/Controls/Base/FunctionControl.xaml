@@ -15,8 +15,12 @@
             </Grid.ColumnDefinitions>
             
             <local:SelectorControl x:Name="CtlFunction" />
-            <local:TextControl Text="a:" Grid.Column="1" />
-            <local:DoubleValueControl x:Name="CtlParam" Grid.Column="2" />
+            
+            <local:TextControl Text="a:"
+                               Grid.Column="1" />
+            
+            <local:DoubleValueControl x:Name="CtlParam"
+                                      Grid.Column="2" />
         </Grid>
     </Grid>
 </local:BaseUserControl>

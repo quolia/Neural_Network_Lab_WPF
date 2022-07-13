@@ -79,6 +79,8 @@ namespace Qualia.Controls
             }
         }
 
+        // IConfigParam
+
         public void SetConfig(Config config)
         {
             _config = config;
@@ -107,6 +109,8 @@ namespace Qualia.Controls
 
         public void InvalidateValue() => throw new InvalidOperationException();
 
+        //
+
         public string ToXml()
         {
             string name = Config.PrepareParamName(Name);
@@ -116,19 +120,19 @@ namespace Qualia.Controls
 
     sealed public class SelectorControlWrapper
     {
-        private SelectorControl _control;
+        private SelectorControl _selector;
 
-        private SelectorControlWrapper(SelectorControl control)
+        private SelectorControlWrapper(SelectorControl selector)
         {
-            _control = control;
+            _selector = selector;
         }
 
-        public static SelectorControlWrapper Wrap(SelectorControl control)
+        public static SelectorControlWrapper Wrap(SelectorControl selector)
         {
-            return new SelectorControlWrapper(control);
+            return new SelectorControlWrapper(selector);
         }
 
-        public static ISelectableItem GetSelectableItem<T>(string name) where T : class
+        public static ISelectableItem GetSelectableItemForName<T>(string name) where T : class
         {
             var instance = BaseFunction<T>.GetInstance(name);
 
@@ -147,43 +151,43 @@ namespace Qualia.Controls
 
         public void Clear()
         {
-            _control.Items.Clear();
+            _selector.Items.Clear();
         }
 
         public void AddItem(ISelectableItem item)
         {
-            _control.Items.Add(item);
+            _selector.Items.Add(item);
         }
 
         public string DefaultValue
         {
-            get => _control.DefaultValue;
+            get => _selector.DefaultValue;
         }
 
         public string Name
         {
-            get => _control.Name;
+            get => _selector.Name;
         }
 
         public int Count
         {
-            get => _control.Items.Count;
+            get => _selector.Items.Count;
         }
 
         public bool Contains(ISelectableItem item)
         {
-            return _control.Items.Contains(item);
+            return _selector.Items.Contains(item);
         }
 
         public ISelectableItem GetItemAt(int index)
         {
-            return _control.Items.GetItemAt(index) as ISelectableItem;
+            return _selector.Items.GetItemAt(index) as ISelectableItem;
         }
 
         public ISelectableItem SelectedItem
         {
-            get => _control.SelectedItem;
-            set => _control.SelectedItem = value;
+            get => _selector.SelectedItem;
+            set => _selector.SelectedItem = value;
         }
     }
 
