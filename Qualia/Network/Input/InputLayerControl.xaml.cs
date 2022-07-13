@@ -7,8 +7,12 @@ namespace Qualia.Controls
 {
     sealed public partial class InputLayerControl : LayerBaseControl
     {
-        public InputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
-            : base(id, config, onChanged)
+        public InputLayerControl(long id,
+                                 Config config,
+                                 Action<Notification.ParameterChanged> onChanged)
+            : base(id,
+                   config,
+                   onChanged)
         {
             InitializeComponent();
 
@@ -36,11 +40,11 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 1)
             };
 
-            _configParams.ForEach(p => p.SetConfig(_config));
+            _configParams.ForEach(cp => cp.SetConfig(_config));
 
             LoadConfig();
 
-            _configParams.ForEach(p => p.SetOnChangeEvent(LayerParameter_OnChanged));
+            _configParams.ForEach(cp => cp.SetOnChangeEvent(LayerParameter_OnChanged));
         }
 
         public override void LoadConfig()
@@ -51,7 +55,7 @@ namespace Qualia.Controls
             CtlWeightsInitializeFunction
                  .Fill<InitializeFunction>(_config);
 
-            _configParams.ForEach(param => param.LoadConfig());
+            _configParams.ForEach(cp => cp.LoadConfig());
 
             var neuronIds = _config.Get(Constants.Param.Neurons, Array.Empty<long>());
             foreach (var biasNeuronId in neuronIds)
@@ -130,6 +134,8 @@ namespace Qualia.Controls
             RefreshNeuronsOrdinalNumbers();
         }
 
+        // IConfigParam
+
         public override bool RemoveNeuron(NeuronBaseControl neuron)
         {
             MessageBox.Show("Input neuron cannot be removed.", "Warning", MessageBoxButton.OK);
@@ -138,12 +144,12 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return _configParams.All(p => p.IsValid()) && Neurons.All(n => n.IsValid());
+            return _configParams.All(cp => cp.IsValid()) && Neurons.All(n => n.IsValid());
         }
 
         public override void SaveConfig()
         {
-            _configParams.ForEach(p => p.SaveConfig());
+            _configParams.ForEach(cp => cp.SaveConfig());
 
             var neurons = Neurons.Where(n => n.IsBias);
             _config.Set(Constants.Param.Neurons, neurons.Select(n => n.Id));
@@ -153,13 +159,9 @@ namespace Qualia.Controls
         public override void RemoveFromConfig()
         {
             _config.Remove(Constants.Param.Neurons);
-            _configParams.ForEach(p => p.RemoveFromConfig());
-            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
-        }
+            _configParams.ForEach(cp => cp.RemoveFromConfig());
 
-        private void MenuAddBias_OnClick(object sender, EventArgs e)
-        {
-            AddBias(Constants.UnknownId);
+            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 
         public override void SetConfig(Config config)
@@ -167,14 +169,16 @@ namespace Qualia.Controls
             throw new InvalidOperationException();
         }
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
+        public override void InvalidateValue()
         {
             throw new InvalidOperationException();
         }
 
-        public override void InvalidateValue()
+        //
+
+        private void MenuAddBias_OnClick(object sender, EventArgs e)
         {
-            throw new InvalidOperationException();
+            AddBias(Constants.UnknownId);
         }
     }
 }

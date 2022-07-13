@@ -11,8 +11,14 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
-            : base(id, config, onChanged, parentLayer)
+        public InputBiasControl(long id,
+                                Config config,
+                                Action<Notification.ParameterChanged> onChanged,
+                                LayerBaseControl parentLayer)
+            : base(id,
+                   config,
+                   onChanged,
+                   parentLayer)
         {
             InitializeComponent();
 

@@ -103,11 +103,6 @@ namespace Qualia.Controls
             throw new InvalidOperationException();
         }
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> action)
-        {
-            throw new InvalidOperationException();
-        }
-
         public override void InvalidateValue()
         {
             throw new InvalidOperationException();

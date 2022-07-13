@@ -25,10 +25,12 @@ namespace Qualia.Controls
 
         public override string Label => null;
 
-        public override void OrdinalNumber_OnChanged(int number)
+        public override void SetOrdinalNumber(int number)
         {
             throw new InvalidOperationException();
         }
+
+        // IConfigParam
 
         public override bool IsValid() => true;
 
@@ -41,5 +43,7 @@ namespace Qualia.Controls
         {
             throw new InvalidOperationException();
         }
+
+        //
     }
 }

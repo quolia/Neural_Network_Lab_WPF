@@ -58,10 +58,10 @@ namespace Qualia.Controls
 
         private void Neuron_OnChanged(Notification.ParameterChanged _)
         {
-            NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+            OnChanged(Notification.ParameterChanged.Structure);
         }
 
-        public override void OrdinalNumber_OnChanged(int number)
+        public override void SetOrdinalNumber(int number)
         {
             CtlNumber.Text = Converter.IntToText(number);
         }

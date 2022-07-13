@@ -10,8 +10,6 @@ namespace Qualia.Controls
         public readonly long Id;
         public readonly Config Config;
 
-        public readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
-
         private readonly MenuItem _menuAdd;
         private readonly MenuItem _menuRemove;
 
@@ -35,13 +33,13 @@ namespace Qualia.Controls
             ContextMenu.Items.Add(_menuRemove);
             _menuRemove.Click += RemoveNeuron_OnClick;
 
-            NetworkUI_OnChanged = onChanged;
-
             Id = UniqId.GetNextId(id);
             if (config != null)
             {
                 Config = config.ExtendWithId(Id);
-            }            
+            }
+
+            SetOnChangeEvent(onChanged);
         }
 
         private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
@@ -86,10 +84,7 @@ namespace Qualia.Controls
 
         abstract public bool IsBias { get; }
         abstract public bool IsBiasConnected { get; }
-        //abstract public bool IsValid();
-        //abstract public void SaveConfig();
-        //abstract public void RemoveFromConfig();
-        abstract public void OrdinalNumber_OnChanged(int number);
+        abstract public void SetOrdinalNumber(int number);
 
         private void RemoveNeuron()
         {

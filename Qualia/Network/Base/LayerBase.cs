@@ -1,7 +1,7 @@
 ﻿using Qualia.Tools;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -22,13 +22,13 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(config));
             }
 
-            _onChangedLocal = onChanged;
-
             Neurons = new ObservableCollection<NeuronBaseControl>();
-            Neurons.CollectionChanged += Neurons_OnCollectionChanged;
 
             Id = UniqId.GetNextId(configId);
             _config = config.ExtendWithId(Id);
+
+            _onChangedLocal = onChanged;
+            SetOnChangeEvent(onChanged);
 
             Loaded += LayerBaseControl_Loaded;
         }
@@ -36,17 +36,12 @@ namespace Qualia.Controls
         public void RefreshNeuronsOrdinalNumbers()
         {
             int ordinalNumber = 0;
-            Range.ForEach(Neurons, n => n.OrdinalNumber_OnChanged(++ordinalNumber));
+            Range.ForEach(Neurons, n => n.SetOrdinalNumber(++ordinalNumber));
         }
 
-        private void LayerBaseControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void LayerBaseControl_Loaded(object sender, RoutedEventArgs e)
         {
             LayerControl_OnLoaded();
-        }
-
-        private void Neurons_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-
         }
 
         public void Scroll_OnChanged(object sender, ScrollChangedEventArgs e)
