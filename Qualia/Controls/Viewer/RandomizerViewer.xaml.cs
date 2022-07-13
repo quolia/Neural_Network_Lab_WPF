@@ -11,7 +11,9 @@ namespace Qualia.Controls
         private readonly RandomizeFunction _randomizeMode;
         private readonly double _param;
 
-        private readonly Font _font = new("Tahoma", 6.5f, System.Drawing.FontStyle.Bold);
+        private readonly Font _font = new("Tahoma",
+                                          6.5f,
+                                          System.Drawing.FontStyle.Bold);
 
         private readonly NetworkDataModel _model = new(Constants.UnknownId, new[] { 100, 100, 100, 100, 100, 100 });
 

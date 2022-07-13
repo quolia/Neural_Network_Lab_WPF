@@ -65,5 +65,7 @@ namespace Qualia.Controls
         virtual public bool IsInput => false;
         virtual public bool IsHidden => false;
         virtual public bool IsOutput => false;
+
+        //
     }
 }

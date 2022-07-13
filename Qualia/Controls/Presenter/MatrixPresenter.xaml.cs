@@ -108,17 +108,17 @@ namespace Qualia.Controls
                 for (int x = 0; x < matrix.Input.Length; ++x)
                 {
                     CtlBaseCanvas.DrawRectangle(null,
-                                               _penSilver,
-                                               ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE,
-                                                             AXIS_OFFSET + y * POINTS_SIZE,
-                                                             POINTS_SIZE,
-                                                             POINTS_SIZE));
+                                                _penSilver,
+                                                ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE,
+                                                              AXIS_OFFSET + y * POINTS_SIZE,
+                                                              POINTS_SIZE,
+                                                              POINTS_SIZE));
                 }
             }
 
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
-                var text = _classesFormatText[matrix.Classes[x]];
+                var text = _classesFormatText[matrix.OutputClasses[x]];
                 CtlBaseCanvas.DrawText(text,
                                        ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
                                                       1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
@@ -126,7 +126,7 @@ namespace Qualia.Controls
 
             for (int y = 0; y < matrix.Input.Length; ++y)
             {
-                var text = _classesFormatText[matrix.Classes[y]];
+                var text = _classesFormatText[matrix.OutputClasses[y]];
                 CtlBaseCanvas.DrawText(text,
                                        ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
                                                       AXIS_OFFSET + y * POINTS_SIZE));
@@ -137,11 +137,13 @@ namespace Qualia.Controls
                                     ref Points.Get(AXIS_OFFSET + textOutputX,
                                                    AXIS_OFFSET - _textOutput.Height - 1));
 
-            var textInputX = MathX.Max(_textInput.Width, (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2);
+            var textInputX = MathX.Max(_textInput.Width,
+                                       (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2);
+
             CtlBaseCanvas.DrawText(_textInput,
-                                    ref Points.Get(-AXIS_OFFSET - textInputX,
-                                                   AXIS_OFFSET - _textInput.Height - 1),
-                                    -90);
+                                   ref Points.Get(-AXIS_OFFSET - textInputX,
+                                                  AXIS_OFFSET - _textInput.Height - 1),
+                                   -90);
         }
 
         public void DrawErrorMatrix(ErrorMatrix matrix, long lastInput, long lastOutput)
@@ -156,13 +158,13 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(matrix));
             }
 
-            if (IsClassesChanged(matrix.Classes))
+            if (IsClassesChanged(matrix.OutputClasses))
             {
-                InitClassesFormatText(matrix.Classes);
+                InitClassesFormatText(matrix.OutputClasses);
                 DrawBase(matrix);
             }
 
-            _classes = matrix.Classes;
+            _classes = matrix.OutputClasses;
             CtlDataCanvas.Clear();
 
             long goodMax = 1;
@@ -190,7 +192,7 @@ namespace Qualia.Controls
                 {
                     if (matrix.Matrix[y, x] > 0)
                     {
-                        var value = (double)matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
+                        var value = matrix.Matrix[y, x] / (double)(x == y ? goodMax : badMax);
                         var color = Draw.GetColorDradient(in ColorsX.LightGray,
                                                           x == y ? ColorsX.Green : ColorsX.Red,
                                                           255,
@@ -216,7 +218,7 @@ namespace Qualia.Controls
                                                           ? ColorsX.Blue
                                                           : ColorsX.Green,
                                                   100,
-                                                  (double)matrix.Output[x] / (double)outputMax);
+                                                  matrix.Output[x] / (double)outputMax);
 
                 var brush = Draw.GetBrush(in color);
                 CtlDataCanvas.DrawRectangle(brush,
@@ -224,7 +226,7 @@ namespace Qualia.Controls
                                            ref Rects.Get(AXIS_OFFSET + x * POINT_SIZE,
                                                          10 + AXIS_OFFSET + matrix.Input.Length * POINT_SIZE,
                                                          POINT_SIZE,
-                                                         (int)(BOUND * (double)matrix.Output[x] / (double)outputMax)));
+                                                         (int)(BOUND * (double)matrix.Output[x] / outputMax)));
             }
 
             long inputMax = matrix.MaxInput();
@@ -233,14 +235,14 @@ namespace Qualia.Controls
                 var color = Draw.GetColorDradient(in ColorsX.White,
                                                   in ColorsX.Green,
                                                   100,
-                                                  (double)matrix.Input[y] / (double)inputMax);
+                                                  (double)matrix.Input[y] / inputMax);
 
                 var brush = Draw.GetBrush(in color);
                 CtlDataCanvas.DrawRectangle(brush,
                                             _penSilver,
                                             ref Rects.Get(11 + AXIS_OFFSET + matrix.Output.Length * POINT_SIZE,
                                                           AXIS_OFFSET + y * POINT_SIZE,
-                                                          (int)(BOUND * (double)matrix.Input[y] / (double)inputMax),
+                                                          (int)(BOUND * (double)matrix.Input[y] / inputMax),
                                                           POINT_SIZE));
             }
 
@@ -276,14 +278,14 @@ namespace Qualia.Controls
         public long[] Output;
         public long[,] Matrix;
 
-        public List<string> Classes;
+        public List<string> OutputClasses;
 
         public long Count { get; private set; }
 
         public ErrorMatrix(List<string> classes!!)
         {
-            Classes = classes;
-            var count = Classes.Count;
+            OutputClasses = classes;
+            var count = OutputClasses.Count;
 
             Input = new long[count];
             Output = new long[count];

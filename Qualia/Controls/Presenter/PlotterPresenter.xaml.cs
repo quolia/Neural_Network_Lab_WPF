@@ -291,12 +291,12 @@ namespace Qualia.Controls
                                              + " / "
                                              + Converter.DoubleToText(pointsData.Last().Value, "N6", true)
                                              + " %",
-                                      Culture.Current,
-                                      FlowDirection.LeftToRight,
-                                      _font,
-                                      10,
-                                      Draw.GetBrush(in color),
-                                      RenderSettings.PixelsPerDip);
+                                     Culture.Current,
+                                     FlowDirection.LeftToRight,
+                                     _font,
+                                     10,
+                                     Draw.GetBrush(in color),
+                                     RenderSettings.PixelsPerDip);
 
             CtlDataCanvas.DrawRectangle(Draw.GetBrush(Draw.GetColor(150, in ColorsX.White)),
                                         null,

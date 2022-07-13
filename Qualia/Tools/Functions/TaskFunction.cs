@@ -17,7 +17,7 @@ namespace Qualia.Tools
         int GetInputCount();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        List<string> GetClasses();
+        List<string> GetOutputClasses();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void ApplyChanges();
@@ -109,7 +109,7 @@ namespace Qualia.Tools
 
             public void SaveConfig() => s_control.SaveConfig();
 
-            public List<string> GetClasses()
+            public List<string> GetOutputClasses()
             {
                 List<string> classes = new();
                 for (int number = s_control.MinDotsAmountToCount; number <= s_control.MaxDotsAmountToCount; ++number)
@@ -254,7 +254,7 @@ namespace Qualia.Tools
 
             public void SaveConfig() => s_control.SaveConfig();
 
-            public List<string> GetClasses()
+            public List<string> GetOutputClasses()
             {
                 List<string> classes = new();
                 for (int number = s_control.MinCrossesAmountToCount; number <= s_control.MaxCrossesAmountToCount; ++number)
@@ -953,7 +953,7 @@ namespace Qualia.Tools
 
             public int GetInputCount() => 28 * 28;
 
-            public List<string> GetClasses()
+            public List<string> GetOutputClasses()
             {
                 List<string> classes = new();
                 for (int number = s_control.MinNumber; number <= s_control.MaxNumber; ++number)

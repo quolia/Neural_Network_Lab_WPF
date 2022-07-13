@@ -18,8 +18,11 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            CtlImagesPath.Initialize(App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz");
-            CtlLabelsPath.Initialize(App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz");
+            CtlImagesPath
+                .Initialize(App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz");
+
+            CtlLabelsPath
+                .Initialize(App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz");
         }
 
         public int MaxNumber => (int)CtlMaxNumber.Value;

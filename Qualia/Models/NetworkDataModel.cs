@@ -10,7 +10,7 @@ namespace Qualia.Model
         public readonly long VisualId;
         public readonly ListX<LayerDataModel> Layers;
         public int TargetOutputNeuronId;
-        public List<string> Classes;
+        public List<string> OutputClasses;
 
         public bool IsEnabled;
 
@@ -198,7 +198,7 @@ namespace Qualia.Model
                         var prevNeuron = AxW.Neuron;
                         if (prevNeuron.Activation != 0)
                         {
-                            prevNeuron.Error += neuron.Error * AxW.WeightModel.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
+                            prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
                         }
 
                         AxW = AxW.Next;
@@ -217,7 +217,7 @@ namespace Qualia.Model
                     {
                         if (AxW.Neuron.Activation != 0)
                         {
-                            AxW.WeightModel.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
+                            AxW.Weight.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
                         }
                         
                         AxW = AxW.Next;

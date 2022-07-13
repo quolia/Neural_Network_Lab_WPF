@@ -33,9 +33,7 @@ namespace Qualia.Tools
 
         public static ISelectableItem GetDefaultSelectableItemPresenter(string name)
         {
-            var control = new DefaultSelectableItemPresenter();
-            control.CtlText.Text = name;
-            return control;
+            return new DefaultSelectableItemPresenter(name);
         }
     }
 }

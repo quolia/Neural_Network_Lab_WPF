@@ -95,7 +95,7 @@ namespace Qualia.Controls
             }, DispatcherPriority.Render);
         }
 
-        public int LayerDistance(NetworkDataModel model!!)
+        public int LayerDistance(NetworkDataModel model)
         {
             return (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (model.Layers.Count - 1);
         }

@@ -13,26 +13,26 @@ namespace Qualia.Controls
         public readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
 
         private readonly MenuItem _menuAdd;
-        private readonly MenuItem _menuDelete;
+        private readonly MenuItem _menuRemove;
 
         private readonly LayerBaseControl _parentLayer;
 
-        public NeuronBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged, LayerBaseControl parentLayer)
+        public NeuronBaseControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
         {
             _parentLayer = parentLayer;
 
             ContextMenu = new();
-            ContextMenu.Opened += OnContextMenuOpened;
+            ContextMenu.Opened += ContextMenu_OnOpened;
 
             _menuAdd = new() { Header = "Add" };
             ContextMenu.Items.Add(_menuAdd);
-            _menuAdd.Click += OnAddNeuronClick;
+            _menuAdd.Click += AddNeuron_OnClick;
 
-            _menuDelete = new() { Header = "Delete..." };
-            ContextMenu.Items.Add(_menuDelete);
-            _menuDelete.Click += OnDeleteNeuronClick;
+            _menuRemove = new() { Header = "Remove..." };
+            ContextMenu.Items.Add(_menuRemove);
+            _menuRemove.Click += RemoveNeuron_OnClick;
 
-            NetworkUI_OnChanged = onNetworkUIChanged;
+            NetworkUI_OnChanged = onChanged;
 
             Id = UniqId.GetNextId(id);
             if (config != null)
@@ -41,17 +41,17 @@ namespace Qualia.Controls
             }            
         }
 
-        private void OnContextMenuOpened(object sender, RoutedEventArgs e)
+        private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
-            _menuDelete.IsEnabled = _parentLayer.CanNeuronBeRemoved();
+            _menuRemove.IsEnabled = _parentLayer.CanNeuronBeRemoved();
         }
 
-        private void OnAddNeuronClick(object sender, RoutedEventArgs e)
+        private void AddNeuron_OnClick(object sender, RoutedEventArgs e)
         {
             _parentLayer.AddNeuron();
         }
 
-        private void OnDeleteNeuronClick(object sender, RoutedEventArgs e)
+        private void RemoveNeuron_OnClick(object sender, RoutedEventArgs e)
         {
             RemoveNeuron();
         }

@@ -3,7 +3,6 @@ using Qualia.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -23,10 +22,10 @@ namespace Qualia.Controls
 
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
-        public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
         {
             InitializeComponent();
-            NetworkUI_OnChanged = onNetworkUIChanged;
+            NetworkUI_OnChanged = onChanged;
 
             Id = UniqId.GetNextId(id);
             _config = config.ExtendWithId(Id);
@@ -52,10 +51,10 @@ namespace Qualia.Controls
                     .Initialize(nameof(BackPropagationStrategy.Always))
             };
 
-            _configParams.ForEach(param => param.SetConfig(_config));
+            _configParams.ForEach(p => p.SetConfig(_config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetOnChangeEvent(OnChanged));
+            _configParams.ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 
         private new void OnChanged(Notification.ParameterChanged _)
@@ -73,18 +72,18 @@ namespace Qualia.Controls
 
         private void AddLayer(long layerId)
         {
-            HiddenLayerControl ctlLayer = new(layerId, _config, NetworkUI_OnChanged);
+            HiddenLayerControl hiddenLayer = new(layerId, _config, NetworkUI_OnChanged);
 
-            ScrollViewer ctlScroll = new()
+            ScrollViewer scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Content = ctlLayer
+                Content = hiddenLayer
             };
-            ctlScroll.ScrollChanged += ctlLayer.Scroll_OnChanged;
+            scroll.ScrollChanged += hiddenLayer.Scroll_OnChanged;
 
             TabItem tabItem = new()
             {
-                Content = ctlScroll
+                Content = scroll
             };
 
             CtlTabsLayers.Items.Insert(CtlTabsLayers.Items.Count - 1, tabItem);
@@ -99,27 +98,27 @@ namespace Qualia.Controls
 
         public void ResetLayersTabsNames()
         {
-            var ctlLayers = GetLayersControls();
-            for (int i = 0; i < ctlLayers.Count; ++i)
+            var layers = GetLayersControls();
+            for (int i = 0; i < layers.Count; ++i)
             {
-                if (ctlLayers[i].IsInput)
+                if (layers[i].IsInput)
                 {
-                    CtlTabsLayers.Tab(i).Header = $"Input ({ctlLayers[i].Neurons.Count})";
+                    CtlTabsLayers.Tab(i).Header = $"Input ({layers[i].Neurons.Count})";
                 }
-                else if (ctlLayers[i].IsOutput)
+                else if (layers[i].IsOutput)
                 {
-                    CtlTabsLayers.Tab(i).Header = $"Output ({ctlLayers[i].Neurons.Count})";
+                    CtlTabsLayers.Tab(i).Header = $"Output ({layers[i].Neurons.Count})";
                 }
                 else
                 {
-                    CtlTabsLayers.Tab(i).Header = $"L{i} ({ctlLayers[i].Neurons.Count})";
+                    CtlTabsLayers.Tab(i).Header = $"L{i} ({layers[i].Neurons.Count})";
                 }
             }
         }
 
         public override bool IsValid()
         {
-            return _configParams.All(param => param.IsValid()) && GetLayersControls().All(control => control.IsValid());
+            return _configParams.All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
         }
 
         public override void SaveConfig()
@@ -132,10 +131,10 @@ namespace Qualia.Controls
                         $"{CtlColor.Foreground.GetColor().G}," +
                         $"{CtlColor.Foreground.GetColor().B}");
 
-            _configParams.ForEach(param => param.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
 
             var layers = GetLayersControls();
-            layers.ForEach(ctlLayer => ctlLayer.SaveConfig());
+            layers.ForEach(l => l.SaveConfig());
             _config.Set(Constants.Param.Layers, layers.Select(l => l.Id));
 
             //
@@ -154,21 +153,21 @@ namespace Qualia.Controls
             _config.Remove(Constants.Param.SelectedLayerIndex);
             _config.Remove(Constants.Param.Color);
 
-            _configParams.ForEach(param => param.RemoveFromConfig());
+            _configParams.ForEach(p => p.RemoveFromConfig());
 
-            GetLayersControls().ForEach(ctlLayer => ctlLayer.RemoveFromConfig());
+            GetLayersControls().ForEach(l => l.RemoveFromConfig());
             _config.Remove(Constants.Param.Layers);
         }
 
         private List<LayerBaseControl> GetLayersControls()
         {
-            List<LayerBaseControl> ctlLayers = new(CtlTabsLayers.Items.Count);
+            List<LayerBaseControl> layers = new(CtlTabsLayers.Items.Count);
             for (int i = 0; i < CtlTabsLayers.Items.Count; ++i)
             {
-                ctlLayers.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBaseControl>().First());
+                layers.Add(CtlTabsLayers.Tab(i).FindVisualChildren<LayerBaseControl>().First());
             }
 
-            return ctlLayers;
+            return layers;
         }
 
         public override void LoadConfig()
@@ -199,24 +198,24 @@ namespace Qualia.Controls
             var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
             InputLayer = new(inputLayerId, _config, NetworkUI_OnChanged);
-            ScrollViewer ctlScroll = new()
+            ScrollViewer scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Content = InputLayer
             };
 
-            CtlTabInput.Content = ctlScroll;
-            ctlScroll.ScrollChanged += InputLayer.Scroll_OnChanged;
+            CtlTabInput.Content = scroll;
+            scroll.ScrollChanged += InputLayer.Scroll_OnChanged;
 
             _outputLayer = new(outputLayerId, _config, NetworkUI_OnChanged);
-            ctlScroll = new()
+            scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Content = _outputLayer
             };
 
-            CtlTabOutput.Content = ctlScroll;
-            ctlScroll.ScrollChanged += _outputLayer.Scroll_OnChanged;
+            CtlTabOutput.Content = scroll;
+            scroll.ScrollChanged += _outputLayer.Scroll_OnChanged;
 
             var lastLayerId = layerIds.Length > 0 ? layerIds.Last() : Constants.UnknownId;
 
@@ -233,7 +232,7 @@ namespace Qualia.Controls
 
         public int[] GetLayersSizes()
         {
-            return GetLayersControls().Select(ctlLayer => ctlLayer.Neurons.Count).ToArray();
+            return GetLayersControls().Select(l => l.Neurons.Count).ToArray();
         }
 
         public LayerBaseControl SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBaseControl>().First();
@@ -255,6 +254,7 @@ namespace Qualia.Controls
                 SelectedLayer.RemoveFromConfig();
                 CtlTabsLayers.Items.Remove(CtlTabsLayers.SelectedTab());
                 ResetLayersTabsNames();
+
                 NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
             }
         }
@@ -264,8 +264,8 @@ namespace Qualia.Controls
             ErrorMatrix matrix = null;
             if (taskFunction != null)
             {
-                matrix = new(taskFunction.ITaskControl.GetClasses());
-                ErrorMatrix nextMatrix = new(taskFunction.ITaskControl.GetClasses());
+                matrix = new(taskFunction.ITaskControl.GetOutputClasses());
+                ErrorMatrix nextMatrix = new(taskFunction.ITaskControl.GetOutputClasses());
                 matrix.Next = nextMatrix;
                 nextMatrix.Next = matrix;
             }
@@ -273,7 +273,7 @@ namespace Qualia.Controls
             NetworkDataModel network = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
-                Classes = taskFunction?.ITaskControl.GetClasses(),
+                OutputClasses = taskFunction?.ITaskControl.GetOutputClasses(),
                 IsEnabled = CtlIsNetworkEnabled.Value,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = RandomizeMode,

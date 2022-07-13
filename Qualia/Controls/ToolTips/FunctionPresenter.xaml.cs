@@ -19,9 +19,13 @@ namespace Qualia.Controls
         private readonly Pen _penBlack = Draw.GetPen(in ColorsX.Black);
         private readonly Pen _penLightGray = Draw.GetPen(in ColorsX.LightGray);
 
+        // ISelectableItem
+
         public string Text { get; set; }
         public string Value { get; set; }
         public Control Control => this;
+
+        //
 
         public FunctionPresenter()
         {
@@ -38,7 +42,7 @@ namespace Qualia.Controls
 
         public void DrawFunction(Func<double, double> func, in Color color, int dataShiftFactor)
         {
-            double step = 40;
+            const double STEP = 40;
             double yc = CtlCanvas.Height / 2;
             double xc = CtlCanvas.Width / 2;
 
@@ -46,8 +50,8 @@ namespace Qualia.Controls
             {
                 double y = func(x);
 
-                var render_x = xc + x * step;
-                var render_y = yc - y * step;
+                var render_x = xc + x * STEP;
+                var render_y = yc - y * STEP;
 
                 if (render_y < 0 || render_y > CtlCanvas.Height)
                 {
@@ -56,7 +60,8 @@ namespace Qualia.Controls
 
                 CtlCanvas.DrawEllipse(Draw.GetBrush(in color),
                                       Draw.GetPen(in color),
-                                      ref Points.Get(render_x, render_y), 1,
+                                      ref Points.Get(render_x, render_y),
+                                      1,
                                       1);
             }
         }

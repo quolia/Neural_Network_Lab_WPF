@@ -9,10 +9,18 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
+        public DefaultSelectableItemPresenter(string name)
+        {
+            InitializeComponent();
+            CtlText.Text = name;
+        }
+
+        // ISelectableItem
+
         public string Text => CtlText.Text;
-
         public string Value => Text;
-
         public Control Control => this;
+
+        //
     }
 }

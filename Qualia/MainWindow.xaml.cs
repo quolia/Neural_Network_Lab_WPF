@@ -544,15 +544,15 @@ namespace Qualia.Controls
                                 ++statistics.CorrectRoundsTotal;
                                 ++statistics.CorrectRounds;
 
-                                statistics.LastGoodInput = network.Classes[input];
-                                statistics.LastGoodOutput = network.Classes[outputId];
+                                statistics.LastGoodInput = network.OutputClasses[input];
+                                statistics.LastGoodOutput = network.OutputClasses[outputId];
                                 statistics.LastGoodOutputActivation = output.Activation;
                                 statistics.LastGoodCost = cost;
                             }
                             else
                             {
-                                statistics.LastBadInput = network.Classes[input];
-                                statistics.LastBadOutput = network.Classes[outputId];
+                                statistics.LastBadInput = network.OutputClasses[input];
+                                statistics.LastBadOutput = network.OutputClasses[outputId];
                                 statistics.LastBadOutputActivation = output.Activation;
                                 statistics.LastBadCost = cost;
                                 statistics.LastBadTick = _startTime.Elapsed.Ticks;

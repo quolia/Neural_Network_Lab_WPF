@@ -6,11 +6,7 @@ TODO:
 It's a number of output classed.
 - Memory layer.
 - Add to Solutions the check-box "Dynamic performance sorting".
-- Draw FullState on load.
 - Save config on dynamic settings change.
-- Redraw network after ApplyChanges clicked.
-- With "yes/no"-type solution network cannot learn.
-- ErrorMatrixs  is null after file load.
 - Add learning limit activation.
 - Add datasets.
 - If ApplyChanges is On - do not save config on exit.

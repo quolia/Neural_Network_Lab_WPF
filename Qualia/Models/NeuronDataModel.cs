@@ -8,7 +8,7 @@ namespace Qualia.Model
         public readonly int Id;
         public long VisualId;
 
-        public double X; // Values used as a parameter of activation function.
+        public double X; // Value used as a parameter of activation function.
         public double Activation;
         public double Error;
 
@@ -40,10 +40,10 @@ namespace Qualia.Model
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double AxW(NeuronDataModel neuronModel) => Activation * WeightTo(neuronModel).Weight;
+        public double AxW(NeuronDataModel neuron) => Activation * WeightTo(neuron).Weight;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public WeightDataModel WeightTo(NeuronDataModel neuronModel) => Weights[neuronModel.Id];
+        public WeightDataModel WeightTo(NeuronDataModel neuron) => Weights[neuron.Id];
     }
 
     sealed public class WeightDataModel : ListXNode<WeightDataModel>
@@ -63,14 +63,14 @@ namespace Qualia.Model
     sealed public class ForwardNeuron : ListXNode<ForwardNeuron>
     {
         public readonly NeuronDataModel Neuron;
-        public readonly WeightDataModel WeightModel;
+        public readonly WeightDataModel Weight;
 
         public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
         {
             Neuron = neuron;
-            WeightModel = weight;
+            Weight = weight;
         }
 
-        public double AxW => Neuron.Activation * WeightModel.Weight;
+        public double AxW => Neuron.Activation * Weight.Weight;
     }
 }
