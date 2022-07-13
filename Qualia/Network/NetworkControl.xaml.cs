@@ -3,6 +3,7 @@ using Qualia.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -17,7 +18,6 @@ namespace Qualia.Controls
         public Config Config;
         
         private readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
-        private readonly List<IConfigParam> _configParams;
         private OutputLayerControl _outputLayer;
 
         public InputLayerControl InputLayer { get; private set; }
@@ -105,24 +105,29 @@ namespace Qualia.Controls
             {
                 if (ctlLayers[i].IsInput)
                 {
-                    CtlTabsLayers.Tab(i).Header = $"Input ({ctlLayers[i].NeuronsCount})";
+                    CtlTabsLayers.Tab(i).Header = $"Input ({ctlLayers[i].Neurons.Count})";
                 }
                 else if (ctlLayers[i].IsOutput)
                 {
-                    CtlTabsLayers.Tab(i).Header = $"Output ({ctlLayers[i].NeuronsCount})";
+                    CtlTabsLayers.Tab(i).Header = $"Output ({ctlLayers[i].Neurons.Count})";
                 }
                 else
                 {
-                    CtlTabsLayers.Tab(i).Header = $"L{i} ({ctlLayers[i].NeuronsCount})";
+                    CtlTabsLayers.Tab(i).Header = $"L{i} ({ctlLayers[i].Neurons.Count})";
                 }
             }
 
             // The code below is needed to refresh Tabcontrol.
             // Without it newly added neuron control is not visible for hit test (some WPF issue).
 
-            int selectedIndex = CtlTabsLayers.SelectedIndex;
-            CtlTabsLayers.SelectedIndex = 0;
-            CtlTabsLayers.SelectedIndex = selectedIndex;
+
+            //int selectedIndex = CtlTabsLayers.SelectedIndex;
+            //CtlTabsLayers.SelectedIndex = 0;
+            //_ = this.Dispatch(() =>
+            //{
+            //    CtlTabsLayers.SelectedIndex = selectedIndex;
+
+            //}, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         public override bool IsValid()
@@ -242,7 +247,7 @@ namespace Qualia.Controls
 
         public int[] GetLayersSizes()
         {
-            return GetLayersControls().Select(ctlLayer => ctlLayer.NeuronsCount).ToArray();
+            return GetLayersControls().Select(ctlLayer => ctlLayer.Neurons.Count).ToArray();
         }
 
         public LayerBaseControl SelectedLayer => CtlTabsLayers.SelectedTab().FindVisualChildren<LayerBaseControl>().First();
@@ -315,7 +320,7 @@ namespace Qualia.Controls
 
                 layer.VisualId = ctlLayers[layerInd].Id;
 
-                var ctlNeurons = ctlLayers[layerInd].GetNeuronsControls().ToArray();
+                var ctlNeurons = ctlLayers[layerInd].Neurons.ToArray();
 
                 for (int neuronInd = 0; neuronInd < ctlNeurons.Length; ++neuronInd)
                 {
@@ -389,7 +394,7 @@ namespace Qualia.Controls
             var lastLayer = network.Layers.Last;
             lastLayer.VisualId = Constants.OutputLayerId;
             {
-                var ctlNeurons = _outputLayer.GetNeuronsControls().ToArray();
+                var ctlNeurons = _outputLayer.Neurons.ToArray();
                 for (int i = 0; i < ctlNeurons.Length; ++i)
                 {
                     lastLayer.Neurons[i].VisualId = ctlNeurons[i].Id;

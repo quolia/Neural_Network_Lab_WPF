@@ -1,6 +1,10 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -28,12 +32,14 @@ namespace Qualia.Controls
 
         public override bool IsHidden => true;
 
-        public override Panel NeuronsHolder => CtlNeuronsHolder;
-
         public override void AddNeuron(long id)
         {
-            NeuronControl neuron = new(id, Config, NetworkUI_OnChanged);
-            NeuronsHolder.Children.Add(neuron);
+            NeuronControl neuron = new(id, Config, NetworkUI_OnChanged, this);
+
+            CtlContent.Content = null;
+            Neurons.Add(neuron);
+            CtlNeurons.Items.Add(neuron);
+            CtlContent.Content = CtlNeurons;
 
             if (id == Constants.UnknownId)
             {
@@ -43,25 +49,48 @@ namespace Qualia.Controls
             RefreshOrdinalNumbers();
         }
 
+        public override bool RemoveNeuron(NeuronBaseControl neuron)
+        {
+            if (!CanNeuronBeRemoved())
+            {
+                MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
+                return false;
+            }
+
+            var color = neuron.Background;
+            neuron.Background = Draw.GetBrush(in ColorsX.Tomato);
+            if (MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                Neurons.Remove(neuron);
+                CtlNeurons.Items.Remove(neuron);
+                neuron.RemoveFromConfig();
+                neuron.SaveConfig();
+                RefreshOrdinalNumbers();
+                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
+                return true;
+            }
+
+            neuron.Background = color;
+            return false;
+        }
+
         public override bool IsValid()
         {
-            return GetNeuronsControls().All(neuron => neuron.IsValid());
+            return Neurons.All(neuron => neuron.IsValid());
         }
 
         public override void SaveConfig()
         {
-            var ctlNeurons = GetNeuronsControls().ToList();
-            var ids = ctlNeurons.Select(ctlNeuron => ctlNeuron.Id);
+            var ids = Neurons.Select(ctlNeuron => ctlNeuron.Id);
             Config.Set(Constants.Param.Neurons, ids);
 
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.SaveConfig());
+            Neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
             Config.Remove(Constants.Param.Neurons);
-            var ctlNeurons = GetNeuronsControls().ToList();
-            ctlNeurons.ForEach(ctlNeuron => ctlNeuron.RemoveFromConfig());
+            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Qualia.Tools;
 using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -23,8 +24,6 @@ namespace Qualia.Controls
 
         public override bool IsOutput => true;
 
-        public override Panel NeuronsHolder => CtlNeuronsHolder;
-
         private void MenuAddNeuron_OnClick(object sender, EventArgs e)
         {
             AddNeuron(Constants.UnknownId);
@@ -32,8 +31,12 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long neuronId)
         {
-            OutputNeuronControl neuron = new(neuronId, Config, NetworkUI_OnChanged);
-            NeuronsHolder.Children.Add(neuron);
+            OutputNeuronControl neuron = new(neuronId, Config, NetworkUI_OnChanged, this);
+            
+            CtlContent.Content = null;
+            Neurons.Add(neuron);
+            CtlNeurons.Items.Add(neuron);
+            CtlContent.Content = CtlNeurons;
 
             if (neuronId == Constants.UnknownId)
             {
@@ -43,30 +46,32 @@ namespace Qualia.Controls
             RefreshOrdinalNumbers();
         }
 
+        public override bool RemoveNeuron(NeuronBaseControl neuron)
+        {
+            MessageBox.Show("Output neuron cannot be removed.", "Warning", MessageBoxButton.OK);
+            return false;
+        }
+
         public override bool IsValid()
         {
-            var ctlNeurons = GetNeuronsControls();
-            return ctlNeurons.All(ctlNeuron => ctlNeuron.IsValid());
+            return Neurons.All(n => n.IsValid());
         }
 
         public override void SaveConfig()
         {
-            var ctlNeurons = GetNeuronsControls();
-            Config.Set(Constants.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
-            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.SaveConfig());
+            Config.Set(Constants.Param.Neurons, Neurons.Select(n => n.Id));
+            Neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
             Config.Remove(Constants.Param.Neurons);
-
-            var ctlNeurons = GetNeuronsControls();
-            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.RemoveFromConfig());
+            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            var ctlNeurons = NeuronsHolder.Children.OfType<OutputNeuronControl>().ToList();
+            var ctlNeurons = Neurons;// NeuronsHolder.Items.OfType<OutputNeuronControl>().ToList();
 
             for (int i = ctlNeurons.Count; i < taskFunction.ITaskControl.GetClasses().Count; ++i)
             {
@@ -75,7 +80,8 @@ namespace Qualia.Controls
 
             for (int i = taskFunction.ITaskControl.GetClasses().Count; i < ctlNeurons.Count; ++i)
             {
-                NeuronsHolder.Children.RemoveAt(NeuronsHolder.Children.Count - 1);
+                CtlNeurons.Items.RemoveAt(CtlNeurons.Items.Count - 1);
+                Neurons.RemoveAt(Neurons.Count - 1);
             }
         }
     }

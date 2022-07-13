@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -87,6 +88,16 @@ namespace Qualia.Tools
             var prev = SetThreadExecutionState(yes
                                                ? EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS
                                                : EXECUTION_STATE.ES_CONTINUOUS);
+        }
+    }
+
+    public class Notifier : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

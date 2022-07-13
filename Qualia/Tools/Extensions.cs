@@ -167,6 +167,7 @@ namespace Qualia.Tools
                     comboBox.AddItem(item);
                 }
 
+
                 var defaultValue = comboBox.DefaultValue;
 
                 if (string.IsNullOrEmpty(paramName))

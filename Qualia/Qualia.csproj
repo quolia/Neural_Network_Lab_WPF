@@ -344,8 +344,8 @@
     </Compile>
     <Compile Include="Controls\Base\Values\DoubleValue.cs" />
     <Compile Include="Controls\Base\Values\IntValue.cs" />
-    <Compile Include="Controls\Base\LayerBase.cs" />
-    <Compile Include="Controls\Base\NeuronBase.cs" />
+    <Compile Include="Network\Base\LayerBase.cs" />
+    <Compile Include="Network\Base\NeuronBase.cs" />
     <Compile Include="Network\HiddenLayerControl.xaml.cs">
       <DependentUpon>HiddenLayerControl.xaml</DependentUpon>
     </Compile>

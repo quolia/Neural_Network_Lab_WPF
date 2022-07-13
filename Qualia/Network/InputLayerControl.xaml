@@ -52,8 +52,15 @@
             <StackPanel Orientation="Horizontal">
                 <local:BoolValueControl x:Name="CtlAdjustFirstLayerWeights" Margin="5" Content="Adjust first layer weights" DefaultValue="True" />
             </StackPanel>
-            <StackPanel x:Name="CtlNeuronsHolder" Orientation="Vertical">
-            </StackPanel>
+            <ContentControl x:Name="CtlContent">
+                <ItemsControl x:Name="CtlNeurons">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ContentControl>
         </StackPanel>
     </Grid>
 </local:LayerBaseControl>

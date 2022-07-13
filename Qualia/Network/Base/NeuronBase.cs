@@ -2,7 +2,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Qualia.Controls
 {
@@ -16,8 +15,12 @@ namespace Qualia.Controls
         private readonly MenuItem _menuAdd;
         private readonly MenuItem _menuDelete;
 
-        public NeuronBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged)
+        private readonly LayerBaseControl _parentLayer;
+
+        public NeuronBaseControl(long id, Config config, Action<Notification.ParameterChanged> onNetworkUIChanged, LayerBaseControl parentLayer)
         {
+            _parentLayer = parentLayer;
+
             ContextMenu = new();
             ContextMenu.Opened += OnContextMenuOpened;
 
@@ -40,17 +43,17 @@ namespace Qualia.Controls
 
         private void OnContextMenuOpened(object sender, RoutedEventArgs e)
         {
-            _menuDelete.IsEnabled = this.GetParentOfType<LayerBaseControl>().NeuronsCount > 1;
+            _menuDelete.IsEnabled = _parentLayer.CanNeuronBeRemoved();
         }
 
         private void OnAddNeuronClick(object sender, RoutedEventArgs e)
         {
-            this.GetParentOfType<LayerBaseControl>().AddNeuron();
+            _parentLayer.AddNeuron();
         }
 
         private void OnDeleteNeuronClick(object sender, RoutedEventArgs e)
         {
-            DeleteNeuron();
+            RemoveNeuron();
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)
@@ -98,29 +101,9 @@ namespace Qualia.Controls
         public virtual void RemoveFromConfig() => throw new InvalidOperationException();
         public virtual void OrdinalNumber_OnChanged(int number) => throw new InvalidOperationException();
 
-        private void DeleteNeuron()
+        private void RemoveNeuron()
         {
-            var layerBase = this.GetParentOfType<LayerBaseControl>();
-            if (layerBase.NeuronsCount < 2)
-            {
-                MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
-                return;
-            }
-
-            var color = Background;
-            Background = Brushes.Tomato;
-            if (MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-            {
-                this.GetParentOfType<LayerBaseControl>().NeuronsHolder.Children.Remove(this);
-                RemoveFromConfig();
-                SaveConfig();
-                layerBase.RefreshOrdinalNumbers();
-                NetworkUI_OnChanged(Notification.ParameterChanged.NeuronsCount);
-            }
-            else
-            {
-                Background = color;
-            }
+            var removed = _parentLayer.RemoveNeuron(this);
         }
     }
 }

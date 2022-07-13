@@ -21,7 +21,7 @@ namespace Qualia.Controls
 
         public BaseUserControl()
         {
-
+            
         }
 
         public virtual bool IsValid()

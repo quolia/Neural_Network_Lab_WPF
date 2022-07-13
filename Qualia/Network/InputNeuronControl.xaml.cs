@@ -5,10 +5,9 @@ namespace Qualia.Controls
 {
     sealed public partial class InputNeuronControl : NeuronBaseControl
     {
-        public InputNeuronControl(long id)
-            : base(id, null, null)
+        public InputNeuronControl(long id, LayerBaseControl parentLayer)
+            : base(id, null, null, parentLayer)
         {
-            InitializeComponent();
             Visibility = Visibility.Collapsed; // do not show it
         }
 

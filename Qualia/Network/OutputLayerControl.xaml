@@ -7,7 +7,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <StackPanel x:Name="CtlNeuronsHolder" Orientation="Vertical">
-    </StackPanel>
-
+    <ContentControl x:Name="CtlContent">
+        <ItemsControl x:Name="CtlNeurons">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </ContentControl>
+    
 </local:LayerBaseControl>

@@ -105,7 +105,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.MNISTControl.LoadLabels(System.String)")]
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.NetworkControl.DeleteLayer")]
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.NetworksManager.DeleteNetwork")]
-[assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.NeuronBaseControl.DeleteNeuron")]
+[assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.NeuronBaseControl.RemoveNeuron")]
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.PlotterPresenter.Draw(Tools.ListX{Qualia.NetworkDataModel},Qualia.NetworkDataModel)")]
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Controls.PlotterPresenter.Vanish(Tools.ListX{Qualia.NetworkDataModel})")]
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Main.#ctor")]

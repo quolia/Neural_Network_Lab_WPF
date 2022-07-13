@@ -8,10 +8,8 @@ namespace Qualia.Controls
 {
     public partial class NeuronControl : NeuronBaseControl
     {
-        private readonly List<IConfigParam> _configParams;
-
-        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged)
-            : base(id, config, networkUI_OnChanged)
+        public NeuronControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged, LayerBaseControl parentLayer)
+            : base(id, config, networkUI_OnChanged, parentLayer)
         {
             InitializeComponent();
 

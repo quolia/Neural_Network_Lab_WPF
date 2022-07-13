@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
@@ -52,7 +53,6 @@ namespace Qualia.Controls
         }
 
         public override bool IsInput => true;
-        public override Panel NeuronsHolder => CtlNeuronsHolder;
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
         public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
@@ -63,12 +63,13 @@ namespace Qualia.Controls
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            var ctlNeurons = NeuronsHolder.Children.OfType<InputNeuronControl>().ToList();
-            ctlNeurons.ForEach(NeuronsHolder.Children.Remove);
+            //var ctlNeurons = Neurons;// NeuronsHolder.Items.OfType<InputNeuronControl>().ToList();
+            CtlNeurons.Items.Clear();// .ForEach(Neurons.Remove);
+            Neurons.Clear();
 
             if (taskFunction != null)
             {
-                Range.For(taskFunction.ITaskControl.GetInputCount(), _ => NeuronsHolder.Children.Insert(0, AddNeuron()));
+                Range.For(taskFunction.ITaskControl.GetInputCount(), _ => Neurons.Insert(0, AddNeuron()));
             }
         }
 
@@ -91,7 +92,7 @@ namespace Qualia.Controls
 
         public new InputNeuronControl AddNeuron()
         {
-            InputNeuronControl ctlNeuron = new(NeuronsHolder.Children.Count)
+            InputNeuronControl ctlNeuron = new(Neurons.Count, this)
             {
                 ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction),
                 ActivationFunctionParam = CtlActivationFunctionParam.Value
@@ -107,8 +108,12 @@ namespace Qualia.Controls
 
         public void AddBias(long biasNeuronId)
         {
-            InputBiasControl neuron = new(biasNeuronId, Config, NetworkUI_OnChanged);
-            NeuronsHolder.Children.Add(neuron);
+            InputBiasControl neuron = new(biasNeuronId, Config, NetworkUI_OnChanged, this);
+
+            CtlContent.Content = null;
+            Neurons.Add(neuron);
+            CtlNeurons.Items.Add(neuron);
+            CtlContent.Content = CtlNeurons;
 
             if (biasNeuronId == Constants.UnknownId)
             {
@@ -118,27 +123,31 @@ namespace Qualia.Controls
             RefreshOrdinalNumbers();
         }
 
+        public override bool RemoveNeuron(NeuronBaseControl neuron)
+        {
+            MessageBox.Show("Input neuron cannot be removed.", "Warning", MessageBoxButton.OK);
+            return false;
+        }
+
         public override bool IsValid()
         {
-            var ctlNeurons = GetNeuronsControls();
-            return _configParams.All(param => param.IsValid()) && ctlNeurons.All(ctlNeuron => ctlNeuron.IsValid());
+            return _configParams.All(p => p.IsValid()) && Neurons.All(n => n.IsValid());
         }
 
         public override void SaveConfig()
         {
-            _configParams.ForEach(param => param.SaveConfig());
+            _configParams.ForEach(p => p.SaveConfig());
 
-            var ctlNeurons = GetNeuronsControls().Where(ctlNeuron => ctlNeuron.IsBias);
-            Config.Set(Constants.Param.Neurons, ctlNeurons.Select(ctlNeuron => ctlNeuron.Id));
-            ctlNeurons.ToList().ForEach(neuron => neuron.SaveConfig());
+            var neurons = Neurons.Where(n => n.IsBias);
+            Config.Set(Constants.Param.Neurons, neurons.Select(n => n.Id));
+            neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
             Config.Remove(Constants.Param.Neurons);
-            _configParams.ForEach(param => param.RemoveFromConfig());
-            var ctlNeurons = GetNeuronsControls();
-            ctlNeurons.ToList().ForEach(ctlNeuron => ctlNeuron.RemoveFromConfig());
+            _configParams.ForEach(p => p.RemoveFromConfig());
+            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 
         private void MenuAddBias_OnClick(object sender, EventArgs e)

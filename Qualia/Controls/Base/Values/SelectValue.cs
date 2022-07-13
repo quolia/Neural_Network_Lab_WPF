@@ -187,11 +187,6 @@ namespace Qualia.Controls
             get => _control.SelectedItem;
             set => _control.SelectedItem = value;
         }
-
-        public void UpdateLayout()
-        {
-            _control.UpdateLayout();
-        }
     }
 
     public interface ISelectableItem

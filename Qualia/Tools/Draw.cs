@@ -69,6 +69,7 @@ namespace Qualia.Tools
         public static readonly Color Lavender = Colors.Lavender;
         public static readonly Color Black = Colors.Black;
         public static readonly Color Yellow = Colors.Yellow;
+        public static readonly Color Tomato = Colors.Tomato;
     }
 
     public static class RenderSettings
