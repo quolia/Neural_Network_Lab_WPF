@@ -22,6 +22,17 @@ namespace Qualia.Controls
             }
         }
 
+        public override void LayerControl_OnLoaded()
+        {
+            RefreshContent();
+        }
+
+        public void RefreshContent()
+        {
+            CtlContent.Content = null;
+            CtlContent.Content = CtlNeurons;
+        }
+
         public override bool IsOutput => true;
 
         private void MenuAddNeuron_OnClick(object sender, EventArgs e)

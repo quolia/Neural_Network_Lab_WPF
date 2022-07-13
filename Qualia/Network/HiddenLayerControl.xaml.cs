@@ -30,16 +30,27 @@ namespace Qualia.Controls
             }
         }
 
+        public override void LayerControl_OnLoaded()
+        {
+            RefreshContent();
+        }
+
+        public void RefreshContent()
+        {
+            CtlContent.Content = null;
+            CtlContent.Content = CtlNeurons;
+        }
+
         public override bool IsHidden => true;
 
         public override void AddNeuron(long id)
         {
             NeuronControl neuron = new(id, Config, NetworkUI_OnChanged, this);
 
-            CtlContent.Content = null;
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
-            CtlContent.Content = CtlNeurons;
+
+            RefreshContent();
 
             if (id == Constants.UnknownId)
             {

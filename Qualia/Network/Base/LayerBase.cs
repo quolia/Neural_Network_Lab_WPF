@@ -27,7 +27,16 @@ namespace Qualia.Controls
 
             Id = UniqId.GetNextId(id);
             Config = config.ExtendWithId(Id);
+
+            Loaded += LayerBaseControl_Loaded;
         }
+
+        private void LayerBaseControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            LayerControl_OnLoaded();
+        }
+
+        public abstract void LayerControl_OnLoaded();
 
         private void Neurons_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

@@ -47,6 +47,17 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.SetOnChangeEvent(Parameter_OnChanged));
         }
 
+        public override void LayerControl_OnLoaded()
+        {
+            RefreshContent();
+        }
+
+        public void RefreshContent()
+        {
+            CtlContent.Content = null;
+            CtlContent.Content = CtlNeurons;
+        }
+
         private void Parameter_OnChanged(Notification.ParameterChanged _)
         {
             NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
