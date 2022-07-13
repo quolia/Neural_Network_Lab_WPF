@@ -5,14 +5,14 @@ namespace Qualia.Controls
 {
     sealed public class InputBiasControl : NeuronControl
     {
-        public InputBiasControl(LayerBaseControl parentLayer)
-            : base(0, null, null, parentLayer)
+        public InputBiasControl()
+            : base(0, null, null, null)
         {
             InitializeComponent();
         }
 
-        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged, LayerBaseControl parentLayer)
-            : base(id, config, networkUI_OnChanged, parentLayer)
+        public InputBiasControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
+            : base(id, config, onChanged, parentLayer)
         {
             InitializeComponent();
 

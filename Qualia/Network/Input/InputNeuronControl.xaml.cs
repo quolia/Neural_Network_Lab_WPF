@@ -1,4 +1,5 @@
 ﻿using Qualia.Tools;
+using System;
 using System.Windows;
 
 namespace Qualia.Controls
@@ -8,7 +9,7 @@ namespace Qualia.Controls
         public InputNeuronControl(long id, LayerBaseControl parentLayer)
             : base(id, null, null, parentLayer)
         {
-            Visibility = Visibility.Collapsed; // do not show it
+            Visibility = Visibility.Collapsed; // Do not show input neuron.
         }
 
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
@@ -18,27 +19,27 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction { get; set; }
         public override double ActivationFunctionParam { get; set; }
 
-        public override InitializeFunction ActivationInitializeFunction => throw new System.NotImplementedException();
+        public override InitializeFunction ActivationInitializeFunction => throw new InvalidOperationException();
 
-        public override double ActivationInitializeFunctionParam => throw new System.NotImplementedException();
+        public override double ActivationInitializeFunctionParam => throw new InvalidOperationException();
 
         public override string Label => null;
 
         public override void OrdinalNumber_OnChanged(int number)
         {
-            //
+            throw new InvalidOperationException();
         }
 
         public override bool IsValid() => true;
 
         public override void SaveConfig()
         {
-            //
+            throw new InvalidOperationException();
         }
 
         public override void RemoveFromConfig()
         {
-            //
+            throw new InvalidOperationException();
         }
     }
 }

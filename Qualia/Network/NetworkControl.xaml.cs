@@ -15,7 +15,6 @@ namespace Qualia.Controls
     sealed public partial class NetworkControl : BaseUserControl
     {
         public readonly long Id;
-        public Config Config;
         
         private readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
         private OutputLayerControl _outputLayer;
@@ -30,7 +29,7 @@ namespace Qualia.Controls
             NetworkUI_OnChanged = onNetworkUIChanged;
 
             Id = UniqId.GetNextId(id);
-            Config = config.ExtendWithId(Id);
+            _config = config.ExtendWithId(Id);
 
             _configParams = new()
             {
@@ -53,13 +52,13 @@ namespace Qualia.Controls
                     .Initialize(nameof(BackPropagationStrategy.Always))
             };
 
-            _configParams.ForEach(param => param.SetConfig(Config));
+            _configParams.ForEach(param => param.SetConfig(_config));
             LoadConfig();
 
             _configParams.ForEach(param => param.SetOnChangeEvent(OnChanged));
         }
 
-        private void OnChanged(Notification.ParameterChanged _)
+        private new void OnChanged(Notification.ParameterChanged _)
         {
             NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
 
@@ -74,7 +73,7 @@ namespace Qualia.Controls
 
         private void AddLayer(long layerId)
         {
-            HiddenLayerControl ctlLayer = new(layerId, Config, NetworkUI_OnChanged);
+            HiddenLayerControl ctlLayer = new(layerId, _config, NetworkUI_OnChanged);
 
             ScrollViewer ctlScroll = new()
             {
@@ -116,18 +115,6 @@ namespace Qualia.Controls
                     CtlTabsLayers.Tab(i).Header = $"L{i} ({ctlLayers[i].Neurons.Count})";
                 }
             }
-
-            // The code below is needed to refresh Tabcontrol.
-            // Without it newly added neuron control is not visible for hit test (some WPF issue).
-
-
-            //int selectedIndex = CtlTabsLayers.SelectedIndex;
-            //CtlTabsLayers.SelectedIndex = 0;
-            //_ = this.Dispatch(() =>
-            //{
-            //    CtlTabsLayers.SelectedIndex = selectedIndex;
-
-            //}, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         public override bool IsValid()
@@ -137,20 +124,19 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            Config.Set(Constants.Param.SelectedLayerIndex,
-                       CtlTabsLayers.SelectedIndex);
+            _config.Set(Constants.Param.SelectedLayerIndex, CtlTabsLayers.SelectedIndex);
 
-            Config.Set(Constants.Param.Color,
-                       $"{CtlColor.Foreground.GetColor().A}," +
-                       $"{CtlColor.Foreground.GetColor().R}," +
-                       $"{CtlColor.Foreground.GetColor().G}," +
-                       $"{CtlColor.Foreground.GetColor().B}");
+            _config.Set(Constants.Param.Color,
+                        $"{CtlColor.Foreground.GetColor().A}," +
+                        $"{CtlColor.Foreground.GetColor().R}," +
+                        $"{CtlColor.Foreground.GetColor().G}," +
+                        $"{CtlColor.Foreground.GetColor().B}");
 
             _configParams.ForEach(param => param.SaveConfig());
 
-            var ctlLayers = GetLayersControls();
-            ctlLayers.ForEach(ctlLayer => ctlLayer.SaveConfig());
-            Config.Set(Constants.Param.Layers, ctlLayers.Select(ctlLayer => ctlLayer.Id));
+            var layers = GetLayersControls();
+            layers.ForEach(ctlLayer => ctlLayer.SaveConfig());
+            _config.Set(Constants.Param.Layers, layers.Select(l => l.Id));
 
             //
 
@@ -165,13 +151,13 @@ namespace Qualia.Controls
 
         public override void RemoveFromConfig()
         {
-            Config.Remove(Constants.Param.SelectedLayerIndex);
-            Config.Remove(Constants.Param.Color);
+            _config.Remove(Constants.Param.SelectedLayerIndex);
+            _config.Remove(Constants.Param.Color);
 
             _configParams.ForEach(param => param.RemoveFromConfig());
 
             GetLayersControls().ForEach(ctlLayer => ctlLayer.RemoveFromConfig());
-            Config.Remove(Constants.Param.Layers);
+            _config.Remove(Constants.Param.Layers);
         }
 
         private List<LayerBaseControl> GetLayersControls()
@@ -188,31 +174,31 @@ namespace Qualia.Controls
         public override void LoadConfig()
         {
             CtlRandomizeFunction
-                .Fill<RandomizeFunction>(Config);
+                .Fill<RandomizeFunction>(_config);
 
             CtlCostFunction
-                .Fill<CostFunction>(Config);
+                .Fill<CostFunction>(_config);
 
             CtlBackPropagationStrategy
-                .Fill<BackPropagationStrategy>(Config);
+                .Fill<BackPropagationStrategy>(_config);
 
             var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy);
             CtlBackPropagationStrategyDescription.Text = description;
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            var color = Config.Get(Constants.Param.Color, new long[] { 255, 100, 100, 100 });
+            var color = _config.Get(Constants.Param.Color, new long[] { 255, 100, 100, 100 });
             CtlColor.Foreground = Draw.GetBrush(Color.FromArgb((byte)color[0],
                                                                (byte)color[1],
                                                                (byte)color[2],
                                                                (byte)color[3]));
             //
 
-            var layerIds = Config.Get(Constants.Param.Layers, Array.Empty<long>());
+            var layerIds = _config.Get(Constants.Param.Layers, Array.Empty<long>());
             var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Constants.UnknownId;
             var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
-            InputLayer = new(inputLayerId, Config, NetworkUI_OnChanged);
+            InputLayer = new(inputLayerId, _config, NetworkUI_OnChanged);
             ScrollViewer ctlScroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -222,7 +208,7 @@ namespace Qualia.Controls
             CtlTabInput.Content = ctlScroll;
             ctlScroll.ScrollChanged += InputLayer.Scroll_OnChanged;
 
-            _outputLayer = new(outputLayerId, Config, NetworkUI_OnChanged);
+            _outputLayer = new(outputLayerId, _config, NetworkUI_OnChanged);
             ctlScroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -242,7 +228,7 @@ namespace Qualia.Controls
                 }
             }
 
-            CtlTabsLayers.SelectedIndex = Config.Get(Constants.Param.SelectedLayerIndex, 0);
+            CtlTabsLayers.SelectedIndex = _config.Get(Constants.Param.SelectedLayerIndex, 0);
         }
 
         public int[] GetLayersSizes()

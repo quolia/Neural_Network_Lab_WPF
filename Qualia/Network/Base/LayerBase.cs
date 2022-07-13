@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    abstract public partial class LayerBaseControl : BaseUserControl, IConfigParam
+    abstract public partial class LayerBaseControl : BaseUserControl
     {
         public readonly long Id;
         protected Action<Notification.ParameterChanged> _onChangedLocal;
@@ -23,7 +23,7 @@ namespace Qualia.Controls
             _onChangedLocal = onChanged;
 
             Neurons = new ObservableCollection<NeuronBaseControl>();
-            Neurons.CollectionChanged += Neurons_CollectionChanged;
+            Neurons.CollectionChanged += Neurons_OnCollectionChanged;
 
             Id = UniqId.GetNextId(configId);
             _config = config.ExtendWithId(Id);
@@ -42,7 +42,7 @@ namespace Qualia.Controls
             LayerControl_OnLoaded();
         }
 
-        private void Neurons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Neurons_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
 
         }

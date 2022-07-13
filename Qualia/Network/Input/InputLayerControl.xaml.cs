@@ -1,6 +1,5 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -37,11 +36,11 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 1)
             };
 
-            _configParams.ForEach(param => param.SetConfig(_config));
+            _configParams.ForEach(p => p.SetConfig(_config));
 
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetOnChangeEvent(Parameter_OnChanged));
+            _configParams.ForEach(p => p.SetOnChangeEvent(LayerParameter_OnChanged));
         }
 
         public override void LoadConfig()
@@ -72,7 +71,7 @@ namespace Qualia.Controls
             CtlContent.Content = CtlNeurons;
         }
 
-        private void Parameter_OnChanged(Notification.ParameterChanged _)
+        private void LayerParameter_OnChanged(Notification.ParameterChanged _)
         {
             OnChanged(Notification.ParameterChanged.Structure);
         }

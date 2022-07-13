@@ -81,7 +81,7 @@ namespace Qualia.Controls
             set => throw new InvalidOperationException();
         }
 
-    public override double ActivationFunctionParam
+        public override double ActivationFunctionParam
         {
             get => CtlActivationFunctionParam.Value;
             set => throw new InvalidOperationException();

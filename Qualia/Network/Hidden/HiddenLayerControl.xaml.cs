@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Qualia.Controls
 {
-    sealed public partial class HiddenLayerControl : LayerBaseControl, IConfigParam
+    sealed public partial class HiddenLayerControl : LayerBaseControl
     {
         public HiddenLayerControl()
             : base(0, null, null)

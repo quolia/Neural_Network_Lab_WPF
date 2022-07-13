@@ -23,6 +23,7 @@ namespace Qualia.Controls
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
+
             LoadConfig();
 
             _configParams.ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));

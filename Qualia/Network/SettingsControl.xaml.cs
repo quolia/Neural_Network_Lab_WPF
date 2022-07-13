@@ -1,7 +1,6 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
-using System.Linq;
 
 namespace Qualia.Controls
 {
