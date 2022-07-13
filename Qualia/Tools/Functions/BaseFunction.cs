@@ -29,7 +29,7 @@ namespace Qualia.Tools
             return (GetInstance(functions[0]) as BaseFunction<T>).DefaultFunction;
         }
 
-        public static T GetInstance(SelectValueControl selector)
+        public static T GetInstance(SelectorControl selector)
         {
             if (selector.SelectedItem == null)
             {
@@ -40,7 +40,7 @@ namespace Qualia.Tools
             return GetInstance(selector.SelectedItem.Text);
         }
 
-        public static T GetInstance(SelectValueWrapper selector)
+        public static T GetInstance(SelectorControlWrapper selector)
         {
             if (selector.SelectedItem == null)
             {
@@ -99,7 +99,7 @@ namespace Qualia.Tools
                             .ToArray();
         }
 
-        public static string GetDescription(SelectValueControl selector)
+        public static string GetDescription(SelectorControl selector)
         {
             return GetDescription(selector.SelectedItem.Text);
         }

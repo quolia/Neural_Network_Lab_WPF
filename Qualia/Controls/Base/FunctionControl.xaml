@@ -14,8 +14,8 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <local:SelectValueControl x:Name="CtlFunction" />
-            <local:LabelControl Text="a:" Grid.Column="1" />
+            <local:SelectorControl x:Name="CtlFunction" />
+            <local:TextControl Text="a:" Grid.Column="1" />
             <local:DoubleValueControl x:Name="CtlParam" Grid.Column="2" />
         </Grid>
     </Grid>

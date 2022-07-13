@@ -403,7 +403,7 @@ namespace Qualia.Controls
             CtlMenuStart.IsEnabled = false;
             CtlMenuReset.IsEnabled = false;
             CtlMenuStop.IsEnabled = true;
-            CtlMenuDeleteNetwork.IsEnabled = false;
+            CtlMenuRemoveNetwork.IsEnabled = false;
 
             _networksManager.PrepareModelsForRun();
             _networksManager.PrepareModelsForRound();
@@ -987,21 +987,21 @@ namespace Qualia.Controls
             return stat;
         }
 
-        private void MenuNew_OnClick(object sender, EventArgs e)
+        private void MenuNewManager_OnClick(object sender, EventArgs e)
         {
             CreateNetworksManager();
         }
 
-        private void MenuLoad_OnClick(object sender, EventArgs e)
+        private void MenuLoadManager_OnClick(object sender, EventArgs e)
         {
             LoadNetworksManager();
         }
 
-        private void MenuDelete_OnClick(object sender, EventArgs e)
+        private void MenuRemoveNetwork_OnClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Would you really like to delete the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show("Would you really like to remove the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                DeleteNetworksManager();
+                RemoveNetworksManager();
             }
         }
 
@@ -1076,7 +1076,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DeleteNetworksManager()
+        private void RemoveNetworksManager()
         {
             var networksManagerName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
             if (string.IsNullOrEmpty(networksManagerName))
@@ -1231,9 +1231,9 @@ namespace Qualia.Controls
             ApplyChangesToStandingNetworks();
         }
 
-        private void MainMenuDeleteNetwork_OnClick(object sender, RoutedEventArgs e)
+        private void MainMenuRemoveNetwork_OnClick(object sender, RoutedEventArgs e)
         {
-            _networksManager.DeleteNetwork();
+            _networksManager.RemoveNetwork();
         }
 
         private void MainMenuAddLayer_OnClick(object sender, RoutedEventArgs e)
@@ -1242,9 +1242,9 @@ namespace Qualia.Controls
             UI_OnChanged(Notification.ParameterChanged.Structure);
         }
 
-        private void MainMenuDeleteLayer_OnClick(object sender, RoutedEventArgs e)
+        private void MainMenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
         {
-            _networksManager.SelectedNetworkControl.DeleteLayer();
+            _networksManager.SelectedNetworkControl.RemoveLayer();
             UI_OnChanged(Notification.ParameterChanged.Structure);
         }
 
@@ -1275,15 +1275,15 @@ namespace Qualia.Controls
 
         private void MenuNetwork_OnSubmenuOpened(object sender, RoutedEventArgs e)
         {
-            CtlMainMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMainMenuRemoveNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
             CtlMainMenuAddLayer.IsEnabled = CtlTabs.SelectedIndex > 0;
-            CtlMainMenuDeleteLayer.IsEnabled = CtlTabs.SelectedIndex > 0 && (CtlTabs.SelectedContent as NetworkControl).IsSelectedLayerHidden;
+            CtlMainMenuRemoveLayer.IsEnabled = CtlTabs.SelectedIndex > 0 && (CtlTabs.SelectedContent as NetworkControl).IsSelectedLayerHidden;
             CtlMainMenuAddNeuron.IsEnabled = CtlTabs.SelectedIndex > 0;
         }
 
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
-            CtlMenuDeleteNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMenuRemoveNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
         }
 
         public void TaskParameter_OnChanged()
@@ -1310,7 +1310,7 @@ namespace Qualia.Controls
             MessageBox.Show($"Version: {version}\n\nBuilt on: {date}\n\nAuthor: echoviser@gmail.com", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void CtlNotes_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Notes_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             CtlNotes.Save(FileHelper.NotesPath);
         }

@@ -177,9 +177,9 @@
       <DependentUpon>FunctionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\CanvasControl.cs" />
-    <Compile Include="Controls\Base\Values\Label.cs" />
+    <Compile Include="Controls\Base\Values\Text.cs" />
     <Compile Include="Controls\Base\Values\BoolValue.cs" />
-    <Compile Include="Controls\Base\Values\SelectValue.cs" />
+    <Compile Include="Controls\Base\Values\Selector.cs" />
     <Compile Include="Controls\Base\Values\StringValue.cs" />
     <Compile Include="Controls\Presenter\DefaultSelectableItemPresenter.xaml.cs">
       <DependentUpon>DefaultSelectableItemPresenter.xaml</DependentUpon>

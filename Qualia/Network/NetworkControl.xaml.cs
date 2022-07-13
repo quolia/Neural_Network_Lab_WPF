@@ -245,9 +245,9 @@ namespace Qualia.Controls
         private double RandomizerParam => CtlRandomizeFunctionParam.Value;
         private double LearningRate => CtlLearningRate.Value;
 
-        public void DeleteLayer()
+        public void RemoveLayer()
         {
-            if (MessageBoxResult.OK == System.Windows.MessageBox.Show($"Would you really like to delete layer L{CtlTabsLayers.SelectedIndex + 1}?",
+            if (MessageBoxResult.OK == System.Windows.MessageBox.Show($"Would you really like to remove layer L{CtlTabsLayers.SelectedIndex + 1}?",
                                                                       "Confirm",
                                                                       MessageBoxButton.OKCancel))
             {
@@ -411,7 +411,7 @@ namespace Qualia.Controls
 
         private void LayerContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
-            CtlMenuDeleteLayer.IsEnabled = IsSelectedLayerHidden;
+            CtlMenuRemoveLayer.IsEnabled = IsSelectedLayerHidden;
         }
 
         private void MenuAddLayer_OnClick(object sender, RoutedEventArgs e)
@@ -419,9 +419,9 @@ namespace Qualia.Controls
             AddLayer();
         }
 
-        private void MenuDeleteLayer_OnClick(object sender, RoutedEventArgs e)
+        private void MenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
         {
-            DeleteLayer();
+            RemoveLayer();
         }
 
         private void RandomizerButton_OnClick(object sender, RoutedEventArgs e)

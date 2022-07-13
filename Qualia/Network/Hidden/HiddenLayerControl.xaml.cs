@@ -84,7 +84,7 @@ namespace Qualia.Controls
             neuron.Background = Draw.GetBrush(in ColorsX.Tomato);
 
             if (MessageBoxResult.OK == 
-                    MessageBox.Show("Would you really like to delete the neuron?", "Confirm", MessageBoxButton.OKCancel))
+                    MessageBox.Show("Would you really like to remove the neuron?", "Confirm", MessageBoxButton.OKCancel))
             {
                 Neurons.Remove(neuron);
                 CtlNeurons.Items.Remove(neuron);

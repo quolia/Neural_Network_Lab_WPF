@@ -23,11 +23,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <local:LabelControl Text="Activation func:" />
-        <local:SelectValueControl Grid.Column="1" x:Name="CtlActivationFunction" />
+        <local:TextControl Text="Activation func:" />
+        <local:SelectorControl Grid.Column="1" x:Name="CtlActivationFunction" />
         <Label Grid.Column="2" Content="a:" />
         <local:DoubleValueControl Grid.Column="3" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
-        <local:LabelControl  Grid.Column="4" x:Name="CtlNumber" Text="1" />
+        <local:TextControl  Grid.Column="4" x:Name="CtlNumber" Text="1" />
 
         <Label Grid.Row="1" Content="Label:" />
         <local:StringValueControl x:Name="CtlLabel" Grid.Row="1" Grid.Column="1" IsEmptyAllowed="True" />

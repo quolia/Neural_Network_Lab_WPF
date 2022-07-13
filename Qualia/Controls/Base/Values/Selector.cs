@@ -1,19 +1,17 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
 
 namespace Qualia.Controls
 {
-    sealed public class SelectValueControl : ComboBox, IConfigParam
+    sealed public class SelectorControl : ComboBox, IConfigParam
     {
         private Config _config;
         private event Action<Notification.ParameterChanged> _onChanged = delegate {};
 
         public string DefaultValue { get; set; }
 
-        public SelectValueControl Initialize(string defaultValue)
+        public SelectorControl Initialize(string defaultValue)
         {
             if (!string.IsNullOrEmpty(defaultValue))
             {
@@ -25,7 +23,7 @@ namespace Qualia.Controls
 
         public Notification.ParameterChanged UIParam { get; private set; }
 
-        public SelectValueControl SetUIParam(Notification.ParameterChanged param)
+        public SelectorControl SetUIParam(Notification.ParameterChanged param)
         {
             UIParam = param;
             return this;
@@ -37,7 +35,7 @@ namespace Qualia.Controls
         //    return this;
         //}
 
-        public SelectValueControl()
+        public SelectorControl()
         {
             //ItemTemplate = Main.Instance.Resources["SelectableItemTemplate"] as DataTemplate;
             //Style = Main.Instance.Resources["SelectValueStyle"] as Style;
@@ -116,18 +114,18 @@ namespace Qualia.Controls
         }
     }
 
-    sealed public class SelectValueWrapper
+    sealed public class SelectorControlWrapper
     {
-        private SelectValueControl _control;
+        private SelectorControl _control;
 
-        private SelectValueWrapper(SelectValueControl control)
+        private SelectorControlWrapper(SelectorControl control)
         {
             _control = control;
         }
 
-        public static SelectValueWrapper Wrap(SelectValueControl control)
+        public static SelectorControlWrapper Wrap(SelectorControl control)
         {
-            return new SelectValueWrapper(control);
+            return new SelectorControlWrapper(control);
         }
 
         public static ISelectableItem GetSelectableItem<T>(string name) where T : class

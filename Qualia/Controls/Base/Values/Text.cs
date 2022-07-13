@@ -2,7 +2,7 @@
 
 namespace Qualia.Controls
 {
-    sealed public class LabelControl : Label
+    sealed public class TextControl : Label
     {
         public string Text
         {
@@ -10,7 +10,7 @@ namespace Qualia.Controls
             set => Content = value;
         }
 
-        public LabelControl()
+        public TextControl()
         {
             //Padding = new(3);
             Margin = new(0);

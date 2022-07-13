@@ -63,7 +63,7 @@ namespace Qualia.Tools
             return new(_fileName, this, PrepareParamName(extender));
         }
 
-        public Config Extend(SelectValueControl select)
+        public Config Extend(SelectorControl select)
         {
             return Extend(select.Name)
                   .Extend(select.Value.Text);

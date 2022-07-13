@@ -167,9 +167,9 @@ namespace Qualia.Controls
             }
         }
 
-        public void DeleteNetwork()
+        public void RemoveNetwork()
         {
-            if (MessageBoxResult.OK == MessageBox.Show($"Would you really like to delete Network {_Tabs.SelectedIndex}?",
+            if (MessageBoxResult.OK == MessageBox.Show($"Would you really like to remove Network {_Tabs.SelectedIndex}?",
                                                        "Confirm",
                                                        MessageBoxButton.OKCancel))
             {

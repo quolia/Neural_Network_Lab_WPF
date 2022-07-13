@@ -135,18 +135,18 @@ namespace Qualia.Tools
         }
 
         /// <returns>Selected function instance.</returns>
-        public static T Fill<T>(this SelectValueControl comboBox, Config config, string paramName = null) where T : class
+        public static T Fill<T>(this SelectorControl comboBox, Config config, string paramName = null) where T : class
         {
-            return Initializer.FillComboBox<T>(SelectValueWrapper.Wrap(comboBox), config, paramName);
+            return Initializer.FillComboBox<T>(SelectorControlWrapper.Wrap(comboBox), config, paramName);
         }
 
         static class Initializer
         {
-            public static T FillComboBox<T>(SelectValueWrapper comboBoxWrapper, Config config, string paramName) where T : class
+            public static T FillComboBox<T>(SelectorControlWrapper comboBoxWrapper, Config config, string paramName) where T : class
             {
 
                 var items = BaseFunction<T>.GetItems()
-                                           .Select(SelectValueWrapper.GetSelectableItem<T>)
+                                           .Select(SelectorControlWrapper.GetSelectableItem<T>)
                                            .ToList();
 
 
@@ -158,7 +158,7 @@ namespace Qualia.Tools
                 return BaseFunction<T>.GetInstance(comboBoxWrapper);
             }
 
-            private static void FillComboBox(in IEnumerable<ISelectableItem> items, SelectValueWrapper comboBox, Config config, string paramName)
+            private static void FillComboBox(in IEnumerable<ISelectableItem> items, SelectorControlWrapper comboBox, Config config, string paramName)
             {
                 comboBox.Clear();
 
