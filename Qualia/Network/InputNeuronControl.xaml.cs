@@ -18,6 +18,12 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction { get; set; }
         public override double ActivationFunctionParam { get; set; }
 
+        public override InitializeFunction ActivationInitializeFunction => throw new System.NotImplementedException();
+
+        public override double ActivationInitializeFunctionParam => throw new System.NotImplementedException();
+
+        public override string Label => null;
+
         public override void OrdinalNumber_OnChanged(int number)
         {
             //

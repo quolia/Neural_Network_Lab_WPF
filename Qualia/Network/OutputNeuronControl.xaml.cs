@@ -6,10 +6,8 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputNeuronControl : NeuronBaseControl
     {
-        private readonly List<IConfigParam> _configParams;
-
-        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> networkUI_OnChanged, LayerBaseControl parentLayer)
-            : base(id, config, networkUI_OnChanged, parentLayer)
+        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
+            : base(id, config, onChanged, parentLayer)
         {
             InitializeComponent();
 
@@ -34,10 +32,26 @@ namespace Qualia.Controls
         public override double WeightsInitializeFunctionParam => 1;
         public override bool IsBias => false;
         public override bool IsBiasConnected => false;
-        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
-        public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
-
+        public override ActivationFunction ActivationFunction
+        {
+            get => ActivationFunction.GetInstance(CtlActivationFunction);
+            set => throw new InvalidOperationException();
+        }
+        
+        public override double ActivationFunctionParam
+        {
+            get => CtlActivationFunctionParam.Value;
+            set => throw new InvalidOperationException();
+        }
+        
         public override string Label => CtlLabel.Text;
+
+        public override InitializeFunction ActivationInitializeFunction
+        {
+            get => throw new InvalidOperationException();
+        }
+
+        public override double ActivationInitializeFunctionParam => throw new NotImplementedException();
 
         public override void LoadConfig()
         {

@@ -56,26 +56,26 @@ namespace Qualia.Controls
 
         public void AddNeuron() => AddNeuron(Constants.UnknownId);
 
-        public virtual bool CanNeuronBeRemoved() => Neurons.Count > 1;
+        virtual public bool CanNeuronBeRemoved() => Neurons.Count > 1;
 
-        public abstract void LayerControl_OnLoaded();
-        public abstract void AddNeuron(long id);
-        public abstract bool RemoveNeuron(NeuronBaseControl neuron);
+        abstract public void LayerControl_OnLoaded();
+        abstract public void AddNeuron(long id);
+        abstract public bool RemoveNeuron(NeuronBaseControl neuron);
 
         // Layer type.
 
-        public virtual bool IsInput => false;
-        public virtual bool IsHidden => false;
-        public virtual bool IsOutput => false;
+        virtual public bool IsInput => false;
+        virtual public bool IsHidden => false;
+        virtual public bool IsOutput => false;
 
         // IConfigParam
 
-        public abstract void SetConfig(Config config);
-        public abstract void LoadConfig();
-        public abstract void SaveConfig();
-        public abstract void RemoveFromConfig();
-        public abstract bool IsValid();
-        public abstract void SetOnChangeEvent(Action<Notification.ParameterChanged> action);
-        public abstract void InvalidateValue();
+        abstract public void SetConfig(Config config);
+        abstract public void LoadConfig();
+        abstract public void SaveConfig();
+        abstract public void RemoveFromConfig();
+        abstract public bool IsValid();
+        abstract public void SetOnChangeEvent(Action<Notification.ParameterChanged> action);
+        abstract public void InvalidateValue();
     }
 }

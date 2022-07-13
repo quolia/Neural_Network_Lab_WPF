@@ -77,8 +77,19 @@ namespace Qualia.Controls
         public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
         public override bool IsBias => CtlIsBias.IsChecked == true;
         public override bool IsBiasConnected => CtlIsBiasConnected.IsChecked == true && IsBias;
-        public override ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
-        public override double ActivationFunctionParam => CtlActivationFunctionParam.Value;
+        public override ActivationFunction ActivationFunction
+        {
+            get => ActivationFunction.GetInstance(CtlActivationFunction);
+            set => throw new InvalidOperationException();
+        }
+
+    public override double ActivationFunctionParam
+        {
+            get => CtlActivationFunctionParam.Value;
+            set => throw new InvalidOperationException();
+        }
+
+        public override string Label => null;
 
         public override void LoadConfig()
         {

@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    public partial class NeuronBaseControl : BaseUserControl
+    abstract public partial class NeuronBaseControl : BaseUserControl
     {
         public readonly long Id;
         public readonly Config Config;
@@ -72,34 +72,21 @@ namespace Qualia.Controls
                          : Draw.GetBrush(in ColorsX.Lavender);
         }
 
-        public virtual InitializeFunction ActivationInitializeFunction => throw new InvalidOperationException();
-        public virtual double ActivationInitializeFunctionParam => throw new InvalidOperationException();
-        public virtual InitializeFunction WeightsInitializeFunction => throw new InvalidOperationException();
-        public virtual double WeightsInitializeFunctionParam => throw new InvalidOperationException();
+        abstract public InitializeFunction ActivationInitializeFunction { get; }
+        abstract public double ActivationInitializeFunctionParam { get; }
+        abstract public InitializeFunction WeightsInitializeFunction { get; }
+        abstract public double WeightsInitializeFunctionParam { get; }
 
-        public virtual ActivationFunction ActivationFunction
-        {
-            get => throw new InvalidOperationException();
-            set => throw new InvalidOperationException();
-        }
+        abstract public ActivationFunction ActivationFunction { get; set; }
+        abstract public double ActivationFunctionParam { get; set; }
+        abstract public string Label { get; }
 
-        public virtual double ActivationFunctionParam
-        {
-            get => throw new InvalidOperationException();
-            set => throw new InvalidOperationException();
-        }
-        public virtual string Label
-        {
-            get => throw new InvalidOperationException();
-            set => throw new InvalidOperationException();
-        }
-
-        public virtual bool IsBias => throw new InvalidOperationException();
-        public virtual bool IsBiasConnected => throw new InvalidOperationException();
-        public virtual bool IsValid() => throw new InvalidOperationException();
-        public virtual void SaveConfig() => throw new InvalidOperationException();
-        public virtual void RemoveFromConfig() => throw new InvalidOperationException();
-        public virtual void OrdinalNumber_OnChanged(int number) => throw new InvalidOperationException();
+        abstract public bool IsBias { get; }
+        abstract public bool IsBiasConnected { get; }
+        //abstract public bool IsValid();
+        //abstract public void SaveConfig();
+        //abstract public void RemoveFromConfig();
+        abstract public void OrdinalNumber_OnChanged(int number);
 
         private void RemoveNeuron()
         {
