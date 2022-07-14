@@ -196,9 +196,7 @@ namespace Qualia.Controls
 
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged -= onChanged;
-            _onChanged += onChanged;
-
+            _onChanged = onChanged;
             _configParams.ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 

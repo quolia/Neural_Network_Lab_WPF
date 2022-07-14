@@ -21,7 +21,7 @@
             <TextBlock x:Name="CtlTaskDescription"
                        TextWrapping="Wrap" />
 
-            <local:TextControl Text="Task solution value distribution function:" />
+            <local:TextControl Text="Task solution values distribution function:" />
             <local:FunctionControl x:Name="CtlDistributionFunction" />
             <local:TextControl Text="Parameters:" />
             
@@ -29,7 +29,7 @@
 
             <StackPanel Orientation="Vertical">
                 <local:BoolValueControl x:Name="CtlIsPreventRepetition"
-                                        Content="Prevent task solution value repetition"
+                                        Content="Prevent task solution values repetition"
                                         VerticalAlignment="Center" />
                 
                 <local:TextControl Text="Input data view:" />

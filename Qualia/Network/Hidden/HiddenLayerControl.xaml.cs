@@ -18,7 +18,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _onChangedLocal = onChanged;
+            //_onChangedLocal = onChanged;
 
             LoadConfig();
         }
@@ -80,7 +80,7 @@ namespace Qualia.Controls
 
         public override void AddNeuron(long id)
         {
-            NeuronControl neuron = new(id, _config, _onChangedLocal, this);
+            NeuronControl neuron = new(id, _config, _onChanged, this);
 
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);

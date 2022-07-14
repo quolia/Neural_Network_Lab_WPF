@@ -9,7 +9,8 @@ namespace Qualia.Controls
     {
         protected Config _config;
         protected List<IConfigParam> _configParams = new();
-        protected event Action<Notification.ParameterChanged> _onChanged = delegate {};
+
+        protected Action<Notification.ParameterChanged> _onChanged;
 
         public Notification.ParameterChanged UIParam { get; private set; }
 
@@ -60,9 +61,12 @@ namespace Qualia.Controls
 
         virtual public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged -= onChanged;
-            _onChanged += onChanged;
+            if (_onChanged != null)
+            {
+                throw new InvalidOperationException();
+            }
 
+            _onChanged = onChanged;
             _configParams.ForEach(cp => cp.SetOnChangeEvent(onChanged));
         }
 

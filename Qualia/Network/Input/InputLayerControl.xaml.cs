@@ -119,7 +119,7 @@ namespace Qualia.Controls
 
         public void AddBias(long biasNeuronId)
         {
-            InputBiasControl neuron = new(biasNeuronId, _config, _onChangedLocal, this);
+            InputBiasControl neuron = new(biasNeuronId, _config, _onChanged, this);
 
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);

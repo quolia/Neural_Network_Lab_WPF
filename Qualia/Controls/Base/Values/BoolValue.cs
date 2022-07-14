@@ -72,8 +72,7 @@ namespace Qualia.Controls
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged -= onChanged;
-            _onChanged += onChanged;
+            _onChanged = onChanged;
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();

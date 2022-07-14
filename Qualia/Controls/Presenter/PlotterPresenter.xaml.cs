@@ -178,7 +178,9 @@ namespace Qualia.Controls
 
         private void RenderPlotterLabels(DynamicStatistics.PlotPointsList pointsData)
         {
-            double step = (ActualWidth - AXIS_OFFSET) / 10;
+            double step_x = (ActualWidth - AXIS_OFFSET) / 10;
+            double step_y = (ActualHeight - AXIS_OFFSET) / 10;
+
             double y = ActualHeight / 2 - AXIS_OFFSET - AXIS_OFFSET / 2;
             double x;
 
@@ -197,19 +199,19 @@ namespace Qualia.Controls
                                           Draw.GetBrush(in ColorsX.Gray),
                                           RenderSettings.PixelsPerDip);
 
-                CtlDataCanvas.DrawRectangle(Brushes.White,
-                                            Draw.GetPen(in ColorsX.White),
-                                            ref Points.Get(AXIS_OFFSET - text.Width / 2 + step * x, y),
-                                            text.Width,
+                CtlDataCanvas.DrawRectangle(Draw.GetBrush(Draw.GetColor(150, in ColorsX.White)),
+                                            null,
+                                            ref Points.Get(AXIS_OFFSET - text.Width / 2 + step_x * x - 5,
+                                                           text.Width * 1.5 < step_x || x % 2 == 1 ? y : y - text.Height * 1.2),
+                                            text.Width + 10,
                                             text.Height);
 
                 CtlDataCanvas.DrawText(text,
-                                       ref Points.Get(AXIS_OFFSET - text.Width / 2 + step * x, y));
+                                       ref Points.Get(AXIS_OFFSET - text.Width / 2 + step_x * x,
+                                                      text.Width * 1.5 < step_x || x % 2 == 1 ? y : y - text.Height * 1.2));
             }
 
             // Render percent-line.
-
-            step = (ActualHeight - AXIS_OFFSET) / 10;
 
             for (y = 1; y < 10; ++y)
             {
@@ -226,15 +228,15 @@ namespace Qualia.Controls
                                           Draw.GetBrush(in ColorsX.Gray),
                                           RenderSettings.PixelsPerDip);
 
-                CtlDataCanvas.DrawRectangle(Brushes.White,
-                                            Draw.GetPen(in ColorsX.White),
+                CtlDataCanvas.DrawRectangle(Draw.GetBrush(Draw.GetColor(150, in ColorsX.White)),
+                                            null,
                                             ref Points.Get(ActualWidth / 2 - text.Width / 2 + AXIS_OFFSET / 2,
-                                                           ActualHeight - AXIS_OFFSET - step * y - text.Height / 2),
+                                                           ActualHeight - AXIS_OFFSET - step_y * y - text.Height / 2),
                                             text.Width,
                                             text.Height);
 
                 CtlDataCanvas.DrawText(text, ref Points.Get(ActualWidth / 2 - text.Width / 2 + AXIS_OFFSET / 2,
-                                                            ActualHeight - AXIS_OFFSET - step * y - text.Height / 2));
+                                                            ActualHeight - AXIS_OFFSET - step_y * y - text.Height / 2));
             }
         }
 

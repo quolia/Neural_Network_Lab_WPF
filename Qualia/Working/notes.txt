@@ -10,3 +10,4 @@ It's a number of output classed.
 - Add learning limit activation.
 - Add datasets.
 - If ApplyChanges is On - do not save config on exit.
+- Enhanced plot points optimization.

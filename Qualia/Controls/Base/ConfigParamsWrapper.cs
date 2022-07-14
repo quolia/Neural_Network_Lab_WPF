@@ -7,20 +7,18 @@ namespace Qualia.Controls
 {
     sealed public class ConfigParamWrapper : BaseUserControl
     {
-        public ConfigParamWrapper(FrameworkElement control)
+        public ConfigParamWrapper(FrameworkElement control, List<IConfigParam> configParams = null)
         {
             Name = control.Name;
 
-            _configParams = new List<IConfigParam>(control.FindVisualChildren<IConfigParam>());
+            _configParams = configParams ?? new List<IConfigParam>(control.FindVisualChildren<IConfigParam>());
         }
 
         // IConfigParam
-
+        /*
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged -= onChanged;
-            _onChanged += onChanged;
-
+            _onChanged = onChanged;
             _configParams.ForEach(p => p.SetOnChangeEvent(Param_OnChanged));
         }
 
@@ -30,6 +28,7 @@ namespace Qualia.Controls
         {
             OnChanged(UIParam);
         }
+        */
     }
 }
 

@@ -133,6 +133,15 @@ namespace Qualia.Tools
 
                     intNumber = (int)randNumber;
 
+                    if (intNumber < _minDotsAmountToCount)
+                    {
+                        intNumber = _minDotsAmountToCount;
+                    }
+                    else if (intNumber > _maxDotsAmountToCount)
+                    {
+                        intNumber = _maxDotsAmountToCount;
+                    }
+
                     network.TargetOutputNeuronId = intNumber - _minDotsAmountToCount;
 
                     if (!_isPreventRepetition || network.TargetOutputNeuronId != _prevTargetOutputNeuronId)
@@ -275,6 +284,17 @@ namespace Qualia.Tools
                     randNumber = (1 + _maxCrossesAmountToCount - _minCrossesAmountToCount) * randNumber + _minCrossesAmountToCount;
 
                     var intNumber = (int)randNumber;
+
+                    intNumber = (int)randNumber;
+
+                    if (intNumber < _minCrossesAmountToCount)
+                    {
+                        intNumber = _minCrossesAmountToCount;
+                    }
+                    else if (intNumber > _maxCrossesAmountToCount)
+                    {
+                        intNumber = _maxCrossesAmountToCount;
+                    }
 
                     var neurons = network.Layers.First.Neurons;
                     var neuron = neurons.First;
@@ -967,6 +987,25 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
+                double randNumber = distributionFunction.Do(distributionFunctionParam);
+
+                /* todo
+                randNumber = (1 + _maxCrossesAmountToCount - _minCrossesAmountToCount) * randNumber + _minCrossesAmountToCount;
+
+                var intNumber = (int)randNumber;
+
+                intNumber = (int)randNumber;
+
+                if (intNumber < _minCrossesAmountToCount)
+                {
+                    intNumber = _minCrossesAmountToCount;
+                }
+                else if (intNumber > _maxCrossesAmountToCount)
+                {
+                    intNumber = _maxCrossesAmountToCount;
+                }
+                */
+
                 var image = s_control.Images[(int)(s_control.Images.Count * distributionFunction.Do(distributionFunctionParam))];
                 var count = networkModel.Layers.First.Neurons.Count;
 
