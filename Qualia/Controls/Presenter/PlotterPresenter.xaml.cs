@@ -1,8 +1,10 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Qualia.Controls
 {
@@ -68,8 +70,11 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                OptimizePointsCount(network.DynamicStatistics.PercentData, GetPointPercentData);
-                OptimizePointsCount(network.DynamicStatistics.CostData, GetPointCostData);
+                LinearOptimization(network.DynamicStatistics.PercentData, GetPointPercentData);
+                LinearOptimization(network.DynamicStatistics.CostData, GetPointCostData);
+
+                DensityOptimization(network.DynamicStatistics.PercentData, GetPointPercentData);
+                DensityOptimization(network.DynamicStatistics.CostData, GetPointCostData);
 
                 network.DynamicStatistics.CopyForRender = new(network.DynamicStatistics);
 
@@ -346,10 +351,10 @@ namespace Qualia.Controls
             return ref Points.Get(pointX, pointY);
         }
 
-        private void OptimizePointsCount(DynamicStatistics.PlotPointsList pointsData,
-                                         GetPointDelegate getPoint)
+        private void LinearOptimization(DynamicStatistics.PlotPointsList pointsData,
+                                        GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 14;
+            const int VANISH_AREA = 6;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
@@ -391,6 +396,68 @@ namespace Qualia.Controls
 
                             i += 2;
                         }
+                    }
+                }
+
+                if (pointsData.PointsToRemoveCount == 0)
+                {
+                    return;
+                }
+
+                pointsData.CommitRemove();
+            }
+        }
+
+        private void DensityOptimization(DynamicStatistics.PlotPointsList pointsData,
+                                         GetPointDelegate getPoint)
+        {
+            const int VANISH_AREA = 6;
+            const int MIN_POINTS_COUNT = 10;
+
+            while (true)
+            {
+                if (pointsData.Count <= MIN_POINTS_COUNT)
+                {
+                    return;
+                }
+
+                for (int i = 0; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
+                {
+                    var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
+
+                    ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
+                    ref var point5 = ref getPoint(pointsData, pointsData[i + 5], ticks);
+
+                    if (MathX.Abs(point0.X - point5.X) < VANISH_AREA)
+                        //&& MathX.Abs(points.First().Y - points.Last().Y) < VANISH_AREA / 2)
+                    {
+                        List<Point> points = new()
+                        {
+                            //getPoint(pointsData, pointsData[i], ticks),
+                            getPoint(pointsData, pointsData[i + 1], ticks),
+                            getPoint(pointsData, pointsData[i + 2], ticks),
+                            getPoint(pointsData, pointsData[i + 3], ticks),
+                            getPoint(pointsData, pointsData[i + 4], ticks),
+                            //getPoint(pointsData, pointsData[i + 5], ticks)
+                        };
+
+                        var maxY = points.Max(p => p.Y);
+                        var minY = points.Min(p => p.Y);
+
+                        for (int n = 0; n < points.Count; ++n)
+                        {
+                            if (points[n].Y < maxY && points[n].Y > minY)
+                            {
+                                pointsData.AddToRemove(pointsData[i + n + 1]);
+                            }
+                        }
+
+                        i += points.Count;
+                    }
+
+                    if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
+                    {
+                        break;
                     }
                 }
 

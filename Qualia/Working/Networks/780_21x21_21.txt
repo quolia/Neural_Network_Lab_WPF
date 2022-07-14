@@ -126,8 +126,8 @@ Networks:637929663525374560
 637929663525374560.SelectedLayerIndex:2
 SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:DotsCount
-InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:GaussNormal
-InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.GaussNormal.Param:0.5
+InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom
+InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1
 InputDataPresenter.TaskFunction.DotsCount.IsPreventRepetition:0
 InputDataPresenter.TaskFunction.DotsCount.CommonDotsAmount:1024
 InputDataPresenter.TaskFunction.DotsCount.MinDotsAmountToCount:0
