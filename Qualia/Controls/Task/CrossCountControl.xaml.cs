@@ -21,12 +21,19 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 10,
                                 minValue: 1,
                                 maxValue: Constants.SquareRoot)
+                    .SetUIParam(Notification.ParameterChanged.TaskParameter),
+
+                CtlNoisePointsAmount
+                    .Initialize(defaultValue: 5,
+                                minValue: 0,
+                                maxValue: Constants.SquareRoot * Constants.SquareRoot / 2)
                     .SetUIParam(Notification.ParameterChanged.TaskParameter)
             };
         }
 
         public int MaxCrossesAmountToCount => (int)CtlMaxCrossesAmoutToCount.Value;
         public int MinCrossesAmountToCount => (int)CtlMinCrossesAmountToCount.Value;
+        public int NoisePointsAmount => (int)CtlNoisePointsAmount.Value;
 
         private void Parameter_OnChanged(Notification.ParameterChanged param)
         {
@@ -63,7 +70,7 @@ namespace Qualia.Controls
             if (_configParams.TrueForAll(p => p.IsValid()))
             {
                 if (CtlMaxCrossesAmoutToCount.Value <= Constants.SquareRoot
-                    && CtlMaxCrossesAmoutToCount.Value >= CtlMinCrossesAmountToCount.Value)
+                    && CtlMaxCrossesAmoutToCount.Value > CtlMinCrossesAmountToCount.Value)
                 {
                     return true;
                 }

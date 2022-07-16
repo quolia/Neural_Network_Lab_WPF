@@ -14,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <local:TextControl Text="Min amount of crosses to count:" />
@@ -21,11 +22,18 @@
         <local:IntValueControl Grid.Column="1"
                                x:Name="CtlMinCrossesAmountToCount" />
         
-        <local:TextControl Grid.Row="2"
+        <local:TextControl Grid.Row="1"
                            Text="Max amount of crosses to count:" />
         
-        <local:IntValueControl Grid.Row="2"
+        <local:IntValueControl Grid.Row="1"
                                Grid.Column="1"
                                x:Name="CtlMaxCrossesAmoutToCount" />
+
+        <local:TextControl Grid.Row="2"
+                           Text="Noise points amount (pos/neg):" />
+
+        <local:IntValueControl Grid.Row="2"
+                               Grid.Column="1"
+                               x:Name="CtlNoisePointsAmount" />
     </Grid>
 </local:BaseUserControl>

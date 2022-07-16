@@ -198,6 +198,8 @@ namespace Qualia.Tools
 
         sealed public class CrossCount : ITaskControl
         {
+            private static readonly int DIMENSION = Constants.SquareRootMNIST;
+
             public static readonly string Description = "Network counts a simple croosses amount on the field of points.";
 
             public static readonly TaskFunction Instance = new(&Do, new CrossCount());
@@ -206,16 +208,17 @@ namespace Qualia.Tools
 
             private static int _minCrossesAmountToCount;
             private static int _maxCrossesAmountToCount;
+            private static int _noisePointsAmount;
 
             private static bool _isPreventRepetition;
-            private static int _prevTargetOutputNeuronId = -1;
+            private static int _prevTargetOutputNeuronId = -1; // todo: is inited?
 
             private static byte[] s_array;
             private static byte[][] s_array2;
 
             public Control GetVisualControl() => s_control;
 
-            public int GetPointsRearrangeSnap() => Constants.SquareRootMNIST;
+            public int GetPointsRearrangeSnap() => DIMENSION;
 
             public bool IsGridSnapAdjustmentAllowed() => false;
 
@@ -223,6 +226,7 @@ namespace Qualia.Tools
             {
                 _minCrossesAmountToCount = s_control.MinCrossesAmountToCount;
                 _maxCrossesAmountToCount = s_control.MaxCrossesAmountToCount;
+                _noisePointsAmount = s_control.NoisePointsAmount;
 
                 Instance._solutions.Clear();
                 Instance._solutions.Add(nameof(S1));
@@ -234,12 +238,12 @@ namespace Qualia.Tools
 
             public CrossCount()
             {
-                s_array = new byte[Constants.SquareRootMNIST * Constants.SquareRootMNIST];
-                s_array2 = new byte[Constants.SquareRootMNIST][];
+                s_array = new byte[DIMENSION * DIMENSION];
+                s_array2 = new byte[DIMENSION][];
 
-                for (int i = 0; i < Constants.SquareRootMNIST; ++i)
+                for (int i = 0; i < DIMENSION; ++i)
                 {
-                    s_array2[i] = new byte[Constants.SquareRootMNIST];
+                    s_array2[i] = new byte[DIMENSION];
                 }
             }
 
@@ -259,7 +263,7 @@ namespace Qualia.Tools
                 ApplyChanges();
             }
 
-            public int GetInputCount() => Constants.SquareRootMNIST * Constants.SquareRootMNIST;
+            public int GetInputCount() => DIMENSION * DIMENSION;
 
             public void SaveConfig() => s_control.SaveConfig();
 
@@ -308,41 +312,77 @@ namespace Qualia.Tools
 
                     var number = intNumber;
 
+                    int ind;
+
                     while (number > 0)
                     {
-                        var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
+                        int x = 1 + Rand.RandomFlat.Next(DIMENSION - 2);
+                        int y = Rand.RandomFlat.Next(DIMENSION - 2);
 
-                        while (active.Activation == network.InputInitial1)
+                        ind = Rand.RandomFlat.Next(neurons.Count - DIMENSION * 2); // Exclude the last two lines.
+                        var activeNeuron = neurons[ind];
+
+                        while (activeNeuron.Activation == network.InputInitial1)
                         {
-                            active = active.Next;
-                            if (active == null)
+                            activeNeuron = activeNeuron.Next;
+                            if (activeNeuron == null)
                             {
-                                active = neurons.First;
+                                activeNeuron = neurons.First;
                             }
                         }
 
-                        active.X = network.InputInitial1; // ?
-                        active.Activation = network.InputInitial1;
+                        activeNeuron.X = network.InputInitial1; // ?
+                        activeNeuron.Activation = network.InputInitial1;
+
+                        var center = neurons[ind + DIMENSION];
+                        center.X = network.InputInitial1; // ?
+                        center.Activation = network.InputInitial1;
+
+                        var left = neurons[ind + DIMENSION - 1];
+                        left.X = network.InputInitial1; // ?
+                        left.Activation = network.InputInitial1;
+
+                        var right = neurons[ind + DIMENSION + 1];
+                        right.X = network.InputInitial1; // ?
+                        right.Activation = network.InputInitial1;
+
+                        var bottom = neurons[ind + DIMENSION * 2];
+                        bottom.X = network.InputInitial1; // ?
+                        bottom.Activation = network.InputInitial1;
+
                         --number;
                     }
 
-                    int ind = 0;
+                    for (ind = 0; ind < _noisePointsAmount; ++ind)
+                    {
+                        var activeNeuron = neurons[Rand.RandomFlat.Next(neurons.Count)];
+                        activeNeuron.X = network.InputInitial1; // ?
+                        activeNeuron.Activation = network.InputInitial1;
+
+                        var inactiveNeuron = neurons[Rand.RandomFlat.Next(neurons.Count)];
+                        inactiveNeuron.X = network.InputInitial0; // ?
+                        inactiveNeuron.Activation = network.InputInitial0;
+                    }
+
+                    ind = 0;
                     network.Layers.First.Neurons.ForEach(n =>
                     {
                         s_array[ind] = (byte)(n.Activation == network.InputInitial1 ? 1 : 0);
                         ++ind;
                     });
 
-                    for (int i = 0; i < Constants.SquareRootMNIST; ++i)
+                    for (int i = 0; i < DIMENSION; ++i)
                     {
-                        Array.Copy(s_array, i * Constants.SquareRootMNIST, s_array2[i], 0, Constants.SquareRootMNIST);
+                        Array.Copy(s_array, i * DIMENSION, s_array2[i], 0, DIMENSION);
                     }
 
-                    int targetOutputNeuronId = Instance._solutions.GetTargetOutputNeuronId(new object[] { s_array, s_array2 });
+                    int targetOutputNeuronId = Instance._solutions.GetResult(new object[] { s_array, s_array2 });
 
                     if (!_isPreventRepetition || targetOutputNeuronId != _prevTargetOutputNeuronId)
                     {
                         _prevTargetOutputNeuronId = targetOutputNeuronId;
+
+                        network.TargetOutputNeuronId = targetOutputNeuronId;
 
                         neuron = network.Layers.Last.Neurons.First;
                         while (neuron != null)
@@ -350,8 +390,6 @@ namespace Qualia.Tools
                             neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? 1 : 0;
                             neuron = neuron.Next;
                         }
-
-                        network.TargetOutputNeuronId = targetOutputNeuronId;
 
                         break;
                     }

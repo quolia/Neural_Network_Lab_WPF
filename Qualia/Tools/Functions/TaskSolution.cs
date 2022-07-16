@@ -34,7 +34,7 @@ namespace Qualia.Tools
             _solutions.Clear();
         }
 
-        public int GetTargetOutputNeuronId(object[] solutionParams)
+        public int GetResult(object[] solutionParams)
         {
             _commonTimer.Restart();
 
@@ -43,18 +43,18 @@ namespace Qualia.Tools
             foreach (var solution in _solutions)
             {
                 _solutionTimer.Restart();
-                var yes = (int)solution.Function.Invoke(null, solutionParams) > 0;
+                int result = (int)solution.Function.Invoke(null, solutionParams);
                 _solutionTimer.Stop();
 
-                solution.AddResult(yes ? 1 : 0, _solutionTimer.Elapsed);
+                solution.AddResult(result, _solutionTimer.Elapsed);
             }
 
             _commonTimer.Stop();
 
-            return GetFinalTargetOutput();
+            return GetCommonResult();
         }
 
-        private int GetFinalTargetOutput()
+        private int GetCommonResult()
         {
             var targetOutputs = _solutions.Select(s => s.TargetOutput).ToList();
 
