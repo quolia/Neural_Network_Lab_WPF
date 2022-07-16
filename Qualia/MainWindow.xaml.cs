@@ -735,7 +735,6 @@ namespace Qualia.Controls
                         //lock (ApplyChangesLocker)
                         {
                             CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
-                            //CtlPlotPresenter.OptimizePlotPointsCount(model.Network);
                             {
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;

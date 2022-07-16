@@ -56,9 +56,6 @@ namespace Qualia.Tools
         public readonly PlotPointsList PercentData;
         public readonly PlotPointsList CostData;
 
-        //public readonly PlotPointsList PercentData;
-        //public readonly PlotPointsList CostData;
-
         public DynamicStatistics()
         {
             PercentData = new();

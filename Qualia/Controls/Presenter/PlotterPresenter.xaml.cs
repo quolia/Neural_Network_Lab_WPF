@@ -269,7 +269,7 @@ namespace Qualia.Controls
             {
                 ref var point = ref getPoint(pointsData, pointData, ticks);
 
-                if ((point.X - prevPoint.X) > 10 || MathX.Abs(point.Y - prevPoint.Y) > 10 || pointData == lastPointData) // opt
+                //if ((point.X - prevPoint.X) > 8 || MathX.Abs(point.Y - prevPoint.Y) > 8)// || pointData == lastPointData) // opt
                 {
                     ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
                     CtlDataCanvas.DrawLine(pen, ref fromPoint, ref point);
@@ -354,7 +354,7 @@ namespace Qualia.Controls
         private void LinearOptimization(DynamicStatistics.PlotPointsList pointsData,
                                         GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 6;
+            const int VANISH_AREA = 8;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
@@ -369,10 +369,21 @@ namespace Qualia.Controls
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
 
                     ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
+                    if (point0.X > ActualWidth - ActualWidth / 40)
+                    {
+                        //return;
+                    }
+
                     ref var point1 = ref getPoint(pointsData, pointsData[i + 1], ticks);
                     ref var point2 = ref getPoint(pointsData, pointsData[i + 2], ticks);
 
-                    if (MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2)) < Math.PI / 720D)
+                    var a1 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
+                    var a2 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
+
+                    var a = MathX.Max(a1, a2);
+
+                    //if (a > Math.PI - Math.PI / 360D)
+                    if (IsSameLine(point0, point1, point2))
                     {
                         pointsData.AddToRemove(pointsData[i + 1]);
 
@@ -385,7 +396,21 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        if (MathX.Abs(point0.X - point1.X) < VANISH_AREA && MathX.Abs(point0.Y - point1.Y) < VANISH_AREA)
+                        /*
+                        if (MathX.Abs(point2.X - point0.X) < VANISH_AREA && MathX.Abs(point2.Y - point0.Y) < VANISH_AREA
+                            && MathX.Abs(point1.X - point0.X) < VANISH_AREA && MathX.Abs(point1.Y - point0.Y) < VANISH_AREA)
+                        {
+                            pointsData.AddToRemove(pointsData[i + 1]);
+
+                            if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
+                            {
+                                break;
+                            }
+
+                            i += 3;
+                        }
+                        */
+                        if ((point1.X - point0.X) < VANISH_AREA && MathX.Abs(point1.Y - point0.Y) < VANISH_AREA)// || pointData == lastPointData) // opt
                         {
                             pointsData.AddToRemove(pointsData[i + 1]);
 
@@ -408,10 +433,18 @@ namespace Qualia.Controls
             }
         }
 
+        private bool IsSameLine(Point p1, Point p2, Point p3)
+        {
+            double m = 150 * (p2.Y - p1.Y) / (p2.X - p1.X);
+            double n = 150 * (p3.Y - p1.Y) / (p3.X - p1.X);
+
+            return (int)m == (int)n;
+        }
+
         private void DensityOptimization(DynamicStatistics.PlotPointsList pointsData,
                                          GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 6;
+            const int VANISH_AREA = 7;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
@@ -426,10 +459,14 @@ namespace Qualia.Controls
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
 
                     ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
+                    if (point0.X > ActualWidth - ActualWidth / 40)
+                    {
+                        //return;
+                    }
+
                     ref var point5 = ref getPoint(pointsData, pointsData[i + 5], ticks);
 
                     if (MathX.Abs(point0.X - point5.X) < VANISH_AREA)
-                        //&& MathX.Abs(points.First().Y - points.Last().Y) < VANISH_AREA / 2)
                     {
                         List<Point> points = new()
                         {
