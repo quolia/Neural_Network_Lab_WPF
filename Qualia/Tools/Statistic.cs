@@ -49,20 +49,20 @@ namespace Qualia.Tools
         }
     }
 
-    sealed public class DynamicStatistics
+    sealed public class PlotterStatistics
     {
-        public DynamicStatistics CopyForRender;
+        public PlotterStatistics CopyForRender;
 
         public readonly PlotPointsList PercentData;
         public readonly PlotPointsList CostData;
 
-        public DynamicStatistics()
+        public PlotterStatistics()
         {
             PercentData = new();
             CostData = new();
         }
 
-        public DynamicStatistics(DynamicStatistics from)
+        public PlotterStatistics(PlotterStatistics from)
         {
             PercentData = from.PercentData.Copy();
             CostData = from.CostData.Copy();

@@ -26,7 +26,7 @@ namespace Qualia.Model
         public BackPropagationStrategy BackPropagationStrategy;
 
         public Statistics Statistics;
-        public DynamicStatistics DynamicStatistics;
+        public PlotterStatistics PlotterStatistics;
         public ErrorMatrix ErrorMatrix;
         public Dictionary<string, string> LastStatistics;
 
@@ -313,7 +313,7 @@ namespace Qualia.Model
         public NetworkDataModel Merge(NetworkDataModel newNetwork)
         {
             newNetwork.Statistics = Statistics;
-            newNetwork.DynamicStatistics = DynamicStatistics;
+            newNetwork.PlotterStatistics = PlotterStatistics;
 
             var newLayer = newNetwork.Layers.First;
             while (newLayer != null)

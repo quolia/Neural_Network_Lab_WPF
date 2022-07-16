@@ -342,7 +342,7 @@ namespace Qualia.Controls
 
         private void ResetModelsDynamicStatistics()
         {
-            NetworkModels.ForEach(network => network.DynamicStatistics = new());
+            NetworkModels.ForEach(network => network.PlotterStatistics = new());
         }
 
         public void ResetErrorMatrix()

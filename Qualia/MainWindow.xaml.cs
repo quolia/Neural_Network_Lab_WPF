@@ -654,7 +654,7 @@ namespace Qualia.Controls
                                 statistics.Last100PercentOnRound = 0;
                             }
 
-                            network.DynamicStatistics.Add(statistics.Percent, statistics.CostAvg);
+                            network.PlotterStatistics.Add(statistics.Percent, statistics.CostAvg);
 
                             statistics.CostSum = 0;
                             statistics.CorrectRounds = 0;

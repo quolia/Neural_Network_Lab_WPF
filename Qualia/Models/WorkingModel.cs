@@ -114,7 +114,7 @@ namespace Qualia.Model
 
         private void ResetModelsDynamicStatistics()
         {
-            Network.ForEach(network => network.DynamicStatistics = new());
+            Network.ForEach(network => network.PlotterStatistics = new());
         }
 
         public void ResetErrorMatrix()

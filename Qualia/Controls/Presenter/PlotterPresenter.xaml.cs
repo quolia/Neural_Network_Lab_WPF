@@ -8,8 +8,8 @@ using System.Linq;
 
 namespace Qualia.Controls
 {
-    public delegate ref Point GetPointDelegate(DynamicStatistics.PlotPointsList plotPoints,
-                                               DynamicStatistics.PlotPoint plotPoint,
+    public delegate ref Point GetPointDelegate(PlotterStatistics.PlotPointsList plotPoints,
+                                               PlotterStatistics.PlotPoint plotPoint,
                                                long timeTicks);
 
     sealed public partial class PlotterPresenter : BaseUserControl
@@ -70,13 +70,13 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                LinearOptimization(network.DynamicStatistics.PercentData, GetPointPercentData);
-                LinearOptimization(network.DynamicStatistics.CostData, GetPointCostData);
+                LinearOptimization(network.PlotterStatistics.PercentData, GetPointPercentData);
+                LinearOptimization(network.PlotterStatistics.CostData, GetPointCostData);
 
-                DensityOptimization(network.DynamicStatistics.PercentData, GetPointPercentData);
-                DensityOptimization(network.DynamicStatistics.CostData, GetPointCostData);
+                DensityOptimization(network.PlotterStatistics.PercentData, GetPointPercentData);
+                DensityOptimization(network.PlotterStatistics.CostData, GetPointCostData);
 
-                network.DynamicStatistics.CopyForRender = new(network.DynamicStatistics);
+                network.PlotterStatistics.CopyForRender = new(network.PlotterStatistics);
 
                 network = network.Next;
             }
@@ -113,12 +113,12 @@ namespace Qualia.Controls
                     continue;
                 }
 
-                RenderData(networkModel.DynamicStatistics.CopyForRender.PercentData,
+                RenderData(networkModel.PlotterStatistics.CopyForRender.PercentData,
                            Draw.GetColor(220, networkModel.Color),
                            GetPointPercentData,
                            false);
 
-                RenderData(networkModel.DynamicStatistics.CopyForRender.CostData,
+                RenderData(networkModel.PlotterStatistics.CopyForRender.CostData,
                            Draw.GetColor(150, networkModel.Color),
                            GetPointCostData,
                            true);
@@ -126,12 +126,12 @@ namespace Qualia.Controls
                 networkModel = networkModel.Next;
             }
 
-            if (selectedNetwork != null && selectedNetwork.DynamicStatistics.PercentData.Count > 0)
+            if (selectedNetwork != null && selectedNetwork.PlotterStatistics.PercentData.Count > 0)
             {
-                DrawLabel(selectedNetwork.DynamicStatistics.PercentData,
+                DrawLabel(selectedNetwork.PlotterStatistics.PercentData,
                           in selectedNetwork.Color);
 
-                RenderPlotterLabels(selectedNetwork.DynamicStatistics.PercentData);
+                RenderPlotterLabels(selectedNetwork.PlotterStatistics.PercentData);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Qualia.Controls
                                    ref Points.Get(ActualWidth, ActualHeight - AXIS_OFFSET));
         }
 
-        private void RenderPlotterLabels(DynamicStatistics.PlotPointsList pointsData)
+        private void RenderPlotterLabels(PlotterStatistics.PlotPointsList pointsData)
         {
             double step_x = (ActualWidth - AXIS_OFFSET) / 10;
             double step_y = (ActualHeight - AXIS_OFFSET) / 10;
@@ -245,7 +245,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void RenderData(DynamicStatistics.PlotPointsList pointsData,
+        private void RenderData(PlotterStatistics.PlotPointsList pointsData,
                                 in Color color,
                                 GetPointDelegate getPoint,
                                 bool isRect)
@@ -295,7 +295,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawLabel(DynamicStatistics.PlotPointsList pointsData,
+        private void DrawLabel(PlotterStatistics.PlotPointsList pointsData,
                                in Color color)
         {
             FormattedText text = new(TimeSpan.FromTicks(pointsData.Last().TimeTicks - pointsData[0].TimeTicks)
@@ -322,8 +322,8 @@ namespace Qualia.Controls
                                                   ActualHeight - AXIS_OFFSET - 20));
         }
 
-        private ref Point GetPointPercentData(DynamicStatistics.PlotPointsList pointsData,
-                                              DynamicStatistics.PlotPoint plotPoint,
+        private ref Point GetPointPercentData(PlotterStatistics.PlotPointsList pointsData,
+                                              PlotterStatistics.PlotPoint plotPoint,
                                               long ticks)
         {
             var pointData0 = pointsData[0];
@@ -337,8 +337,8 @@ namespace Qualia.Controls
             return ref Points.Get(pointX, pointY);
         }
 
-        private ref Point GetPointCostData(DynamicStatistics.PlotPointsList pointsData,
-                                           DynamicStatistics.PlotPoint plotPoint,
+        private ref Point GetPointCostData(PlotterStatistics.PlotPointsList pointsData,
+                                           PlotterStatistics.PlotPoint plotPoint,
                                            long ticks)
         {
             var pointData0 = pointsData[0];
@@ -351,7 +351,7 @@ namespace Qualia.Controls
             return ref Points.Get(pointX, pointY);
         }
 
-        private void LinearOptimization(DynamicStatistics.PlotPointsList pointsData,
+        private void LinearOptimization(PlotterStatistics.PlotPointsList pointsData,
                                         GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 8;
@@ -441,7 +441,7 @@ namespace Qualia.Controls
             return (int)m == (int)n;
         }
 
-        private void DensityOptimization(DynamicStatistics.PlotPointsList pointsData,
+        private void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,
                                          GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 7;
