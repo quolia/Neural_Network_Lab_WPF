@@ -25,17 +25,22 @@ namespace Qualia.Controls
         {
             var builder = new StringBuilder();
 
+            /*
             var solutions = data.Solutions.OrderBy(s => s.ErrorsCount)
                                           .ThenBy(s => s.AverageTime)
                                           .ThenBy(s => s.MinTime)
                                           .ThenBy(s => s.LastTime)
                                           .ToList();
+            */
+            var solutions = data.Solutions.OrderBy(s => s.Rating)
+                                          .ToList();
 
             builder.AppendLine(string.Format(Culture.Current,
-                                             "{0, -12} {1} {2, 6}",
+                                             "{0, -12} {1} {2, 6} {3, 8}",
                                              "Function",
                                              "Execution time, mcsec",
-                                             "Error"));
+                                             "Error",
+                                             "Rating"));
 
             builder.AppendLine(string.Format(Culture.Current,
                                              "{0, 18} {1, 5} {2, 9} {3, 6}",
@@ -47,13 +52,19 @@ namespace Qualia.Controls
 
             foreach (var solution in solutions)
             {
+                if (solution.IsExcluded)
+                {
+                    continue;
+                }
+
                 builder.AppendLine(string.Format(Culture.Current,
-                                                 "{0, -10} {1, 7} {2, 5} {3, 9} {4, 6}",
+                                                 "{0, -10} {1, 7} {2, 5} {3, 9} {4, 6} {5, 8}",
                                                  solution.Name,
                                                  solution.MinTime,
                                                  solution.LastTime,
                                                  solution.AverageTime,
-                                                 solution.ErrorsCount));
+                                                 solution.ErrorsCount,
+                                                 solution.Rating));
             }
 
             builder.AppendLine();

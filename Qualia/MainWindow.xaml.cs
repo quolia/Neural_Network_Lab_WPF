@@ -231,7 +231,7 @@ namespace Qualia.Controls
         {
             if (param == Notification.ParameterChanged.DynamicSettings)
             {
-                //
+                // Skip "Apply changes" button.
             }
             else if (param == Notification.ParameterChanged.PreventComputerFromSleep)
             {
@@ -243,9 +243,8 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
-                var model = CtlInputDataPresenter.GetModel();
-
-                model.TaskFunction.ITaskControl.SetIsPreventRepetition(CtlInputDataPresenter.IsPreventDataRepetition);
+                var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
+                taskFunction.ITaskControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -264,9 +263,8 @@ namespace Qualia.Controls
                     }
                 }
 
-                var model = CtlInputDataPresenter.GetModel();
-
-                if (model.TaskFunction != null && !model.TaskFunction.ITaskControl.IsValid())
+                var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
+                if (!taskFunction.ITaskControl.IsValid())
                 {
                     TurnApplyChangesButton(Constants.State.Off);
                 }
@@ -532,26 +530,26 @@ namespace Qualia.Controls
                             
                             var output = network.GetMaxActivatedOutputNeuron();
                             var outputId = output.Id;
-                            var input = network.TargetOutputNeuronId;
+                            var inputId = network.TargetOutputNeuronId;
                             var cost = network.CostFunction.Do(network);
                             var statistics = network.Statistics;
 
-                            statistics.LastInput = input;
+                            statistics.LastInput = inputId;
                             statistics.LastOutput = outputId;
 
-                            if (input == outputId)
+                            if (inputId == outputId)
                             {
                                 ++statistics.CorrectRoundsTotal;
                                 ++statistics.CorrectRounds;
 
-                                statistics.LastGoodInput = network.OutputClasses[input];
+                                statistics.LastGoodInput = network.OutputClasses[inputId];
                                 statistics.LastGoodOutput = network.OutputClasses[outputId];
                                 statistics.LastGoodOutputActivation = output.Activation;
                                 statistics.LastGoodCost = cost;
                             }
                             else
                             {
-                                statistics.LastBadInput = network.OutputClasses[input];
+                                statistics.LastBadInput = network.OutputClasses[inputId];
                                 statistics.LastBadOutput = network.OutputClasses[outputId];
                                 statistics.LastBadOutputActivation = output.Activation;
                                 statistics.LastBadCost = cost;
@@ -559,9 +557,9 @@ namespace Qualia.Controls
                             }
 
                             statistics.CostSum += cost;
-                            network.ErrorMatrix.AddData(input, outputId);
+                            network.ErrorMatrix.AddData(inputId, outputId);
 
-                            network.BackPropagationStrategy.OnError(network, input != outputId);
+                            network.BackPropagationStrategy.OnError(network, inputId != outputId);
 
                             if (network.BackPropagationStrategy.IsBackPropagationNeeded(network))
                             {
@@ -629,6 +627,10 @@ namespace Qualia.Controls
                             var percentTotal = 100 * (double)statistics.CorrectRoundsTotal / statistics.Rounds;
 
                             statistics.Percent = percent * K1 + percentTotal * K2;
+                            if (statistics.Percent > statistics.MaxPercent)
+                            {
+                                statistics.MaxPercent = statistics.Percent;
+                            }
 
                             var costAvg = statistics.CostSum / settings.SkipRoundsToDrawStatistics;
                             var costAvgTotal = statistics.CostSumTotal / statistics.Rounds;
@@ -915,8 +917,11 @@ namespace Qualia.Controls
             stat.Add("Rounds",
                      Converter.RoundsToString(statistics.Rounds));
 
-            stat.Add("Percent",
-                     Converter.DoubleToText(statistics.Percent, "N6") + " %");
+            stat.Add("Percent / Max",
+                     Converter.DoubleToText(statistics.Percent, "N6")
+                     + " / "
+                     + Converter.DoubleToText(statistics.MaxPercent, "N6")
+                     + " %");
 
             stat.Add("4.5", null);
 

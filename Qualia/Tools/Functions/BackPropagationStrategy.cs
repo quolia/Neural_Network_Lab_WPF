@@ -71,7 +71,7 @@ namespace Qualia.Tools
 
         unsafe sealed public class InErrorRound
         {
-            public static readonly string Description = "BP executes only in error round.";
+            public static readonly string Description = "BP executes only in error rounds.";
 
             public static readonly BackPropagationStrategy Instance = new(&Stub1,
                                                                           &PrepareForRound,

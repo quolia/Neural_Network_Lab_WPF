@@ -3,11 +3,16 @@ TODO:
 - Functions tooltips.
 - Functions [Description] attributes.
 - Output neurons should not be able to be deleted via UI.
-It's a number of output classed.
+It's a number of output classes.
 - Memory layer.
 - Add to Solutions the check-box "Dynamic performance sorting".
-- Save config on dynamic settings change.
+- Save config on dynamic settings is changed.
 - Add learning limit activation.
 - Add datasets.
 - If ApplyChanges is On - do not save config on exit.
 - Enhanced plot points optimization.
+- Network is not re-rendered after task params change.
+- Dynamic settings should not turn on Apply Changes.
+- Optimize task array filling.
+- IDN neuron.
+- Pos and Neg LR value.

@@ -354,7 +354,7 @@ namespace Qualia.Controls
         private void LinearOptimization(PlotterStatistics.PlotPointsList pointsData,
                                         GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 8;
+            const int VANISH_AREA = 7;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
@@ -364,25 +364,19 @@ namespace Qualia.Controls
                     return;
                 }
 
-                for (int i = 0; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
+                for (int i = Rand.RandomFlat.Next() % 3; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
                 {
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
 
                     ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
-                    if (point0.X > ActualWidth - ActualWidth / 40)
-                    {
-                        //return;
-                    }
-
                     ref var point1 = ref getPoint(pointsData, pointsData[i + 1], ticks);
                     ref var point2 = ref getPoint(pointsData, pointsData[i + 2], ticks);
 
-                    var a1 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
-                    var a2 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
-
-                    var a = MathX.Max(a1, a2);
-
+                    //var a1 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
+                    //var a2 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
+                    //var a = MathX.Max(a1, a2);
                     //if (a > Math.PI - Math.PI / 360D)
+
                     if (IsSameLine(point0, point1, point2))
                     {
                         pointsData.AddToRemove(pointsData[i + 1]);
@@ -396,21 +390,7 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        /*
-                        if (MathX.Abs(point2.X - point0.X) < VANISH_AREA && MathX.Abs(point2.Y - point0.Y) < VANISH_AREA
-                            && MathX.Abs(point1.X - point0.X) < VANISH_AREA && MathX.Abs(point1.Y - point0.Y) < VANISH_AREA)
-                        {
-                            pointsData.AddToRemove(pointsData[i + 1]);
-
-                            if (pointsData.Count - pointsData.PointsToRemoveCount < MIN_POINTS_COUNT)
-                            {
-                                break;
-                            }
-
-                            i += 3;
-                        }
-                        */
-                        if ((point1.X - point0.X) < VANISH_AREA && MathX.Abs(point1.Y - point0.Y) < VANISH_AREA)// || pointData == lastPointData) // opt
+                        if ((point1.X - point0.X) < VANISH_AREA && MathX.Abs(point1.Y - point0.Y) < VANISH_AREA)
                         {
                             pointsData.AddToRemove(pointsData[i + 1]);
 
@@ -454,28 +434,21 @@ namespace Qualia.Controls
                     return;
                 }
 
-                for (int i = 0; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
+                for (int i = Rand.RandomFlat.Next() % 3; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
                 {
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
 
                     ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
-                    if (point0.X > ActualWidth - ActualWidth / 40)
-                    {
-                        //return;
-                    }
-
                     ref var point5 = ref getPoint(pointsData, pointsData[i + 5], ticks);
 
                     if (MathX.Abs(point0.X - point5.X) < VANISH_AREA)
                     {
                         List<Point> points = new()
                         {
-                            //getPoint(pointsData, pointsData[i], ticks),
                             getPoint(pointsData, pointsData[i + 1], ticks),
                             getPoint(pointsData, pointsData[i + 2], ticks),
                             getPoint(pointsData, pointsData[i + 3], ticks),
                             getPoint(pointsData, pointsData[i + 4], ticks),
-                            //getPoint(pointsData, pointsData[i + 5], ticks)
                         };
 
                         var maxY = points.Max(p => p.Y);

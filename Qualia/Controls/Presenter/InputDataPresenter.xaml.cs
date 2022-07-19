@@ -10,7 +10,7 @@ namespace Qualia.Controls
     {
         private const int CURRENT_POINTS_COUNT = -1;
 
-        public bool IsPreventDataRepetition => CtlIsPreventRepetition.Value;
+        //public bool IsPreventDataRepetition => CtlIsPreventRepetition.Value;
 
         private int _pointsRearrangeSnap;
         private bool _isGridSnapAdjustmentAllowed;
@@ -347,7 +347,7 @@ namespace Qualia.Controls
             {
                 if (!neuron.IsBias)
                 {
-                    _stat[index] += neuron.Activation > _threshold ? neuron.Activation : 0;
+                    _stat[index] += neuron.Activation > _threshold ? neuron.Activation : 0; //?
                 }
 
                 ++index;
@@ -360,7 +360,7 @@ namespace Qualia.Controls
             var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
             var distributionFunction = DistributionFunction.GetInstance(CtlDistributionFunction);
             var distributionFunctionParam = CtlDistributionFunction.CtlParam.Value;
-            var solutionsData = taskFunction?.GetSolutionsData();
+            //var solutionsData = taskFunction?.GetSolutionsData();
 
             if (taskFunction != null)
             {
@@ -372,8 +372,8 @@ namespace Qualia.Controls
             {
                 TaskFunction = taskFunction,
                 DistributionFunction = distributionFunction,
-                DistributionFunctionParam = distributionFunctionParam,
-                SolutionsData = solutionsData
+                DistributionFunctionParam = distributionFunctionParam
+                //SolutionsData = solutionsData
             };
         }
     }

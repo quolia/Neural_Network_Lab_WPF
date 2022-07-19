@@ -38,25 +38,35 @@ namespace Qualia.Tools
         {
             _commonTimer.Restart();
 
-            //foreach (var solution in _solutions.OrderBy(s => s.LastTime)
-            //                                   .ThenBy(s => s.AverageTime))
-            foreach (var solution in _solutions)
+            int rating = 0;
+
+            var sorted = _solutions.Where(s => !s.IsExcluded)
+                                   .OrderBy(s => s.AverageTime)
+                                   .ThenBy(s => s.LastTime)
+                                   .ThenBy(s => s.MinTime)
+                                   .ToList();
+
+            for (int i = 0; i < sorted.Count; ++i)
             {
+                var solution = sorted[i];
+
                 _solutionTimer.Restart();
                 int result = (int)solution.Function.Invoke(null, solutionParams);
                 _solutionTimer.Stop();
 
                 solution.AddResult(result, _solutionTimer.Elapsed);
+                solution.Rating += rating;
+                ++rating;
             }
 
             _commonTimer.Stop();
 
-            return GetCommonResult();
+            return sorted.Count > 1 ? GetCommonResult() : sorted[0].Result;
         }
 
         private int GetCommonResult()
         {
-            var targetOutputs = _solutions.Select(s => s.TargetOutput).ToList();
+            var targetOutputs = _solutions.Select(s => s.Result).ToList();
 
             HashSet<int> output = new(targetOutputs);
 
@@ -71,7 +81,7 @@ namespace Qualia.Tools
             for (int i = 0; i < _solutions.Count; ++i)
             {
                 var solution = _solutions[i];
-                var targetOutput = solution.TargetOutput;
+                var targetOutput = solution.Result;
 
                 var count = targetOutputs.Count(t => t == targetOutput);
                 if (count >  maxCount)
@@ -84,7 +94,7 @@ namespace Qualia.Tools
             for (int i = 0; i < _solutions.Count; ++i)
             {
                 var solution = _solutions[i];
-                var targetOutput = solution.TargetOutput;
+                var targetOutput = solution.Result;
 
                 if (targetOutput != commonTargetOutput)
                 {
@@ -106,7 +116,7 @@ namespace Qualia.Tools
         public readonly MethodInfo Function;
         public string Name => Function.Name;
 
-        public int TargetOutput { get; private set; }
+        public int Result { get; private set; }
         public double ExecutionMicroseconds { get; private set; }
 
         public long ErrorsCount => _errorsCount;
@@ -114,6 +124,10 @@ namespace Qualia.Tools
         public double MinTime { get; internal set; }
         public double LastTime => ExecutionMicroseconds;
         public double AverageTime { get; internal set; }
+
+        public long Rating;
+
+        public bool IsExcluded;
 
         private long _resultsCount;
 
@@ -124,9 +138,9 @@ namespace Qualia.Tools
             Function = method;
         }
 
-        public void AddResult(int targetOutput, TimeSpan executionTime)
+        public void AddResult(int result, TimeSpan executionTime)
         {
-            TargetOutput = targetOutput;
+            Result = result;
             ExecutionMicroseconds = executionTime.TotalNanoseconds() / (double)1000;
 
             if (_resultsCount == 0)
@@ -146,6 +160,13 @@ namespace Qualia.Tools
         {
             ++_errorsCount;
         }
+
+        public void Reset()
+        {
+            _resultsCount = 0;
+            AverageTime = 0;
+            Rating = 0;
+        }
     }
 
     public class SolutionData
@@ -155,6 +176,8 @@ namespace Qualia.Tools
         public string LastTime { get; private set; }
         public string AverageTime { get; private set; }
         public long ErrorsCount { get; private set; }
+        public long Rating { get; private set; }
+        public bool IsExcluded { get; private set; }
 
         public SolutionData(Solution solution)
         {
@@ -163,6 +186,8 @@ namespace Qualia.Tools
             LastTime = Converter.DoubleToText(solution.LastTime, solution.LastTime < 10 ? "F3" : "F0");
             AverageTime = Converter.DoubleToText(solution.AverageTime, solution.AverageTime < 10 ? "F3" : "F0");
             ErrorsCount = solution.ErrorsCount;
+            Rating = solution.Rating;
+            IsExcluded = solution.IsExcluded;
         }
     }
 
@@ -176,9 +201,25 @@ namespace Qualia.Tools
         {
             _solutionsData.Clear();
 
+            var minRating = solutions.Count > 0 ? solutions.Min(s => s.Rating) - 1 : 0;
+
+            var sorted = solutions.OrderBy(s => s.Rating).ToList();
+
             foreach (var solution in solutions)
             {
+                if (solution.IsExcluded)
+                {
+                    continue;
+                }
+
+                solution.Rating -= minRating;
                 _solutionsData.Add(new SolutionData(solution));
+                solution.Reset(); //?
+            }
+
+            if (sorted.Count > 1)
+            {
+                sorted[sorted.Count - 1].IsExcluded = true;
             }
         }
     }

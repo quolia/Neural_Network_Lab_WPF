@@ -9,6 +9,7 @@ namespace Qualia.Tools
         public long CorrectRoundsTotal;
         public long CorrectRounds;
         public double Percent;
+        public double MaxPercent;
         public double CostSum;
         public double CostSumTotal;
         public double CostAvg;
