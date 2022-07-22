@@ -1,6 +1,6 @@
 PointSize:7
-ScreenWidth:1721.33333333333
-ScreenHeight:1033.33333333333
+ScreenWidth:2574.66666666667
+ScreenHeight:1414.66666666667
 ScreenTop:0
 ScreenLeft:0
 OnTop:0
@@ -15,4 +15,4 @@ DynamicSettings.OnlyChangedWeights:0
 DynamicSettings.HighlightChangedWeights:0
 DynamicSettings.ShowOnlyUnchangedWeights:0
 DynamicSettings.ShowActivationLabels:1
-NetworksManagerName:C:\Projects\GitHub\quolia\Neural_Network_Lab_WPF\Qualia\Working\Networks\780_21x21_21.txt
+NetworksManagerName:C:\work\projects\Slava\Neural_Network_Lab_WPF\Qualia\Working\Networks\780_21x21_21.txt
