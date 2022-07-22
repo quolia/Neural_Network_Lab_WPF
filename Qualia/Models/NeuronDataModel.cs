@@ -32,6 +32,9 @@ namespace Qualia.Model
 
         public string Label; // Neuron text description.
 
+        public double PositiveTargetValue; // Neuron positive target.
+        public double NegativeTargetValue; // Neuron negative target.
+
         public NeuronDataModel(int id, int weightsCount)
         {
             Weights = new(weightsCount);

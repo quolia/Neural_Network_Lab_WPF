@@ -95,6 +95,9 @@ namespace Qualia.Controls
 
         public override string Label => null;
 
+        public override double PositiveTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
+        public override double NegativeTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
+
         // IConfigParam
 
         public override void LoadConfig()

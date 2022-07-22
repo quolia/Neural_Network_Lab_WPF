@@ -21,6 +21,8 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <local:TextControl Text="Activation func:" />
@@ -32,6 +34,11 @@
         <Label Grid.Row="1" Content="Label:" />
         <local:StringValueControl x:Name="CtlLabel" Grid.Row="1" Grid.Column="1" IsEmptyAllowed="True" />
 
+        <Label Grid.Row="2" Content="Positive target value:" />
+        <local:DoubleValueControl x:Name="CtlPositiveTargetValue" Grid.Row="2" Grid.Column="1" />
+
+        <Label Grid.Row="3" Content="Negative target value:" />
+        <local:DoubleValueControl x:Name="CtlNegativeTargetValue" Grid.Row="3" Grid.Column="1" />
 
     </Grid>
 </local:NeuronBaseControl>

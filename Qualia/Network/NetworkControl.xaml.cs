@@ -321,6 +321,9 @@ namespace Qualia.Controls
                     if (layer.Next == null) // Output layer.
                     {
                         neuron.Label = ctlNeurons[neuronInd].Label;
+
+                        neuron.PositiveTargetValue = ctlNeurons[neuronInd].PositiveTargetValue;
+                        neuron.NegativeTargetValue = ctlNeurons[neuronInd].NegativeTargetValue;
                     }
 
                     if (layerInd == 0 && !neuron.IsBias)
