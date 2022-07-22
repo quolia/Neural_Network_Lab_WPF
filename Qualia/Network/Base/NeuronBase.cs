@@ -80,6 +80,8 @@ namespace Qualia.Controls
 
         abstract public ActivationFunction ActivationFunction { get; set; }
         abstract public double ActivationFunctionParam { get; set; }
+        abstract public double PositiveTargetValue { get; set; }
+        abstract public double NegativeTargetValue { get; set; }
         abstract public string Label { get; }
 
         abstract public bool IsBias { get; }
