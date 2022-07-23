@@ -6,7 +6,7 @@ namespace Qualia.Tools
     unsafe public class ActivationFunction : BaseFunction<ActivationFunction>
     {
         public readonly delegate*<double, double, double> Do; // x, a, f
-        public readonly delegate*<double, double, double, double> Derivative; // x, f, a
+        public readonly delegate*<double, double, double, double> Derivative; // x, f, a, f'
 
         public ActivationFunction(delegate*<double, double, double> doFunc,
                                   delegate*<double, double, double, double> derivativeFunc)
@@ -142,10 +142,7 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double a)
-            {
-                return x > 0 ? a : -a;
-            }
+            public static double Do(double x, double a) => x > 0 ? a : -a;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Derivative(double x, double f, double a) => 0;

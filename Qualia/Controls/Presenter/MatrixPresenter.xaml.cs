@@ -312,7 +312,7 @@ namespace Qualia.Controls
 
         private long MaxInArray(in long[] array)
         {
-            long max = 0;
+            long max = 1;
 
             for (int i = 0; i < array.Length; ++i)
             {
@@ -322,7 +322,7 @@ namespace Qualia.Controls
                 }
             }
 
-            return MathX.Max(max, 1);
+            return max;// MathX.Max(max, 1);
         }
 
         public void ClearData()

@@ -23,22 +23,47 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-
+        <!--
         <local:TextControl Text="Activation func:" />
         <local:SelectorControl Grid.Column="1" x:Name="CtlActivationFunction" />
         <Label Grid.Column="2" Content="a:" />
         <local:DoubleValueControl Grid.Column="3" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
+        -->
+        <local:TextControl Grid.ColumnSpan="2"
+                           Text="Activation function:" />
+
+        <local:SelectorControl Grid.Row="1"
+                               Grid.RowSpan="2"
+                               Grid.ColumnSpan="2"
+                               x:Name="CtlActivationFunction" />
+
+        <local:TextControl Grid.Row="1"
+                           Grid.Column="2"
+                           Text="a:" />
+
+        <local:DoubleValueControl Grid.Row="1"
+                                  Grid.Column="3"
+                                  Grid.ColumnSpan="2"
+                                  x:Name="CtlActivationFunctionParam"
+                                  VerticalAlignment="Top"
+                                  MinValue="-100"
+                                  MaxValue="100" />
+        
+        
+
         <local:TextControl  Grid.Column="4" x:Name="CtlNumber" Text="1" />
 
-        <Label Grid.Row="1" Content="Label:" />
-        <local:StringValueControl x:Name="CtlLabel" Grid.Row="1" Grid.Column="1" IsEmptyAllowed="True" />
+        <Label Grid.Row="3" Content="Label:" />
+        <local:StringValueControl x:Name="CtlLabel" Grid.Row="3" Grid.Column="1" IsEmptyAllowed="True" />
 
-        <Label Grid.Row="2" Content="Positive target value:" />
-        <local:DoubleValueControl x:Name="CtlPositiveTargetValue" Grid.Row="2" Grid.Column="1" />
+        <Label Grid.Row="4" Content="Positive target value:" />
+        <local:DoubleValueControl x:Name="CtlPositiveTargetValue" Grid.Row="4" Grid.Column="1" />
 
-        <Label Grid.Row="3" Content="Negative target value:" />
-        <local:DoubleValueControl x:Name="CtlNegativeTargetValue" Grid.Row="3" Grid.Column="1" />
+        <Label Grid.Row="5" Content="Negative target value:" />
+        <local:DoubleValueControl x:Name="CtlNegativeTargetValue" Grid.Row="5" Grid.Column="1" />
 
     </Grid>
 </local:NeuronBaseControl>

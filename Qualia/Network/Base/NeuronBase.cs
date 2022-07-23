@@ -25,11 +25,11 @@ namespace Qualia.Controls
             ContextMenu = new();
             ContextMenu.Opened += ContextMenu_OnOpened;
 
-            _menuAdd = new() { Header = "Add" };
+            _menuAdd = new() { Header = "Add neuron" };
             ContextMenu.Items.Add(_menuAdd);
             _menuAdd.Click += AddNeuron_OnClick;
 
-            _menuRemove = new() { Header = "Remove..." };
+            _menuRemove = new() { Header = "Remove neuron..." };
             ContextMenu.Items.Add(_menuRemove);
             _menuRemove.Click += RemoveNeuron_OnClick;
 
@@ -69,7 +69,7 @@ namespace Qualia.Controls
         public void StateChanged()
         {
             Background = IsBias 
-                         ? Draw.GetBrush(Draw.GetRandomColor(20, Draw.GetColor(240, 250, 240)))
+                         ? Draw.GetBrush(in ColorsX.Silver)
                          : Draw.GetBrush(in ColorsX.Lavender);
         }
 

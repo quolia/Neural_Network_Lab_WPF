@@ -241,9 +241,9 @@ namespace Qualia.Controls
 
         public bool IsSelectedLayerHidden => SelectedLayerType == typeof(HiddenLayerControl);
 
-        private RandomizeFunction RandomizeMode => RandomizeFunction.GetInstance(CtlRandomizeFunction);
-        private double RandomizerParam => CtlRandomizeFunctionParam.Value;
-        private double LearningRate => CtlLearningRate.Value;
+        private RandomizeFunction _randomizeMode => RandomizeFunction.GetInstance(CtlRandomizeFunction);
+        private double _randomizerParam => CtlRandomizeFunctionParam.Value;
+        private double _learningRate => CtlLearningRate.Value;
 
         public void RemoveLayer()
         {
@@ -276,9 +276,9 @@ namespace Qualia.Controls
                 OutputClasses = taskFunction?.ITaskControl.GetOutputClasses(),
                 IsEnabled = CtlIsNetworkEnabled.Value,
                 Color = CtlColor.Foreground.GetColor(),
-                RandomizeMode = RandomizeMode,
-                RandomizerParam = RandomizerParam,
-                LearningRate = LearningRate,
+                RandomizeMode = _randomizeMode,
+                RandomizerParam = _randomizerParam,
+                LearningRate = _learningRate,
                 InputInitial0 = InputLayer.ActivationFunction.Do(InputLayer.Initial0,
                                                                  InputLayer.ActivationFunctionParam),
 
@@ -404,10 +404,17 @@ namespace Qualia.Controls
             using ColorDialog colorDialog = new();
 
             var wpfColor = CtlColor.Foreground.GetColor();
-            colorDialog.Color = System.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B); ;
+            colorDialog.Color = System.Drawing.Color.FromArgb(wpfColor.A,
+                                                              wpfColor.R,
+                                                              wpfColor.G,
+                                                              wpfColor.B);
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A, colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B));
+                CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A,
+                                                                   colorDialog.Color.R,
+                                                                   colorDialog.Color.G,
+                                                                   colorDialog.Color.B));
+
                 NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
             }
         }
@@ -429,7 +436,7 @@ namespace Qualia.Controls
 
         private void RandomizerButton_OnClick(object sender, RoutedEventArgs e)
         {
-            RandomizerViewer viewer = new(RandomizeMode, RandomizerParam);
+            RandomizerViewer viewer = new(_randomizeMode, _randomizerParam);
             viewer.Show();
         }
     }
