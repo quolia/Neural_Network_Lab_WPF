@@ -21,8 +21,7 @@
                                   Text="No data."
                                   AcceptsReturn="True"
                                   BorderThickness="0"
-                                  FontFamily="Consolas"
-                                  FontSize="11" />
+                                  FontFamily="Consolas" />
         
     </Grid>
 </local:BaseUserControl>

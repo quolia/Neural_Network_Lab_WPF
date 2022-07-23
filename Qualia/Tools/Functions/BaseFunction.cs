@@ -101,7 +101,7 @@ namespace Qualia.Tools
 
         public static string GetDescription(SelectorControl selector)
         {
-            return GetDescription(selector.SelectedItem.Text);
+            return selector.SelectedItem == null ? null : GetDescription(selector.SelectedItem.Text);
         }
 
         private static string GetDescription(object name)

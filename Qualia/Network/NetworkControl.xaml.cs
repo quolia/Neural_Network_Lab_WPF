@@ -264,8 +264,8 @@ namespace Qualia.Controls
             ErrorMatrix matrix = null;
             if (taskFunction != null)
             {
-                matrix = new(taskFunction.ITaskControl.GetOutputClasses());
-                ErrorMatrix nextMatrix = new(taskFunction.ITaskControl.GetOutputClasses());
+                matrix = new(taskFunction.VisualControl.GetOutputClasses());
+                ErrorMatrix nextMatrix = new(taskFunction.VisualControl.GetOutputClasses());
                 matrix.Next = nextMatrix;
                 nextMatrix.Next = matrix;
             }
@@ -273,7 +273,7 @@ namespace Qualia.Controls
             NetworkDataModel network = new(Id, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
-                OutputClasses = taskFunction?.ITaskControl.GetOutputClasses(),
+                OutputClasses = taskFunction?.VisualControl.GetOutputClasses(),
                 IsEnabled = CtlIsNetworkEnabled.Value,
                 Color = CtlColor.Foreground.GetColor(),
                 RandomizeMode = _randomizeMode,

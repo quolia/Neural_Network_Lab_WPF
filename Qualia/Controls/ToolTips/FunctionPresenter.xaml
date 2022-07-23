@@ -9,10 +9,11 @@
         <StackPanel Orientation="Vertical">
             
             <TextBlock x:Name="CtlDescription"
-                       Text="Description" />
+                       Text="Description"
+                       TextBlock.FontWeight="Bold" />
             
             <local:CanvasControl x:Name="CtlCanvas"
-                                 Width="200"
+                                 Width="100"
                                  Height="200" />
         </StackPanel>
     </Grid>

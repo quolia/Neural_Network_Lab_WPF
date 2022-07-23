@@ -244,11 +244,11 @@ namespace Qualia.Controls
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
                 var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
-                taskFunction.ITaskControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
+                taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
-                TurnApplyChangesButton(Constants.State.On);
+                TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
 
                 if (_networksManager != null)
@@ -259,26 +259,26 @@ namespace Qualia.Controls
                     }
                     else
                     {
-                        TurnApplyChangesButton(Constants.State.Off);
+                        TurnApplyChangesButtonOn(false);
                     }
                 }
 
                 var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
-                if (!taskFunction.ITaskControl.IsValid())
+                if (!taskFunction.VisualControl.IsValid())
                 {
-                    TurnApplyChangesButton(Constants.State.Off);
+                    TurnApplyChangesButtonOn(false);
                 }
             }
             else
             {
-                TurnApplyChangesButton(Constants.State.On);
+                TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
             }
         }
 
-        private void TurnApplyChangesButton(Constants.State state)
+        private void TurnApplyChangesButtonOn(bool isOn)
         {
-            if (state == Constants.State.On)
+            if (isOn)
             {
                 CtlApplyChanges.Background = Brushes.Yellow;
                 CtlApplyChanges.IsEnabled = true;
@@ -336,7 +336,7 @@ namespace Qualia.Controls
             lock (Locker.ApplyChanges)
             {
                 var model = CtlInputDataPresenter.GetModel();
-                model.TaskFunction.ITaskControl.ApplyChanges();
+                model.TaskFunction.VisualControl.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 var newModels = _networksManager.CreateNetworksDataModels();
@@ -350,7 +350,7 @@ namespace Qualia.Controls
                                                   CtlShowOnlyUnchangedWeights.Value,
                                                   CtlShowActivationLabels.Value);
 
-                TurnApplyChangesButton(Constants.State.Off);
+                TurnApplyChangesButtonOn(false);
             }
         }
 
@@ -365,7 +365,7 @@ namespace Qualia.Controls
             lock (Locker.ApplyChanges)
             {
                 var model = CtlInputDataPresenter.GetModel();
-                model.TaskFunction.ITaskControl.ApplyChanges();
+                model.TaskFunction.VisualControl.ApplyChanges();
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 //TaskParameter_OnChanged();
@@ -376,7 +376,7 @@ namespace Qualia.Controls
                 _networksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
-                TurnApplyChangesButton(Constants.State.Off);
+                TurnApplyChangesButtonOn(false);
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuRun.IsEnabled = true;

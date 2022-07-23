@@ -30,12 +30,6 @@ namespace Qualia.Tools
             return double.IsNaN(value);
         }
 
-        public enum State
-        {
-            On,
-            Off
-        }
-
         public enum Param
         {
             ScreenWidth,
@@ -69,19 +63,14 @@ namespace Qualia.Tools
             PreventComputerFromSleep,
             DisablePreventComputerFromSleep,
 
-            //FunctionName,
-            //FunctionParam,
-
             TaskFunction,
             TaskParameter,
             TaskDistributionFunction,
             TaskDistributionFunctionParam,
+            IsPreventRepetition,
 
             Structure,
-            NeuronsCount,
-
-            //Fake,
-            IsPreventRepetition
+            NeuronsCount
         }
     }
 }

@@ -308,7 +308,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Tools.TaskFunction.Do")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Tools.TaskFunction.DistributionFunction")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Tools.TaskFunction.DistributionFunctionParam")]
-[assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Tools.TaskFunction.ITaskControl")]
+[assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Tools.TaskFunction.VisualControl")]
 [assembly: SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>", Scope = "member", Target = "~F:Qualia.Model.WorkingModel.Settings")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~M:Qualia.Model.WorkingModel.Refresh(Qualia.Controls.Main)~Qualia.Model.WorkingModel")]
 [assembly: SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "<Pending>", Scope = "member", Target = "~P:Qualia.Controls.BoolValueControl.Value")]

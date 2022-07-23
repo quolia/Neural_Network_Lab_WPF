@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qualia.Controls"
         Closing="MainWindow_OnClosing"
+        FontSize="10"
         mc:Ignorable="d" Height="450" Width="800" Title="Networks">
 
     <Window.Resources>
@@ -155,7 +156,6 @@
                             </Grid.RowDefinitions>
                             <local:SettingsControl x:Name="CtlSettings" />
                             <local:MemoControl x:Name="CtlNotes" Grid.Row="1" Margin="0 20 0 0" Caption="Notes:" KeyUp="Notes_KeyUp" />
-                            <local:FunctionPresenter Grid.Row="2" />                            
                         </Grid>
                     </ContentControl>
                 </TabItem>

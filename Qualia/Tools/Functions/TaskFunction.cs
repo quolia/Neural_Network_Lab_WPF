@@ -36,7 +36,7 @@ namespace Qualia.Tools
     {
         public readonly delegate*<NetworkDataModel, DistributionFunction, double, void> Do;
 
-        public ITaskControl ITaskControl;
+        public ITaskControl VisualControl;
 
         public DistributionFunction DistributionFunction;
         public double DistributionFunctionParam;
@@ -47,9 +47,9 @@ namespace Qualia.Tools
             : base(nameof(DotsCount))
         {
             Do = doFunc;
-            ITaskControl = taskControl;
+            VisualControl = taskControl;
 
-            _solutions = new(ITaskControl.GetType());
+            _solutions = new(VisualControl.GetType());
     }
 
         public TaskFunction SetInputDataFunction(DistributionFunction distributionFunction)

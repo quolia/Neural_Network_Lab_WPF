@@ -9,7 +9,7 @@ namespace Qualia.Controls
     public partial class FunctionPresenter : UserControl, ISelectableItem
     {
         private const double AXIS_OFFSET = 6;
-        private const double DATA_STEP = 0.1;
+        private const double DATA_STEP = 0.2;
 
         private readonly Typeface _font = new(new("Tahoma"),
                                               FontStyles.Normal,
@@ -42,7 +42,7 @@ namespace Qualia.Controls
 
         public void DrawFunction(Func<double, double> func, in Color color, int dataShiftFactor)
         {
-            const double STEP = 40;
+            const double STEP = 20;
             double yc = CtlCanvas.Height / 2;
             double xc = CtlCanvas.Width / 2;
 
@@ -71,7 +71,7 @@ namespace Qualia.Controls
             const int SIZE_X = 10;
             const int SIZE_Y = 6;
 
-            const double STEP = 20;
+            const double STEP = 10;
 
             CtlCanvas.Clear();
             CtlCanvas.Height = SIZE_Y * STEP;

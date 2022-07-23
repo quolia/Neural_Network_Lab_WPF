@@ -15,7 +15,7 @@ namespace Qualia.Controls
         }
 
         // IConfigParam
-        /*
+
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged = onChanged;
@@ -26,9 +26,8 @@ namespace Qualia.Controls
 
         private void Param_OnChanged(Notification.ParameterChanged param)
         {
-            OnChanged(UIParam);
+            OnChanged(param == Notification.ParameterChanged.Unknown ? UIParam : param);
         }
-        */
     }
 }
 

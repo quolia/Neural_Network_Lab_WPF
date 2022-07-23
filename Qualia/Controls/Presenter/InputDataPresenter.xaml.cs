@@ -79,7 +79,7 @@ namespace Qualia.Controls
                 CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
                 CtlIsPreventRepetition.LoadConfig();
 
-                var taskControl = taskFunction.ITaskControl;
+                var taskControl = taskFunction.VisualControl;
 
                 _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
                 _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
@@ -123,7 +123,7 @@ namespace Qualia.Controls
             var model = GetModel();
 
             //if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
-            if (model.TaskFunction != null && model.TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
+            if (model.TaskFunction != null && model.TaskFunction.VisualControl.IsGridSnapAdjustmentAllowed())
             {
                 Rearrange(CURRENT_POINTS_COUNT);
             }
@@ -151,7 +151,7 @@ namespace Qualia.Controls
 
             var model = GetModel();
 
-            var taskControl = model.TaskFunction.ITaskControl;
+            var taskControl = model.TaskFunction.VisualControl;
 
             _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
             _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
@@ -185,8 +185,8 @@ namespace Qualia.Controls
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
                                             .Extend(CtlTaskFunction.Value.Text);
 
-            model.TaskFunction.ITaskControl.SetConfig(taskFunctionConfig);
-            model.TaskFunction.ITaskControl.SaveConfig();
+            model.TaskFunction.VisualControl.SetConfig(taskFunctionConfig);
+            model.TaskFunction.VisualControl.SaveConfig();
 
             CtlDistributionFunction.SaveConfig();
             CtlIsPreventRepetition.SaveConfig();
@@ -247,7 +247,7 @@ namespace Qualia.Controls
             _data = null;
 
             var model = GetModel();
-            Rearrange(model.TaskFunction.ITaskControl.GetInputCount());
+            Rearrange(model.TaskFunction.VisualControl.GetInputCount());
         }
 
         private int GetSnaps()
