@@ -200,7 +200,7 @@ namespace Qualia.Tools
         {
             private static readonly int DIMENSION = Constants.SquareRootMNIST;
 
-            public static readonly string Description = "Network counts a simple croosses amount on the field of points.";
+            public static readonly string Description = "Network counts a simple crosses amount on the field of points.";
 
             public static readonly TaskFunction Instance = new(&Do, new CrossCount());
 
