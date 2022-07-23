@@ -361,7 +361,7 @@ namespace Qualia.Controls
                 return;    
             }
 
-            CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+            //CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel); ???
             lock (Locker.ApplyChanges)
             {
                 var model = CtlInputDataPresenter.GetModel();
