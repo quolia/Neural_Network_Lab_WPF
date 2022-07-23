@@ -356,6 +356,11 @@ namespace Qualia.Controls
 
         private void ApplyChangesToStandingNetworks()
         {
+            if (_networksManager is null)
+            {
+                return;    
+            }
+
             CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
             lock (Locker.ApplyChanges)
             {

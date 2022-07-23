@@ -19,7 +19,13 @@ namespace Qualia.Controls
                 CtlActivationFunctionParam
                     .Initialize(defaultValue: 1),
 
-                CtlLabel
+                CtlLabel,
+
+                CtlPositiveTargetValue
+                    .Initialize(defaultValue: 1),
+
+                CtlNegativeTargetValue
+                    .Initialize(defaultValue: 0)
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -44,7 +50,19 @@ namespace Qualia.Controls
             get => CtlActivationFunctionParam.Value;
             set => throw new InvalidOperationException();
         }
-        
+
+        public override double PositiveTargetValue
+        {
+            get => CtlPositiveTargetValue.Value;
+            set => throw new InvalidOperationException();
+        }
+
+        public override double NegativeTargetValue
+        {
+            get => CtlNegativeTargetValue.Value;
+            set => throw new InvalidOperationException();
+        }
+
         public override string Label => CtlLabel.Text;
 
         public override InitializeFunction ActivationInitializeFunction

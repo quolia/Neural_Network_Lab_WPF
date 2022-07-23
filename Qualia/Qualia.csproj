@@ -456,7 +456,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Working\config.txt" />
     <Resource Include="Working\Networks\780_15x15_21.txt" />
     <Resource Include="Working\Networks\780_21x21_21.txt" />
     <Resource Include="Working\Networks\780_30x30_21.txt" />
