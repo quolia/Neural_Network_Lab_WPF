@@ -12,9 +12,6 @@ namespace Qualia.Model
         public double Activation;
         public double Error;
 
-        public bool IsBias;
-        public bool IsBiasConnected;
-
         public InitializeFunction ActivationInitializer;
         public double ActivationInitializerParam;
 

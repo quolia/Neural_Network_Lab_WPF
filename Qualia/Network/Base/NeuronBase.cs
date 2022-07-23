@@ -68,9 +68,7 @@ namespace Qualia.Controls
 
         public void StateChanged()
         {
-            Background = IsBias 
-                         ? Draw.GetBrush(in ColorsX.Silver)
-                         : Draw.GetBrush(in ColorsX.Lavender);
+            Background = Draw.GetBrush(in ColorsX.Lavender);
         }
 
         abstract public InitializeFunction ActivationInitializeFunction { get; }
@@ -84,8 +82,6 @@ namespace Qualia.Controls
         abstract public double NegativeTargetValue { get; set; }
         abstract public string Label { get; }
 
-        abstract public bool IsBias { get; }
-        abstract public bool IsBiasConnected { get; }
         abstract public void SetOrdinalNumber(int number);
 
         private void RemoveNeuron()

@@ -26,18 +26,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <StackPanel Grid.ColumnSpan="4" Orientation="Horizontal">
-            
-            <local:BoolValueControl x:Name="CtlIsBias"
-                                    Content="Is bias"
-                                    DefaultValue="False" />
-            
-            <local:BoolValueControl x:Name="CtlIsBiasConnected"
-                                    Content="Is bias connected"
-                                    DefaultValue="False"
-                                    Margin="10,0,0,0" />
-        </StackPanel>
         
         <local:TextControl Grid.Column="4"
                            x:Name="CtlNumber"

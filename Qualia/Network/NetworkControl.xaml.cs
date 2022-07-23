@@ -312,8 +312,6 @@ namespace Qualia.Controls
                 {
                     var neuron = network.Layers[layerInd].Neurons[neuronInd];
                     neuron.VisualId = ctlNeurons[neuronInd].Id;
-                    neuron.IsBias = ctlNeurons[neuronInd].IsBias;
-                    neuron.IsBiasConnected = ctlNeurons[neuronInd].IsBiasConnected;
 
                     neuron.ActivationFunction = ctlNeurons[neuronInd].ActivationFunction;
                     neuron.ActivationFunctionParam = ctlNeurons[neuronInd].ActivationFunctionParam;
@@ -326,7 +324,7 @@ namespace Qualia.Controls
                         neuron.NegativeTargetValue = ctlNeurons[neuronInd].NegativeTargetValue;
                     }
 
-                    if (layerInd == 0 && !neuron.IsBias)
+                    if (layerInd == 0)
                     {
                         neuron.WeightsInitializer = InputLayer.WeightsInitializeFunction;
                         neuron.WeightsInitializerParam = InputLayer.WeightsInitializeFunctionParam;
@@ -349,19 +347,7 @@ namespace Qualia.Controls
                         }
                     }
 
-                    if (neuron.IsBias)
-                    {
-                        neuron.ActivationInitializer = ctlNeurons[neuronInd].ActivationInitializeFunction;
-                        neuron.ActivationInitializerParam = ctlNeurons[neuronInd].ActivationInitializeFunctionParam;
-                        double initValue = ctlNeurons[neuronInd].ActivationInitializeFunction.Do(ctlNeurons[neuronInd].ActivationInitializeFunctionParam);
-
-                        if (!InitializeFunction.IsSkipValue(initValue))
-                        {
-                            neuron.X = initValue; // ?
-                            neuron.Activation = initValue;
-                        }
-                    }
-                    
+                   
                     if (!isCopy && prevLayer != null && prevLayer.Neurons.Count > 0)
                     {
                         neuron.WeightsToPreviousLayer = new(prevLayer.Neurons.Count);
@@ -369,11 +355,7 @@ namespace Qualia.Controls
                         var prevNeuronModel = prevLayer.Neurons.First;
                         while (prevNeuronModel != null)
                         {
-                            if (!neuron.IsBias || (neuron.IsBiasConnected && prevNeuronModel.IsBias))
-                            {
-                                neuron.WeightsToPreviousLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuron)));
-                            }
-
+                            neuron.WeightsToPreviousLayer.Add(new(prevNeuronModel, prevNeuronModel.WeightTo(neuron)));
                             prevNeuronModel = prevNeuronModel.Next;
                         }
                     }

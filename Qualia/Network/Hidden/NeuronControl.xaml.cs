@@ -36,13 +36,7 @@ namespace Qualia.Controls
                     .Initialize(nameof(InitializeFunction.Skip)),
 
                 CtlWeightsInitializeFunctionParam
-                    .Initialize(defaultValue: 1),
-
-                CtlIsBias
-                    .Initialize(false),
-
-                CtlIsBiasConnected
-                    .Initialize(false)
+                    .Initialize(defaultValue: 1)
             };
 
             _configParams.ForEach(param => param.SetConfig(Config));
@@ -68,19 +62,16 @@ namespace Qualia.Controls
 
         private void IsBias_OnCheckedChanged()
         {
-            CtlIsBiasConnected.Visibility = CtlIsBias.Value ? Visibility.Visible : Visibility.Collapsed;
             //CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
             Neuron_OnChanged(Notification.ParameterChanged.Unknown);
         }
 
-        public override InitializeFunction ActivationInitializeFunction => (CtlIsBias.IsChecked == true ? InitializeFunction.GetInstance(CtlActivationInitializeFunction) : null);
-        public override double ActivationInitializeFunctionParam => (CtlIsBias.IsChecked == true ? CtlActivationInitializeFunctionParam.Value : 1);
+        public override InitializeFunction ActivationInitializeFunction => InitializeFunction.GetInstance(CtlActivationInitializeFunction);
+        public override double ActivationInitializeFunctionParam => CtlActivationInitializeFunctionParam.Value;
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
         public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
-        public override bool IsBias => CtlIsBias.IsChecked == true;
-        public override bool IsBiasConnected => CtlIsBiasConnected.IsChecked == true && IsBias;
         public override ActivationFunction ActivationFunction
         {
             get => ActivationFunction.GetInstance(CtlActivationFunction);
@@ -113,8 +104,6 @@ namespace Qualia.Controls
 
             _configParams.ForEach(param => param.LoadConfig());
 
-            CtlIsBiasConnected.Visibility = CtlIsBias.Value ? Visibility.Visible : Visibility.Collapsed;
-            CtlIsBiasConnected.Value &= CtlIsBias.Value;
             //CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
 
             StateChanged();
@@ -122,18 +111,15 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return CtlWeightsInitializeFunctionParam.IsValid() && (!IsBias || CtlActivationInitializeFunctionParam.IsValid());
+            return CtlWeightsInitializeFunctionParam.IsValid() && CtlActivationInitializeFunctionParam.IsValid();
         }
 
         public override void SaveConfig()
         {
             _configParams.ForEach(param => param.SaveConfig());
 
-            if (!CtlIsBias.Value)
-            {
-                CtlActivationInitializeFunction.RemoveFromConfig();
-                CtlActivationInitializeFunctionParam.RemoveFromConfig();
-            }
+            CtlActivationInitializeFunction.RemoveFromConfig();
+            CtlActivationInitializeFunctionParam.RemoveFromConfig();
         }
 
         public override void RemoveFromConfig()

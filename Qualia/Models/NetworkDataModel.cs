@@ -351,21 +351,6 @@ namespace Qualia.Model
 
                                 newWeight = newWeight.Next;
                             }
-
-                            if (newNeuron.IsBias)
-                            {
-                                double initValue = newNeuron.ActivationInitializer.Do(newNeuron.ActivationInitializerParam);
-                                if (InitializeFunction.IsSkipValue(initValue))
-                                {
-                                    newNeuron.X = neuronModel.X;
-                                    newNeuron.Activation = neuronModel.Activation;
-
-                                    if (layer.Next == null) // Output layer.
-                                    {
-                                        newNeuron.Label = neuronModel.Label;
-                                    }
-                                }
-                            }
                         }
 
                         newNeuron = newNeuron.Next;

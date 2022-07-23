@@ -150,10 +150,6 @@ namespace Qualia.Controls
         public override void SaveConfig()
         {
             _configParams.ForEach(cp => cp.SaveConfig());
-
-            var neurons = Neurons.Where(n => n.IsBias);
-            _config.Set(Constants.Param.Neurons, neurons.Select(n => n.Id));
-            neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()

@@ -220,7 +220,7 @@ namespace Qualia.Controls
         public void SetInputDataAndDraw(NetworkDataModel network)
         {
             _threshold = network.InputThreshold;
-            var count = network.Layers.First.Neurons.CountIf(n => !n.IsBias);
+            var count = network.Layers.First.Neurons.Count;
 
             if (_data == null || _data.Length != count)
             {
@@ -235,10 +235,7 @@ namespace Qualia.Controls
             var neuron = network.Layers.First.Neurons.First;
             while (neuron != null)
             {
-                if (!neuron.IsBias)
-                {
-                    _data[neuron.Id] = neuron.Activation;
-                }
+                _data[neuron.Id] = neuron.Activation;
                 neuron = neuron.Next;
             }
 
@@ -345,12 +342,9 @@ namespace Qualia.Controls
 
             while (neuron != null)
             {
-                if (!neuron.IsBias)
-                {
-                    _stat[index] += neuron.Activation > _threshold ? neuron.Activation : 0; //?
-                }
-
+                _stat[index] += neuron.Activation > _threshold ? neuron.Activation : 0; //?
                 ++index;
+
                 neuron = neuron.Next;
             }
         }

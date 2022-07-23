@@ -298,11 +298,8 @@ namespace Qualia.Controls
 
                 while (neuron != null)
                 {
-                    if (!neuron.IsBias)
-                    {
-                        neuron.X = baseNeuron.X;
-                        neuron.Activation = baseNeuron.Activation;
-                    }
+                    neuron.X = baseNeuron.X;
+                    neuron.Activation = baseNeuron.Activation;
 
                     neuron = neuron.Next;
                     baseNeuron = baseNeuron.Next;

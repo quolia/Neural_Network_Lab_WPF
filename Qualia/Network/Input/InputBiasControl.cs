@@ -21,12 +21,6 @@ namespace Qualia.Controls
                    parentLayer)
         {
             InitializeComponent();
-
-            CtlIsBias.Value = true;
-            CtlIsBiasConnected.Value = false;
-            CtlIsBias.IsEnabled = false;
-            CtlIsBiasConnected.SetVisible(CtlIsBias.Value);
-            CtlIsBiasConnected.IsEnabled = false;
         }
     }
 }
