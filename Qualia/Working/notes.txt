@@ -16,3 +16,4 @@ It's a number of output classes.
 - Optimize task array filling.
 - IDN neuron.
 - Pos and Neg LR value.
+- SaveAs causes exception.

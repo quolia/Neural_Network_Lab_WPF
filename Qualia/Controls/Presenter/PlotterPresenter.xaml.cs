@@ -103,27 +103,27 @@ namespace Qualia.Controls
                 throw new ArgumentException("No network models.", nameof(networks));
             }
 
-            var networkModel = networks.First;
+            var network = networks.First;
 
-            while (networkModel != null)
+            while (network != null)
             { 
-                if (!networkModel.IsEnabled)
+                if (!network.IsEnabled)
                 {
-                    networkModel = networkModel.Next;
+                    network = network.Next;
                     continue;
                 }
 
-                RenderData(networkModel.PlotterStatistics.CopyForRender.PercentData,
-                           Draw.GetColor(220, networkModel.Color),
+                RenderData(network.PlotterStatistics.CopyForRender.PercentData,
+                           Draw.GetColor(220, network.Color),
                            GetPointPercentData,
                            false);
 
-                RenderData(networkModel.PlotterStatistics.CopyForRender.CostData,
-                           Draw.GetColor(150, networkModel.Color),
+                RenderData(network.PlotterStatistics.CopyForRender.CostData,
+                           Draw.GetColor(150, network.Color),
                            GetPointCostData,
                            true);
 
-                networkModel = networkModel.Next;
+                network = network.Next;
             }
 
             if (selectedNetwork != null && selectedNetwork.PlotterStatistics.PercentData.Count > 0)
@@ -415,10 +415,10 @@ namespace Qualia.Controls
 
         private bool IsSameLine(Point p1, Point p2, Point p3)
         {
-            double m = 150 * (p2.Y - p1.Y) / (p2.X - p1.X);
-            double n = 150 * (p3.Y - p1.Y) / (p3.X - p1.X);
+            double a1 = 150 * (p2.Y - p1.Y) / (p2.X - p1.X);
+            double a2 = 150 * (p3.Y - p1.Y) / (p3.X - p1.X);
 
-            return (int)m == (int)n;
+            return (int)a1 == (int)a2;
         }
 
         private void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,
