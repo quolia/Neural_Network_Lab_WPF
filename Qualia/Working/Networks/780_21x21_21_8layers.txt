@@ -769,7 +769,7 @@ Networks:637929663525374560
 637940548514161597.ActivationFunction:LogisticSigmoid
 637940548514161597.ActivationFunctionParam:1
 637940548514161597.WeightsInitializeFunctionParam:1
-637929663525374560.SelectedLayerIndex:9
+637929663525374560.SelectedLayerIndex:6
 SelectedNetworkIndex:0
 InputDataPresenter.TaskFunction:DotsCount
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom

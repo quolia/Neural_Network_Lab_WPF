@@ -88,7 +88,7 @@ namespace Qualia.Controls
 
             SetOnChangeEvent();
 
-            ApplyChangesToStandingNetworks();
+            ApplyChangesToStandingNetworks(); // !!! called also in LoadNetworks();
             //TurnApplyChangesButton(Constants.State.Off);
         }
 
@@ -107,11 +107,7 @@ namespace Qualia.Controls
 
         private void LoadMainConfigParams()
         {
-            _configParams.ForEach(p =>
-            {
-                p.SetConfig(Config.Main);
-            });
-
+            _configParams.ForEach(p => p.SetConfig(Config.Main));
             _configParams.ForEach(p => p.LoadConfig());
         }
 
@@ -180,8 +176,6 @@ namespace Qualia.Controls
 
                 //CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
             }
-
-            
         }
 
         private void SetOnChangeEvent()
@@ -335,8 +329,9 @@ namespace Qualia.Controls
         {
             lock (Locker.ApplyChanges)
             {
-                var model = CtlInputDataPresenter.GetModel();
-                model.TaskFunction.VisualControl.ApplyChanges();
+                var taskFunction = CtlInputDataPresenter.TaskFunction;
+                taskFunction.VisualControl.ApplyChanges();
+
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 var newModels = _networksManager.CreateNetworksDataModels();
@@ -364,13 +359,13 @@ namespace Qualia.Controls
             //CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel); ???
             lock (Locker.ApplyChanges)
             {
-                var model = CtlInputDataPresenter.GetModel();
-                model.TaskFunction.VisualControl.ApplyChanges();
+                var taskFunction = CtlInputDataPresenter.TaskFunction;
+                taskFunction.VisualControl.ApplyChanges();
+
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 //TaskParameter_OnChanged();
-                //var model = CtlInputDataPresenter.GetModel();
-                _networksManager.RebuildNetworksForTask(model.TaskFunction);
+                _networksManager.RebuildNetworksForTask(taskFunction);
                 _networksManager.ResetLayersTabsNames(); // ?
 
                 _networksManager.RefreshNetworksDataModels();
@@ -413,16 +408,11 @@ namespace Qualia.Controls
 
             var model = WorkingModel.Current.RefreshAll(this, _networksManager);
 
-            //model.PrepareModelsForRun();
-            //model.PrepareModelsForRound();
-
             CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.SelectedNetworkModel);
             //CtlInputDataPresenter.SetInputDataAndDraw(model.SelectedNetwork);
             _networksManager.FeedForward(); // initialize state
-            //model.FeedForward(); // initialize state
 
             DrawNetworkAndInputData(_networksManager.SelectedNetworkModel,
-            //DrawNetworkAndInputData(model.SelectedNetwork,
                                     CtlUseWeightsColors.Value,
                                     CtlOnlyChangedWeights.Value,
                                     CtlHighlightChangedWeights.Value,
@@ -466,7 +456,6 @@ namespace Qualia.Controls
 
             Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
-            //var model = WorkingModel.Current.RefreshAll(this, _networksManager);
             var settings = WorkingModel.Current.Settings;// CtlSettings.GetModel();
 
             var loopLimits = new LoopsLimit[3]
@@ -511,18 +500,13 @@ namespace Qualia.Controls
 
                 lock (Locker.ApplyChanges)
                 {
-                    //model = WorkingModel.Current;
-
                     _networksManager.PrepareModelsForLoop();
-                    //model.PrepareModelsForLoop();
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
                         _networksManager.PrepareModelsForRound();
-                        //model.PrepareModelsForRound();
 
                         network = _networksManager.NetworkModels.First;
-                        //network = model.Network;
                         while (network != null)
                         {
                             if (!network.IsEnabled)
@@ -576,7 +560,6 @@ namespace Qualia.Controls
                     }
 
                     network = _networksManager.NetworkModels.First;
-                    //network = model.Network;
                     while (network != null)
                     {
                         if (!network.IsEnabled)
@@ -599,7 +582,6 @@ namespace Qualia.Controls
                         var totalTicksElapsed = _startTime.Elapsed.Ticks;
 
                         network = _networksManager.NetworkModels.First;
-                        //network = model.Network;
                         while (network != null)
                         {
                             if (!network.IsEnabled)
@@ -707,7 +689,6 @@ namespace Qualia.Controls
                     isRendering = true;
 
                     NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
-                    //NetworkDataModel selectedNetworkModel = model.SelectedNetwork;
                     double learningRate = 0;
 
                     if (isErrorMatrixRenderNeeded)
@@ -727,11 +708,8 @@ namespace Qualia.Controls
 
                         //lock (ApplyChangesLocker)
                         {
-                            //selectedNetworkModel.BlockWeights(networkModelToRender);
-
                             networkModelToRender = selectedNetworkModel.GetCopyToDraw();
                             CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
-                            //CtlInputDataPresenter.SetInputStat(model.Network);
                         }
                     }
 
@@ -746,7 +724,7 @@ namespace Qualia.Controls
                                 statisticsToRender = selectedNetworkModel.Statistics.Copy();
                                 learningRate = selectedNetworkModel.LearningRate;
 
-                                solutionsData = WorkingModel.Current.Task.TaskFunction.GetSolutionsData();
+                                solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
                             }
                         }
                     }
@@ -1166,8 +1144,14 @@ namespace Qualia.Controls
         private void NetworkTab_OnChanged(object sender, SelectionChangedEventArgs e)
         {
             // newly selected network must not affect NetworksManager until it saved
-
+            
             if (_networksManager == null)
+            {
+                return;
+            }
+
+            var originalSource = e.OriginalSource as TabControl;
+            if (originalSource != CtlTabs)
             {
                 return;
             }
@@ -1297,8 +1281,8 @@ namespace Qualia.Controls
 
         public void TaskParameter_OnChanged()
         {
-            var model = CtlInputDataPresenter.GetModel();
-            _networksManager.RebuildNetworksForTask(model.TaskFunction);
+            var taskFunction = CtlInputDataPresenter.TaskFunction;
+            _networksManager.RebuildNetworksForTask(taskFunction);
             _networksManager.ResetLayersTabsNames();
 
             CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);

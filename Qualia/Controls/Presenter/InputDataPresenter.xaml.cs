@@ -8,6 +8,8 @@ namespace Qualia.Controls
 
     sealed public partial class InputDataPresenter : BaseUserControl
     {
+        public TaskFunction TaskFunction { get; private set; }
+
         private const int CURRENT_POINTS_COUNT = -1;
 
         //public bool IsPreventDataRepetition => CtlIsPreventRepetition.Value;
@@ -56,6 +58,7 @@ namespace Qualia.Controls
 
         private void TaskFunction_OnChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            TaskFunction = GetTaskFunction();
             CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
@@ -120,10 +123,8 @@ namespace Qualia.Controls
 
         private void Size_OnChanged(object sender, EventArgs e)
         {
-            var model = GetModel();
-
-            //if (TaskFunction != null && TaskFunction.ITaskControl.IsGridSnapAdjustmentAllowed())
-            if (model.TaskFunction != null && model.TaskFunction.VisualControl.IsGridSnapAdjustmentAllowed())
+            var taskFunction = GetTaskFunction();
+            if (taskFunction != null && taskFunction.VisualControl.IsGridSnapAdjustmentAllowed())
             {
                 Rearrange(CURRENT_POINTS_COUNT);
             }
@@ -149,9 +150,8 @@ namespace Qualia.Controls
             CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
             CtlIsPreventRepetition.LoadConfig();
 
-            var model = GetModel();
-
-            var taskControl = model.TaskFunction.VisualControl;
+            var taskFunction = GetTaskFunction();
+            var taskControl = taskFunction.VisualControl;
 
             _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
             _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
@@ -180,13 +180,12 @@ namespace Qualia.Controls
         {
             CtlTaskFunction.SaveConfig();
 
-            var model = GetModel();
-
             var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
                                             .Extend(CtlTaskFunction.Value.Text);
 
-            model.TaskFunction.VisualControl.SetConfig(taskFunctionConfig);
-            model.TaskFunction.VisualControl.SaveConfig();
+            var taskFunction = GetTaskFunction();
+            taskFunction.VisualControl.SetConfig(taskFunctionConfig);
+            taskFunction.VisualControl.SaveConfig();
 
             CtlDistributionFunction.SaveConfig();
             CtlIsPreventRepetition.SaveConfig();
@@ -246,8 +245,8 @@ namespace Qualia.Controls
         {
             _data = null;
 
-            var model = GetModel();
-            Rearrange(model.TaskFunction.VisualControl.GetInputCount());
+            var taskFunction = GetTaskFunction();
+            Rearrange(taskFunction.VisualControl.GetInputCount());
         }
 
         private int GetSnaps()
@@ -349,12 +348,11 @@ namespace Qualia.Controls
             }
         }
 
-        public TaskModel GetModel()
+        private TaskFunction GetTaskFunction()
         {
             var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
             var distributionFunction = DistributionFunction.GetInstance(CtlDistributionFunction);
             var distributionFunctionParam = CtlDistributionFunction.CtlParam.Value;
-            //var solutionsData = taskFunction?.GetSolutionsData();
 
             if (taskFunction != null)
             {
@@ -362,13 +360,7 @@ namespace Qualia.Controls
                 taskFunction.DistributionFunctionParam = distributionFunctionParam;
             }
 
-            return new()
-            {
-                TaskFunction = taskFunction,
-                DistributionFunction = distributionFunction,
-                DistributionFunctionParam = distributionFunctionParam
-                //SolutionsData = solutionsData
-            };
+            return taskFunction;
         }
     }
 }

@@ -195,7 +195,7 @@ namespace Qualia.Tools
     {
         public IList<SolutionData> Solutions => _solutionsData;
 
-        private List<SolutionData> _solutionsData = new();
+        private readonly List<SolutionData> _solutionsData = new();
 
         public SolutionsData(IList<Solution> solutions)
         {

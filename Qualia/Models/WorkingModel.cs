@@ -7,7 +7,6 @@ namespace Qualia.Model
     public class WorkingModel
     {
         public SettingsModel Settings;
-        public TaskModel Task;
         public NetworkDataModel Network;
         public NetworkDataModel SelectedNetwork;
 
@@ -34,7 +33,6 @@ namespace Qualia.Model
         {
             WorkingModel current = Refresh(main)
                                     .RefreshSettings()
-                                    .RefreshDataPresenter()
                                     .RefreshNetworks(manager);
 
             _current = current;
@@ -52,17 +50,6 @@ namespace Qualia.Model
             return this;
         }
 
-        public WorkingModel RefreshDataPresenter()
-        {
-            _main.Dispatch(() =>
-            {
-                Task = _main.CtlInputDataPresenter.GetModel();
-
-            }).Wait();
-
-            return this;
-        }
-
         public WorkingModel RefreshNetworks(NetworksManager manager)
         {
             _main.Dispatch(() =>
@@ -73,38 +60,6 @@ namespace Qualia.Model
             }).Wait();
 
             return this;
-        }
-
-        unsafe public void PrepareModelsForLoop()
-        {
-            NetworkDataModel network = Network;
-
-            while (network != null)
-            {
-                if (!network.IsEnabled)
-                {
-                    network = network.Next;
-                    continue;
-                }
-
-                network.BackPropagationStrategy.PrepareForLoop(network);
-                network = network.Next;
-            }
-        }
-
-        unsafe public void PrepareModelsForRun()
-        {
-            Network.ForEach(network => network.ActivateFirstLayer());
-            Network.ForEach(network => network.BackPropagationStrategy.PrepareForRun(network));
-
-            ResetModelsDynamicStatistics();
-            ResetModelsStatistics();
-            ResetErrorMatrix();
-        }
-
-        public void FeedForward()
-        {
-            Network.ForEach(network => network.FeedForward());
         }
 
         public void ResetModelsStatistics()
@@ -125,53 +80,6 @@ namespace Qualia.Model
                 network.ErrorMatrix.Next.ClearData();
             });
         }
-
-        unsafe public void PrepareModelsForRound()
-        {
-            var baseNetwork = Network;
-            Task.TaskFunction.Do(baseNetwork, Task.DistributionFunction, Task.DistributionFunctionParam);
-
-            // copy first layer state and last layer targets to other networks
-
-            var network = baseNetwork.Next;
-            while (network != null)
-            {
-                if (!network.IsEnabled)
-                {
-                    network = network.Next;
-                    continue;
-                }
-
-                network.BackPropagationStrategy.PrepareForRound(network);
-
-                var baseNeuron = baseNetwork.Layers.First.Neurons.First;
-                var neuron = network.Layers.First.Neurons.First;
-
-                while (neuron != null)
-                {
-                    neuron.X = baseNeuron.X;
-                    neuron.Activation = baseNeuron.Activation;
-
-                    neuron = neuron.Next;
-                    baseNeuron = baseNeuron.Next;
-                }
-
-                baseNeuron = baseNetwork.Layers.Last.Neurons.First;
-                neuron = network.Layers.Last.Neurons.First;
-
-                while (neuron != null)
-                {
-                    neuron.Target = baseNeuron.Target;
-
-                    neuron = neuron.Next;
-                    baseNeuron = baseNeuron.Next;
-                }
-
-                network.TargetOutputNeuronId = baseNetwork.TargetOutputNeuronId;
-
-                network = network.Next;
-            }
-        }
     }
 
     sealed public class SettingsModel
@@ -179,13 +87,5 @@ namespace Qualia.Model
         public int SkipRoundsToDrawErrorMatrix;
         public int SkipRoundsToDrawNetworks;
         public int SkipRoundsToDrawStatistics;
-    }
-
-    sealed public class TaskModel
-    {
-        public TaskFunction TaskFunction;
-        public DistributionFunction DistributionFunction;
-        public double DistributionFunctionParam;
-        public SolutionsData SolutionsData;
     }
 }
