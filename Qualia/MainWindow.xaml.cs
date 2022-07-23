@@ -88,7 +88,7 @@ namespace Qualia.Controls
 
             SetOnChangeEvent();
 
-            ApplyChangesToStandingNetworks(); // !!! called also in LoadNetworks();
+            //ApplyChangesToStandingNetworks(); // !!! called also in LoadNetworks();
             //TurnApplyChangesButton(Constants.State.Off);
         }
 
