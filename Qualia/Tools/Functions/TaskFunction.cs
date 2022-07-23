@@ -211,7 +211,7 @@ namespace Qualia.Tools
             private static int _noisePointsAmount;
 
             private static bool _isPreventRepetition;
-            private static int _prevTargetOutputNeuronId = -1; // todo: is inited?
+            private static int _prevCrossesAmount = -1; // todo: is inited?
 
             private static byte[] s_array;
             private static byte[][] s_array2;
@@ -267,7 +267,7 @@ namespace Qualia.Tools
 
             public void SaveConfig() => s_control.SaveConfig();
 
-            public List<string> GetOutputClasses()
+            public List<string> GetOutputClasses() //todo: add output classes '<' and '>'
             {
                 List<string> classes = new();
                 for (int number = s_control.MinCrossesAmountToCount; number <= s_control.MaxCrossesAmountToCount; ++number)
@@ -376,13 +376,13 @@ namespace Qualia.Tools
                         Array.Copy(s_array, i * DIMENSION, s_array2[i], 0, DIMENSION);
                     }
 
-                    int targetOutputNeuronId = Instance._solutions.GetResult(new object[] { s_array, s_array2 });
+                    int crossesAmount = Instance._solutions.GetResult(new object[] { s_array, s_array2 });
 
-                    if (!_isPreventRepetition || targetOutputNeuronId != _prevTargetOutputNeuronId)
+                    if (!_isPreventRepetition || crossesAmount != _prevCrossesAmount)
                     {
-                        _prevTargetOutputNeuronId = targetOutputNeuronId;
+                        _prevCrossesAmount = crossesAmount;
 
-                        network.TargetOutputNeuronId = targetOutputNeuronId;
+                        network.TargetOutputNeuronId = crossesAmount - _minCrossesAmountToCount;
 
                         neuron = network.Layers.Last.Neurons.First;
                         while (neuron != null)
