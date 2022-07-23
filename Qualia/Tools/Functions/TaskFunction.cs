@@ -387,7 +387,7 @@ namespace Qualia.Tools
                         neuron = network.Layers.Last.Neurons.First;
                         while (neuron != null)
                         {
-                            neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? 1 : 0;
+                            neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? neuron.PositiveTargetValue : neuron.NegativeTargetValue;
                             neuron = neuron.Next;
                         }
 
@@ -1056,7 +1056,7 @@ namespace Qualia.Tools
                 var neuron = networkModel.Layers.Last.Neurons.First;
                 while (neuron != null)
                 {
-                    neuron.Target = (neuron.Id == image.Label) ? 1 : 0;
+                    neuron.Target = (neuron.Id == image.Label) ? neuron.PositiveTargetValue : neuron.NegativeTargetValue;
                     neuron = neuron.Next;
                 }
 
