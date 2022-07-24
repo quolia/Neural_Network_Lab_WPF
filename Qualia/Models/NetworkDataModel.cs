@@ -381,6 +381,8 @@ namespace Qualia.Model
                     if (layer.Next == null) // Output layer.
                     {
                         neuronCopy.Label = neuron.Label;
+                        neuronCopy.PositiveTargetValue = neuron.PositiveTargetValue;
+                        neuronCopy.NegativeTargetValue = neuron.NegativeTargetValue;
                     }
 
                     if (neuron.Activation != 0 && layer != Layers.Last)
