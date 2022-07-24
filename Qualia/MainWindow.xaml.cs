@@ -334,6 +334,7 @@ namespace Qualia.Controls
 
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
+                _networksManager.RebuildNetworksForTask(taskFunction);
                 var newModels = _networksManager.CreateNetworksDataModels();
                 _networksManager.MergeModels(newModels);
 
