@@ -61,25 +61,6 @@ namespace Qualia.Model
 
             return this;
         }
-
-        public void ResetModelsStatistics()
-        {
-            Network.ForEach(network => network.Statistics = new());
-        }
-
-        private void ResetModelsDynamicStatistics()
-        {
-            Network.ForEach(network => network.PlotterStatistics = new());
-        }
-
-        public void ResetErrorMatrix()
-        {
-            Network.ForEach(network =>
-            {
-                network.ErrorMatrix.ClearData();
-                network.ErrorMatrix.Next.ClearData();
-            });
-        }
     }
 
     sealed public class SettingsModel

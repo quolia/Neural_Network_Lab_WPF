@@ -255,6 +255,9 @@ namespace Qualia.Controls
                 return;
             }
 
+            const double RECT_SIZE = 4;
+            const double CIRC_SIZE = 5;
+
             var pen = Draw.GetPen(in color);
             
             var firstPointData = pointsData[0];
@@ -278,15 +281,15 @@ namespace Qualia.Controls
                     {
                         CtlDataCanvas.DrawRectangle(pen.Brush,
                                                     pen,
-                                                    ref Rects.Get(point.X - 6 / 2, point.Y - 6 / 2, 6, 6));
+                                                    ref Rects.Get(point.X - RECT_SIZE / 2, point.Y - RECT_SIZE / 2, RECT_SIZE, RECT_SIZE));
                     }
                     else
                     {
                         CtlDataCanvas.DrawEllipse(pen.Brush,
                                                   pen,
                                                   ref Points.Get(point.X, point.Y),
-                                                  7 / 2,
-                                                  7 / 2);
+                                                  CIRC_SIZE / 2,
+                                                  CIRC_SIZE / 2);
                     }
 
                     prevPointData = pointData;
@@ -354,7 +357,7 @@ namespace Qualia.Controls
         private void LinearOptimization(PlotterStatistics.PlotPointsList pointsData,
                                         GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 7;
+            const int VANISH_AREA = 4;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
@@ -364,18 +367,13 @@ namespace Qualia.Controls
                     return;
                 }
 
-                for (int i = Rand.RandomFlat.Next() % 3; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
+                for (int i = Rand.RandomFlat.Next() % 2; i < pointsData.Count - MIN_POINTS_COUNT; ++i)
                 {
                     var ticks = pointsData.Last().TimeTicks - pointsData[0].TimeTicks;
 
                     ref var point0 = ref getPoint(pointsData, pointsData[i], ticks);
                     ref var point1 = ref getPoint(pointsData, pointsData[i + 1], ticks);
                     ref var point2 = ref getPoint(pointsData, pointsData[i + 2], ticks);
-
-                    //var a1 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
-                    //var a2 = MathX.Abs(Angle(in point0, in point1) - Angle(in point1, in point2));
-                    //var a = MathX.Max(a1, a2);
-                    //if (a > Math.PI - Math.PI / 360D)
 
                     if (IsSameLine(point0, point1, point2))
                     {
@@ -416,7 +414,7 @@ namespace Qualia.Controls
         private bool IsSameLine(Point p1, Point p2, Point p3)
         {
             double a1 = 150 * (p2.Y - p1.Y) / (p2.X - p1.X);
-            double a2 = 150 * (p3.Y - p1.Y) / (p3.X - p1.X);
+            double a2 = 150 * (p3.Y - p2.Y) / (p3.X - p2.X);
 
             return (int)a1 == (int)a2;
         }
@@ -424,7 +422,7 @@ namespace Qualia.Controls
         private void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,
                                          GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 7;
+            const int VANISH_AREA = 6;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)

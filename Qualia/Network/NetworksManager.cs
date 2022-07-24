@@ -270,7 +270,7 @@ namespace Qualia.Controls
             NetworkModels.ForEach(network => network.ActivateFirstLayer());
             NetworkModels.ForEach(network => network.BackPropagationStrategy.PrepareForRun(network));
 
-            ResetModelsDynamicStatistics();
+            ResetModelsPlotterStatistics();
             ResetModelsStatistics();
             ResetErrorMatrix();
         }
@@ -337,7 +337,7 @@ namespace Qualia.Controls
             NetworkModels.ForEach(network => network.Statistics = new());
         }
 
-        private void ResetModelsDynamicStatistics()
+        private void ResetModelsPlotterStatistics()
         {
             NetworkModels.ForEach(network => network.PlotterStatistics = new());
         }
