@@ -86,15 +86,23 @@ namespace Qualia.Controls
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            for (int i = Neurons.Count; i < taskFunction.VisualControl.GetOutputClasses().Count; ++i)
-            {
-                AddNeuron();
-            }
+            var newCount = taskFunction.VisualControl.GetOutputClasses().Count;
+            var count = Neurons.Count;
 
-            for (int i = taskFunction.VisualControl.GetOutputClasses().Count; i < Neurons.Count; ++i)
+            if (newCount > count)
             {
-                CtlNeurons.Items.RemoveAt(CtlNeurons.Items.Count - 1);
-                Neurons.RemoveAt(Neurons.Count - 1);
+                for (int i = count; i < newCount; ++i)
+                {
+                    AddNeuron();
+                }
+            }
+            else if (newCount < count)
+            {
+                for (int i = newCount; i < count; ++i)
+                {
+                    CtlNeurons.Items.RemoveAt(CtlNeurons.Items.Count - 1);
+                    Neurons.Remove(Neurons.Last());// At(Neurons.Count - 1);
+                }
             }
         }
 
