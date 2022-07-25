@@ -297,6 +297,6 @@ InputDataPresenter.TaskFunction:DotsCount
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1
 InputDataPresenter.TaskFunction.DotsCount.IsPreventRepetition:0
-InputDataPresenter.TaskFunction.DotsCount.CommonDotsAmount:784
+InputDataPresenter.TaskFunction.DotsCount.CommonDotsAmount:780
 InputDataPresenter.TaskFunction.DotsCount.MinDotsAmountToCount:0
 InputDataPresenter.TaskFunction.DotsCount.MaxDotsAmoutToCount:20

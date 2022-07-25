@@ -166,14 +166,8 @@ namespace Qualia.Controls
 
         void TaskParameter_OnChanged(Notification.ParameterChanged param)
         {
-            //if (_onTaskChanged == null)
-            {
-                //return;
-            }
-
-            RearrangeWithNewPointsCount();
+            //RearrangeWithNewPointsCount();
             OnChanged(param);
-            //_onTaskChanged.TaskParameter_OnChanged();
         }
 
         public override void SaveConfig()
