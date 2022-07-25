@@ -357,7 +357,7 @@ namespace Qualia.Controls
         private void LinearOptimization(PlotterStatistics.PlotPointsList pointsData,
                                         GetPointDelegate getPoint)
         {
-            const int VANISH_AREA = 4;
+            const double VANISH_AREA = 3.5;
             const int MIN_POINTS_COUNT = 10;
 
             while (true)
@@ -384,7 +384,7 @@ namespace Qualia.Controls
                             break;
                         }
 
-                        i += 2;
+                        i += 1;
                     }
                     else
                     {
@@ -413,10 +413,32 @@ namespace Qualia.Controls
 
         private bool IsSameLine(Point p1, Point p2, Point p3)
         {
+            int x1 = (int)p1.X;
+            int y1 = (int)p1.Y;
+
+            int x2 = (int)p2.X;
+            int y2 = (int)p2.Y;
+
+            int x3 = (int)p3.X;
+            int y3 = (int)p3.Y;
+
+            if (x2 - x1 == 0 || x3 - x2 == 0)
+            {
+                return false;
+            }
+
+            double a1 = 100 * (y2 - y1) / (x2 - x1);
+            double a2 = 100 * (y3 - y2) / (x3 - x2);
+
+            return (int)a1 == (int)a2;
+
+
+            /*
             double a1 = 150 * (p2.Y - p1.Y) / (p2.X - p1.X);
             double a2 = 150 * (p3.Y - p2.Y) / (p3.X - p2.X);
 
             return (int)a1 == (int)a2;
+            */
         }
 
         private void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,
