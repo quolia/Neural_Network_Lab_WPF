@@ -4,8 +4,11 @@ namespace Qualia.Tools
 {
     public static class FileHelper
     {
-        public static string ConfigPath = App.WorkingDirectory + "config.txt";
-        public static string NotesPath = App.WorkingDirectory + "notes.txt";
+        public static string MainConfigName = "config.txt";
+        public static string NotesName = "notes.txt";
+
+        public static string ConfigPath = App.WorkingDirectory + MainConfigName;
+        public static string NotesPath = App.WorkingDirectory + NotesName;
 
         public static void InitWorkingDirectories()
         {

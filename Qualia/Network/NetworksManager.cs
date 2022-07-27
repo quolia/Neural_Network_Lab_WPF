@@ -62,13 +62,13 @@ namespace Qualia.Controls
         {
             get
             {
-                List<NetworkControl> networks = new();
+                List<NetworkControl> result = new();
                 for (int i = 1; i < _Tabs.Items.Count; ++i)
                 {
-                    networks.Add(_Tabs.Tab(i).Content as NetworkControl);
+                    result.Add(_Tabs.Tab(i).Content as NetworkControl);
                 }
 
-                return networks;
+                return result;
             }
         }
 

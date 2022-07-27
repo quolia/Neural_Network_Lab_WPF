@@ -410,7 +410,6 @@ namespace Qualia.Controls
             var model = WorkingModel.Current.RefreshAll(this, _networksManager);
 
             CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.SelectedNetworkModel);
-            //CtlInputDataPresenter.SetInputDataAndDraw(model.SelectedNetwork);
             _networksManager.FeedForward(); // initialize state
 
             DrawNetworkAndInputData(_networksManager.SelectedNetworkModel,
