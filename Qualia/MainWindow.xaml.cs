@@ -87,9 +87,6 @@ namespace Qualia.Controls
             OnConfigLoaded();
 
             SetOnChangeEvent();
-
-            //ApplyChangesToStandingNetworks(); // !!! called also in LoadNetworks();
-            //TurnApplyChangesButton(Constants.State.Off);
         }
 
         private void LoadWindowSettings()
@@ -165,17 +162,6 @@ namespace Qualia.Controls
             CtlMenuRun.IsEnabled = _networksManager != null
                                    && _networksManager.NetworkModels != null
                                    && _networksManager.NetworkModels.Any();
-
-            //ApplyChangesToStandingNetworks();
-
-            if (_networksManager != null)
-            {
-                //var model = CtlInputDataPresenter.GetModel();
-                //_networksManager.RebuildNetworksForTask(model.TaskFunction);
-                //_networksManager.ResetLayersTabsNames();
-
-                //CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
-            }
         }
 
         private void SetOnChangeEvent()
@@ -357,7 +343,6 @@ namespace Qualia.Controls
                 return;    
             }
 
-            //CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel); ???
             lock (Locker.ApplyChanges)
             {
                 var taskFunction = CtlInputDataPresenter.TaskFunction;
@@ -365,7 +350,6 @@ namespace Qualia.Controls
 
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
-                //TaskParameter_OnChanged();
                 _networksManager.RebuildNetworksForTask(taskFunction);
                 _networksManager.ResetLayersTabsNames(); // ?
 
@@ -815,21 +799,21 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawNetworkAndInputData(NetworkDataModel model,
+        private void DrawNetworkAndInputData(NetworkDataModel network,
                                              bool isUseWeightsColors,
                                              bool isOnlyChangedWeights,
                                              bool isHighlightChangedWeights,
                                              bool isShowOnlyUnchangedWeights,
                                              bool isShowActivationLabels)
         {
-            CtlNetworkPresenter.RenderRunning(model,
+            CtlNetworkPresenter.RenderRunning(network,
                                               isUseWeightsColors,
                                               isOnlyChangedWeights,
                                               isHighlightChangedWeights,
                                               isShowOnlyUnchangedWeights,
                                               isShowActivationLabels);
 
-            CtlInputDataPresenter.SetInputDataAndDraw(model);
+            CtlInputDataPresenter.SetInputDataAndDraw(network);
         }
 
         private Dictionary<string, string> DrawStatistics(Statistics statistics, double learningRate)
@@ -1143,7 +1127,7 @@ namespace Qualia.Controls
 
         private void NetworkTab_OnChanged(object sender, SelectionChangedEventArgs e)
         {
-            // newly selected network must not affect NetworksManager until it saved
+            // A newly selected network must not affect NetworksManager until it saved.
             
             if (_networksManager == null)
             {
@@ -1246,16 +1230,6 @@ namespace Qualia.Controls
             _networksManager.SelectedNetworkControl.SelectedLayer.AddNeuron();
         }
 
-        private void ApplySettingsButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            //SaveSettings();
-        }
-
-        private void CancelSettingsButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            //LoadSettings();
-        }
-
         private void MenuRun_OnSubmenuOpened(object sender, RoutedEventArgs e)
         {
             if (_networksManager.SelectedNetworkControl == null && CtlTabs.Items.Count > 1)
@@ -1300,7 +1274,10 @@ namespace Qualia.Controls
         private void MenuVersion_OnClick(object sender, RoutedEventArgs e)
         {
             var (version, date) = VersionHelper.GetVersion();
-            MessageBox.Show($"Version: {version}\n\nBuilt on: {date}\n\nAuthor: echoviser@gmail.com", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Version: {version}\n\nBuilt on: {date}\n\nAuthor: echoviser@gmail.com",
+                            "Info",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
         }
 
         private void Notes_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
