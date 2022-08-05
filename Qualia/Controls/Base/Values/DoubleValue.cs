@@ -8,7 +8,7 @@ namespace Qualia.Controls
     sealed public class DoubleValueControl : TextBox, IConfigParam
     {
         private Config _config;
-        private event Action<Notification.ParameterChanged> _onChanged = delegate { };
+        private event Action<Notification.ParameterChanged> _onChanged = delegate {};
 
         public double DefaultValue { get; set; } = Constants.InvalidDouble;
 
