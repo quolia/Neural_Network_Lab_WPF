@@ -262,39 +262,32 @@ namespace Qualia.Controls
             
             var firstPointData = pointsData[0];
             var lastPointData = pointsData.Last();
-
             var ticks = lastPointData.TimeTicks - firstPointData.TimeTicks;
-
-            Point prevPoint = new(-1000, -1000);
             var prevPointData = firstPointData;
 
             foreach (var pointData in pointsData)
             {
                 ref var point = ref getPoint(pointsData, pointData, ticks);
 
-                //if ((point.X - prevPoint.X) > 8 || MathX.Abs(point.Y - prevPoint.Y) > 8)// || pointData == lastPointData) // opt
+                ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
+                CtlDataCanvas.DrawLine(pen, ref fromPoint, ref point);
+
+                if (isRect)
                 {
-                    ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
-                    CtlDataCanvas.DrawLine(pen, ref fromPoint, ref point);
-
-                    if (isRect)
-                    {
-                        CtlDataCanvas.DrawRectangle(pen.Brush,
-                                                    pen,
-                                                    ref Rects.Get(point.X - RECT_SIZE / 2, point.Y - RECT_SIZE / 2, RECT_SIZE, RECT_SIZE));
-                    }
-                    else
-                    {
-                        CtlDataCanvas.DrawEllipse(pen.Brush,
-                                                  pen,
-                                                  ref Points.Get(point.X, point.Y),
-                                                  CIRC_SIZE / 2,
-                                                  CIRC_SIZE / 2);
-                    }
-
-                    prevPointData = pointData;
-                    prevPoint = point;
+                    CtlDataCanvas.DrawRectangle(pen.Brush,
+                                                pen,
+                                                ref Rects.Get(point.X - RECT_SIZE / 2, point.Y - RECT_SIZE / 2, RECT_SIZE, RECT_SIZE));
                 }
+                else
+                {
+                    CtlDataCanvas.DrawEllipse(pen.Brush,
+                                                pen,
+                                                ref Points.Get(point.X, point.Y),
+                                                CIRC_SIZE / 2,
+                                                CIRC_SIZE / 2);
+                }
+
+                prevPointData = pointData;
             }
         }
 
@@ -431,14 +424,6 @@ namespace Qualia.Controls
             double a2 = 100 * (y3 - y2) / (x3 - x2);
 
             return (int)a1 == (int)a2;
-
-
-            /*
-            double a1 = 150 * (p2.Y - p1.Y) / (p2.X - p1.X);
-            double a2 = 150 * (p3.Y - p2.Y) / (p3.X - p2.X);
-
-            return (int)a1 == (int)a2;
-            */
         }
 
         private void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,

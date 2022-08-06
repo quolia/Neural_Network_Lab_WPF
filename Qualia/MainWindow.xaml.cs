@@ -443,6 +443,14 @@ namespace Qualia.Controls
             _timeThread.Start();
         }
 
+        volatile bool isErrorMatrixRendering = false;
+        volatile bool isNetworksRendering = false;
+        volatile bool isStatisticsRendering = false;
+
+        volatile bool isErrorMatrixRenderNeeded = false;
+        volatile bool isNetworksRenderNeeded = false;
+        volatile bool isStatisticsRenderNeeded = false;
+
         unsafe private void RunNetworks(object args)
         {
             var arr = (object[])args;
@@ -459,6 +467,7 @@ namespace Qualia.Controls
             int currentLoopLimit = 0;
             var loopLimits = new LoopsLimit[3];
 
+            /*
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
             bool isStatisticsRendering = false;
@@ -466,6 +475,15 @@ namespace Qualia.Controls
             bool isErrorMatrixRenderNeeded = false;
             bool isNetworksRenderNeeded = false;
             bool isStatisticsRenderNeeded = false;
+            */
+
+            isErrorMatrixRendering = false;
+            isNetworksRendering = false;
+            isStatisticsRendering = false;
+
+            isErrorMatrixRenderNeeded = false;
+            isNetworksRenderNeeded = false;
+            isStatisticsRenderNeeded = false;
 
             RenderStatistics.Reset();
 
@@ -647,7 +665,10 @@ namespace Qualia.Controls
                                 statistics.Last100PercentOnRound = 0;
                             }
 
-                            network.PlotterStatistics.Add(statistics.Percent, statistics.CostAvg);
+                            if (!isStatisticsRendering)
+                            {
+                                network.PlotterStatistics.Add(statistics.Percent, statistics.CostAvg);
+                            }
 
                             statistics.CostSum = 0;
                             statistics.CorrectRounds = 0;
@@ -798,6 +819,7 @@ namespace Qualia.Controls
                         }
 
                         swRenderTime.Restart();
+                        //CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
                         CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, selectedNetworkModel);
 
                         var lastStats = DrawStatistics(statisticsToRender, learningRate);
@@ -818,7 +840,7 @@ namespace Qualia.Controls
 
                 if (renderErrorMatrix != null || renderNetwork != null || renderStatistics != null)
                 {
-                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    Dispatcher.BeginInvoke(DispatcherPriority.SystemIdle, () =>
                     {
                         if (_cancellationToken.IsCancellationRequested)
                         {
