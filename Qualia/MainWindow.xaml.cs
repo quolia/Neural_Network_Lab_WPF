@@ -463,7 +463,7 @@ namespace Qualia.Controls
             bool isNetworksRenderNeeded = false;
             bool isStatisticsRenderNeeded = false;
 
-            SolutionsData solutionsData = null;
+            RenderStatistics.Reset();
 
             Stopwatch swCurrentMiscCodeTime = new();
             Stopwatch swCurrentPureRoundsPerSecond = new();
@@ -669,6 +669,10 @@ namespace Qualia.Controls
                     if (loopLimits[LoopsLimit.ERROR_MATRIX].IsLimitReached)
                     {
                         isErrorMatrixRenderNeeded = !isErrorMatrixRendering;
+                        if (!isErrorMatrixRenderNeeded)
+                        {
+                            ++RenderStatistics.ErrorMatrixFramesLost;
+                        }
                         loopLimits[LoopsLimit.ERROR_MATRIX].Reset();
                     }
 
@@ -676,6 +680,10 @@ namespace Qualia.Controls
                     if (loopLimits[LoopsLimit.NETWORK].IsLimitReached)
                     {
                         isNetworksRenderNeeded = !isNetworksRendering;
+                        if (!isNetworksRenderNeeded)
+                        {
+                            ++RenderStatistics.NetworkFramesLost;
+                        }
                         loopLimits[LoopsLimit.NETWORK].Reset();
                     }
 
@@ -683,6 +691,10 @@ namespace Qualia.Controls
                     if (loopLimits[LoopsLimit.STATISTICS].IsLimitReached)
                     {
                         isStatisticsRenderNeeded = !isStatisticsRendering;
+                        if (!isStatisticsRenderNeeded)
+                        {
+                            ++RenderStatistics.StatisticsFramesLost;
+                        }
                         loopLimits[LoopsLimit.STATISTICS].Reset();
                     }
                 }
@@ -707,12 +719,15 @@ namespace Qualia.Controls
 
                 bool isSleepNeeded = false;
 
+                NetworkDataModel selectedNetworkModel = null;
+                Statistics statisticsToRender = null;
+
                 if (isErrorMatrixRenderNeeded)
                 {
                     isErrorMatrixRendering = true;
 
-                    NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
-                    Statistics statisticsToRender = selectedNetworkModel.Statistics.Copy();
+                    selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    statisticsToRender = selectedNetworkModel.Statistics.Copy();
                     ErrorMatrix errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
                     selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
 
@@ -731,7 +746,12 @@ namespace Qualia.Controls
                         errorMatrixToRender.ClearData();
 
                         swRenderTime.Stop();
-                        RenderTime.ErrorMatrix = swRenderTime.Elapsed.Ticks;
+                        RenderStatistics.ErrorMatrixRenderTime = swRenderTime.Elapsed.Ticks;
+                        if (RenderStatistics.ErrorMatrixRenderTime > RenderStatistics.ErrorMatrixRenderTimeMax)
+                        {
+                            RenderStatistics.ErrorMatrixRenderTimeMax = RenderStatistics.ErrorMatrixRenderTime;
+                        }
+
                         isErrorMatrixRendering = false;
                     });
 
@@ -742,7 +762,7 @@ namespace Qualia.Controls
                 {
                     isNetworksRendering = true;
 
-                    NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    selectedNetworkModel = selectedNetworkModel ?? _networksManager.SelectedNetworkModel;
                     NetworkDataModel networkModelToRender = selectedNetworkModel.GetCopyToDraw();
                         
                     CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
@@ -764,7 +784,12 @@ namespace Qualia.Controls
                                                 CtlShowActivationLabels.Value);
 
                         swRenderTime.Stop();
-                        RenderTime.Network = swRenderTime.Elapsed.Ticks;
+                        RenderStatistics.NetworkRenderTime = swRenderTime.Elapsed.Ticks;
+                        if (RenderStatistics.NetworkRenderTime > RenderStatistics.NetworkRenderTimeMax)
+                        {
+                            RenderStatistics.NetworkRenderTimeMax = RenderStatistics.NetworkRenderTime;
+                        }
+
                         isNetworksRendering = false;
                     });
 
@@ -775,14 +800,14 @@ namespace Qualia.Controls
                 {
                     isStatisticsRendering = true;
 
-                    NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    selectedNetworkModel = selectedNetworkModel ?? _networksManager.SelectedNetworkModel;
                     double learningRate = 0;
 
                     CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
 
-                    Statistics statisticsToRender = selectedNetworkModel.Statistics.Copy();
+                    statisticsToRender = statisticsToRender ?? selectedNetworkModel.Statistics.Copy();
                     learningRate = selectedNetworkModel.LearningRate;
-                    solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
+                    SolutionsData solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
 
                     Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
                     {
@@ -800,7 +825,12 @@ namespace Qualia.Controls
                         CtlTaskSolutionsPresenter.ShowSolutionsData(solutionsData);
 
                         swRenderTime.Stop();
-                        RenderTime.Statistics = swRenderTime.Elapsed.Ticks;
+                        RenderStatistics.StatisticsRenderTime = swRenderTime.Elapsed.Ticks;
+                        if (RenderStatistics.StatisticsRenderTime > RenderStatistics.StatisticsRenderTimeMax)
+                        {
+                            RenderStatistics.StatisticsRenderTimeMax = RenderStatistics.StatisticsRenderTime;
+                        }
+
                         isStatisticsRendering = false;
                     });
 
@@ -984,15 +1014,27 @@ namespace Qualia.Controls
 
             stat.Add("6", null);
 
-            stat.Add("Render time, mcsec", string.Empty);
-            stat.Add("Network",
-                     (Converter.IntToText(TimeSpan.FromTicks(RenderTime.Network).TotalMicroseconds())));
+            stat.Add("Render time, mcsec / Max / Frames lost", string.Empty);
+            stat.Add("Network & Data",
+                     Converter.IntToText(TimeSpan.FromTicks(RenderStatistics.NetworkRenderTime).TotalMicroseconds())
+                     + " / "
+                     + Converter.IntToText(TimeSpan.FromTicks(RenderStatistics.NetworkRenderTimeMax).TotalMicroseconds())
+                     + " / "
+                     + Converter.IntToText(RenderStatistics.NetworkFramesLost));
+
+            stat.Add("Statistics & Plotter",
+                     Converter.IntToText(TimeSpan.FromTicks(RenderStatistics.StatisticsRenderTime).TotalMicroseconds())
+                     + " / "
+                     + Converter.IntToText(TimeSpan.FromTicks(RenderStatistics.StatisticsRenderTimeMax).TotalMicroseconds())
+                     + " / "
+                     + Converter.IntToText(RenderStatistics.StatisticsFramesLost));
 
             stat.Add("Error matrix",
-                     (Converter.IntToText(TimeSpan.FromTicks(RenderTime.ErrorMatrix).TotalMicroseconds())));
-
-            stat.Add("Statistics",
-                     (Converter.IntToText(TimeSpan.FromTicks(RenderTime.Statistics).TotalMicroseconds())));
+                     Converter.IntToText(TimeSpan.FromTicks(RenderStatistics.ErrorMatrixRenderTime).TotalMicroseconds())
+                     + " / "
+                     + Converter.IntToText(TimeSpan.FromTicks(RenderStatistics.ErrorMatrixRenderTimeMax).TotalMicroseconds())
+                     + " / "
+                     + Converter.IntToText(RenderStatistics.ErrorMatrixFramesLost));
 
             CtlStatisticsPresenter.Draw(stat);
             return stat;

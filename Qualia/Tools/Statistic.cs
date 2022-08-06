@@ -133,10 +133,34 @@ namespace Qualia.Tools
         }
     }
 
-    public static class RenderTime
+    public static class RenderStatistics
     {
-        public static long Network;
-        public static long Statistics;
-        public static long ErrorMatrix;
+        public static long NetworkRenderTime;
+        public static long NetworkRenderTimeMax;
+        public static long NetworkFramesLost;
+
+        public static long StatisticsRenderTime;
+        public static long StatisticsRenderTimeMax;
+        public static long StatisticsFramesLost;
+
+
+        public static long ErrorMatrixRenderTime;
+        public static long ErrorMatrixRenderTimeMax;
+        public static long ErrorMatrixFramesLost;
+
+        public static void Reset()
+        {
+            NetworkRenderTime = 
+            NetworkRenderTimeMax = 
+            NetworkFramesLost =
+
+            StatisticsRenderTime =
+            StatisticsRenderTimeMax =
+            StatisticsFramesLost =
+
+            ErrorMatrixRenderTime =
+            ErrorMatrixRenderTimeMax =
+            ErrorMatrixFramesLost = 0;
+        }
     }
 }
