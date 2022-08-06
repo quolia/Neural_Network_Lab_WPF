@@ -36,14 +36,6 @@ namespace Qualia.Controls
 
         public long MaxValue { get; set; } = long.MaxValue;
 
-        public Notification.ParameterChanged UIParam { get; private set; }
-
-        public IntValueControl SetUIParam(Notification.ParameterChanged param)
-        {
-            UIParam = param;
-            return this;
-        }
-
         public IntValueControl()
         {
             Padding = new(0);
@@ -57,7 +49,7 @@ namespace Qualia.Controls
         {
             if (IsValidInput(Constants.InvalidLong))
             {
-                _onChanged(UIParam);
+                _onChanged(this.GetUIParam());
             }
         }
 

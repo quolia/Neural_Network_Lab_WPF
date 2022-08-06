@@ -21,17 +21,8 @@ namespace Qualia.Controls
             return this;
         }
 
-        public Notification.ParameterChanged UIParam { get; private set; }
-
-        public StringValueControl SetUIParam(Notification.ParameterChanged param)
-        {
-            UIParam = param;
-            return this;
-        }
-
         public StringValueControl()
         {
-            //InvalidateValue();
             Padding = new(0);
             Margin = new(3);
 
@@ -43,7 +34,7 @@ namespace Qualia.Controls
             if (IsValid())
             {
                 Background = Brushes.White;
-                _onChanged(UIParam);
+                _onChanged(this.GetUIParam());
             }
             else
             {

@@ -18,14 +18,6 @@ namespace Qualia.Controls
             return this;
         }
 
-        public Notification.ParameterChanged UIParam { get; private set; }
-
-        public BoolValueControl SetUIParam(Notification.ParameterChanged param)
-        {
-            UIParam = param;
-            return this;
-        }
-
         public bool Value
         {
             get => IsChecked == true;
@@ -43,7 +35,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, RoutedEventArgs e)
         {
-            _onChanged(UIParam);
+            _onChanged(this.GetUIParam());
         }
 
         // IConfigParam

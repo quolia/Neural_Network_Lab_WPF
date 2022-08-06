@@ -21,14 +21,6 @@ namespace Qualia.Controls
             return this;
         }
 
-        public Notification.ParameterChanged UIParam { get; private set; }
-
-        public SelectorControl SetUIParam(Notification.ParameterChanged param)
-        {
-            UIParam = param;
-            return this;
-        }
-
         //public SelectValueControl SetToolTip(SelectableItem toolTip)
         //{
             //ToolTip = toolTip;
@@ -56,7 +48,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
         {
-             _onChanged(UIParam);
+             _onChanged(this.GetUIParam());
         }
 
         public new ISelectableItem SelectedItem

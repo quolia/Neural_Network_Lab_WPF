@@ -5,11 +5,9 @@ namespace Qualia.Controls
 {
     sealed public class FakeValue : IConfigParam
     {
-        public Notification.ParameterChanged UIParam { get; private set; }
-
-        public FakeValue(Notification.ParameterChanged param)// = Notification.ParameterChanged.Fake)
+        public FakeValue(Notification.ParameterChanged param)
         {
-            UIParam = param;
+            this.SetUIParam(param);
         }
 
         // IConfigParam

@@ -12,14 +12,6 @@ namespace Qualia.Controls
 
         protected Action<Notification.ParameterChanged> _onChanged;
 
-        public Notification.ParameterChanged UIParam { get; private set; }
-
-        public BaseUserControl SetUIParam(Notification.ParameterChanged param)
-        {
-            UIParam = param;
-            return this;
-        }
-
         public BaseUserControl()
         {
             //
@@ -27,7 +19,7 @@ namespace Qualia.Controls
 
         public void OnChanged(Notification.ParameterChanged param)
         {
-            _onChanged(param == Notification.ParameterChanged.Unknown ? UIParam : param);
+            _onChanged(param == Notification.ParameterChanged.Unknown ? this.GetUIParam() : param);
         }
 
         // IConfigParam
