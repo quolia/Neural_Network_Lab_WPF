@@ -152,7 +152,7 @@ namespace Qualia.Controls
 
         override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
         {
-            _onChanged = onChange;
+            this.SetUIHandler(onChange);
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
         }
 

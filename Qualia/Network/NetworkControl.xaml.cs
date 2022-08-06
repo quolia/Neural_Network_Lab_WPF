@@ -15,7 +15,6 @@ namespace Qualia.Controls
     {
         public readonly long Id;
         
-        private readonly Action<Notification.ParameterChanged> NetworkUI_OnChanged;
         private OutputLayerControl _outputLayer;
 
         public InputLayerControl InputLayer { get; private set; }
@@ -25,7 +24,7 @@ namespace Qualia.Controls
         public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
         {
             InitializeComponent();
-            NetworkUI_OnChanged = onChanged;
+            this.SetUIHandler(onChanged);
 
             Id = UniqId.GetNextId(id);
             this.PutConfig(config.ExtendWithId(Id));
@@ -59,7 +58,7 @@ namespace Qualia.Controls
 
         private new void OnChanged(Notification.ParameterChanged _)
         {
-            NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+            this.GetUIHandler()(Notification.ParameterChanged.Structure);
 
             //var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy.SelectedItem);
             //CtlBackPropagationStrategyDescription.Text = description;
@@ -72,7 +71,7 @@ namespace Qualia.Controls
 
         private void AddLayer(long layerId)
         {
-            HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), NetworkUI_OnChanged);
+            HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), this.GetUIHandler());
 
             ScrollViewer scroll = new()
             {
@@ -92,7 +91,7 @@ namespace Qualia.Controls
 
             if (layerId == Constants.UnknownId)
             {
-                NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+                this.GetUIHandler()(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -197,7 +196,7 @@ namespace Qualia.Controls
             var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Constants.UnknownId;
             var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
-            InputLayer = new(inputLayerId, this.GetConfig(), NetworkUI_OnChanged);
+            InputLayer = new(inputLayerId, this.GetConfig(), this.GetUIHandler());
             ScrollViewer scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -207,7 +206,7 @@ namespace Qualia.Controls
             CtlTabInput.Content = scroll;
             scroll.ScrollChanged += InputLayer.Scroll_OnChanged;
 
-            _outputLayer = new(outputLayerId, this.GetConfig(), NetworkUI_OnChanged);
+            _outputLayer = new(outputLayerId, this.GetConfig(), this.GetUIHandler());
             scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -255,7 +254,7 @@ namespace Qualia.Controls
                 CtlTabsLayers.Items.Remove(CtlTabsLayers.SelectedTab());
                 ResetLayersTabsNames();
 
-                NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+                this.GetUIHandler()(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -397,7 +396,7 @@ namespace Qualia.Controls
                                                                    colorDialog.Color.G,
                                                                    colorDialog.Color.B));
 
-                NetworkUI_OnChanged(Notification.ParameterChanged.Structure);
+                this.GetUIHandler()(Notification.ParameterChanged.Structure);
             }
         }
 

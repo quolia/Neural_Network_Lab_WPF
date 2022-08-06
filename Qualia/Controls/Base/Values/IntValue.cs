@@ -7,8 +7,6 @@ namespace Qualia.Controls
 {
     sealed public class IntValueControl : TextBox, IConfigParam
     {
-        private event Action<Notification.ParameterChanged> _onChanged = delegate { };
-
         public long DefaultValue { get; set; } = Constants.InvalidLong;
 
         public IntValueControl Initialize(long? defaultValue = null, long? minValue = null, long? maxValue = null)
@@ -48,7 +46,7 @@ namespace Qualia.Controls
         {
             if (IsValidInput(Constants.InvalidLong))
             {
-                _onChanged(this.GetUIParam());
+                this.GetUIHandler()(this.GetUIParam());
             }
         }
 
@@ -138,7 +136,7 @@ namespace Qualia.Controls
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
         }
 
         public void InvalidateValue()

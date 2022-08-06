@@ -32,7 +32,7 @@ namespace Qualia.Controls
 
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
             Value_OnChanged(Notification.ParameterChanged.PreventComputerFromSleep);

@@ -15,8 +15,6 @@ namespace Qualia.Controls
         public readonly Config Config;
         public ListX<NetworkDataModel> NetworkModels;
 
-        private readonly Action<Notification.ParameterChanged> _onChanged;
-
         private readonly TabControl _Tabs;
         private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
@@ -24,7 +22,7 @@ namespace Qualia.Controls
 
         public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
 
             _Tabs = tabs;
             _Tabs.SelectionChanged += NetworksTabs_OnSelected;
@@ -140,7 +138,7 @@ namespace Qualia.Controls
             _taskFunction = task;
             NetworksControls.ForEach(n => n.NetworkTask_OnChanged(task));
 
-            _onChanged(Notification.ParameterChanged.NeuronsCount);
+            this.GetUIHandler()(Notification.ParameterChanged.NeuronsCount);
         }
 
         public void AddNetwork()
@@ -150,7 +148,7 @@ namespace Qualia.Controls
 
         private void AddNetwork(long networkId)
         {
-            NetworkControl network = new(networkId, Config, _onChanged);
+            NetworkControl network = new(networkId, Config, this.GetUIHandler());
             TabItem tabItem = new()
             {
                 Header = $"Network {_Tabs.Items.Count}",
@@ -181,7 +179,7 @@ namespace Qualia.Controls
 
                 ResetNetworksTabsNames();
 
-                _onChanged(Notification.ParameterChanged.Structure);
+                this.GetUIHandler()(Notification.ParameterChanged.Structure);
             }
         }
 

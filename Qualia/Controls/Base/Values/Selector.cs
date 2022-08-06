@@ -6,8 +6,6 @@ namespace Qualia.Controls
 {
     sealed public class SelectorControl : ComboBox, IConfigParam
     {
-        private event Action<Notification.ParameterChanged> _onChanged = delegate {};
-
         public string DefaultValue { get; set; }
 
         public SelectorControl Initialize(string defaultValue)
@@ -47,7 +45,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
         {
-             _onChanged(this.GetUIParam());
+            this.GetUIHandler()(this.GetUIParam());
         }
 
         public new ISelectableItem SelectedItem
@@ -105,7 +103,7 @@ namespace Qualia.Controls
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
         }
 
         public void InvalidateValue() => throw new InvalidOperationException();

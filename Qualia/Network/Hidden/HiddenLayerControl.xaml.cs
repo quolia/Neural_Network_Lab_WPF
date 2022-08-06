@@ -80,7 +80,7 @@ namespace Qualia.Controls
 
         public override NeuronBaseControl AddNeuron(long id)
         {
-            NeuronControl neuron = new(id, this.GetConfig(), _onChanged, this);
+            NeuronControl neuron = new(id, this.GetConfig(), this.GetUIHandler(), this);
 
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);

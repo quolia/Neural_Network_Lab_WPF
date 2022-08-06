@@ -7,8 +7,6 @@ namespace Qualia.Controls
 {
     sealed public class StringValueControl : TextBox, IConfigParam
     {
-        private event Action<Notification.ParameterChanged> _onChanged = delegate { };
-
         public string DefaultValue { get; set; } = string.Empty;
 
         public bool IsEmptyAllowed { get; set; } = false;
@@ -32,7 +30,7 @@ namespace Qualia.Controls
             if (IsValid())
             {
                 Background = Brushes.White;
-                _onChanged(this.GetUIParam());
+                this.GetUIHandler()(this.GetUIParam());
             }
             else
             {
@@ -78,7 +76,7 @@ namespace Qualia.Controls
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
         }
 
         public void InvalidateValue()

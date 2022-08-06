@@ -6,8 +6,6 @@ namespace Qualia.Controls
 {
     abstract public partial class BaseUserControl : UserControl, IConfigParam
     {
-        protected Action<Notification.ParameterChanged> _onChanged;
-
         public BaseUserControl()
         {
             //
@@ -15,7 +13,7 @@ namespace Qualia.Controls
 
         public void OnChanged(Notification.ParameterChanged param)
         {
-            _onChanged(param == Notification.ParameterChanged.Unknown ? this.GetUIParam() : param);
+            this.GetUIHandler()(param == Notification.ParameterChanged.Unknown ? this.GetUIParam() : param);
         }
 
         // IConfigParam
@@ -49,12 +47,12 @@ namespace Qualia.Controls
 
         virtual public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            if (_onChanged != null)
+            if (this.GetUIHandler() != ExtendedInfo.DefaultHandler)
             {
                 throw new InvalidOperationException();
             }
 
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(cp => cp.SetOnChangeEvent(onChanged));
         }
 

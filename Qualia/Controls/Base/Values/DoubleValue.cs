@@ -7,8 +7,6 @@ namespace Qualia.Controls
 {
     sealed public class DoubleValueControl : TextBox, IConfigParam
     {
-        private event Action<Notification.ParameterChanged> _onChanged = delegate {};
-
         public double DefaultValue { get; set; } = Constants.InvalidDouble;
 
         public DoubleValueControl Initialize(double? defaultValue = null, double? minValue = null, double? maxValue = null)
@@ -48,7 +46,7 @@ namespace Qualia.Controls
         {
             if (IsValidInput(Constants.InvalidDouble))
             {
-                _onChanged(this.GetUIParam());
+                this.GetUIHandler()(this.GetUIParam());
             }
         }
 
@@ -138,7 +136,7 @@ namespace Qualia.Controls
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            _onChanged = onChanged;
+            this.SetUIHandler(onChanged);
         }
 
         public void InvalidateValue()

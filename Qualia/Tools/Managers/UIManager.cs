@@ -5,10 +5,12 @@ namespace Qualia.Tools
 {
     public class ExtendedInfo
     {
+        public static readonly Action<Notification.ParameterChanged> DefaultHandler = delegate { };
+
         public Notification.ParameterChanged UIParam;
         public readonly List<IConfigParam> ConfigParams = new();
         public Config Config;
-        public Action<Notification.ParameterChanged> OnChanged;
+        public Action<Notification.ParameterChanged> OnChanged = DefaultHandler;
 
         private static readonly Dictionary<object, ExtendedInfo> _dict = new();
 
@@ -110,7 +112,7 @@ namespace Qualia.Tools
                 throw new InvalidOperationException("ExtendedInfo not found.");
             }
 
-            if (info.OnChanged != null)
+            if (info.OnChanged != ExtendedInfo.DefaultHandler)
             {
                 throw new InvalidOperationException();
             }
