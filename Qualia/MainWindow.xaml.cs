@@ -24,6 +24,7 @@ namespace Qualia.Controls
         private CancellationTokenSource _cancellationTokenSource;
 
         private NetworksManager _networksManager;
+        private ActionsManager _applyChangesManager = new();
 
         private Stopwatch _startTime;
         private long _rounds;
@@ -253,6 +254,9 @@ namespace Qualia.Controls
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
+
+                var action = new ApplyAction(CtlSettings.ApplyChanges, CtlSettings.ApplyChanges);
+                _applyChangesManager.Add(action);
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
@@ -267,6 +271,9 @@ namespace Qualia.Controls
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
+
+                var action = new ApplyAction(ApplyChangesToRunningNetworks, ApplyChangesToStandingNetworks);
+                _applyChangesManager.Add(action);
             }
         }
 
@@ -304,9 +311,23 @@ namespace Qualia.Controls
 
             if (IsRunning)
             {
-                if (MessageBox.Show("Would you like running networks to apply changes?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBoxResult.Yes ==
+                        MessageBox.Show("Would you like running networks to apply changes?", "Confirm", MessageBoxButton.YesNo))
                 {
-                    ApplyChangesToRunningNetworks();
+                    bool result = false;
+                    lock (Locker.ApplyChanges)
+                    {
+                        result = _applyChangesManager.Execute(IsRunning);
+                    }
+
+                    if (result)
+                    {
+                        TurnApplyChangesButtonOn(false);
+                    }
+                    else
+                    {
+                        ApplyChangesToRunningNetworks();
+                    }
                 }
             }
             else
@@ -314,7 +335,23 @@ namespace Qualia.Controls
                 if (MessageBoxResult.Yes ==
                         MessageBox.Show("Would you like networks to apply changes?", "Confirm", MessageBoxButton.YesNo))
                 {
-                    ApplyChangesToStandingNetworks();
+                    bool result = false;
+                    lock (Locker.ApplyChanges)
+                    {
+                        result = _applyChangesManager.Execute(IsRunning);
+                    }
+
+                    if (result)
+                    {
+                        TurnApplyChangesButtonOn(false);
+
+                        CtlMenuStart.IsEnabled = true;
+                        CtlMenuRun.IsEnabled = true;
+                    }
+                    else
+                    {
+                        ApplyChangesToStandingNetworks();
+                    }
                 }
             }
         }

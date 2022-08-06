@@ -216,6 +216,7 @@
     <Compile Include="Controls\Viewer\RandomizerViewer.xaml.cs">
       <DependentUpon>RandomizerViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\Managers\ActionsManager.cs" />
     <Compile Include="Tools\Attributes.cs" />
     <Compile Include="Tools\Converter.cs" />
     <Compile Include="Tools\FileHelper.cs" />
