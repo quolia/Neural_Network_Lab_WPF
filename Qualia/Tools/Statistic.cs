@@ -133,34 +133,37 @@ namespace Qualia.Tools
         }
     }
 
-    public static class RenderStatistics
+    public class RendererStatistics
     {
-        public static long NetworkRenderTime;
-        public static long NetworkRenderTimeMax;
-        public static long NetworkFramesLost;
+        public static RendererStatistics Instance = new();
 
-        public static long StatisticsRenderTime;
-        public static long StatisticsRenderTimeMax;
-        public static long StatisticsFramesLost;
+        public long NetworkRenderTime;
+        public long NetworkRenderTimeMax;
+        public long NetworkFrames;
+        public long NetworkFramesLost;
 
+        public long StatisticsRenderTime;
+        public long StatisticsRenderTimeMax;
+        public long StatisticsFrames;
+        public long StatisticsFramesLost;
 
-        public static long ErrorMatrixRenderTime;
-        public static long ErrorMatrixRenderTimeMax;
-        public static long ErrorMatrixFramesLost;
+        public long ErrorMatrixRenderTime;
+        public long ErrorMatrixRenderTimeMax;
+        public long ErrorMatrixFrames;
+        public long ErrorMatrixFramesLost;
 
-        public static void Reset()
+        public int NetworkFramesLostPercent() => (int)(NetworkFrames == 0 ? 0 : 100 * NetworkFramesLost / (double)NetworkFrames);
+        public int StatisticsFramesLostPercent() => (int)(StatisticsFrames == 0 ? 0 : 100 * StatisticsFramesLost / (double)StatisticsFrames);
+        public int ErrorMatrixFramesLostPercent() => (int)(ErrorMatrixFrames == 0 ? 0 : 100 * ErrorMatrixFramesLost / (double)ErrorMatrixFrames);
+
+        public void Reset()
         {
-            NetworkRenderTime = 
-            NetworkRenderTimeMax = 
-            NetworkFramesLost =
+            Instance = new RendererStatistics();
+        }
 
-            StatisticsRenderTime =
-            StatisticsRenderTimeMax =
-            StatisticsFramesLost =
-
-            ErrorMatrixRenderTime =
-            ErrorMatrixRenderTimeMax =
-            ErrorMatrixFramesLost = 0;
+        public RendererStatistics Copy()
+        {
+            return (RendererStatistics)MemberwiseClone();
         }
     }
 }
