@@ -143,6 +143,7 @@
                 <TabControl.ContextMenu>
                     <ContextMenu Name="CtlNetworkContextMenu" Opened="NetworkContextMenu_OnOpened">
                         <MenuItem Name="CtlMenuAddNetwork" Header="Add Network" Click="MainMenuAddNetwork_OnClick" />
+                        <MenuItem Name="CtlMenuCloneNetwork" Header="Clone Network" Click="MainMenuCloneNetwork_OnClick" />
                         <MenuItem Name="CtlMenuRemoveNetwork" Header="Remove Network..." Click="MainMenuRemoveNetwork_OnClick" />
                     </ContextMenu>
                 </TabControl.ContextMenu>

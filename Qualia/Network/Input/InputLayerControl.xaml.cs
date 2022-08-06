@@ -168,7 +168,7 @@ namespace Qualia.Controls
             this.GetConfig().Remove(Constants.Param.Neurons);
             this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
 
-            Neurons.ToList().ForEach(n => n.RemoveFromConfig());
+            //Neurons.ToList().ForEach(n => n.RemoveFromConfig()); Input neurons are not in config.
         }
 
         public override void SetConfig(Config config)

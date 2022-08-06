@@ -971,6 +971,7 @@ namespace Qualia.Controls
             LoadNetworksManager();
         }
 
+        /*
         private void MenuRemoveNetwork_OnClick(object sender, EventArgs e)
         {
             if (MessageBox.Show("Would you really like to remove the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
@@ -978,6 +979,7 @@ namespace Qualia.Controls
                 RemoveNetworksManager();
             }
         }
+        */
 
         private bool StopRequest()
         {
@@ -1211,6 +1213,18 @@ namespace Qualia.Controls
             ApplyChangesToStandingNetworks();
         }
 
+        private void MainMenuCloneNetwork_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectedNetwork = _networksManager.SelectedNetworkControl;
+            var newNetwork = _networksManager.AddNetwork();
+
+            ApplyChangesToStandingNetworks();
+
+            selectedNetwork.CopyTo(newNetwork);
+
+            ApplyChangesToStandingNetworks();
+        }
+
         private void MainMenuRemoveNetwork_OnClick(object sender, RoutedEventArgs e)
         {
             _networksManager.RemoveNetwork();
@@ -1254,6 +1268,7 @@ namespace Qualia.Controls
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
             CtlMenuRemoveNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMenuCloneNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
         }
 
         public void Dispose()

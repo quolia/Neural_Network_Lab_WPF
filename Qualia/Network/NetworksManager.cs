@@ -141,12 +141,12 @@ namespace Qualia.Controls
             this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount);
         }
 
-        public void AddNetwork()
+        public NetworkControl AddNetwork()
         {
-            AddNetwork(Constants.UnknownId);
+            return AddNetwork(Constants.UnknownId);
         }
 
-        private void AddNetwork(long networkId)
+        private NetworkControl AddNetwork(long networkId)
         {
             NetworkControl network = new(networkId, Config, this.GetUIHandler());
             TabItem tabItem = new()
@@ -163,6 +163,8 @@ namespace Qualia.Controls
                 network.InputLayer.NetworkTask_OnChanged(_taskFunction);
                 network.ResetLayersTabsNames();
             }
+
+            return network;
         }
 
         public void RemoveNetwork()

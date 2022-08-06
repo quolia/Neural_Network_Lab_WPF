@@ -434,5 +434,21 @@ namespace Qualia.Controls
             RandomizerViewer viewer = new(_randomizeMode, _randomizerParam);
             viewer.Show();
         }
+
+        public void CopyTo(NetworkControl newNetwork)
+        {
+            var layers = GetLayersControls();
+            var newLayers = newNetwork.GetLayersControls();
+
+            layers.First().CopyTo(newLayers.First());
+            layers.Last().CopyTo(newLayers.Last());
+
+            for (int i = 1; i < layers.Count - 1; ++i)
+            {
+                var layer = layers[i];
+                var newLayer = i < newLayers.Count - 1 ? newLayers[i] : newNetwork.AddLayer();
+                layer.CopyTo(newLayer);
+            }
+        }
     }
 }
