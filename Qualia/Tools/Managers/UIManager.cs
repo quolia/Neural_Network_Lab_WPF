@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Qualia.Tools
 {
-    public class ExtendedInfo
+    internal class ExtendedInfo
     {
         public static readonly Action<Notification.ParameterChanged> DefaultHandler = delegate { };
 
@@ -13,6 +13,11 @@ namespace Qualia.Tools
         public Notification.ParameterChanged UIParam;
 
         private static readonly Dictionary<object, ExtendedInfo> _dict = new();
+
+        public static void Clear()
+        {
+            _dict.Clear();
+        }
 
         public static ExtendedInfo GetInfo(object obj)
         {
@@ -35,6 +40,11 @@ namespace Qualia.Tools
 
     public static class UIManager
     {
+        public static void Clear()
+        {
+            ExtendedInfo.Clear();
+        }
+
         public static T SetUIParam<T>(this T t, Notification.ParameterChanged param) where T : class
         {
             var info = ExtendedInfo.GetInfo(t);

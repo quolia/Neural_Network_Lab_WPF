@@ -163,6 +163,8 @@ namespace Qualia.Controls
                 return;
             }
 
+            UIManager.Clear();
+
             _networksManager = new(CtlTabs, fileName, UI_OnChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
             Config.Main.FlushToDrive();
