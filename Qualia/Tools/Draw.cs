@@ -15,7 +15,7 @@ namespace Qualia.Tools
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref Rect Get(double x, double y, double width, double height)
         {
-            if (++s_pointer == POOL_SIZE)
+            if (++s_pointer >= POOL_SIZE)
             {
                 s_pointer = 0;
             }
