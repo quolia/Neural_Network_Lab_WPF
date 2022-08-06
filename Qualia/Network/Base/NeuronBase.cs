@@ -12,6 +12,7 @@ namespace Qualia.Controls
         public readonly Config Config;
 
         private readonly MenuItem _menuAdd;
+        private readonly MenuItem _menuCopyPaste;
         private readonly MenuItem _menuRemove;
         private readonly MenuItem _menuSelectAll;
         private readonly MenuItem _menuDeselectAll;
@@ -38,6 +39,10 @@ namespace Qualia.Controls
             _menuAdd = new() { Header = "Add Neuron" };
             ContextMenu.Items.Add(_menuAdd);
             _menuAdd.Click += AddNeuron_OnClick;
+
+            _menuCopyPaste = new() { Header = "Copy/Paste Neuron" };
+            ContextMenu.Items.Add(_menuCopyPaste);
+            _menuCopyPaste.Click += CopyPasteNeuron_OnClick;
 
             _menuRemove = new() { Header = "Remove Neuron..." };
             ContextMenu.Items.Add(_menuRemove);
@@ -78,6 +83,12 @@ namespace Qualia.Controls
             _parentLayer.AddNeuron();
         }
 
+        private void CopyPasteNeuron_OnClick(object sender, RoutedEventArgs e)
+        {
+            var newNeuron = _parentLayer.AddNeuron();
+            NeuronsSelector.CopyNeuron(this, newNeuron);
+        }
+
         private void RemoveNeuron_OnClick(object sender, RoutedEventArgs e)
         {
             RemoveNeuron();
@@ -95,7 +106,7 @@ namespace Qualia.Controls
 
         private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
         {
-            NeuronsSelector.Instance.CopyParamsToSelected(this);
+            NeuronsSelector.Instance.CopyParamsToSelectedNeurons(this);
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)
@@ -136,6 +147,18 @@ namespace Qualia.Controls
         public void OnIsSelectedChanged(bool isSelected)
         {
             Background = isSelected ? Draw.GetBrush(ColorsX.Wheat) : Draw.GetBrush(ColorsX.Lavender);
+        }
+
+        public void SetRemovingState(bool isRemoving)
+        {
+            if (isRemoving)
+            {
+                Background = Draw.GetBrush(ColorsX.Tomato);
+            }
+            else
+            {
+                OnIsSelectedChanged(NeuronsSelector.Instance.IsSelected(this));
+            }
         }
     }
 }

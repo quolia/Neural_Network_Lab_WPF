@@ -101,7 +101,7 @@ namespace Qualia.Controls
             }
         }
 
-        public new InputNeuronControl AddNeuron()
+        public new NeuronBaseControl AddNeuron()
         {
             InputNeuronControl neuron = new(Neurons.Count, this)
             {
@@ -112,12 +112,12 @@ namespace Qualia.Controls
             return neuron;
         }
 
-        public override void AddNeuron(long biasNeuronid)
+        public override NeuronBaseControl AddNeuron(long biasNeuronid)
         {
-            AddBias(biasNeuronid);
+            return AddBias(biasNeuronid);
         }
 
-        public void AddBias(long biasNeuronId)
+        public NeuronBaseControl AddBias(long biasNeuronId)
         {
             InputBiasControl neuron = new(biasNeuronId, _config, _onChanged, this);
 
@@ -132,15 +132,17 @@ namespace Qualia.Controls
             }
 
             RefreshNeuronsOrdinalNumbers();
+
+            return neuron;
         }
 
         public override bool CanNeuronBeAdded() => false;
         public override bool CanNeuronBeRemoved() => false;
 
-        public override bool RemoveNeuron(NeuronBaseControl neuron)
+        public override int RemoveNeuron(NeuronBaseControl neuron)
         {
             MessageBox.Show("Input neuron cannot be removed.", "Warning", MessageBoxButton.OK);
-            return false;
+            return 0;
         }
 
         public override void SelectAllNeurons()

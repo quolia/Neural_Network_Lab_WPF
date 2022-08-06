@@ -49,14 +49,14 @@ namespace Qualia.Controls
             MaxWidth = (sender as ScrollViewer).ViewportWidth;
         }
 
-        public void AddNeuron() => AddNeuron(Constants.UnknownId);
+        public NeuronBaseControl AddNeuron() => AddNeuron(Constants.UnknownId);
 
         virtual public bool CanNeuronBeAdded() => true;
         virtual public bool CanNeuronBeRemoved() => Neurons.Count > 1;
 
         abstract public void LayerControl_OnLoaded();
-        abstract public void AddNeuron(long id);
-        abstract public bool RemoveNeuron(NeuronBaseControl neuron);
+        abstract public NeuronBaseControl AddNeuron(long id);
+        abstract public int RemoveNeuron(NeuronBaseControl neuron);
 
         // Layer type.
 

@@ -78,7 +78,7 @@ namespace Qualia.Controls
 
         public override bool IsHidden => true;
 
-        public override void AddNeuron(long id)
+        public override NeuronBaseControl AddNeuron(long id)
         {
             NeuronControl neuron = new(id, _config, _onChanged, this);
 
@@ -93,36 +93,64 @@ namespace Qualia.Controls
             }
 
             RefreshNeuronsOrdinalNumbers();
+
+            return neuron;
         }
 
-        public override bool RemoveNeuron(NeuronBaseControl neuron)
+        public override int RemoveNeuron(NeuronBaseControl neuron)
         {
+            int result = 0;
+
             if (!CanNeuronBeRemoved())
             {
                 MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
-                return false;
+                return result;
             }
 
-            var color = neuron.Background;
-            neuron.Background = Draw.GetBrush(in ColorsX.Tomato);
+            neuron.SetRemovingState(true);
+
+            var selectedNeurons = Neurons.Where(n => n.IsSelected).ToList();
+
+            if (NeuronsSelector.Instance.IsSelected(neuron))
+            {
+                selectedNeurons.ForEach(n => n.SetRemovingState(true));
+            }
 
             if (MessageBoxResult.OK == 
-                    MessageBox.Show("Would you really like to remove the neuron?", "Confirm", MessageBoxButton.OKCancel))
+                    MessageBox.Show("Would you really like to remove the neuron(s)?", "Confirm", MessageBoxButton.OKCancel))
             {
-                Neurons.Remove(neuron);
-                CtlNeurons.Items.Remove(neuron);
+                if (NeuronsSelector.Instance.IsSelected(neuron))
+                {
+                    selectedNeurons.ForEach(n => RemoveNeuronWithoutConfirmation(n));
+                    result += selectedNeurons.Count;
+                }
 
-                neuron.RemoveFromConfig();
-                neuron.SaveConfig();
+                RemoveNeuronWithoutConfirmation(neuron);
 
-                RefreshNeuronsOrdinalNumbers();
-
-                OnChanged(Notification.ParameterChanged.NeuronsCount);
-                return true;
+                return result + 1;
             }
 
-            neuron.Background = color;
-            return false;
+            neuron.SetRemovingState(false);
+            
+            if (NeuronsSelector.Instance.IsSelected(neuron))
+            {
+                selectedNeurons.ForEach(n => n.SetRemovingState(false));
+            }
+
+            return result;
+        }
+
+        private void RemoveNeuronWithoutConfirmation(NeuronBaseControl neuron)
+        {
+            Neurons.Remove(neuron);
+            CtlNeurons.Items.Remove(neuron);
+
+            neuron.RemoveFromConfig();
+            neuron.SaveConfig();
+
+            RefreshNeuronsOrdinalNumbers();
+
+            OnChanged(Notification.ParameterChanged.NeuronsCount);
         }
 
         public override void SelectAllNeurons()

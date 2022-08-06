@@ -18,7 +18,7 @@ namespace Qualia.Controls
         public override void LoadConfig()
         {
             var neuronIds = _config.Get(Constants.Param.Neurons, Array.Empty<long>());
-            neuronIds.ToList().ForEach(AddNeuron);
+            neuronIds.ToList().ForEach(id => AddNeuron(id));
 
             //if (neuronIds.Length == 0)
             //{
@@ -44,7 +44,7 @@ namespace Qualia.Controls
             AddNeuron(Constants.UnknownId);
         }
 
-        public override void AddNeuron(long neuronId)
+        public override NeuronBaseControl AddNeuron(long neuronId)
         {
             OutputNeuronControl neuron = new(neuronId, _config, _onChanged, this);
             
@@ -59,15 +59,17 @@ namespace Qualia.Controls
             }
 
             RefreshNeuronsOrdinalNumbers();
+            
+            return neuron;
         }
 
         public override bool CanNeuronBeAdded() => false;
         public override bool CanNeuronBeRemoved() => false;
 
-        public override bool RemoveNeuron(NeuronBaseControl neuron)
+        public override int RemoveNeuron(NeuronBaseControl neuron)
         {
             MessageBox.Show("Output neuron cannot be removed.", "Warning", MessageBoxButton.OK);
-            return false;
+            return 0;
         }
 
         public override bool IsValid()

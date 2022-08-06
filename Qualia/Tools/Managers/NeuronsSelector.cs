@@ -1,9 +1,5 @@
 ﻿using Qualia.Controls;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qualia.Tools
 {
@@ -29,7 +25,7 @@ namespace Qualia.Tools
         {
             if (isSelected)
             {
-                if (!_selected.Contains(neuron))
+                if (!IsSelected(neuron))
                 {
                     _selected.Add(neuron);
                     neuron.OnIsSelectedChanged(isSelected);
@@ -37,7 +33,7 @@ namespace Qualia.Tools
             }
             else
             {
-                if (_selected.Contains(neuron))
+                if (IsSelected(neuron))
                 {
                     _selected.Remove(neuron);
                     neuron.OnIsSelectedChanged(isSelected);
@@ -45,23 +41,28 @@ namespace Qualia.Tools
             }
         }
 
-        public void CopyParamsToSelected(NeuronBaseControl fromNeuron)
+        public void CopyParamsToSelectedNeurons(NeuronBaseControl fromNeuron)
         {
             foreach (var neuron in _selected)
             {
-                if (neuron == fromNeuron)
-                {
-                    continue;
-                }
+                CopyNeuron(fromNeuron, neuron);
+            }
+        }
 
-                neuron.ActivationFunction = fromNeuron.ActivationFunction;
-                neuron.ActivationFunctionParam = fromNeuron.ActivationFunctionParam;
+        public static void CopyNeuron(NeuronBaseControl from, NeuronBaseControl to)
+        {
+            if (from == null || to == null || from == to)
+            {
+                return;
+            }
 
-                if (neuron is OutputNeuronControl && fromNeuron is OutputNeuronControl)
-                {
-                    neuron.PositiveTargetValue = fromNeuron.PositiveTargetValue;
-                    neuron.NegativeTargetValue = fromNeuron.NegativeTargetValue;
-                }
+            to.ActivationFunction = from.ActivationFunction;
+            to.ActivationFunctionParam = from.ActivationFunctionParam;
+
+            if (to is OutputNeuronControl && from is OutputNeuronControl)
+            {
+                to.PositiveTargetValue = from.PositiveTargetValue;
+                to.NegativeTargetValue = from.NegativeTargetValue;
             }
         }
     }
