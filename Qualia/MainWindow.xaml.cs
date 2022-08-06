@@ -443,14 +443,6 @@ namespace Qualia.Controls
             _timeThread.Start();
         }
 
-        volatile bool isErrorMatrixRendering = false;
-        volatile bool isNetworksRendering = false;
-        volatile bool isStatisticsRendering = false;
-
-        volatile bool isErrorMatrixRenderNeeded = false;
-        volatile bool isNetworksRenderNeeded = false;
-        volatile bool isStatisticsRenderNeeded = false;
-
         unsafe private void RunNetworks(object args)
         {
             var arr = (object[])args;
@@ -467,7 +459,6 @@ namespace Qualia.Controls
             int currentLoopLimit = 0;
             var loopLimits = new LoopsLimit[3];
 
-            /*
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
             bool isStatisticsRendering = false;
@@ -475,15 +466,6 @@ namespace Qualia.Controls
             bool isErrorMatrixRenderNeeded = false;
             bool isNetworksRenderNeeded = false;
             bool isStatisticsRenderNeeded = false;
-            */
-
-            isErrorMatrixRendering = false;
-            isNetworksRendering = false;
-            isStatisticsRendering = false;
-
-            isErrorMatrixRenderNeeded = false;
-            isNetworksRenderNeeded = false;
-            isStatisticsRenderNeeded = false;
 
             RenderStatistics.Reset();
 
@@ -819,7 +801,6 @@ namespace Qualia.Controls
                         }
 
                         swRenderTime.Restart();
-                        //CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
                         CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, selectedNetworkModel);
 
                         var lastStats = DrawStatistics(statisticsToRender, learningRate);
@@ -1024,6 +1005,11 @@ namespace Qualia.Controls
             stat.Add("Current 100% period, time (from round)", currentPeriod);
 
             stat.Add("5", null);
+
+            double totalRoundsPerSecond = statistics.Rounds / TimeSpan.FromTicks(statistics.TotalTicksElapsed).TotalSeconds;
+            stat.Add("Total rounds/sec",
+                     string.Format(Culture.Current,
+                                   Converter.IntToText((long)totalRoundsPerSecond)));
 
             stat.Add("Microseconds / pure round",
                      Converter.IntToText(statistics.MicrosecondsPerPureRound));
