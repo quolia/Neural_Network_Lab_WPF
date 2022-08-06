@@ -62,6 +62,8 @@ namespace Qualia.Controls
 
         private void MainWindow_OnLoaded(object sender, EventArgs e)
         {
+            Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
+
             FileHelper.InitWorkingDirectories();
 
             CtlNetworkPresenter.SizeChanged += (sender, e) =>
