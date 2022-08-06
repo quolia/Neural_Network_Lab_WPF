@@ -124,7 +124,7 @@ namespace Qualia.Tools
 
             if (info.OnChanged != ExtendedInfo.DefaultHandler)
             {
-                throw new InvalidOperationException();
+                //throw new InvalidOperationException();
             }
 
             info.OnChanged = onChanged;
