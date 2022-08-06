@@ -122,6 +122,8 @@
                     </MenuItem>
                     <MenuItem Name="CtlMenuRun" Header="_Run" IsEnabled="False" SubmenuOpened="MenuRun_OnSubmenuOpened">
                         <MenuItem Name="CtlMenuStart" Header="Start" IsEnabled="False" Click="MenuStart_OnClick" />
+                        <MenuItem Name="CtlMenuPause" Header="Pause" IsEnabled="False" Click="MenuPause_OnClick" />
+                        <MenuItem Name="CtlMenuContinue" Header="Continue" IsEnabled="False" Click="MenuContinue_OnClick" />
                         <MenuItem Name="CtlMenuStop" Header="Stop" IsEnabled="False" Click="MenuStop_OnClick" />
                         <MenuItem Name="CtlMenuReset" Header="Reset" Click="MenuReset_OnClick" />
                     </MenuItem>

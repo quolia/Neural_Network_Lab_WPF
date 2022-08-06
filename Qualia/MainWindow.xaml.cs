@@ -538,6 +538,18 @@ namespace Qualia.Controls
 
         private bool IsRunning => CtlMenuStop.IsEnabled;
 
+        private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
+        {
+            CtlMenuContinue.Visi = Visibility.Visible;
+            CtlMenuPause.Visibility = Visibility.Hidden;
+        }
+
+        private void MenuContinue_OnClick(object sender, RoutedEventArgs e)
+        {
+            CtlMenuContinue.Visibility = Visibility.Hidden;
+            CtlMenuPause.Visibility = Visibility.Visible;
+        }
+
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
         {
             if (_applyChangesManager.HasActions())
@@ -566,6 +578,7 @@ namespace Qualia.Controls
             CtlMenuStart.IsEnabled = false;
             CtlMenuReset.IsEnabled = false;
             CtlMenuStop.IsEnabled = true;
+            CtlMenuPause.IsEnabled = true;
             CtlMenuRemoveNetwork.IsEnabled = false;
 
             _networksManager.PrepareModelsForRun();
