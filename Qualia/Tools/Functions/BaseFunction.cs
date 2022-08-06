@@ -26,7 +26,7 @@ namespace Qualia.Tools
         public static string GetDefaultFunctionName()
         {
             var functions = GetItems();
-            return (GetInstance(functions[0]) as BaseFunction<T>).DefaultFunction;
+            return (GetInstanceByName(functions[0]) as BaseFunction<T>).DefaultFunction;
         }
 
         public static T GetInstance(SelectorControl selector)
@@ -36,8 +36,7 @@ namespace Qualia.Tools
                 return default(T);
             }
 
-            //return GetInstance(selector.SelectedItem.ToString());
-            return GetInstance(selector.SelectedItem.Text);
+            return GetInstanceByName(selector.SelectedItem.Text);
         }
 
         public static T GetInstance(SelectorControlWrapper selector)
@@ -47,7 +46,7 @@ namespace Qualia.Tools
                 return default(T);
             }
 
-            return GetInstance(selector.SelectedItem.Text);
+            return GetInstanceByName(selector.SelectedItem.Text);
         }
 
         public static T GetInstance(FunctionControl function)
@@ -57,10 +56,10 @@ namespace Qualia.Tools
                 return default(T);
             }
 
-            return GetInstance(function.SelectedFunction.Name);
+            return GetInstanceByName(function.SelectedFunction.Name);
         }
 
-        public static T GetInstance(string name)
+        public static T GetInstanceByName(string name)
         {
             //var funcName = Config.PrepareParamName(name);
             var funcName = name;
@@ -80,6 +79,22 @@ namespace Qualia.Tools
             }
 
             return (T)type.GetField("Instance").GetValue(null);
+        }
+
+        public string GetNameByInstance(BaseFunction<T> function)
+        {
+            var types = typeof(T).GetNestedTypes();
+
+            foreach (var type in types)
+            {
+                var instance = (T)type.GetField("Instance").GetValue(null);
+                if (instance == function)
+                {
+                    return type.Name;
+                }
+            }
+
+            return string.Empty;
         }
 
         public static string[] GetItems()

@@ -112,7 +112,7 @@ namespace Qualia.Controls
         
         public T GetInstance<T>() where T : class
         {
-            return BaseFunction<T>.GetInstance(SelectedFunction.Name);
+            return BaseFunction<T>.GetInstanceByName(SelectedFunction.Name);
         }
     }
 

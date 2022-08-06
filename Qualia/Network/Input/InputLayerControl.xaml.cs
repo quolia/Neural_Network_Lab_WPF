@@ -134,13 +134,16 @@ namespace Qualia.Controls
             RefreshNeuronsOrdinalNumbers();
         }
 
-        // IConfigParam
+        public override bool CanNeuronBeAdded() => false;
+        public override bool CanNeuronBeRemoved() => false;
 
         public override bool RemoveNeuron(NeuronBaseControl neuron)
         {
             MessageBox.Show("Input neuron cannot be removed.", "Warning", MessageBoxButton.OK);
             return false;
         }
+
+        // IConfigParam
 
         public override bool IsValid()
         {

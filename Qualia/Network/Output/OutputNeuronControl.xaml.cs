@@ -40,25 +40,28 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction
         {
             get => ActivationFunction.GetInstance(CtlActivationFunction);
-            set => throw new InvalidOperationException();
+            set
+            {
+                CtlActivationFunction.SelectByText(ActivationFunction.GetNameByInstance(value));
+            }
         }
         
         public override double ActivationFunctionParam
         {
             get => CtlActivationFunctionParam.Value;
-            set => throw new InvalidOperationException();
+            set => CtlActivationFunctionParam.Value = value;
         }
 
         public override double PositiveTargetValue
         {
             get => CtlPositiveTargetValue.Value;
-            set => throw new InvalidOperationException();
+            set => CtlPositiveTargetValue.Value = value;
         }
 
         public override double NegativeTargetValue
         {
             get => CtlNegativeTargetValue.Value;
-            set => throw new InvalidOperationException();
+            set => CtlNegativeTargetValue.Value = value;
         }
 
         public override string Label => CtlLabel.Text;
@@ -76,8 +79,6 @@ namespace Qualia.Controls
                 .Fill<ActivationFunction>(Config);
 
             _configParams.ForEach(param => param.LoadConfig());
-
-            StateChanged();
         }
 
         private void Neuron_OnChanged(Notification.ParameterChanged _)

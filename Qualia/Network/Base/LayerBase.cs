@@ -51,6 +51,7 @@ namespace Qualia.Controls
 
         public void AddNeuron() => AddNeuron(Constants.UnknownId);
 
+        virtual public bool CanNeuronBeAdded() => true;
         virtual public bool CanNeuronBeRemoved() => Neurons.Count > 1;
 
         abstract public void LayerControl_OnLoaded();

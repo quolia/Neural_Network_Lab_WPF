@@ -60,14 +60,6 @@ namespace Qualia.Controls
             CtlNumber.Text = Converter.IntToText(number);
         }
 
-        private void IsBias_OnCheckedChanged()
-        {
-            //CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
-
-            StateChanged();
-            Neuron_OnChanged(Notification.ParameterChanged.Unknown);
-        }
-
         public override InitializeFunction ActivationInitializeFunction => InitializeFunction.GetInstance(CtlActivationInitializeFunction);
         public override double ActivationInitializeFunctionParam => CtlActivationInitializeFunctionParam.Value;
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
@@ -75,13 +67,16 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction
         {
             get => ActivationFunction.GetInstance(CtlActivationFunction);
-            set => throw new InvalidOperationException();
+            set
+            {
+                CtlActivationFunction.SelectByText(ActivationFunction.GetNameByInstance(value));
+            }
         }
 
         public override double ActivationFunctionParam
         {
             get => CtlActivationFunctionParam.Value;
-            set => throw new InvalidOperationException();
+            set => CtlActivationFunctionParam.Value = value;
         }
 
         public override string Label => null;
@@ -105,8 +100,6 @@ namespace Qualia.Controls
             _configParams.ForEach(param => param.LoadConfig());
 
             //CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
-
-            StateChanged();
         }
 
         public override bool IsValid()

@@ -61,6 +61,9 @@ namespace Qualia.Controls
             RefreshNeuronsOrdinalNumbers();
         }
 
+        public override bool CanNeuronBeAdded() => false;
+        public override bool CanNeuronBeRemoved() => false;
+
         public override bool RemoveNeuron(NeuronBaseControl neuron)
         {
             MessageBox.Show("Output neuron cannot be removed.", "Warning", MessageBoxButton.OK);

@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Qualia.Controls
 {
@@ -12,8 +13,15 @@ namespace Qualia.Controls
 
         private readonly MenuItem _menuAdd;
         private readonly MenuItem _menuRemove;
+        private readonly MenuItem _menuCopyParamsToSelectedNeurons;
 
         private readonly LayerBaseControl _parentLayer;
+
+        public bool IsSelected
+        {
+            get => NeuronsSelector.Instance.IsSelected(this);
+            set => NeuronsSelector.Instance.SetSelected(this, value);
+        }
 
         public NeuronBaseControl(long id,
                                  Config config,
@@ -25,13 +33,17 @@ namespace Qualia.Controls
             ContextMenu = new();
             ContextMenu.Opened += ContextMenu_OnOpened;
 
-            _menuAdd = new() { Header = "Add neuron" };
+            _menuAdd = new() { Header = "Add Neuron" };
             ContextMenu.Items.Add(_menuAdd);
             _menuAdd.Click += AddNeuron_OnClick;
 
-            _menuRemove = new() { Header = "Remove neuron..." };
+            _menuRemove = new() { Header = "Remove Neuron..." };
             ContextMenu.Items.Add(_menuRemove);
             _menuRemove.Click += RemoveNeuron_OnClick;
+
+            _menuCopyParamsToSelectedNeurons = new() { Header = "Copy parameters to selected neurons" };
+            ContextMenu.Items.Add(_menuCopyParamsToSelectedNeurons);
+            _menuCopyParamsToSelectedNeurons.Click += CopyParamsToSelected_OnClick;
 
             Id = UniqId.GetNextId(id);
             if (config != null)
@@ -40,11 +52,15 @@ namespace Qualia.Controls
             }
 
             SetOnChangeEvent(onChanged);
+
+            Background = Draw.GetBrush(in ColorsX.Lavender);
         }
 
         private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
+            _menuAdd.IsEnabled = _parentLayer.CanNeuronBeAdded();
             _menuRemove.IsEnabled = _parentLayer.CanNeuronBeRemoved();
+            _menuCopyParamsToSelectedNeurons.IsEnabled = NeuronsSelector.Instance.SelectedCount > 0;
         }
 
         private void AddNeuron_OnClick(object sender, RoutedEventArgs e)
@@ -57,6 +73,11 @@ namespace Qualia.Controls
             RemoveNeuron();
         }
 
+        private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
+        {
+            NeuronsSelector.Instance.CopyParamsToSelected(this);
+        }
+
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             var sv = this.GetParentOfType<ScrollViewer>();
@@ -64,11 +85,6 @@ namespace Qualia.Controls
             {
                 sv.ScrollToBottom();
             }
-        }
-
-        public void StateChanged()
-        {
-            Background = Draw.GetBrush(in ColorsX.Lavender);
         }
 
         abstract public InitializeFunction ActivationInitializeFunction { get; }
@@ -87,6 +103,19 @@ namespace Qualia.Controls
         private void RemoveNeuron()
         {
             var removed = _parentLayer.RemoveNeuron(this);
+        }
+
+        //
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            IsSelected = !IsSelected;
+            base.OnMouseLeftButtonDown(e);
+        }
+
+        public void OnSelectionChanged(bool isSelected)
+        {
+            Background = isSelected ? Draw.GetBrush(ColorsX.Wheat) : Draw.GetBrush(ColorsX.Lavender);
         }
     }
 }

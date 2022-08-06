@@ -235,6 +235,7 @@
     <Compile Include="Tools\List.cs" />
     <Compile Include="Tools\Locker.cs" />
     <Compile Include="Tools\Logger.cs" />
+    <Compile Include="Tools\Managers\NeuronsSelector.cs" />
     <Compile Include="Tools\Math.cs" />
     <Compile Include="Tools\Rand.cs" />
     <Compile Include="Tools\Functions\RandomizeFunction.cs" />

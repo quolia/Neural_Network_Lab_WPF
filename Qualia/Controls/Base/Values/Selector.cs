@@ -78,6 +78,17 @@ namespace Qualia.Controls
                 SelectedItem = value;
             }
         }
+        public void SelectByText(string text)
+        {
+            foreach (var item in Items)
+            {
+                if ((item as ISelectableItem).Text == text)
+                {
+                    SelectedItem = item as ISelectableItem;
+                    return;
+                }
+            }
+        }
 
         // IConfigParam
 
@@ -133,7 +144,7 @@ namespace Qualia.Controls
 
         public static ISelectableItem GetSelectableItemForName<T>(string name) where T : class
         {
-            var instance = BaseFunction<T>.GetInstance(name);
+            var instance = BaseFunction<T>.GetInstanceByName(name);
 
             var type = typeof(T);
 
