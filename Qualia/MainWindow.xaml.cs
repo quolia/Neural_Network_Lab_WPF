@@ -497,8 +497,6 @@ namespace Qualia.Controls
 
                     _networksManager.PrepareModelsForLoop();
 
-                    //_roundsForLoopProcessing = _rounds + currentLoopLimit;
-
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
                         _networksManager.PrepareModelsForRound();
@@ -688,23 +686,15 @@ namespace Qualia.Controls
                     loopLimits[LoopsLimit.STATISTICS].Reset();
                 }
 
-                int minLimit = int.MaxValue;
+                currentLoopLimit = int.MaxValue;
                 for (int i = 0; i < loopLimits.Length; ++i)
                 {
                     var loopLimit = loopLimits[i];
-                    if (loopLimit.CurrentLimit > 0 && loopLimit.CurrentLimit < minLimit)
+                    if (loopLimit.CurrentLimit > 0 && loopLimit.CurrentLimit < currentLoopLimit)
                     {
-                        minLimit = loopLimit.CurrentLimit;
+                        currentLoopLimit = loopLimit.CurrentLimit;
                     }
                 }
-
-                if (minLimit == int.MaxValue)
-                {
-                    loopLimits[LoopsLimit.STATISTICS].Reset();
-                    minLimit = loopLimits[LoopsLimit.STATISTICS].OriginalLimit;
-                }
-
-                currentLoopLimit = minLimit;
 
                 bool isSleepNeeded = false;
 
