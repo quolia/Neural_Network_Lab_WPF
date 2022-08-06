@@ -1,12 +1,13 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
     sealed public partial class SettingsControl : BaseUserControl
     {
+        public Settings Settings;
+
         public SettingsControl()
         {
             InitializeComponent();
@@ -25,9 +26,9 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 10000)
                     .SetUIParam(Notification.ParameterChanged.Settings),
 
-                CtlPreventComputerFromSleep
+                CtlIsNoSleepMode
                     .Initialize(defaultValue: true)
-                    .SetUIParam(Notification.ParameterChanged.PreventComputerFromSleep)
+                    .SetUIParam(Notification.ParameterChanged.NoSleepMode)
             });
         }
 
@@ -36,43 +37,27 @@ namespace Qualia.Controls
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
-            Value_OnChanged(Notification.ParameterChanged.PreventComputerFromSleep);
+            Value_OnChanged(Notification.ParameterChanged.NoSleepMode);
         }
 
         private void Value_OnChanged(Notification.ParameterChanged param)
         {
-            if (param == Notification.ParameterChanged.Settings)
+            if (param == Notification.ParameterChanged.Settings
+                || param == Notification.ParameterChanged.NoSleepMode)
             {
-                OnChanged(Notification.ParameterChanged.Settings);
-                return;
-            }
-
-            if (param == Notification.ParameterChanged.PreventComputerFromSleep)
-            {
-                var yes = CtlPreventComputerFromSleep.Value;
-                try
-                {
-                    SystemTools.SetPreventComputerFromSleep(yes);
-                    OnChanged(yes
-                              ? Notification.ParameterChanged.PreventComputerFromSleep
-                              : Notification.ParameterChanged.DisablePreventComputerFromSleep);
-                }
-                catch
-                {
-                    OnChanged(yes
-                              ? Notification.ParameterChanged.DisablePreventComputerFromSleep
-                              : Notification.ParameterChanged.PreventComputerFromSleep);
-                }
+                Settings = Get();
+                OnChanged(param);
             }
         }
 
-        public SettingsModel GetModel()
+        private Settings Get()
         {
             return new()
             {
                 SkipRoundsToDrawErrorMatrix = (int)CtlSkipRoundsToDrawErrorMatrix.Value,
                 SkipRoundsToDrawNetworks = (int)CtlSkipRoundsToDrawNetworks.Value,
-                SkipRoundsToDrawStatistics = (int)CtlSkipRoundsToDrawStatistics.Value
+                SkipRoundsToDrawStatistics = (int)CtlSkipRoundsToDrawStatistics.Value,
+                IsNoSleepMode = CtlIsNoSleepMode.Value
             };
         }
     }

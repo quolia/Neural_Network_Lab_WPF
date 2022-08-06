@@ -83,11 +83,19 @@ namespace Qualia.Tools
             ES_SYSTEM_REQUIRED = 0x00000001
         }
 
-        public static void SetPreventComputerFromSleep(bool yes)
+        public static bool SetPreventComputerFromSleep(bool yes)
         {
-            var prev = SetThreadExecutionState(yes
-                                               ? EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS
-                                               : EXECUTION_STATE.ES_CONTINUOUS);
+            try
+            {
+                var prev = SetThreadExecutionState(yes
+                                                   ? EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS
+                                                   : EXECUTION_STATE.ES_CONTINUOUS);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 

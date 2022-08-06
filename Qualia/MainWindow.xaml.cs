@@ -39,6 +39,8 @@ namespace Qualia.Controls
 
             InitializeComponent();
 
+            CtlNoSleepLabel.Visibility = Visibility.Collapsed;
+
             this.SetConfigParams(new()
             {
                 CtlSettings,
@@ -235,13 +237,18 @@ namespace Qualia.Controls
             {
                 // Skip "Apply changes" button.
             }
-            else if (param == Notification.ParameterChanged.PreventComputerFromSleep)
+            else if (param == Notification.ParameterChanged.NoSleepMode)
             {
-                CtlNoSleepLabel.Visibility = Visibility.Visible;
+                var isNoSleepMode = CtlSettings.Settings.IsNoSleepMode;
+                SystemTools.SetPreventComputerFromSleep(isNoSleepMode);
+                CtlNoSleepLabel.Visibility = isNoSleepMode
+                                             ? Visibility.Visible
+                                             : Visibility.Collapsed;
             }
-            else if (param == Notification.ParameterChanged.DisablePreventComputerFromSleep)
+            else if (param == Notification.ParameterChanged.Settings)
             {
-                CtlNoSleepLabel.Visibility = Visibility.Collapsed;
+                TurnApplyChangesButtonOn(true);
+                CtlMenuStart.IsEnabled = false;
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
@@ -443,7 +450,7 @@ namespace Qualia.Controls
 
             Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
-            var settings = WorkingModel.Current.Settings;// CtlSettings.GetModel();
+            var settings = CtlSettings.Settings;// WorkingModel.Current.Settings;// CtlSettings.GetModel();
 
             var loopLimits = new LoopsLimit[3]
             {

@@ -59,8 +59,7 @@
 
             Settings,
             DynamicSettings,
-            PreventComputerFromSleep,
-            DisablePreventComputerFromSleep,
+            NoSleepMode,
 
             TaskFunction,
             TaskParameter,

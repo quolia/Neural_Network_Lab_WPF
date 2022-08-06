@@ -6,7 +6,7 @@ namespace Qualia.Model
 {
     public class WorkingModel
     {
-        public SettingsModel Settings;
+        //public Settings Settings;
         public NetworkDataModel Network;
         public NetworkDataModel SelectedNetwork;
 
@@ -32,23 +32,25 @@ namespace Qualia.Model
         public WorkingModel RefreshAll(Main main, NetworksManager manager)
         {
             WorkingModel current = Refresh(main)
-                                    .RefreshSettings()
+                                    //.RefreshSettings()
                                     .RefreshNetworks(manager);
 
             _current = current;
             return _current;
         }
 
+        /*
         public WorkingModel RefreshSettings()
         {
             _main.Dispatch(() =>
             {
-                Settings = _main.CtlSettings.GetModel();
+                Settings = _main.CtlSettings.Get();
 
             }).Wait();
 
             return this;
         }
+        */
 
         public WorkingModel RefreshNetworks(NetworksManager manager)
         {
@@ -63,10 +65,11 @@ namespace Qualia.Model
         }
     }
 
-    sealed public class SettingsModel
+    sealed public class Settings
     {
         public int SkipRoundsToDrawErrorMatrix;
         public int SkipRoundsToDrawNetworks;
         public int SkipRoundsToDrawStatistics;
+        public bool IsNoSleepMode;
     }
 }
