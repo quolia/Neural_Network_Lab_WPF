@@ -12,7 +12,7 @@ namespace Qualia.Controls
         public readonly Config Config;
 
         private readonly MenuItem _menuAdd;
-        private readonly MenuItem _menuCopyPaste;
+        private readonly MenuItem _menuClone;
         private readonly MenuItem _menuRemove;
         private readonly MenuItem _menuSelectAll;
         private readonly MenuItem _menuDeselectAll;
@@ -40,9 +40,9 @@ namespace Qualia.Controls
             ContextMenu.Items.Add(_menuAdd);
             _menuAdd.Click += AddNeuron_OnClick;
 
-            _menuCopyPaste = new() { Header = "Copy/Paste Neuron" };
-            ContextMenu.Items.Add(_menuCopyPaste);
-            _menuCopyPaste.Click += CopyPasteNeuron_OnClick;
+            _menuClone = new() { Header = "Clone Neuron" };
+            ContextMenu.Items.Add(_menuClone);
+            _menuClone.Click += CloneNeuron_OnClick;
 
             _menuRemove = new() { Header = "Remove Neuron..." };
             ContextMenu.Items.Add(_menuRemove);
@@ -74,7 +74,7 @@ namespace Qualia.Controls
         private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
             _menuAdd.IsEnabled = _parentLayer.CanNeuronBeAdded();
-            _menuCopyPaste.IsEnabled = _menuAdd.IsEnabled;
+            _menuClone.IsEnabled = _menuAdd.IsEnabled;
             _menuRemove.IsEnabled = _parentLayer.CanNeuronBeRemoved(this);
             _menuCopyParamsToSelectedNeurons.IsEnabled = NeuronsSelector.Instance.SelectedCount > 0;
         }
@@ -84,7 +84,7 @@ namespace Qualia.Controls
             _parentLayer.AddNeuron();
         }
 
-        private void CopyPasteNeuron_OnClick(object sender, RoutedEventArgs e)
+        private void CloneNeuron_OnClick(object sender, RoutedEventArgs e)
         {
             var newNeuron = _parentLayer.AddNeuron();
             CopyTo(newNeuron);
