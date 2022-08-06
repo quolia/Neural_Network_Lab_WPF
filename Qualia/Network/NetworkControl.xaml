@@ -49,6 +49,7 @@
             <TabControl.ContextMenu>
                 <ContextMenu Name="CtlLayerContextMenu" Opened="LayerContextMenu_OnOpened">
                     <MenuItem Name="CtlMenuAddLayer" Header="Add Layer" Click="MenuAddLayer_OnClick" />
+                    <MenuItem Name="CtlMenuCloneLayer" Header="Clone Layer" Click="MenuCloneLayer_OnClick" />
                     <MenuItem Name="CtlMenuRemoveLayer" Header="Remove Layer..." Click="MenuRemoveLayer_OnClick" />
                 </ContextMenu>
             </TabControl.ContextMenu>

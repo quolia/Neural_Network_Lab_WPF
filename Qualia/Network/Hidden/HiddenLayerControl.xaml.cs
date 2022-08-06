@@ -18,8 +18,6 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            //_onChangedLocal = onChanged;
-
             LoadConfig();
         }
 

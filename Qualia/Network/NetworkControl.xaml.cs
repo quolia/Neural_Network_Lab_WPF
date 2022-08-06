@@ -64,12 +64,12 @@ namespace Qualia.Controls
             //CtlBackPropagationStrategyDescription.Text = description;
         }
 
-        public void AddLayer()
+        public HiddenLayerControl AddLayer()
         {
-            AddLayer(Constants.UnknownId);
+            return AddLayer(Constants.UnknownId);
         }
 
-        private void AddLayer(long layerId)
+        private HiddenLayerControl AddLayer(long layerId)
         {
             HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), this.GetUIHandler());
 
@@ -85,7 +85,13 @@ namespace Qualia.Controls
                 Content = scroll
             };
 
-            CtlTabsLayers.Items.Insert(CtlTabsLayers.Items.Count - 1, tabItem);
+            var index = CtlTabsLayers.Items.Count - 1;
+            if (layerId == Constants.UnknownId)
+            {
+                index = MathX.Min(CtlTabsLayers.SelectedIndex + 1, index);
+            }
+
+            CtlTabsLayers.Items.Insert(index, tabItem);
             CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
 
@@ -93,6 +99,8 @@ namespace Qualia.Controls
             {
                 this.InvokeUIHandler(Notification.ParameterChanged.Structure);
             }
+
+            return hiddenLayer;
         }
 
         public void ResetLayersTabsNames()
@@ -402,12 +410,20 @@ namespace Qualia.Controls
 
         private void LayerContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
+            CtlMenuCloneLayer.IsEnabled = IsSelectedLayerHidden;
             CtlMenuRemoveLayer.IsEnabled = IsSelectedLayerHidden;
         }
 
         private void MenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
             AddLayer();
+        }
+
+        private void MenuCloneLayer_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectedLayer = SelectedLayer;
+            var newLayer = AddLayer();
+            selectedLayer.CopyTo(newLayer);
         }
 
         private void MenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)

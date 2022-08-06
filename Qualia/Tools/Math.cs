@@ -48,6 +48,12 @@ namespace Qualia.Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Min(int a, int b)
+        {
+            return a < b ? a : b;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Min(float a, float b)
         {
             return a < b ? a : b;

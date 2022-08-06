@@ -80,5 +80,17 @@ namespace Qualia.Controls
         //
 
         abstract public void SetAllNeuronsSelected(bool isSelected);
+
+        public void CopyTo(HiddenLayerControl newLayer)
+        {
+            int newNeuronsCount = newLayer.Neurons.Count;
+
+            for (int i = 0; i < Neurons.Count; ++i)
+            {
+                var neuron = Neurons[i];
+                var newNeuron = i < newNeuronsCount ? newLayer.Neurons[i] : newLayer.AddNeuron();
+                neuron.CopyTo(newNeuron);
+            }
+        }
     }
 }

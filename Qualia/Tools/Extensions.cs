@@ -39,7 +39,7 @@ namespace Qualia.Tools
 
         public static TabItem SelectedTab(this TabControl tab)
         {
-            return (tab.Items[tab.SelectedIndex] as TabItem);
+            return tab.SelectedIndex > -1 ? tab.Items[tab.SelectedIndex] as TabItem : null;
         }
 
         public static Color GetColor(this Brush brush)
