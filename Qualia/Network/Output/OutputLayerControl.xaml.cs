@@ -17,7 +17,7 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            var neuronIds = _config.Get(Constants.Param.Neurons, Array.Empty<long>());
+            var neuronIds = this.GetConfig().Get(Constants.Param.Neurons, Array.Empty<long>());
             neuronIds.ToList().ForEach(id => AddNeuron(id));
 
             //if (neuronIds.Length == 0)
@@ -46,7 +46,7 @@ namespace Qualia.Controls
 
         public override NeuronBaseControl AddNeuron(long neuronId)
         {
-            OutputNeuronControl neuron = new(neuronId, _config, _onChanged, this);
+            OutputNeuronControl neuron = new(neuronId, this.GetConfig(), _onChanged, this);
             
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
@@ -79,13 +79,13 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            _config.Set(Constants.Param.Neurons, Neurons.Select(n => n.Id));
+            this.GetConfig().Set(Constants.Param.Neurons, Neurons.Select(n => n.Id));
             Neurons.ToList().ForEach(n => n.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
-            _config.Remove(Constants.Param.Neurons);
+            this.GetConfig().Remove(Constants.Param.Neurons);
             Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 

@@ -17,7 +17,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            this.SetConfigParams(new List<IConfigParam>()
+            this.SetConfigParams(new()
             {
                 CtlInputInitial0
                     .Initialize(defaultValue: 0),
@@ -41,7 +41,7 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 1)
             });
 
-            this.GetConfigParams().ForEach(cp => cp.SetConfig(_config));
+            this.GetConfigParams().ForEach(cp => cp.SetConfig(this.GetConfig()));
 
             LoadConfig();
 
@@ -51,14 +51,14 @@ namespace Qualia.Controls
         public override void LoadConfig()
         {
             CtlActivationFunction
-                .Fill<ActivationFunction>(_config);
+                .Fill<ActivationFunction>(this.GetConfig());
 
             CtlWeightsInitializeFunction
-                 .Fill<InitializeFunction>(_config);
+                 .Fill<InitializeFunction>(this.GetConfig());
 
             this.GetConfigParams().ForEach(cp => cp.LoadConfig());
 
-            var neuronIds = _config.Get(Constants.Param.Neurons, Array.Empty<long>());
+            var neuronIds = this.GetConfig().Get(Constants.Param.Neurons, Array.Empty<long>());
             foreach (var biasNeuronId in neuronIds)
             {
                 AddBias(biasNeuronId);
@@ -120,7 +120,7 @@ namespace Qualia.Controls
 
         public NeuronBaseControl AddBias(long biasNeuronId)
         {
-            InputBiasControl neuron = new(biasNeuronId, _config, _onChanged, this);
+            InputBiasControl neuron = new(biasNeuronId, this.GetConfig(), _onChanged, this);
 
             Neurons.Add(neuron);
             CtlNeurons.Items.Add(neuron);
@@ -165,7 +165,7 @@ namespace Qualia.Controls
 
         public override void RemoveFromConfig()
         {
-            _config.Remove(Constants.Param.Neurons);
+            this.GetConfig().Remove(Constants.Param.Neurons);
             this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
 
             Neurons.ToList().ForEach(n => n.RemoveFromConfig());

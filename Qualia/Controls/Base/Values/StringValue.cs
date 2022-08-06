@@ -7,8 +7,6 @@ namespace Qualia.Controls
 {
     sealed public class StringValueControl : TextBox, IConfigParam
     {
-        private Config _config;
-
         private event Action<Notification.ParameterChanged> _onChanged = delegate { };
 
         public string DefaultValue { get; set; } = string.Empty;
@@ -60,22 +58,22 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            this.PutConfig(config);
         }
 
         public void LoadConfig()
         {
-            Value = _config.Get(Name, DefaultValue);
+            Value = this.GetConfig().Get(Name, DefaultValue);
         }
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value);
+            this.GetConfig().Set(Name, Value);
         }
 
         public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            this.GetConfig().Remove(Name);
         }
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)

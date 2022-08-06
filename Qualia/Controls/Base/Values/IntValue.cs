@@ -7,7 +7,6 @@ namespace Qualia.Controls
 {
     sealed public class IntValueControl : TextBox, IConfigParam
     {
-        private Config _config;
         private event Action<Notification.ParameterChanged> _onChanged = delegate { };
 
         public long DefaultValue { get; set; } = Constants.InvalidLong;
@@ -107,12 +106,12 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            this.PutConfig(config);
         }
 
         public void LoadConfig()
         {
-            var value = _config.Get(Name, DefaultValue);
+            var value = this.GetConfig().Get(Name, DefaultValue);
 
             if (value < MinValue)
             {
@@ -129,12 +128,12 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value);
+            this.GetConfig().Set(Name, Value);
         }
 
         public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            this.GetConfig().Remove(Name);
         }
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)

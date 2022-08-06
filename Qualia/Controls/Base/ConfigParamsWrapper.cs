@@ -11,7 +11,7 @@ namespace Qualia.Controls
         {
             Name = control.Name;
 
-            this.SetConfigParams(configParams ?? new List<IConfigParam>(control.FindVisualChildren<IConfigParam>()));
+            this.SetConfigParams(configParams ?? new(control.FindVisualChildren<IConfigParam>()));
         }
 
         // IConfigParam

@@ -10,7 +10,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            this.SetConfigParams(new List<IConfigParam>()
+            this.SetConfigParams(new()
             {
                 CtlMinCrossesAmountToCount
                     .Initialize(defaultValue: 0,

@@ -1,15 +1,11 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
     abstract public partial class BaseUserControl : UserControl, IConfigParam
     {
-        protected Config _config;
-        //protected List<IConfigParam> _configParams = new();
-
         protected Action<Notification.ParameterChanged> _onChanged;
 
         public BaseUserControl()
@@ -31,8 +27,8 @@ namespace Qualia.Controls
 
         virtual public void SetConfig(Config config)
         {
-            _config = config.Extend(Name);
-            this.GetConfigParams().ForEach(cp => cp.SetConfig(_config));
+            this.PutConfig(config.Extend(Name));
+            this.GetConfigParams().ForEach(cp => cp.SetConfig(this.GetConfig()));
         }
 
         virtual public void LoadConfig()
@@ -47,7 +43,7 @@ namespace Qualia.Controls
 
         virtual public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            this.GetConfig().Remove(Name);
             this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
         }
 

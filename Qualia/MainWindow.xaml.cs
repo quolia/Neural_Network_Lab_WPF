@@ -28,8 +28,6 @@ namespace Qualia.Controls
         private Stopwatch _startTime;
         private long _rounds;
 
-        private readonly List<IConfigParam> _configParams;
-
         public Main()
         {
             Instance = this;
@@ -41,7 +39,7 @@ namespace Qualia.Controls
 
             InitializeComponent();
 
-            _configParams = new()
+            this.SetConfigParams(new()
             {
                 CtlSettings,
 
@@ -50,7 +48,7 @@ namespace Qualia.Controls
 
                 CtlTaskSolutionsPresenter
                     .SetUIParam(Notification.ParameterChanged.DynamicSettings)
-            };
+            });
 
             Loaded += MainWindow_OnLoaded;
         }
@@ -128,8 +126,8 @@ namespace Qualia.Controls
 
         private void LoadMainConfigParams()
         {
-            _configParams.ForEach(p => p.SetConfig(Config.Main));
-            _configParams.ForEach(p => p.LoadConfig());
+            this.GetConfigParams().ForEach(p => p.SetConfig(Config.Main));
+            this.GetConfigParams().ForEach(p => p.LoadConfig());
         }
 
         private void LoadNetworks()
@@ -190,7 +188,7 @@ namespace Qualia.Controls
 
         private void SetOnChangeEvent()
         {
-            _configParams.ForEach(p => p.SetOnChangeEvent(UI_OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(UI_OnChanged));
 
             CtlInputDataPresenter.SetOnChangeEvent(UI_OnChanged);
         }
@@ -207,12 +205,12 @@ namespace Qualia.Controls
             
             Config.Main.FlushToDrive();
 
-            if (!_configParams.TrueForAll(p => p.IsValid()))
+            if (!this.GetConfigParams().TrueForAll(p => p.IsValid()))
             {
                 return false;
             }
 
-            _configParams.ForEach(p => p.SaveConfig());
+            this.GetConfigParams().ForEach(p => p.SaveConfig());
             Config.Main.FlushToDrive();
 
             if (_networksManager != null)
@@ -356,7 +354,7 @@ namespace Qualia.Controls
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
-                _networksManager.ResetLayersTabsNames(); // ?
+                //_networksManager.ResetLayersTabsNames(); // ?
 
                 _networksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);

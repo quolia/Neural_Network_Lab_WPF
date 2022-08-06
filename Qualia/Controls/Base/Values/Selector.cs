@@ -6,7 +6,6 @@ namespace Qualia.Controls
 {
     sealed public class SelectorControl : ComboBox, IConfigParam
     {
-        private Config _config;
         private event Action<Notification.ParameterChanged> _onChanged = delegate {};
 
         public string DefaultValue { get; set; }
@@ -86,7 +85,7 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            _config = config;
+            this.PutConfig(config);
         }
 
         public void LoadConfig()
@@ -96,12 +95,12 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            _config.Set(Name, Value.Text);
+            this.GetConfig().Set(Name, Value.Text);
         }
 
         public void RemoveFromConfig()
         {
-            _config.Remove(Name);
+            this.GetConfig().Remove(Name);
         }
 
         public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)

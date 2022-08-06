@@ -35,7 +35,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            this.SetConfigParams(new List<IConfigParam>()
+            this.SetConfigParams(new()
             {
                 CtlFunction,
                 CtlParam
@@ -64,7 +64,7 @@ namespace Qualia.Controls
 
         override public void SetConfig(Config config)
         {
-            _config = config;
+            this.PutConfig(config);
 
             config = config.Extend(Name);
 
@@ -80,7 +80,7 @@ namespace Qualia.Controls
 
         override public void SaveConfig()
         {
-            _config.Set(Name, CtlFunction.Value.Text);
+            this.GetConfig().Set(Name, CtlFunction.Value.Text);
             CtlParam.SaveConfig();
         }
 

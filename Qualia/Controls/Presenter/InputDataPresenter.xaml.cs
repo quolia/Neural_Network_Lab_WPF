@@ -35,7 +35,7 @@ namespace Qualia.Controls
             
             SizeChanged += Size_OnChanged;
 
-            this.SetConfigParams(new List<IConfigParam>()
+            this.SetConfigParams(new()
             {
                 CtlTaskFunction
                     .Initialize(nameof(TaskFunction.DotsCount))
@@ -74,8 +74,8 @@ namespace Qualia.Controls
 
                 var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
 
-                var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                                .Extend(CtlTaskFunction.Value.Text);
+                var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                         .Extend(CtlTaskFunction.Value.Text);
 
                 CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
                 CtlDistributionFunction.LoadConfig();
@@ -108,8 +108,8 @@ namespace Qualia.Controls
                 {
                     //TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
 
-                    var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                                    .Extend(CtlTaskFunction.Value.Text);
+                    var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                             .Extend(CtlTaskFunction.Value.Text);
 
                     CtlDistributionFunction.SetConfig(taskFunctionConfig);
                     CtlDistributionFunction.LoadConfig();
@@ -133,17 +133,17 @@ namespace Qualia.Controls
 
         public override void SetConfig(Config config)
         {
-            _config = config.Extend(Name);
-            CtlTaskFunction.SetConfig(_config);
+            this.PutConfig(config.Extend(Name));
+            CtlTaskFunction.SetConfig(this.GetConfig());
         }
 
         public override void LoadConfig()
         {
             CtlTaskFunction
-                .Fill<TaskFunction>(_config);
+                .Fill<TaskFunction>(this.GetConfig());
 
-            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                            .Extend(CtlTaskFunction.Value.Text);
+            var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                     .Extend(CtlTaskFunction.Value.Text);
 
             CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
             CtlDistributionFunction.LoadConfig();
@@ -175,8 +175,8 @@ namespace Qualia.Controls
         {
             CtlTaskFunction.SaveConfig();
 
-            var taskFunctionConfig = _config.Extend(CtlTaskFunction.Name)
-                                            .Extend(CtlTaskFunction.Value.Text);
+            var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                     .Extend(CtlTaskFunction.Value.Text);
 
             var taskFunction = GetTaskFunction();
             taskFunction.VisualControl.SetConfig(taskFunctionConfig);
@@ -185,7 +185,7 @@ namespace Qualia.Controls
             CtlDistributionFunction.SaveConfig();
             CtlIsPreventRepetition.SaveConfig();
 
-            _config.FlushToDrive();
+            this.GetConfig().FlushToDrive();
         }
 
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)

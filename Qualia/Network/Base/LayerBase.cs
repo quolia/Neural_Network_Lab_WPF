@@ -24,7 +24,7 @@ namespace Qualia.Controls
             Neurons = new ObservableCollection<NeuronBaseControl>();
 
             Id = UniqId.GetNextId(configId);
-            _config = config.ExtendWithId(Id);
+            this.PutConfig(config.ExtendWithId(Id));
 
             SetOnChangeEvent(onChanged);
 

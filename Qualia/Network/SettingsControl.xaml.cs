@@ -11,7 +11,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            this.SetConfigParams(new List<IConfigParam>()
+            this.SetConfigParams(new()
             {
                 CtlSkipRoundsToDrawErrorMatrix
                     .Initialize(defaultValue: 10000),
