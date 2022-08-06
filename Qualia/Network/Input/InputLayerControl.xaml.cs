@@ -143,6 +143,22 @@ namespace Qualia.Controls
             return false;
         }
 
+        public override void SelectAllNeurons()
+        {
+            foreach (var neuron in Neurons)
+            {
+                neuron.IsSelected = true;
+            }
+        }
+
+        public override void DeselectAllNeurons()
+        {
+            foreach (var neuron in Neurons)
+            {
+                neuron.IsSelected = false;
+            }
+        }
+
         // IConfigParam
 
         public override bool IsValid()
@@ -174,10 +190,5 @@ namespace Qualia.Controls
         }
 
         //
-
-        private void MenuAddBias_OnClick(object sender, EventArgs e)
-        {
-            AddBias(Constants.UnknownId);
-        }
     }
 }

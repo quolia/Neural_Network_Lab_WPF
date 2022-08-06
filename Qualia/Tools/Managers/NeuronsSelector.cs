@@ -13,8 +13,6 @@ namespace Qualia.Tools
 
         private readonly List<NeuronBaseControl> _selected = new();
 
-        //public IList<NeuronBaseControl> Selected { get => _selected; }
-
         public int SelectedCount => _selected.Count;
 
         private NeuronsSelector()
@@ -31,14 +29,20 @@ namespace Qualia.Tools
         {
             if (isSelected)
             {
-                _selected.Add(neuron);
+                if (!_selected.Contains(neuron))
+                {
+                    _selected.Add(neuron);
+                    neuron.OnIsSelectedChanged(isSelected);
+                }
             }
             else
             {
-                _selected.Remove(neuron);
+                if (_selected.Contains(neuron))
+                {
+                    _selected.Remove(neuron);
+                    neuron.OnIsSelectedChanged(isSelected);
+                }
             }
-
-            neuron.OnSelectionChanged(isSelected);
         }
 
         public void CopyParamsToSelected(NeuronBaseControl fromNeuron)

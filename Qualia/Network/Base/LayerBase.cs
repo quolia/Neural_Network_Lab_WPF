@@ -65,5 +65,8 @@ namespace Qualia.Controls
         virtual public bool IsOutput => false;
 
         //
+
+        abstract public void SelectAllNeurons();
+        abstract public void DeselectAllNeurons();
     }
 }

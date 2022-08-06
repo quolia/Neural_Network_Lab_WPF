@@ -13,6 +13,8 @@ namespace Qualia.Controls
 
         private readonly MenuItem _menuAdd;
         private readonly MenuItem _menuRemove;
+        private readonly MenuItem _menuSelectAll;
+        private readonly MenuItem _menuDeselectAll;
         private readonly MenuItem _menuCopyParamsToSelectedNeurons;
 
         private readonly LayerBaseControl _parentLayer;
@@ -45,6 +47,14 @@ namespace Qualia.Controls
             ContextMenu.Items.Add(_menuCopyParamsToSelectedNeurons);
             _menuCopyParamsToSelectedNeurons.Click += CopyParamsToSelected_OnClick;
 
+            _menuSelectAll = new() { Header = "Select all" };
+            ContextMenu.Items.Add(_menuSelectAll);
+            _menuSelectAll.Click += SelectAll_OnClick;
+
+            _menuDeselectAll = new() { Header = "Deselect all" };
+            ContextMenu.Items.Add(_menuDeselectAll);
+            _menuDeselectAll.Click += DeselectAll_OnClick;
+
             Id = UniqId.GetNextId(id);
             if (config != null)
             {
@@ -71,6 +81,16 @@ namespace Qualia.Controls
         private void RemoveNeuron_OnClick(object sender, RoutedEventArgs e)
         {
             RemoveNeuron();
+        }
+
+        private void SelectAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            _parentLayer.SelectAllNeurons();
+        }
+
+        private void DeselectAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            _parentLayer.DeselectAllNeurons();
         }
 
         private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
@@ -113,7 +133,7 @@ namespace Qualia.Controls
             base.OnMouseLeftButtonDown(e);
         }
 
-        public void OnSelectionChanged(bool isSelected)
+        public void OnIsSelectedChanged(bool isSelected)
         {
             Background = isSelected ? Draw.GetBrush(ColorsX.Wheat) : Draw.GetBrush(ColorsX.Lavender);
         }

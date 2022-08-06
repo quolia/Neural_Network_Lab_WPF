@@ -118,5 +118,21 @@ namespace Qualia.Controls
         {
             throw new InvalidOperationException();
         }
+
+        public override void SelectAllNeurons()
+        {
+            foreach (var neuron in Neurons)
+            {
+                neuron.IsSelected = true;
+            }
+        }
+
+        public override void DeselectAllNeurons()
+        {
+            foreach (var neuron in Neurons)
+            {
+                neuron.IsSelected = false;
+            }
+        }
     }
 }
