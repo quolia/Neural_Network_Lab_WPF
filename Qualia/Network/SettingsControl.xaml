@@ -15,7 +15,7 @@
             <Grid Margin="10,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -25,13 +25,13 @@
                 </Grid.RowDefinitions>
 
                 <local:TextControl HorizontalAlignment="Right" Text="Draw error matrix:" />
-                <local:IntValueControl HorizontalAlignment="Left" Grid.Column="1" x:Name="CtlSkipRoundsToDrawErrorMatrix" DefaultValue="10000" Value="10000" MaxValue="100000" MinValue="1" />
+                <local:IntValueControl HorizontalAlignment="Stretch" Grid.Column="1" x:Name="CtlSkipRoundsToDrawErrorMatrix" DefaultValue="10000" Value="10000" MaxValue="100000" MinValue="1" />
 
                 <local:TextControl HorizontalAlignment="Right" Grid.Row="1" Text="Draw network:" />
-                <local:IntValueControl HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" x:Name="CtlSkipRoundsToDrawNetworks" DefaultValue="10000" Value="10000" MaxValue="100000" MinValue="1" />
+                <local:IntValueControl HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" x:Name="CtlSkipRoundsToDrawNetworks" DefaultValue="10000" Value="10000" MaxValue="100000" MinValue="1" />
 
                 <local:TextControl HorizontalAlignment="Right" Grid.Row="2" Text="Draw statistics (loop size):" />
-                <local:IntValueControl HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" x:Name="CtlSkipRoundsToDrawStatistics" DefaultValue="10000" Value="10000" MaxValue="100000" MinValue="1" />
+                <local:IntValueControl HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1" x:Name="CtlSkipRoundsToDrawStatistics" DefaultValue="10000" Value="10000" MaxValue="100000" MinValue="1" />
 
                 <local:BoolValueControl Grid.Row="3" Grid.ColumnSpan="2" x:Name="CtlIsNoSleepMode" Content="No sleep mode" Margin="0 20 0 0" />
 
