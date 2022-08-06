@@ -269,11 +269,14 @@ namespace Qualia.Controls
             }
             else
             {
-                TurnApplyChangesButtonOn(true);
-                CtlMenuStart.IsEnabled = false;
-
                 var action = new ApplyAction(ApplyChangesToRunningNetworks, ApplyChangesToStandingNetworks);
                 _applyChangesManager.Add(action);
+            }
+
+            if (_applyChangesManager.HasActions())
+            {
+                TurnApplyChangesButtonOn(true);
+                CtlMenuStart.IsEnabled = false;
             }
         }
 
@@ -294,6 +297,8 @@ namespace Qualia.Controls
 
                 CtlCancelChanges.Background = Brushes.White;
                 CtlCancelChanges.IsEnabled = false;
+
+                _applyChangesManager.Clear();
             }
         }
 
@@ -324,10 +329,6 @@ namespace Qualia.Controls
                     {
                         TurnApplyChangesButtonOn(false);
                     }
-                    else
-                    {
-                        ApplyChangesToRunningNetworks();
-                    }
                 }
             }
             else
@@ -347,10 +348,6 @@ namespace Qualia.Controls
 
                         CtlMenuStart.IsEnabled = true;
                         CtlMenuRun.IsEnabled = true;
-                    }
-                    else
-                    {
-                        ApplyChangesToStandingNetworks();
                     }
                 }
             }

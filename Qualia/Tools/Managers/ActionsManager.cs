@@ -32,10 +32,15 @@ namespace Qualia.Tools
                 action.Execute(isForRunning);
             }
 
-            bool result = _actions.Any(); ;
+            bool result = HasActions();
             _actions.Clear();
 
             return result;
+        }
+
+        public bool HasActions()
+        {
+            return _actions.Any();
         }
     }
 
