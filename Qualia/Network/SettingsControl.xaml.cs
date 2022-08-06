@@ -37,6 +37,7 @@ namespace Qualia.Controls
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
+            ApplyChanges();
             Value_OnChanged(Notification.ParameterChanged.NoSleepMode);
         }
 
@@ -45,7 +46,6 @@ namespace Qualia.Controls
             if (param == Notification.ParameterChanged.Settings
                 || param == Notification.ParameterChanged.NoSleepMode)
             {
-                Settings = Get();
                 OnChanged(param);
             }
         }
@@ -60,5 +60,18 @@ namespace Qualia.Controls
                 IsNoSleepMode = CtlIsNoSleepMode.Value
             };
         }
+
+        public void ApplyChanges()
+        {
+            Settings = Get();
+        }
+    }
+
+    sealed public class Settings
+    {
+        public int SkipRoundsToDrawErrorMatrix;
+        public int SkipRoundsToDrawNetworks;
+        public int SkipRoundsToDrawStatistics;
+        public bool IsNoSleepMode;
     }
 }

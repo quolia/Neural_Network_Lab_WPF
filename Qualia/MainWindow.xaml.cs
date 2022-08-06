@@ -291,7 +291,6 @@ namespace Qualia.Controls
             try
             {
                 SaveConfig();
-                WorkingModel.Current.RefreshAll(this, _networksManager);
             }
             catch (Exception ex)
             {
@@ -325,6 +324,8 @@ namespace Qualia.Controls
         {
             lock (Locker.ApplyChanges)
             {
+                CtlSettings.ApplyChanges();
+
                 var taskFunction = CtlInputDataPresenter.TaskFunction;
                 taskFunction.VisualControl.ApplyChanges();
 
@@ -355,6 +356,8 @@ namespace Qualia.Controls
 
             lock (Locker.ApplyChanges)
             {
+                CtlSettings.ApplyChanges();
+
                 var taskFunction = CtlInputDataPresenter.TaskFunction;
                 taskFunction.VisualControl.ApplyChanges();
 
@@ -400,8 +403,6 @@ namespace Qualia.Controls
 
             _networksManager.PrepareModelsForRun();
             _networksManager.PrepareModelsForRound();
-
-            var model = WorkingModel.Current.RefreshAll(this, _networksManager);
 
             CtlInputDataPresenter.SetInputDataAndDraw(_networksManager.SelectedNetworkModel);
             _networksManager.FeedForward(); // initialize state
@@ -450,30 +451,17 @@ namespace Qualia.Controls
 
             Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
-            var settings = CtlSettings.Settings;// WorkingModel.Current.Settings;// CtlSettings.GetModel();
-
-            var loopLimits = new LoopsLimit[3]
-            {
-                new(settings.SkipRoundsToDrawErrorMatrix),
-                new(settings.SkipRoundsToDrawNetworks),
-                new(settings.SkipRoundsToDrawStatistics)
-            };
-
-            var currentLoopLimit = LoopsLimit.Min(in loopLimits);
+            Settings settings = null;
+            int currentLoopLimit = 0;
+            var loopLimits = new LoopsLimit[3];
 
             bool isErrorMatrixRendering = false;
             bool isNetworksRendering = false;
             bool isStatisticsRendering = false;
-            bool isRendering = false;
 
             bool isErrorMatrixRenderNeeded = false;
             bool isNetworksRenderNeeded = false;
             bool isStatisticsRenderNeeded = false;
-            bool isRenderNeeded = false;
-
-            ErrorMatrix errorMatrixToRender = null;
-            NetworkDataModel networkModelToRender = null;
-            Statistics statisticsToRender = null;
 
             SolutionsData solutionsData = null;
 
@@ -494,7 +482,22 @@ namespace Qualia.Controls
 
                 lock (Locker.ApplyChanges)
                 {
+                    if (settings != CtlSettings.Settings)
+                    {
+                        settings = CtlSettings.Settings;
+                        loopLimits = new LoopsLimit[3]
+                        {
+                        new(settings.SkipRoundsToDrawErrorMatrix),
+                        new(settings.SkipRoundsToDrawNetworks),
+                        new(settings.SkipRoundsToDrawStatistics)
+                        };
+
+                        currentLoopLimit = LoopsLimit.Min(in loopLimits);
+                    }
+
                     _networksManager.PrepareModelsForLoop();
+
+                    //_roundsForLoopProcessing = _rounds + currentLoopLimit;
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
@@ -571,7 +574,12 @@ namespace Qualia.Controls
 
                     _rounds += currentLoopLimit;
 
-                    if (_rounds % settings.SkipRoundsToDrawStatistics == 0)
+                    for (int i = 0; i < loopLimits.Length; ++i)
+                    {
+                        loopLimits[i].CurrentLimit -= currentLoopLimit;
+                    }
+
+                    if (loopLimits[LoopsLimit.STATISTICS].IsLimitReached)
                     {
                         var totalTicksElapsed = _startTime.Elapsed.Ticks;
 
@@ -647,22 +655,7 @@ namespace Qualia.Controls
                     }
                 }
 
-                int currentLimit = int.MaxValue;
-                for (int i = 0; i < loopLimits.Length; ++i)
-                {
-                    var loopLimit = loopLimits[i];
-                    loopLimit.CurrentLimit -= currentLoopLimit;
-                    if (loopLimit.CurrentLimit <= 0)
-                    {
-                        loopLimit.CurrentLimit = loopLimit.OriginalLimit;
-                    }
-
-                    if (loopLimit.CurrentLimit < currentLimit)
-                    {
-                        currentLimit = loopLimit.CurrentLimit;
-                    }
-                }
-
+                /*
                 if (isRendering)
                 {
                     isErrorMatrixRenderNeeded = false;
@@ -670,58 +663,58 @@ namespace Qualia.Controls
                     isStatisticsRenderNeeded = false;
                 }
                 else
+                */
                 {
-                    isErrorMatrixRenderNeeded = !isErrorMatrixRendering && _rounds % settings.SkipRoundsToDrawErrorMatrix == 0;
-                    isNetworksRenderNeeded = !isNetworksRendering && _rounds % settings.SkipRoundsToDrawNetworks == 0;
-                    isStatisticsRenderNeeded = !isStatisticsRendering && _rounds % settings.SkipRoundsToDrawStatistics == 0;
+                    isErrorMatrixRenderNeeded = false;
+                    if (loopLimits[LoopsLimit.ERROR_MATRIX].IsLimitReached)
+                    {
+                        isErrorMatrixRenderNeeded = !isErrorMatrixRendering;
+                        loopLimits[LoopsLimit.ERROR_MATRIX].Reset();
+                    }
+
+                    isNetworksRenderNeeded = false;
+                    if (loopLimits[LoopsLimit.NETWORK].IsLimitReached)
+                    {
+                        isNetworksRenderNeeded = !isNetworksRendering;
+                        loopLimits[LoopsLimit.NETWORK].Reset();
+                    }
+
+                    isStatisticsRenderNeeded = false;
+                    if (loopLimits[LoopsLimit.STATISTICS].IsLimitReached)
+                    {
+                        isStatisticsRenderNeeded = !isStatisticsRendering;
+                        loopLimits[LoopsLimit.STATISTICS].Reset();
+                    }
                 }
 
-                isRenderNeeded = isErrorMatrixRenderNeeded || isNetworksRenderNeeded || isStatisticsRenderNeeded;
-
-                if (isRenderNeeded)
+                int minLimit = int.MaxValue;
+                for (int i = 0; i < loopLimits.Length; ++i)
                 {
-                    isRendering = true;
+                    var loopLimit = loopLimits[i];
+                    if (loopLimit.CurrentLimit > 0 && loopLimit.CurrentLimit < minLimit)
+                    {
+                        minLimit = loopLimit.CurrentLimit;
+                    }
+                }
+
+                if (minLimit == int.MaxValue)
+                {
+                    loopLimits[LoopsLimit.STATISTICS].Reset();
+                    minLimit = loopLimits[LoopsLimit.STATISTICS].OriginalLimit;
+                }
+
+                currentLoopLimit = minLimit;
+
+                bool isSleepNeeded = false;
+
+                if (isErrorMatrixRenderNeeded)
+                {
+                    isErrorMatrixRendering = true;
 
                     NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
-                    double learningRate = 0;
-
-                    if (isErrorMatrixRenderNeeded)
-                    {
-                        isErrorMatrixRendering = true;
-
-                        //lock (ApplyChangesLocker)
-                        {
-                            errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
-                            selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
-                        }
-                    }
-
-                    if (isNetworksRenderNeeded)
-                    {
-                        isNetworksRendering = true;
-
-                        //lock (ApplyChangesLocker)
-                        {
-                            networkModelToRender = selectedNetworkModel.GetCopyToDraw();
-                            CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
-                        }
-                    }
-
-                    if (isStatisticsRenderNeeded)
-                    {
-                        isStatisticsRendering = true;
-
-                        //lock (ApplyChangesLocker)
-                        {
-                            CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
-                            {
-                                statisticsToRender = selectedNetworkModel.Statistics.Copy();
-                                learningRate = selectedNetworkModel.LearningRate;
-
-                                solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
-                            }
-                        }
-                    }
+                    Statistics statisticsToRender = selectedNetworkModel.Statistics.Copy();
+                    ErrorMatrix errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
+                    selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
 
                     Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
                     {
@@ -730,55 +723,92 @@ namespace Qualia.Controls
                             return;
                         }
 
-                        if (isErrorMatrixRendering)
-                        {
-                            swRenderTime.Restart();
+                        swRenderTime.Restart();
 
-                            CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender,
-                                                               statisticsToRender.LastInput,
-                                                               statisticsToRender.LastOutput);
-                            errorMatrixToRender.ClearData();
+                        CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender,
+                                                           statisticsToRender.LastInput,
+                                                           statisticsToRender.LastOutput);
+                        errorMatrixToRender.ClearData();
 
-                            swRenderTime.Stop();
-                            RenderTime.ErrorMatrix = swRenderTime.Elapsed.Ticks;
-                        }
-
-                        if (isNetworksRendering)
-                        {
-                            swRenderTime.Restart();
-
-                            DrawNetworkAndInputData(networkModelToRender,
-                                                    CtlUseWeightsColors.Value,
-                                                    CtlOnlyChangedWeights.Value,
-                                                    CtlHighlightChangedWeights.Value,
-                                                    CtlShowOnlyUnchangedWeights.Value,
-                                                    CtlShowActivationLabels.Value);
-
-                            swRenderTime.Stop();
-                            RenderTime.Network = swRenderTime.Elapsed.Ticks;
-                        }
-
-                        if (isStatisticsRendering)
-                        {
-                            swRenderTime.Restart();
-                            CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, selectedNetworkModel);
-
-                            var lastStats = DrawStatistics(statisticsToRender, learningRate);
-                            selectedNetworkModel.LastStatistics = lastStats;
-
-                            CtlTaskSolutionsPresenter.ShowSolutionsData(solutionsData);
-
-                            swRenderTime.Stop();
-                            RenderTime.Statistics = swRenderTime.Elapsed.Ticks;
-                        }
-
+                        swRenderTime.Stop();
+                        RenderTime.ErrorMatrix = swRenderTime.Elapsed.Ticks;
                         isErrorMatrixRendering = false;
-                        isStatisticsRendering = false;
-                        isNetworksRendering = false;
-
-                        isRendering = false;
                     });
 
+                    isSleepNeeded = true;
+                }
+
+                if (isNetworksRenderNeeded)
+                {
+                    isNetworksRendering = true;
+
+                    NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    NetworkDataModel networkModelToRender = selectedNetworkModel.GetCopyToDraw();
+                        
+                    CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
+
+                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    {
+                        if (_cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        swRenderTime.Restart();
+
+                        DrawNetworkAndInputData(networkModelToRender,
+                                                CtlUseWeightsColors.Value,
+                                                CtlOnlyChangedWeights.Value,
+                                                CtlHighlightChangedWeights.Value,
+                                                CtlShowOnlyUnchangedWeights.Value,
+                                                CtlShowActivationLabels.Value);
+
+                        swRenderTime.Stop();
+                        RenderTime.Network = swRenderTime.Elapsed.Ticks;
+                        isNetworksRendering = false;
+                    });
+
+                    isSleepNeeded = true;
+                }
+
+                if (isStatisticsRenderNeeded)
+                {
+                    isStatisticsRendering = true;
+
+                    NetworkDataModel selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    double learningRate = 0;
+
+                    CtlPlotPresenter.OptimizePlotPointsCount(_networksManager.NetworkModels);
+
+                    Statistics statisticsToRender = selectedNetworkModel.Statistics.Copy();
+                    learningRate = selectedNetworkModel.LearningRate;
+                    solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
+
+                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    {
+                        if (_cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        swRenderTime.Restart();
+                        CtlPlotPresenter.DrawPlot(_networksManager.NetworkModels, selectedNetworkModel);
+
+                        var lastStats = DrawStatistics(statisticsToRender, learningRate);
+                        selectedNetworkModel.LastStatistics = lastStats;
+
+                        CtlTaskSolutionsPresenter.ShowSolutionsData(solutionsData);
+
+                        swRenderTime.Stop();
+                        RenderTime.Statistics = swRenderTime.Elapsed.Ticks;
+                        isStatisticsRendering = false;
+                    });
+
+                    isSleepNeeded = true;
+                }
+
+                if (isSleepNeeded)
+                {
                     Thread.Sleep(1);
                 }
 

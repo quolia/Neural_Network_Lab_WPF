@@ -195,7 +195,6 @@
     <Compile Include="Controls\Task\CrossCountControl.xaml.cs">
       <DependentUpon>CrossCountControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\WorkingModel.cs" />
     <Compile Include="Network\Input\InputBiasControl.cs" />
     <Compile Include="Controls\Presenter\PresenterControl.cs">
       <SubType>UserControl</SubType>

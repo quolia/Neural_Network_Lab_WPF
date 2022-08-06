@@ -8,13 +8,18 @@ namespace Qualia.Tools
 {
     public static class Rects
     {
-        private const int POOL_SIZE = 5;
-        private static int s_pointer = 0;
+        private const int POOL_SIZE = 50;
+        private static int s_pointer = -1;
         private static readonly Rect[] s_pool = new Rect[POOL_SIZE];
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref Rect Get(double x, double y, double width, double height)
         {
+            if (++s_pointer == POOL_SIZE)
+            {
+                s_pointer = 0;
+            }
+
             ref var rect = ref s_pool[s_pointer];
 
             rect.X = x;
@@ -22,33 +27,28 @@ namespace Qualia.Tools
             rect.Width = width;
             rect.Height = height;
 
-            if (++s_pointer == POOL_SIZE)
-            {
-                s_pointer = 0;
-            }
-
             return ref rect;
         }
     }
 
     public static class Points
     {
-        private const int POOL_SIZE = 5;
-        private static int s_pointer = 0;
+        private const int POOL_SIZE = 50;
+        private static int s_pointer = -1;
         private static readonly Point[] s_pool = new Point[POOL_SIZE];
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref Point Get(double x, double y)
         {
+            if (++s_pointer >= POOL_SIZE)
+            {
+                s_pointer = 0;
+            }
+
             ref var point = ref s_pool[s_pointer];
 
             point.X = x;
             point.Y = y;
-
-            if (++s_pointer == POOL_SIZE)
-            {
-                s_pointer = 0;
-            }
 
             return ref point;
         }

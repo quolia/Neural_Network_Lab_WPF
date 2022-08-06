@@ -48,7 +48,7 @@ namespace Qualia.Controls
             {
                 var selectedNetworkModel = SelectedNetworkControl == null
                                            ? _prevSelectedNetworkModel
-                                           : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
+                                           : NetworkModels.FirstOrDefault(model => model.VisualId ==SelectedNetworkControl.Id);
 
                 _prevSelectedNetworkModel = selectedNetworkModel;
 

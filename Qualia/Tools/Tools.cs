@@ -7,8 +7,17 @@ namespace Qualia.Tools
 {
     sealed public class LoopsLimit
     {
+        public const int ERROR_MATRIX = 0;
+        public const int NETWORK = 1;
+        public const int STATISTICS = 2;
+
         public int CurrentLimit;
         public readonly int OriginalLimit;
+
+        public bool IsLimitReached => CurrentLimit <= 0;
+
+        public void Reset() => CurrentLimit = OriginalLimit;
+
 
         public static int Min(in LoopsLimit[] array)
         {
