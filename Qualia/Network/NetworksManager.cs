@@ -18,7 +18,7 @@ namespace Qualia.Controls
         private readonly TabControl _Tabs;
         private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
-        private NetworkDataModel _prevSelectedNetworkModel;
+        //private NetworkDataModel _prevSelectedNetworkModel;
 
         public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onChanged)
         {
@@ -37,7 +37,8 @@ namespace Qualia.Controls
 
         private void NetworksTabs_OnSelected(object sender, SelectionChangedEventArgs e)
         {
-            _selectedNetworkControl = _Tabs.SelectedContent as NetworkControl;
+            var selectedNetworkControl = _Tabs.SelectedContent as NetworkControl;
+            _selectedNetworkControl = selectedNetworkControl ?? _selectedNetworkControl;
         }
 
         public NetworkControl SelectedNetworkControl => _selectedNetworkControl;
@@ -46,11 +47,13 @@ namespace Qualia.Controls
         {
             get
             {
-                var selectedNetworkModel = SelectedNetworkControl == null
-                                           ? _prevSelectedNetworkModel
-                                           : NetworkModels.FirstOrDefault(model => model.VisualId ==SelectedNetworkControl.Id);
+                //_prevSelectedNetworkModel = null;
 
-                _prevSelectedNetworkModel = selectedNetworkModel;
+                var selectedNetworkModel = SelectedNetworkControl == null
+                                           ? null// _prevSelectedNetworkModel
+                                           : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
+
+                //_prevSelectedNetworkModel = selectedNetworkModel;
 
                 return selectedNetworkModel;
             }

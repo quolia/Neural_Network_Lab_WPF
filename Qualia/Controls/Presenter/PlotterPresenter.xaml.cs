@@ -50,16 +50,6 @@ namespace Qualia.Controls
             _isBaseRedrawNeeded = true;
         }
 
-        public void OptimizePlotPointsCount(ListX<NetworkDataModel> networks!!)
-        {
-            if (!networks.Any())
-            {
-                throw new ArgumentException("No network models.", nameof(networks));
-            }
-
-            OptimizePlotPointsCount(networks.First);
-        }
-
         public void OptimizePlotPointsCount(NetworkDataModel network)
         {
             while (network != null)
@@ -82,8 +72,7 @@ namespace Qualia.Controls
             }
         }
 
-        public void DrawPlot(ListX<NetworkDataModel> networks,
-                             NetworkDataModel selectedNetwork)
+        public void DrawPlot(NetworkDataModel network, NetworkDataModel selectedNetwork)
         {
             if (_isBaseRedrawNeeded)
             {
@@ -92,18 +81,6 @@ namespace Qualia.Controls
             }
 
             CtlDataCanvas.Clear();
-
-            if (networks == null)
-            {
-                return;
-            }
-
-            if (!networks.Any())
-            {
-                throw new ArgumentException("No network models.", nameof(networks));
-            }
-
-            var network = networks.First;
 
             while (network != null)
             { 
