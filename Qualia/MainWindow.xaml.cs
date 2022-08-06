@@ -655,48 +655,37 @@ namespace Qualia.Controls
                     }
                 }
 
-                /*
-                if (isRendering)
+                isErrorMatrixRenderNeeded = false;
+                if (loopLimits[LoopsLimit.ERROR_MATRIX].IsLimitReached)
                 {
-                    isErrorMatrixRenderNeeded = false;
-                    isNetworksRenderNeeded = false;
-                    isStatisticsRenderNeeded = false;
+                    isErrorMatrixRenderNeeded = !isErrorMatrixRendering;
+                    if (!isErrorMatrixRenderNeeded)
+                    {
+                        ++RenderStatistics.ErrorMatrixFramesLost;
+                    }
+                    loopLimits[LoopsLimit.ERROR_MATRIX].Reset();
                 }
-                else
-                */
+
+                isNetworksRenderNeeded = false;
+                if (loopLimits[LoopsLimit.NETWORK].IsLimitReached)
                 {
-                    isErrorMatrixRenderNeeded = false;
-                    if (loopLimits[LoopsLimit.ERROR_MATRIX].IsLimitReached)
+                    isNetworksRenderNeeded = !isNetworksRendering;
+                    if (!isNetworksRenderNeeded)
                     {
-                        isErrorMatrixRenderNeeded = !isErrorMatrixRendering;
-                        if (!isErrorMatrixRenderNeeded)
-                        {
-                            ++RenderStatistics.ErrorMatrixFramesLost;
-                        }
-                        loopLimits[LoopsLimit.ERROR_MATRIX].Reset();
+                        ++RenderStatistics.NetworkFramesLost;
                     }
+                    loopLimits[LoopsLimit.NETWORK].Reset();
+                }
 
-                    isNetworksRenderNeeded = false;
-                    if (loopLimits[LoopsLimit.NETWORK].IsLimitReached)
+                isStatisticsRenderNeeded = false;
+                if (loopLimits[LoopsLimit.STATISTICS].IsLimitReached)
+                {
+                    isStatisticsRenderNeeded = !isStatisticsRendering;
+                    if (!isStatisticsRenderNeeded)
                     {
-                        isNetworksRenderNeeded = !isNetworksRendering;
-                        if (!isNetworksRenderNeeded)
-                        {
-                            ++RenderStatistics.NetworkFramesLost;
-                        }
-                        loopLimits[LoopsLimit.NETWORK].Reset();
+                        ++RenderStatistics.StatisticsFramesLost;
                     }
-
-                    isStatisticsRenderNeeded = false;
-                    if (loopLimits[LoopsLimit.STATISTICS].IsLimitReached)
-                    {
-                        isStatisticsRenderNeeded = !isStatisticsRendering;
-                        if (!isStatisticsRenderNeeded)
-                        {
-                            ++RenderStatistics.StatisticsFramesLost;
-                        }
-                        loopLimits[LoopsLimit.STATISTICS].Reset();
-                    }
+                    loopLimits[LoopsLimit.STATISTICS].Reset();
                 }
 
                 int minLimit = int.MaxValue;
