@@ -698,8 +698,6 @@ namespace Qualia.Controls
                     }
                 }
 
-                bool isSleepNeeded = false;
-
                 NetworkDataModel selectedNetworkModel = null;
                 Statistics statisticsToRender = null;
 
@@ -739,8 +737,6 @@ namespace Qualia.Controls
 
                         isErrorMatrixRendering = false;
                     };
-
-                    isSleepNeeded = true;
                 }
 
                 if (isNetworksRenderNeeded)
@@ -777,8 +773,6 @@ namespace Qualia.Controls
 
                         isNetworksRendering = false;
                     };
-
-                    isSleepNeeded = true;
                 }
 
                 if (isStatisticsRenderNeeded)
@@ -818,8 +812,6 @@ namespace Qualia.Controls
 
                         isStatisticsRendering = false;
                     };
-
-                    isSleepNeeded = true;
                 }
 
                 if (renderErrorMatrix != null || renderNetwork != null || renderStatistics != null)
@@ -846,10 +838,7 @@ namespace Qualia.Controls
                             renderStatistics();
                         }
                     });
-                }
 
-                if (isSleepNeeded)
-                {
                     Thread.Sleep(1);
                 }
 
