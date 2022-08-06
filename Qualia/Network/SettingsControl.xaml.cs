@@ -14,19 +14,20 @@ namespace Qualia.Controls
             this.SetConfigParams(new()
             {
                 CtlSkipRoundsToDrawErrorMatrix
-                    .Initialize(defaultValue: 10000),
+                    .Initialize(defaultValue: 10000)
+                    .SetUIParam(Notification.ParameterChanged.Settings),
 
                 CtlSkipRoundsToDrawNetworks
-                    .Initialize(defaultValue: 10000),
+                    .Initialize(defaultValue: 10000)
+                    .SetUIParam(Notification.ParameterChanged.Settings),
 
                 CtlSkipRoundsToDrawStatistics
-                    .Initialize(defaultValue: 10000),
+                    .Initialize(defaultValue: 10000)
+                    .SetUIParam(Notification.ParameterChanged.Settings),
 
                 CtlPreventComputerFromSleep
                     .Initialize(defaultValue: true)
-                    .SetUIParam(Notification.ParameterChanged.PreventComputerFromSleep),
-
-                new FakeValue(Notification.ParameterChanged.Settings)
+                    .SetUIParam(Notification.ParameterChanged.PreventComputerFromSleep)
             });
         }
 

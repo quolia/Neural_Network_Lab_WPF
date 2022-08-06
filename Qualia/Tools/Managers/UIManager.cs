@@ -7,27 +7,27 @@ namespace Qualia.Tools
     {
         public static readonly Action<Notification.ParameterChanged> DefaultHandler = delegate { };
 
-        public Notification.ParameterChanged UIParam;
-        public readonly List<IConfigParam> ConfigParams = new();
         public Config Config;
+        public readonly List<IConfigParam> ConfigParams = new();
         public Action<Notification.ParameterChanged> OnChanged = DefaultHandler;
+        public Notification.ParameterChanged UIParam;
 
         private static readonly Dictionary<object, ExtendedInfo> _dict = new();
 
-        public static ExtendedInfo GetInfo(object o)
+        public static ExtendedInfo GetInfo(object obj)
         {
-            if (o == null)
+            if (obj == null)
             {
                 return null;
             }
 
-            if (_dict.ContainsKey(o))
+            if (_dict.ContainsKey(obj))
             {
-                return _dict[o];
+                return _dict[obj];
             }
 
             var info = new ExtendedInfo();
-            _dict.Add(o, info);
+            _dict.Add(obj, info);
 
             return info;
         }
@@ -40,7 +40,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             info.UIParam = param;
@@ -52,7 +52,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             return info.UIParam;
@@ -63,7 +63,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             info.ConfigParams.AddRange(configParams);
@@ -75,7 +75,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             return info.ConfigParams;
@@ -86,7 +86,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             info.Config = config;
@@ -98,7 +98,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             return info.Config;
@@ -109,7 +109,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             if (info.OnChanged != ExtendedInfo.DefaultHandler)
@@ -126,7 +126,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             return info.OnChanged;
@@ -137,7 +137,7 @@ namespace Qualia.Tools
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
             {
-                throw new InvalidOperationException("ExtendedInfo not found.");
+                throw new InvalidOperationException();
             }
 
             t.GetUIHandler()(param == Notification.ParameterChanged.Unknown ? t.GetUIParam() : param);

@@ -526,7 +526,7 @@ Networks:637929663525374560
 637953638317948103.ActivationFunctionParam:1
 637953638317948103.WeightsInitializeFunctionParam:1
 637929663525374560.SelectedLayerIndex:8
-SelectedNetworkIndex:0
+SelectedNetworkIndex:-1
 InputDataPresenter.TaskFunction:DotsCount
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1

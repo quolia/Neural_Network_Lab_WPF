@@ -47,11 +47,6 @@ namespace Qualia.Controls
 
         virtual public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
-            if (this.GetUIHandler() != ExtendedInfo.DefaultHandler)
-            {
-                throw new InvalidOperationException();
-            }
-
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(cp => cp.SetOnChangeEvent(onChanged));
         }

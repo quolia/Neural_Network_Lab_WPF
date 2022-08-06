@@ -172,7 +172,6 @@
     </ApplicationDefinition>
     <Compile Include="Controls\Base\BaseUserControl.cs" />
     <Compile Include="Controls\Base\ConfigParamsWrapper.cs" />
-    <Compile Include="Controls\Base\FakeValue.cs" />
     <Compile Include="Controls\Base\FunctionControl.xaml.cs">
       <DependentUpon>FunctionControl.xaml</DependentUpon>
     </Compile>

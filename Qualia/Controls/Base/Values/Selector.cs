@@ -77,6 +77,8 @@ namespace Qualia.Controls
                     return;
                 }
             }
+
+            throw new InvalidValueException(Name, text);
         }
 
         // IConfigParam

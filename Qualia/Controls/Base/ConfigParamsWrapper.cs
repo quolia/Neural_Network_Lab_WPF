@@ -10,7 +10,6 @@ namespace Qualia.Controls
         public ConfigParamWrapper(FrameworkElement control, List<IConfigParam> configParams = null)
         {
             Name = control.Name;
-
             this.SetConfigParams(configParams ?? new(control.FindVisualChildren<IConfigParam>()));
         }
 
@@ -26,8 +25,7 @@ namespace Qualia.Controls
 
         private void Param_OnChanged(Notification.ParameterChanged param)
         {
-            OnChanged(param == Notification.ParameterChanged.Unknown ? this.GetUIParam() : param);
+            this.InvokeUIHandler(param);
         }
     }
 }
-
