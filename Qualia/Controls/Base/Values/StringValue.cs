@@ -30,7 +30,7 @@ namespace Qualia.Controls
             if (IsValid())
             {
                 Background = Brushes.White;
-                this.GetUIHandler()(this.GetUIParam());
+                this.InvokeUIHandler();
             }
             else
             {

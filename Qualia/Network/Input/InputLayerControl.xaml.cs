@@ -138,7 +138,7 @@ namespace Qualia.Controls
         }
 
         public override bool CanNeuronBeAdded() => false;
-        public override bool CanNeuronBeRemoved() => false;
+        public override bool CanNeuronBeRemoved(NeuronBaseControl neuron) => false;
 
         public override int RemoveNeuron(NeuronBaseControl neuron)
         {

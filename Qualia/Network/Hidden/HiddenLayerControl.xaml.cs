@@ -101,19 +101,21 @@ namespace Qualia.Controls
         {
             int result = 0;
 
-            if (!CanNeuronBeRemoved())
+            if (!CanNeuronBeRemoved(neuron))
             {
                 MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
                 return result;
             }
-
-            neuron.SetRemovingState(true);
 
             var selectedNeurons = Neurons.Where(n => n.IsSelected).ToList();
 
             if (NeuronsSelector.Instance.IsSelected(neuron))
             {
                 selectedNeurons.ForEach(n => n.SetRemovingState(true));
+            }
+            else
+            {
+                neuron.SetRemovingState(true);
             }
 
             if (MessageBoxResult.OK == 
@@ -124,17 +126,22 @@ namespace Qualia.Controls
                     selectedNeurons.ForEach(RemoveNeuronWithoutConfirmation);
                     result += selectedNeurons.Count;
                 }
+                else
+                {
+                    RemoveNeuronWithoutConfirmation(neuron);
+                    ++result;
+                }
 
-                RemoveNeuronWithoutConfirmation(neuron);
-
-                return result + 1;
+                return result;
             }
 
-            neuron.SetRemovingState(false);
-            
             if (NeuronsSelector.Instance.IsSelected(neuron))
             {
                 selectedNeurons.ForEach(n => n.SetRemovingState(false));
+            }
+            else
+            {
+                neuron.SetRemovingState(false);
             }
 
             return result;

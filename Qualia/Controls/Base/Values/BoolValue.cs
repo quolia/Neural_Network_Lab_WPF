@@ -32,7 +32,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, RoutedEventArgs e)
         {
-            this.GetUIHandler()(this.GetUIParam());
+            this.InvokeUIHandler();
         }
 
         // IConfigParam

@@ -138,7 +138,7 @@ namespace Qualia.Controls
             _taskFunction = task;
             NetworksControls.ForEach(n => n.NetworkTask_OnChanged(task));
 
-            this.GetUIHandler()(Notification.ParameterChanged.NeuronsCount);
+            this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount);
         }
 
         public void AddNetwork()
@@ -179,7 +179,7 @@ namespace Qualia.Controls
 
                 ResetNetworksTabsNames();
 
-                this.GetUIHandler()(Notification.ParameterChanged.Structure);
+                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
             }
         }
 

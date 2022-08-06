@@ -131,5 +131,16 @@ namespace Qualia.Tools
 
             return info.OnChanged;
         }
+
+        public static void InvokeUIHandler<T>(this T t, Notification.ParameterChanged param = Notification.ParameterChanged.Unknown) where T : class
+        {
+            var info = ExtendedInfo.GetInfo(t);
+            if (info == null)
+            {
+                throw new InvalidOperationException("ExtendedInfo not found.");
+            }
+
+            t.GetUIHandler()(param == Notification.ParameterChanged.Unknown ? t.GetUIParam() : param);
+        }
     }
 }

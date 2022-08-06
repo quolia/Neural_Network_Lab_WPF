@@ -58,7 +58,7 @@ namespace Qualia.Controls
 
         private new void OnChanged(Notification.ParameterChanged _)
         {
-            this.GetUIHandler()(Notification.ParameterChanged.Structure);
+            this.InvokeUIHandler(Notification.ParameterChanged.Structure);
 
             //var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy.SelectedItem);
             //CtlBackPropagationStrategyDescription.Text = description;
@@ -91,7 +91,7 @@ namespace Qualia.Controls
 
             if (layerId == Constants.UnknownId)
             {
-                this.GetUIHandler()(Notification.ParameterChanged.Structure);
+                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -254,7 +254,7 @@ namespace Qualia.Controls
                 CtlTabsLayers.Items.Remove(CtlTabsLayers.SelectedTab());
                 ResetLayersTabsNames();
 
-                this.GetUIHandler()(Notification.ParameterChanged.Structure);
+                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
             }
         }
 
@@ -396,7 +396,7 @@ namespace Qualia.Controls
                                                                    colorDialog.Color.G,
                                                                    colorDialog.Color.B));
 
-                this.GetUIHandler()(Notification.ParameterChanged.Structure);
+                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
             }
         }
 

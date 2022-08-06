@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace Qualia.Controls
 {
@@ -10,7 +11,7 @@ namespace Qualia.Controls
     {
         public readonly long Id;
 
-        public ObservableCollection<NeuronBaseControl> Neurons { get; }
+        public ObservableCollection<NeuronBaseControl> Neurons { get; } = new();
 
         public LayerBaseControl(long configId,
                                 Config config,
@@ -20,8 +21,6 @@ namespace Qualia.Controls
             {
                 throw new ArgumentNullException(nameof(config));
             }
-
-            Neurons = new ObservableCollection<NeuronBaseControl>();
 
             Id = UniqId.GetNextId(configId);
             this.PutConfig(config.ExtendWithId(Id));
@@ -50,7 +49,23 @@ namespace Qualia.Controls
         public NeuronBaseControl AddNeuron() => AddNeuron(Constants.UnknownId);
 
         virtual public bool CanNeuronBeAdded() => true;
-        virtual public bool CanNeuronBeRemoved() => Neurons.Count > 1;
+        virtual public bool CanNeuronBeRemoved(NeuronBaseControl neuron)
+        {
+            int count = Neurons.Count;
+
+            if (count < 2)
+            {
+                return false;
+            }
+
+            if (!neuron.IsSelected)
+            {
+                return true;
+            }
+
+            var selected = Neurons.Where(n => n.IsSelected).ToList();
+            return count - selected.Count > 0;
+        }
 
         abstract public void LayerControl_OnLoaded();
         abstract public NeuronBaseControl AddNeuron(long id);

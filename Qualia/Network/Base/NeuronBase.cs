@@ -75,7 +75,7 @@ namespace Qualia.Controls
         {
             _menuAdd.IsEnabled = _parentLayer.CanNeuronBeAdded();
             _menuCopyPaste.IsEnabled = _menuAdd.IsEnabled;
-            _menuRemove.IsEnabled = _parentLayer.CanNeuronBeRemoved();
+            _menuRemove.IsEnabled = _parentLayer.CanNeuronBeRemoved(this);
             _menuCopyParamsToSelectedNeurons.IsEnabled = NeuronsSelector.Instance.SelectedCount > 0;
         }
 

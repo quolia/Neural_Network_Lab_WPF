@@ -45,7 +45,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.GetUIHandler()(this.GetUIParam());
+            this.InvokeUIHandler();
         }
 
         public new ISelectableItem SelectedItem

@@ -13,7 +13,7 @@ namespace Qualia.Controls
 
         public void OnChanged(Notification.ParameterChanged param)
         {
-            this.GetUIHandler()(param == Notification.ParameterChanged.Unknown ? this.GetUIParam() : param);
+            this.InvokeUIHandler(param);
         }
 
         // IConfigParam

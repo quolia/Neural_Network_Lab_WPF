@@ -46,7 +46,7 @@ namespace Qualia.Controls
         {
             if (IsValidInput(Constants.InvalidLong))
             {
-                this.GetUIHandler()(this.GetUIParam());
+                this.InvokeUIHandler();
             }
         }
 

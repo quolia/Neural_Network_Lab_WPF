@@ -94,7 +94,7 @@ namespace Qualia.Controls
             }
 
             var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
-            if (!taskFunction.VisualControl.IsValid())
+            if (taskFunction != null && !taskFunction.VisualControl.IsValid())
             {
                 TurnApplyChangesButtonOn(false);
             }
