@@ -11,7 +11,7 @@ namespace Qualia.Tools
 
         public int SelectedCount => _selected.Count;
 
-        private NeuronsSelector()
+        protected NeuronsSelector()
         {
             //
         }
@@ -41,29 +41,9 @@ namespace Qualia.Tools
             }
         }
 
-        public void CopyParamsToSelectedNeurons(NeuronBaseControl fromNeuron)
+        public void CopyNeuronToSelectedNeurons(NeuronBaseControl neuron)
         {
-            foreach (var neuron in _selected)
-            {
-                CopyNeuron(fromNeuron, neuron);
-            }
-        }
-
-        public static void CopyNeuron(NeuronBaseControl from, NeuronBaseControl to)
-        {
-            if (from == null || to == null || from == to)
-            {
-                return;
-            }
-
-            to.ActivationFunction = from.ActivationFunction;
-            to.ActivationFunctionParam = from.ActivationFunctionParam;
-
-            if (to is OutputNeuronControl && from is OutputNeuronControl)
-            {
-                to.PositiveTargetValue = from.PositiveTargetValue;
-                to.NegativeTargetValue = from.NegativeTargetValue;
-            }
+            _selected.ForEach(neuron.CopyTo);
         }
     }
 }

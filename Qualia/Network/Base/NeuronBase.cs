@@ -74,6 +74,7 @@ namespace Qualia.Controls
         private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
             _menuAdd.IsEnabled = _parentLayer.CanNeuronBeAdded();
+            _menuCopyPaste.IsEnabled = _menuAdd.IsEnabled;
             _menuRemove.IsEnabled = _parentLayer.CanNeuronBeRemoved();
             _menuCopyParamsToSelectedNeurons.IsEnabled = NeuronsSelector.Instance.SelectedCount > 0;
         }
@@ -86,7 +87,7 @@ namespace Qualia.Controls
         private void CopyPasteNeuron_OnClick(object sender, RoutedEventArgs e)
         {
             var newNeuron = _parentLayer.AddNeuron();
-            NeuronsSelector.CopyNeuron(this, newNeuron);
+            CopyTo(newNeuron);
         }
 
         private void RemoveNeuron_OnClick(object sender, RoutedEventArgs e)
@@ -96,17 +97,17 @@ namespace Qualia.Controls
 
         private void SelectAll_OnClick(object sender, RoutedEventArgs e)
         {
-            _parentLayer.SelectAllNeurons();
+            _parentLayer.SetAllNeuronsSelected(true);
         }
 
         private void DeselectAll_OnClick(object sender, RoutedEventArgs e)
         {
-            _parentLayer.DeselectAllNeurons();
+            _parentLayer.SetAllNeuronsSelected(false);
         }
 
         private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
         {
-            NeuronsSelector.Instance.CopyParamsToSelectedNeurons(this);
+            NeuronsSelector.Instance.CopyNeuronToSelectedNeurons(this);
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)
@@ -133,7 +134,7 @@ namespace Qualia.Controls
 
         private void RemoveNeuron()
         {
-            var removed = _parentLayer.RemoveNeuron(this);
+            var removedCount = _parentLayer.RemoveNeuron(this);
         }
 
         //
@@ -158,6 +159,23 @@ namespace Qualia.Controls
             else
             {
                 OnIsSelectedChanged(NeuronsSelector.Instance.IsSelected(this));
+            }
+        }
+
+        public void CopyTo(NeuronBaseControl neuron)
+        {
+            if (neuron == null || this == neuron)
+            {
+                return;
+            }
+
+            neuron.ActivationFunction = ActivationFunction;
+            neuron.ActivationFunctionParam = ActivationFunctionParam;
+
+            if (neuron is OutputNeuronControl && this is OutputNeuronControl)
+            {
+                neuron.PositiveTargetValue = PositiveTargetValue;
+                neuron.NegativeTargetValue = NegativeTargetValue;
             }
         }
     }

@@ -145,20 +145,9 @@ namespace Qualia.Controls
             return 0;
         }
 
-        public override void SelectAllNeurons()
+        public override void SetAllNeuronsSelected(bool isSelected)
         {
-            foreach (var neuron in Neurons)
-            {
-                neuron.IsSelected = true;
-            }
-        }
-
-        public override void DeselectAllNeurons()
-        {
-            foreach (var neuron in Neurons)
-            {
-                neuron.IsSelected = false;
-            }
+            Range.ForEach(Neurons, n => n.IsSelected = isSelected);
         }
 
         // IConfigParam

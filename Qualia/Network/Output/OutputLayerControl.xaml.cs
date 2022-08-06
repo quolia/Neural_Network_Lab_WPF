@@ -106,7 +106,7 @@ namespace Qualia.Controls
                 for (int i = newCount; i < count; ++i)
                 {
                     CtlNeurons.Items.RemoveAt(CtlNeurons.Items.Count - 1);
-                    Neurons.Remove(Neurons.Last());// At(Neurons.Count - 1);
+                    Neurons.Remove(Neurons.Last());
                 }
             }
         }
@@ -121,20 +121,9 @@ namespace Qualia.Controls
             throw new InvalidOperationException();
         }
 
-        public override void SelectAllNeurons()
+        public override void SetAllNeuronsSelected(bool isSelected)
         {
-            foreach (var neuron in Neurons)
-            {
-                neuron.IsSelected = true;
-            }
-        }
-
-        public override void DeselectAllNeurons()
-        {
-            foreach (var neuron in Neurons)
-            {
-                neuron.IsSelected = false;
-            }
+            Range.ForEach(Neurons, n => n.IsSelected = isSelected);
         }
     }
 }

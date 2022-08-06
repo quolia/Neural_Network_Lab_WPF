@@ -121,7 +121,7 @@ namespace Qualia.Controls
             {
                 if (NeuronsSelector.Instance.IsSelected(neuron))
                 {
-                    selectedNeurons.ForEach(n => RemoveNeuronWithoutConfirmation(n));
+                    selectedNeurons.ForEach(RemoveNeuronWithoutConfirmation);
                     result += selectedNeurons.Count;
                 }
 
@@ -153,20 +153,9 @@ namespace Qualia.Controls
             OnChanged(Notification.ParameterChanged.NeuronsCount);
         }
 
-        public override void SelectAllNeurons()
+        public override void SetAllNeuronsSelected(bool isSelected)
         {
-            foreach (var neuron in Neurons)
-            {
-                neuron.IsSelected = true;
-            }
-        }
-
-        public override void DeselectAllNeurons()
-        {
-            foreach (var neuron in Neurons)
-            {
-                neuron.IsSelected = false;
-            }
+            Range.ForEach(Neurons, n => n.IsSelected = isSelected);
         }
     }
 }

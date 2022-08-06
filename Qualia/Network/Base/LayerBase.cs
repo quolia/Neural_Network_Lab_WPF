@@ -9,7 +9,6 @@ namespace Qualia.Controls
     abstract public partial class LayerBaseControl : BaseUserControl
     {
         public readonly long Id;
-        //protected Action<Notification.ParameterChanged> _onChangedLocal;
 
         public ObservableCollection<NeuronBaseControl> Neurons { get; }
 
@@ -27,7 +26,6 @@ namespace Qualia.Controls
             Id = UniqId.GetNextId(configId);
             _config = config.ExtendWithId(Id);
 
-            //_onChangedLocal = onChanged;
             SetOnChangeEvent(onChanged);
 
             Loaded += LayerBaseControl_Loaded;
@@ -66,7 +64,6 @@ namespace Qualia.Controls
 
         //
 
-        abstract public void SelectAllNeurons();
-        abstract public void DeselectAllNeurons();
+        abstract public void SetAllNeuronsSelected(bool isSelected);
     }
 }
