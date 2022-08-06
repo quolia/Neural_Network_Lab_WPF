@@ -11,7 +11,7 @@ namespace Qualia.Controls
         {
             Name = control.Name;
 
-            _configParams = configParams ?? new List<IConfigParam>(control.FindVisualChildren<IConfigParam>());
+            this.SetConfigParams(configParams ?? new List<IConfigParam>(control.FindVisualChildren<IConfigParam>()));
         }
 
         // IConfigParam
@@ -19,7 +19,7 @@ namespace Qualia.Controls
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged = onChanged;
-            _configParams.ForEach(p => p.SetOnChangeEvent(Param_OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Param_OnChanged));
         }
 
         //

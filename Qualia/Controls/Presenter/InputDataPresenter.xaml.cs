@@ -1,6 +1,7 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -34,7 +35,7 @@ namespace Qualia.Controls
             
             SizeChanged += Size_OnChanged;
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>()
             {
                 CtlTaskFunction
                     .Initialize(nameof(TaskFunction.DotsCount))
@@ -51,7 +52,7 @@ namespace Qualia.Controls
                 CtlIsPreventRepetition
                     .Initialize(false)
                     .SetUIParam(Notification.ParameterChanged.IsPreventRepetition)
-            };
+            });
 
             CtlTaskFunction.SelectionChanged += TaskFunction_OnChanged;
         }
@@ -190,7 +191,7 @@ namespace Qualia.Controls
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged = onChanged;
-            _configParams.ForEach(p => p.SetOnChangeEvent(OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 
         private void DrawPoint(double x, double y, double value, bool isData)

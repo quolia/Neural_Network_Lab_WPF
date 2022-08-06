@@ -1,6 +1,7 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -10,7 +11,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>()
             {
                 CtlSkipRoundsToDrawErrorMatrix
                     .Initialize(defaultValue: 10000),
@@ -26,13 +27,13 @@ namespace Qualia.Controls
                     .SetUIParam(Notification.ParameterChanged.PreventComputerFromSleep),
 
                 new FakeValue(Notification.ParameterChanged.Settings)
-            };
+            });
         }
 
         public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
         {
             _onChanged = onChanged;
-            _configParams.ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
             Value_OnChanged(Notification.ParameterChanged.PreventComputerFromSleep);
         }

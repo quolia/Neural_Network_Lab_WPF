@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -34,11 +35,11 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>()
             {
                 CtlFunction,
                 CtlParam
-            };
+            });
         }
 
         private void Function_OnChanged(Notification.ParameterChanged param)

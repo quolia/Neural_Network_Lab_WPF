@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -9,7 +10,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>()
             {
                 CtlMinCrossesAmountToCount
                     .Initialize(defaultValue: 0,
@@ -28,7 +29,7 @@ namespace Qualia.Controls
                                 minValue: 0,
                                 maxValue: Constants.SquareRoot * Constants.SquareRoot / 2)
                     .SetUIParam(Notification.ParameterChanged.TaskParameter)
-            };
+            });
         }
 
         public int MaxCrossesAmountToCount => (int)CtlMaxCrossesAmoutToCount.Value;
@@ -47,27 +48,27 @@ namespace Qualia.Controls
 
         override public void SetConfig(Config config)
         {
-            _configParams.ForEach(p => p.SetConfig(config));
+            this.GetConfigParams().ForEach(p => p.SetConfig(config));
         }
 
         override public void LoadConfig()
         {
-            _configParams.ForEach(p => p.LoadConfig());
+            this.GetConfigParams().ForEach(p => p.LoadConfig());
         }
 
         override public void SaveConfig()
         {
-            _configParams.ForEach(p => p.SaveConfig());
+            this.GetConfigParams().ForEach(p => p.SaveConfig());
         }
 
         override public void RemoveFromConfig()
         {
-            _configParams.ForEach(p => p.RemoveFromConfig());
+            this.GetConfigParams().ForEach(p => p.RemoveFromConfig());
         }
 
         override public bool IsValid()
         {
-            if (_configParams.TrueForAll(p => p.IsValid()))
+            if (this.GetConfigParams().TrueForAll(p => p.IsValid()))
             {
                 if (CtlMaxCrossesAmoutToCount.Value <= Constants.SquareRoot
                     && CtlMaxCrossesAmoutToCount.Value > CtlMinCrossesAmountToCount.Value)
@@ -84,12 +85,12 @@ namespace Qualia.Controls
         override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
         {
             _onChanged = onChange;
-            _configParams.ForEach(p => p.SetOnChangeEvent(Parameter_OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Parameter_OnChanged));
         }
 
         override public void InvalidateValue()
         {
-            _configParams.ForEach(p => p.InvalidateValue());
+            this.GetConfigParams().ForEach(p => p.InvalidateValue());
         }
 
         //

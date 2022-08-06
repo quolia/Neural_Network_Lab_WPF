@@ -8,7 +8,7 @@ namespace Qualia.Controls
     abstract public partial class BaseUserControl : UserControl, IConfigParam
     {
         protected Config _config;
-        protected List<IConfigParam> _configParams = new();
+        //protected List<IConfigParam> _configParams = new();
 
         protected Action<Notification.ParameterChanged> _onChanged;
 
@@ -26,29 +26,29 @@ namespace Qualia.Controls
 
         virtual public bool IsValid()
         {
-            return _configParams.TrueForAll(cp => cp.IsValid());
+            return this.GetConfigParams().TrueForAll(cp => cp.IsValid());
         }
 
         virtual public void SetConfig(Config config)
         {
             _config = config.Extend(Name);
-            _configParams.ForEach(cp => cp.SetConfig(_config));
+            this.GetConfigParams().ForEach(cp => cp.SetConfig(_config));
         }
 
         virtual public void LoadConfig()
         {
-            _configParams.ForEach(cp => cp.LoadConfig());
+            this.GetConfigParams().ForEach(cp => cp.LoadConfig());
         }
 
         virtual public void SaveConfig()
         {
-            _configParams.ForEach(cp => cp.SaveConfig());
+            this.GetConfigParams().ForEach(cp => cp.SaveConfig());
         }
 
         virtual public void RemoveFromConfig()
         {
             _config.Remove(Name);
-            _configParams.ForEach(cp => cp.RemoveFromConfig());
+            this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
         }
 
         virtual public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
@@ -59,12 +59,12 @@ namespace Qualia.Controls
             }
 
             _onChanged = onChanged;
-            _configParams.ForEach(cp => cp.SetOnChangeEvent(onChanged));
+            this.GetConfigParams().ForEach(cp => cp.SetOnChangeEvent(onChanged));
         }
 
         virtual public void InvalidateValue()
         {
-            _configParams.ForEach(cp => cp.InvalidateValue());
+            this.GetConfigParams().ForEach(cp => cp.InvalidateValue());
         }
 
         //

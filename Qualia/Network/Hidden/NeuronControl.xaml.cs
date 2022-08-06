@@ -1,5 +1,6 @@
 ﻿using Qualia.Tools;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Qualia.Controls
@@ -17,7 +18,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>() 
             {
                 CtlActivationFunction
                     .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
@@ -37,12 +38,12 @@ namespace Qualia.Controls
 
                 CtlWeightsInitializeFunctionParam
                     .Initialize(defaultValue: 1)
-            };
+            });
 
-            _configParams.ForEach(param => param.SetConfig(Config));
+            this.GetConfigParams().ForEach(param => param.SetConfig(Config));
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
+            this.GetConfigParams().ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
         }
 
         private void ActivationFunction_OnToolTipOpening(object sender, System.Windows.Controls.ToolTipEventArgs e)
@@ -97,7 +98,7 @@ namespace Qualia.Controls
             CtlActivationFunction
                 .Fill<ActivationFunction>(Config);
 
-            _configParams.ForEach(param => param.LoadConfig());
+            this.GetConfigParams().ForEach(param => param.LoadConfig());
 
             //CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
         }
@@ -109,7 +110,7 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            _configParams.ForEach(param => param.SaveConfig());
+            this.GetConfigParams().ForEach(param => param.SaveConfig());
 
             CtlActivationInitializeFunction.RemoveFromConfig();
             CtlActivationInitializeFunctionParam.RemoveFromConfig();
@@ -117,7 +118,7 @@ namespace Qualia.Controls
 
         public override void RemoveFromConfig()
         {
-            _configParams.ForEach(param => param.RemoveFromConfig());
+            this.GetConfigParams().ForEach(param => param.RemoveFromConfig());
         }
 
         //

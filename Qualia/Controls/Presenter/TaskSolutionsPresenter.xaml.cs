@@ -13,11 +13,6 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new()
-            {
-
-            };
-
             ShowSolutionsData(new SolutionsData(Array.Empty<Solution>().ToList()));
         }
 

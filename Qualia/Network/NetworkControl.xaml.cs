@@ -30,7 +30,7 @@ namespace Qualia.Controls
             Id = UniqId.GetNextId(id);
             _config = config.ExtendWithId(Id);
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>()
             {
                 CtlRandomizeFunction
                     .Initialize(nameof(RandomizeFunction.Centered)),
@@ -49,12 +49,12 @@ namespace Qualia.Controls
 
                 CtlBackPropagationStrategy
                     .Initialize(nameof(BackPropagationStrategy.Always))
-            };
+            });
 
-            _configParams.ForEach(p => p.SetConfig(_config));
+            this.GetConfigParams().ForEach(p => p.SetConfig(_config));
             LoadConfig();
 
-            _configParams.ForEach(p => p.SetOnChangeEvent(OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 
         private new void OnChanged(Notification.ParameterChanged _)
@@ -118,7 +118,7 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return _configParams.All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
+            return this.GetConfigParams().All(p => p.IsValid()) && GetLayersControls().All(c => c.IsValid());
         }
 
         public override void SaveConfig()
@@ -131,7 +131,7 @@ namespace Qualia.Controls
                         $"{CtlColor.Foreground.GetColor().G}," +
                         $"{CtlColor.Foreground.GetColor().B}");
 
-            _configParams.ForEach(p => p.SaveConfig());
+            this.GetConfigParams().ForEach(p => p.SaveConfig());
 
             var layers = GetLayersControls();
             layers.ForEach(l => l.SaveConfig());
@@ -153,7 +153,7 @@ namespace Qualia.Controls
             _config.Remove(Constants.Param.SelectedLayerIndex);
             _config.Remove(Constants.Param.Color);
 
-            _configParams.ForEach(p => p.RemoveFromConfig());
+            this.GetConfigParams().ForEach(p => p.RemoveFromConfig());
 
             GetLayersControls().ForEach(l => l.RemoveFromConfig());
             _config.Remove(Constants.Param.Layers);
@@ -184,7 +184,7 @@ namespace Qualia.Controls
             var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy);
             CtlBackPropagationStrategyDescription.Text = description;
 
-            _configParams.ForEach(param => param.LoadConfig());
+            this.GetConfigParams().ForEach(param => param.LoadConfig());
 
             var color = _config.Get(Constants.Param.Color, new long[] { 255, 100, 100, 100 });
             CtlColor.Foreground = Draw.GetBrush(Color.FromArgb((byte)color[0],

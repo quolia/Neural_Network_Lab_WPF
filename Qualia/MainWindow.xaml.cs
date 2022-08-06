@@ -78,6 +78,30 @@ namespace Qualia.Controls
             LoadConfig();
         }
 
+        public void OnNetworkStructureChanged()
+        {
+            TurnApplyChangesButtonOn(true);
+            CtlMenuStart.IsEnabled = false;
+
+            if (_networksManager != null)
+            {
+                if (_networksManager.IsValid())
+                {
+                    _networksManager.ResetLayersTabsNames();
+                }
+                else
+                {
+                    TurnApplyChangesButtonOn(false);
+                }
+            }
+
+            var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
+            if (!taskFunction.VisualControl.IsValid())
+            {
+                TurnApplyChangesButtonOn(false);
+            }
+        }
+
         private void LoadConfig()
         {
             LoadWindowSettings();
@@ -228,26 +252,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
-                TurnApplyChangesButtonOn(true);
-                CtlMenuStart.IsEnabled = false;
-
-                if (_networksManager != null)
-                {
-                    if (_networksManager.IsValid())
-                    {
-                        _networksManager.ResetLayersTabsNames();
-                    }
-                    else
-                    {
-                        TurnApplyChangesButtonOn(false);
-                    }
-                }
-
-                var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
-                if (!taskFunction.VisualControl.IsValid())
-                {
-                    TurnApplyChangesButtonOn(false);
-                }
+                OnNetworkStructureChanged();
             }
             else
             {
@@ -256,7 +261,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void TurnApplyChangesButtonOn(bool isOn)
+        public void TurnApplyChangesButtonOn(bool isOn)
         {
             if (isOn)
             {
@@ -1251,15 +1256,6 @@ namespace Qualia.Controls
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
             CtlMenuRemoveNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
-        }
-
-        public void TaskParameter_OnChanged()
-        {
-            var taskFunction = CtlInputDataPresenter.TaskFunction;
-            _networksManager.RebuildNetworksForTask(taskFunction);
-            _networksManager.ResetLayersTabsNames();
-
-            CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
         }
 
         public void Dispose()

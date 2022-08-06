@@ -11,7 +11,7 @@ namespace Qualia.Controls
         {
             InitializeComponent();
 
-            _configParams = new()
+            this.SetConfigParams(new List<IConfigParam>()
             {
                 CtlActivationFunction
                     .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
@@ -26,13 +26,13 @@ namespace Qualia.Controls
 
                 CtlNegativeTargetValue
                     .Initialize(defaultValue: 0)
-            };
+            });
 
-            _configParams.ForEach(param => param.SetConfig(Config));
+            this.GetConfigParams().ForEach(param => param.SetConfig(Config));
 
             LoadConfig();
 
-            _configParams.ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
+            this.GetConfigParams().ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
         }
 
         public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
@@ -78,7 +78,7 @@ namespace Qualia.Controls
             CtlActivationFunction
                 .Fill<ActivationFunction>(Config);
 
-            _configParams.ForEach(param => param.LoadConfig());
+            this.GetConfigParams().ForEach(param => param.LoadConfig());
         }
 
         private void Neuron_OnChanged(Notification.ParameterChanged _)
@@ -98,12 +98,12 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            _configParams.ForEach(param => param.SaveConfig());
+            this.GetConfigParams().ForEach(param => param.SaveConfig());
         }
 
         public override void RemoveFromConfig()
         {
-            _configParams.ForEach(param => param.RemoveFromConfig());
+            this.GetConfigParams().ForEach(param => param.RemoveFromConfig());
         }
     }
 }
