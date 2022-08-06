@@ -254,7 +254,7 @@ namespace Qualia.Controls
 
         public void RemoveLayer()
         {
-            if (MessageBoxResult.OK == System.Windows.MessageBox.Show($"Would you really like to remove layer L{CtlTabsLayers.SelectedIndex + 1}?",
+            if (MessageBoxResult.OK == System.Windows.MessageBox.Show($"Would you really like to remove layer L{CtlTabsLayers.SelectedIndex}?",
                                                                       "Confirm",
                                                                       MessageBoxButton.OKCancel))
             {
@@ -421,9 +421,7 @@ namespace Qualia.Controls
 
         private void MenuCloneLayer_OnClick(object sender, RoutedEventArgs e)
         {
-            var selectedLayer = SelectedLayer;
-            var newLayer = AddLayer();
-            selectedLayer.CopyTo(newLayer);
+            SelectedLayer.CopyTo(AddLayer());
         }
 
         private void MenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
