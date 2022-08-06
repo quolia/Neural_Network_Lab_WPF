@@ -703,6 +703,10 @@ namespace Qualia.Controls
                 NetworkDataModel selectedNetworkModel = null;
                 Statistics statisticsToRender = null;
 
+                Action renderErrorMatrix = null;
+                Action renderNetwork = null;
+                Action renderStatistics = null;
+
                 if (isErrorMatrixRenderNeeded)
                 {
                     isErrorMatrixRendering = true;
@@ -712,7 +716,7 @@ namespace Qualia.Controls
                     ErrorMatrix errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
                     selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
 
-                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    renderErrorMatrix = () =>
                     {
                         if (_cancellationToken.IsCancellationRequested)
                         {
@@ -734,7 +738,7 @@ namespace Qualia.Controls
                         }
 
                         isErrorMatrixRendering = false;
-                    });
+                    };
 
                     isSleepNeeded = true;
                 }
@@ -748,7 +752,7 @@ namespace Qualia.Controls
                         
                     CtlInputDataPresenter.SetInputStat(_networksManager.NetworkModels.First);
 
-                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    renderNetwork = () =>
                     {
                         if (_cancellationToken.IsCancellationRequested)
                         {
@@ -772,7 +776,7 @@ namespace Qualia.Controls
                         }
 
                         isNetworksRendering = false;
-                    });
+                    };
 
                     isSleepNeeded = true;
                 }
@@ -790,7 +794,7 @@ namespace Qualia.Controls
                     learningRate = selectedNetworkModel.LearningRate;
                     SolutionsData solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
 
-                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    renderStatistics = () =>
                     {
                         if (_cancellationToken.IsCancellationRequested)
                         {
@@ -813,9 +817,35 @@ namespace Qualia.Controls
                         }
 
                         isStatisticsRendering = false;
-                    });
+                    };
 
                     isSleepNeeded = true;
+                }
+
+                if (renderErrorMatrix != null || renderNetwork != null || renderStatistics != null)
+                {
+                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+                    {
+                        if (_cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        if (renderErrorMatrix != null)
+                        {
+                            renderErrorMatrix();
+                        }
+
+                        if (renderNetwork != null)
+                        {
+                            renderNetwork();
+                        }
+
+                        if (renderStatistics != null)
+                        {
+                            renderStatistics();
+                        }
+                    });
                 }
 
                 if (isSleepNeeded)
