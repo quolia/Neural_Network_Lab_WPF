@@ -256,7 +256,7 @@ namespace Qualia.Controls
         {
             if (param == Notification.ParameterChanged.DynamicSettings)
             {
-                // Skip changes confirmation.
+                action = null;
             }
             else if (param == Notification.ParameterChanged.NoSleepMode)
             {
@@ -288,14 +288,13 @@ namespace Qualia.Controls
             else if (param == Notification.ParameterChanged.NetworkRandomizerFunction
                      || param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
             {
-                action = IsRunning ? null : new()
+                action = null;
+
+                if (!IsRunning)
                 {
-                    InstantAction = () =>
-                    {
-                        _networksManager.RefreshStandingNetworks();
-                        CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
-                    }
-                };
+                    _networksManager.RefreshStandingNetworks();
+                    CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                }
             }
             else if (param == Notification.ParameterChanged.NetworkLearningRate)
             {

@@ -47,9 +47,6 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 0.03)
                     .SetUIParam(Notification.ParameterChanged.NetworkLearningRate),
 
-                CtlIsNetworkEnabled
-                    .Initialize(true),
-
                 CtlCostFunction
                     .Initialize(nameof(CostFunction.MeanSquaredError)),
 
@@ -100,11 +97,25 @@ namespace Qualia.Controls
             }
 
             CtlTabsLayers.Items.Insert(index, tabItem);
+            var selectedItem = CtlTabsLayers.SelectedItem;
             CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
 
             if (layerId == Constants.UnknownId)
             {
+                ActionsManager.Instance.Add(new()
+                {
+                    CancelAction = () =>
+                    {
+                        hiddenLayer.RemoveFromConfig();
+                        CtlTabsLayers.Items.Remove(tabItem);
+                        CtlTabsLayers.SelectedItem = selectedItem;
+                        ResetLayersTabsNames();
+
+                        this.InvokeUIHandler(Notification.ParameterChanged.Structure);
+                    }
+                });
+
                 this.InvokeUIHandler(Notification.ParameterChanged.Structure);
             }
 
