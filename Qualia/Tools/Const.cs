@@ -74,7 +74,9 @@
             NeuronActivationFunctionParam,
 
             Structure,
-            NeuronsCount
+            NeuronsCount,
+            NetworkRandomizerFunctionParam,
+            NetworkRandomizerFunction
         }
     }
 }

@@ -251,9 +251,7 @@ namespace Qualia.Controls
 
                 var isNoSleepMode = CtlSettings.CtlIsNoSleepMode.Value;
                 SystemTools.SetPreventComputerFromSleep(isNoSleepMode);
-                CtlNoSleepLabel.Visibility = isNoSleepMode
-                                             ? Visibility.Visible
-                                             : Visibility.Collapsed;
+                CtlNoSleepLabel.Visibility = isNoSleepMode ? Visibility.Visible : Visibility.Collapsed;
             }
             else if (param == Notification.ParameterChanged.Settings)
             {
@@ -273,6 +271,14 @@ namespace Qualia.Controls
             else if (param == Notification.ParameterChanged.NetworkColor)
             {
                 _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(false));
+            }
+            else if (param == Notification.ParameterChanged.NetworkRandomizerFunction)
+            {
+                action = null;
+            }
+            else if (param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
+            {
+                action = null;
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -325,6 +331,10 @@ namespace Qualia.Controls
                     CtlCancelChanges.Background = Brushes.White;
                     CtlCancelChanges.IsEnabled = false;
                 }
+            }
+            else
+            {
+                _applyChangesManager.Clear();
             }
         }
 

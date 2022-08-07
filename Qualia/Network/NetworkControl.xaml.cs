@@ -36,10 +36,12 @@ namespace Qualia.Controls
                     .SetUIParam(Notification.ParameterChanged.IsNetworkEnabled),
 
                 CtlRandomizeFunction
-                    .Initialize(nameof(RandomizeFunction.Centered)),
+                    .Initialize(nameof(RandomizeFunction.Centered))
+                    .SetUIParam(Notification.ParameterChanged.NetworkRandomizerFunction),
 
                 CtlRandomizeFunctionParam
-                    .Initialize(defaultValue: 1),
+                    .Initialize(defaultValue: 1)
+                    .SetUIParam(Notification.ParameterChanged.NetworkRandomizerFunctionParam),
 
                 CtlLearningRate
                     .Initialize(defaultValue: 0.03),
