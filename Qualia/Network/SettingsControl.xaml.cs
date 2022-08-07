@@ -65,6 +65,11 @@ namespace Qualia.Controls
         {
             Settings = Get();
         }
+
+        public void CancelChanges()
+        {
+            LoadConfig();    
+        }
     }
 
     sealed public class Settings

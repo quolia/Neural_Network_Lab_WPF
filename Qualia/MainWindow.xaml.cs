@@ -240,7 +240,7 @@ namespace Qualia.Controls
         {
             if (param == Notification.ParameterChanged.DynamicSettings)
             {
-                // Skip "Apply changes" button.
+                // Skip changes confirmation.
             }
             else if (param == Notification.ParameterChanged.NoSleepMode)
             {
@@ -255,8 +255,12 @@ namespace Qualia.Controls
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
 
-                var action = new ApplyAction(CtlSettings.ApplyChanges, CtlSettings.ApplyChanges);
-                _applyChangesManager.Add(action);
+                _applyChangesManager.Add(new()
+                {
+                    RunningAction = CtlSettings.ApplyChanges,
+                    StandingAction = CtlSettings.ApplyChanges,
+                    CancelAction = CtlSettings.CancelChanges
+                });
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
@@ -267,7 +271,7 @@ namespace Qualia.Controls
             {
                 OnNetworkStructureChanged();
             }
-            else
+            else // Default handler.
             {
                 var action = new ApplyAction(ApplyChangesToRunningNetworks, ApplyChangesToStandingNetworks);
                 _applyChangesManager.Add(action);
@@ -277,6 +281,12 @@ namespace Qualia.Controls
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
+
+                if (!_applyChangesManager.HasCancelActions())
+                {
+                    CtlCancelChanges.Background = Brushes.White;
+                    CtlCancelChanges.IsEnabled = false;
+                }
             }
         }
 
@@ -317,37 +327,31 @@ namespace Qualia.Controls
             if (IsRunning)
             {
                 if (MessageBoxResult.Yes ==
-                        MessageBox.Show("Would you like running networks to apply changes?", "Confirm", MessageBoxButton.YesNo))
+                        MessageBox.Show("Confirm apply changes to running networks.", "Confirm", MessageBoxButton.YesNo))
                 {
-                    bool result = false;
                     lock (Locker.ApplyChanges)
                     {
-                        result = _applyChangesManager.Execute(IsRunning);
-                    }
-
-                    if (result)
-                    {
-                        TurnApplyChangesButtonOn(false);
+                        if (_applyChangesManager.Execute(IsRunning))
+                        {
+                            TurnApplyChangesButtonOn(false);
+                        }
                     }
                 }
             }
             else
             {
                 if (MessageBoxResult.Yes ==
-                        MessageBox.Show("Would you like networks to apply changes?", "Confirm", MessageBoxButton.YesNo))
+                        MessageBox.Show("Confirm apply changes.", "Confirm", MessageBoxButton.YesNo))
                 {
-                    bool result = false;
                     lock (Locker.ApplyChanges)
                     {
-                        result = _applyChangesManager.Execute(IsRunning);
-                    }
+                        if (_applyChangesManager.Execute(IsRunning))
+                        {
+                            TurnApplyChangesButtonOn(false);
 
-                    if (result)
-                    {
-                        TurnApplyChangesButtonOn(false);
-
-                        CtlMenuStart.IsEnabled = true;
-                        CtlMenuRun.IsEnabled = true;
+                            CtlMenuStart.IsEnabled = true;
+                            CtlMenuRun.IsEnabled = true;
+                        }
                     }
                 }
             }
@@ -355,7 +359,17 @@ namespace Qualia.Controls
 
         private void CancelChanges_OnClick(object sender, RoutedEventArgs e)
         {
-            LoadConfig();
+            if (MessageBoxResult.Yes ==
+                    MessageBox.Show("Confirm cancel changes.", "Confirm", MessageBoxButton.YesNo))
+            {
+                lock (Locker.ApplyChanges)
+                {
+                    if (_applyChangesManager.Cancel())
+                    {
+                        TurnApplyChangesButtonOn(false);
+                    }
+                }
+            }
         }
 
         private void ApplyChangesToRunningNetworks()

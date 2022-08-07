@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qualia.Tools
 {
@@ -27,13 +25,41 @@ namespace Qualia.Tools
 
         public bool Execute(bool isForRunning)
         {
-            foreach (var action in _actions)
+            bool result = HasActions();
+
+            while (_actions.Any())
             {
-                action.Execute(isForRunning);
+                var actions = _actions.ToList();
+                Clear();
+
+                foreach (var action in actions)
+                {
+                    action.Execute(isForRunning);
+                }
             }
 
+            return result;
+        }
+
+        public bool Cancel()
+        {
+            return RunCancelActions();
+        }
+
+        private bool RunCancelActions()
+        {
             bool result = HasActions();
-            _actions.Clear();
+
+            while (_actions.Any())
+            {
+                var actions = _actions.ToList();
+                Clear();
+
+                foreach (var action in actions)
+                {
+                    action.Cancel();
+                }
+            }
 
             return result;
         }
@@ -42,31 +68,45 @@ namespace Qualia.Tools
         {
             return _actions.Any();
         }
+
+        public bool HasCancelActions()
+        {
+            return _actions.Any(a => a.CancelAction != null);
+        }
     }
 
-    public class  ApplyAction
+    public class ApplyAction
     {
-        private Action _runningAction;
-        private Action _standingAction;
+        public Action RunningAction;
+        public Action StandingAction;
+        public Action CancelAction;
 
-        public ApplyAction(Action runningAction, Action standingAction)
+        private static readonly Action _default = delegate { };
+
+        public ApplyAction(Action runningAction = null, Action standingAction = null, Action cancelAction = null)
         {
-            _runningAction = runningAction;
-            _standingAction = standingAction;
+            RunningAction = runningAction;
+            StandingAction = standingAction;
+            CancelAction = cancelAction;
         }
 
         public bool Execute(bool isForRunning)
         {
-            if (isForRunning && _runningAction != null)
+            if (isForRunning)
             {
-                _runningAction();
+                (RunningAction ?? _default)();
+            }
+            else
+            {
+                (StandingAction ?? _default)();
             }
 
-            if (!isForRunning && _standingAction != null)
-            {
-                _standingAction();
-            }
+            return true;
+        }
 
+        public bool Cancel()
+        {
+            (CancelAction ?? _default)();
             return true;
         }
     }
