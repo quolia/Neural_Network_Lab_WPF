@@ -276,6 +276,10 @@ namespace Qualia.Controls
 
                 OnNetworkStructureChanged();
             }
+            else if (param == Notification.ParameterChanged.NeuronActivationFunction)
+            {
+                int a = 1;
+            }
             else // Default handler.
             {
                 _applyChangesManager.Add(new()

@@ -9,6 +9,7 @@ namespace Qualia.Tools
         public static readonly ActionsManager Instance = new();
 
         private readonly List<ApplyAction> _actions = new();
+        private IEnumerable<ApplyAction> _cancelActions => _actions.Where(a => a.CancelAction != null).Reverse();
 
         protected ActionsManager()
         {
@@ -32,11 +33,10 @@ namespace Qualia.Tools
             while (_actions.Any())
             {
                 var actions = _actions.ToList();
-                Clear();
-
                 foreach (var action in actions)
                 {
                     action.Execute(isForRunning);
+                    _actions.Remove(action);
                 }
             }
 
@@ -45,36 +45,28 @@ namespace Qualia.Tools
 
         public bool Cancel()
         {
-            return RunCancelActions();
-        }
+            bool result = HasCancelActions();
 
-        private bool RunCancelActions()
-        {
-            bool result = HasActions();
-
-            while (_actions.Any())
+            while (true)
             {
-                var actions = _actions.ToList();
-                Clear();
+                var actions = _cancelActions.ToList();
+                if (!actions.Any())
+                {
+                    break;
+                }
 
                 foreach (var action in actions)
                 {
                     action.Cancel();
+                    _actions.Remove(action);
                 }
             }
 
             return result;
         }
 
-        public bool HasActions()
-        {
-            return _actions.Any();
-        }
-
-        public bool HasCancelActions()
-        {
-            return _actions.Any(a => a.CancelAction != null);
-        }
+        public bool HasActions() => _actions.Any();
+        public bool HasCancelActions() => _cancelActions.Any();
     }
 
     public class ApplyAction
@@ -83,8 +75,6 @@ namespace Qualia.Tools
         public Action StandingAction;
         public Action CancelAction;
 
-        private static readonly Action _default = delegate { };
-
         public ApplyAction(Action runningAction = null, Action standingAction = null, Action cancelAction = null)
         {
             RunningAction = runningAction;
@@ -92,15 +82,15 @@ namespace Qualia.Tools
             CancelAction = cancelAction;
         }
 
-        public bool Execute(bool isForRunning)
+        public bool Execute(bool isRunning)
         {
-            if (isForRunning)
+            if (isRunning)
             {
-                (RunningAction ?? _default)();
+                RunningAction?.Invoke();
             }
             else
             {
-                (StandingAction ?? _default)();
+                StandingAction?.Invoke();
             }
 
             return true;
@@ -108,7 +98,7 @@ namespace Qualia.Tools
 
         public bool Cancel()
         {
-            (CancelAction ?? _default)();
+            CancelAction?.Invoke();
             return true;
         }
     }

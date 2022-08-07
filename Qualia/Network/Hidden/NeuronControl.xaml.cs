@@ -21,8 +21,8 @@ namespace Qualia.Controls
             this.SetConfigParams(new() 
             {
                 CtlActivationFunction
-                    .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
-                    //.SetToolTip(SelectableItemsProvider.GetSelectableItem(null)),
+                    .Initialize(nameof(ActivationFunction.LogisticSigmoid))
+                    .SetUIParam(Notification.ParameterChanged.NeuronActivationFunction),
 
                 CtlActivationFunctionParam
                     .Initialize(defaultValue: 1),
@@ -51,9 +51,9 @@ namespace Qualia.Controls
             //(sender as Control).ToolTip = ToolTipsProvider.GetFunctionToolTip();
         }
 
-        private void Neuron_OnChanged(Notification.ParameterChanged _)
+        private void Neuron_OnChanged(Notification.ParameterChanged param)
         {
-            OnChanged(Notification.ParameterChanged.Structure);
+            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param);
         }
 
         public override void SetOrdinalNumber(int number)

@@ -67,6 +67,8 @@
             TaskDistributionFunctionParam,
             IsPreventRepetition,
 
+            NeuronActivationFunction,
+
             Structure,
             NeuronsCount
         }

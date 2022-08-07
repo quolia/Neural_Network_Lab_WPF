@@ -45,6 +45,27 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, SelectionChangedEventArgs e)
         {
+            var oldValue = e.RemovedItems.Count > 0 ? e.RemovedItems[0] : null;
+            var newValue = e.AddedItems.Count > 0 ? e.AddedItems[0] : null;
+
+            if (oldValue == newValue)
+            {
+                return;
+            }
+
+            if (oldValue != null && newValue != null)
+            {
+                ActionsManager.Instance.Add(new()
+                {
+                    CancelAction = () =>
+                    {
+                        SelectionChanged -= Value_OnChanged;
+                        Value = oldValue as ISelectableItem;
+                        SelectionChanged += Value_OnChanged;
+                    }
+                });
+            }
+
             this.InvokeUIHandler();
         }
 
