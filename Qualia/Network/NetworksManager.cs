@@ -144,13 +144,23 @@ namespace Qualia.Controls
             this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount);
         }
 
-        public ApplyAction GetNetworksRefreshAction()
+        public ApplyAction GetNetworksRefreshAction(bool isNeedConfirmation)
         {
-            return new()
+            if (isNeedConfirmation)
             {
-                RunningAction = RefreshRunningNetworks,
-                StandingAction = RefreshStandingNetworks
-            };
+                return new()
+                {
+                    RunningAction = RefreshRunningNetworks,
+                    StandingAction = RefreshStandingNetworks
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    InstantAction = RefreshRunningNetworks
+                };
+            }
         }
 
         public NetworkControl AddNetwork()

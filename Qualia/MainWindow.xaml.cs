@@ -268,11 +268,11 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.IsNetworkEnabled)
             {
-                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction());
+                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(false));
             }
             else if (param == Notification.ParameterChanged.NetworkColor)
             {
-                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction());
+                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(false));
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -313,7 +313,9 @@ namespace Qualia.Controls
                 _applyChangesManager.Add(action);
             }
 
-            if (_applyChangesManager.HasActions())
+            _applyChangesManager.ExecuteInstant();
+
+            if (_applyChangesManager.HasApplyActions())
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
