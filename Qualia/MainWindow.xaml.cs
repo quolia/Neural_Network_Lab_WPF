@@ -249,7 +249,7 @@ namespace Qualia.Controls
             {
                 action = null;
 
-                var isNoSleepMode = CtlSettings.Settings.IsNoSleepMode;
+                var isNoSleepMode = CtlSettings.CtlIsNoSleepMode.Value;
                 SystemTools.SetPreventComputerFromSleep(isNoSleepMode);
                 CtlNoSleepLabel.Visibility = isNoSleepMode
                                              ? Visibility.Visible
