@@ -28,7 +28,7 @@ namespace Qualia.Controls
 
         public NeuronBaseControl(long id,
                                  Config config,
-                                 Action<Notification.ParameterChanged> onChanged,
+                                 ActionsManager.ApplyActionDelegate onChanged,
                                  LayerBaseControl parentLayer)
         {
             _parentLayer = parentLayer;

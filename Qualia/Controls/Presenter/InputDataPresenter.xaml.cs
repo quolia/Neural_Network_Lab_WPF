@@ -63,7 +63,7 @@ namespace Qualia.Controls
             CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
-        private new void OnChanged(Notification.ParameterChanged param)
+        private void OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             if (param == Notification.ParameterChanged.TaskFunction)
             {
@@ -119,7 +119,7 @@ namespace Qualia.Controls
                 }
             }
 
-            base.OnChanged(Notification.ParameterChanged.TaskParameter);
+            base.OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.TaskParameter : param, action);
         }
 
         private void Size_OnChanged(object sender, EventArgs e)
@@ -165,10 +165,10 @@ namespace Qualia.Controls
             CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
         }
 
-        void TaskParameter_OnChanged(Notification.ParameterChanged param)
+        void TaskParameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             //RearrangeWithNewPointsCount();
-            OnChanged(param);
+            OnChanged(param, action);
         }
 
         public override void SaveConfig()
@@ -188,7 +188,7 @@ namespace Qualia.Controls
             this.GetConfig().FlushToDrive();
         }
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public override void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));

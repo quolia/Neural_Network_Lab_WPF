@@ -28,11 +28,11 @@ namespace Qualia.Controls
         public int MaxNumber => (int)CtlMaxNumber.Value;
         public int MinNumber => (int)CtlMinNumber.Value;
 
-        private void Parameter_OnChanged(Notification.ParameterChanged param)
+        private void Parameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             if (IsValid())
             {
-                OnChanged(param);
+                OnChanged(param, action);
             }
         }
 
@@ -150,7 +150,7 @@ namespace Qualia.Controls
             return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
-        override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
+        override public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChange)
         {
             this.SetUIHandler(onChange);
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));

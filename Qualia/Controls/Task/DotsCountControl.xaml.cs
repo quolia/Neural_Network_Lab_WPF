@@ -36,11 +36,11 @@ namespace Qualia.Controls
         public int MaxDotsAmountToCount => (int)CtlMaxDotsAmoutToCount.Value;
         public int MinDotsAmountToCount => (int)CtlMinDotsAmountToCount.Value;
 
-        private void Parameter_OnChanged(Notification.ParameterChanged param)
+        private void Parameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             if (IsValid())
             {
-                OnChanged(param);
+                OnChanged(param, action);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Qualia.Controls
             return false;
         }
 
-        override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChange)
+        override public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChange)
         {
             this.SetUIHandler(onChange);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Parameter_OnChanged));

@@ -27,6 +27,16 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, EventArgs e)
         {
+            ActionsManager.Instance.Add(new()
+            {
+                CancelAction = () =>
+                {
+                    TextChanged -= Value_OnChanged;
+                    Undo();
+                    TextChanged += Value_OnChanged;
+                }
+            });
+
             if (IsValid())
             {
                 Background = Brushes.White;
@@ -67,6 +77,9 @@ namespace Qualia.Controls
         public void SaveConfig()
         {
             this.GetConfig().Set(Name, Value);
+
+            IsUndoEnabled = false;
+            IsUndoEnabled = true;
         }
 
         public void RemoveFromConfig()
@@ -74,7 +87,7 @@ namespace Qualia.Controls
             this.GetConfig().Remove(Name);
         }
 
-        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
         }

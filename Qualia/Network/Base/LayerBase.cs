@@ -15,7 +15,7 @@ namespace Qualia.Controls
 
         public LayerBaseControl(long configId,
                                 Config config,
-                                Action<Notification.ParameterChanged> onChanged)
+                                ActionsManager.ApplyActionDelegate onChanged)
         {
             if (config == null)
             {

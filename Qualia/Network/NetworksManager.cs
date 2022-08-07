@@ -20,7 +20,7 @@ namespace Qualia.Controls
         private NetworkControl _selectedNetworkControl;
         //private NetworkDataModel _prevSelectedNetworkModel;
 
-        public NetworksManager(TabControl tabs, string fileName, Action<Notification.ParameterChanged> onChanged)
+        public NetworksManager(TabControl tabs, string fileName, ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
 

@@ -11,9 +11,9 @@ namespace Qualia.Controls
             //
         }
 
-        public void OnChanged(Notification.ParameterChanged param)
+        public void OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            this.InvokeUIHandler(param);
+            this.InvokeUIHandler(param, action);
         }
 
         // IConfigParam
@@ -45,7 +45,7 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
         }
 
-        virtual public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        virtual public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(cp => cp.SetOnChangeEvent(onChanged));

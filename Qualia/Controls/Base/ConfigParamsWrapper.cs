@@ -15,7 +15,7 @@ namespace Qualia.Controls
 
         // IConfigParam
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public override void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Param_OnChanged));
@@ -23,7 +23,7 @@ namespace Qualia.Controls
 
         //
 
-        private void Param_OnChanged(Notification.ParameterChanged param)
+        private void Param_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             this.InvokeUIHandler(param);
         }

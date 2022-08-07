@@ -7,7 +7,7 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputLayerControl : LayerBaseControl
     {
-        public OutputLayerControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
+        public OutputLayerControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
             : base(id, config, onChanged)
         {
             InitializeComponent();
@@ -55,7 +55,7 @@ namespace Qualia.Controls
 
             if (neuronId == Constants.UnknownId)
             {
-                OnChanged(Notification.ParameterChanged.NeuronsCount);
+                OnChanged(Notification.ParameterChanged.NeuronsCount, null);
             }
 
             RefreshNeuronsOrdinalNumbers();

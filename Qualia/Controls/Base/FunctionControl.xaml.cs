@@ -42,19 +42,19 @@ namespace Qualia.Controls
             });
         }
 
-        private void Function_OnChanged(Notification.ParameterChanged param)
+        private void Function_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            OnChanged(param);
+            OnChanged(param, action);
         }
 
-        private void Param_OnChanged(Notification.ParameterChanged param)
+        private void Param_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            OnChanged(param);
+            OnChanged(param, action);
         }
 
         // IConfigParam
 
-        override public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        override public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
 

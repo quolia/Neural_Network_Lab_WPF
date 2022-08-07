@@ -6,6 +6,8 @@ namespace Qualia.Tools
 {
     public class ActionsManager
     {
+        public delegate void ApplyActionDelegate(Notification.ParameterChanged sender, ApplyAction action);
+
         public static readonly ActionsManager Instance = new();
 
         private readonly List<ApplyAction> _actions = new();

@@ -67,6 +67,8 @@
             TaskDistributionFunctionParam,
             IsPreventRepetition,
 
+            IsNetworkEnabled,
+
             NeuronActivationFunction,
             NeuronActivationFunctionParam,
 

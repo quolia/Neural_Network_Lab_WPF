@@ -32,21 +32,25 @@ namespace Qualia.Controls
             });
         }
 
-        public override void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public override void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
             ApplyChanges();
-            Value_OnChanged(Notification.ParameterChanged.NoSleepMode);
+            Value_OnChanged(Notification.ParameterChanged.NoSleepMode, null);
         }
 
-        private void Value_OnChanged(Notification.ParameterChanged param)
+        private void Value_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             if (param == Notification.ParameterChanged.Settings
                 || param == Notification.ParameterChanged.NoSleepMode)
             {
-                OnChanged(param);
+                OnChanged(param, action);
+            }
+            else
+            {
+                throw new ArgumentException(param.ToString());
             }
         }
 
@@ -64,11 +68,6 @@ namespace Qualia.Controls
         public void ApplyChanges()
         {
             Settings = Get();
-        }
-
-        public void CancelChanges()
-        {
-            LoadConfig();    
         }
     }
 

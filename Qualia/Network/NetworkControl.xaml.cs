@@ -21,7 +21,7 @@ namespace Qualia.Controls
 
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
-        public NetworkControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
+        public NetworkControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
         {
             InitializeComponent();
             this.SetUIHandler(onChanged);
@@ -31,6 +31,10 @@ namespace Qualia.Controls
 
             this.SetConfigParams(new()
             {
+                CtlIsNetworkEnabled
+                    .Initialize(true)
+                    .SetUIParam(Notification.ParameterChanged.IsNetworkEnabled),
+
                 CtlRandomizeFunction
                     .Initialize(nameof(RandomizeFunction.Centered)),
 
@@ -56,9 +60,9 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 
-        private new void OnChanged(Notification.ParameterChanged _)
+        private new void OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            this.InvokeUIHandler(Notification.ParameterChanged.Structure);
+            this.InvokeUIHandler(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param, action);
 
             //var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy.SelectedItem);
             //CtlBackPropagationStrategyDescription.Text = description;

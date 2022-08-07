@@ -48,7 +48,9 @@ namespace Qualia.Controls
             {
                 CancelAction = () =>
                 {
+                    TextChanged -= Value_OnChanged;
                     Undo();
+                    TextChanged += Value_OnChanged;
                 }
             });
 
@@ -145,7 +147,7 @@ namespace Qualia.Controls
             this.GetConfig().Remove(Name);
         }
 
-        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
         }

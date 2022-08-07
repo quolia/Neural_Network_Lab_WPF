@@ -25,14 +25,33 @@ namespace Qualia.Controls
         {
             Padding = new(0);
             Margin = new(3);
+        }
 
-            Checked += Value_OnChanged;
-            Unchecked += Value_OnChanged;
+        private void EnableListeners(bool isEnable)
+        {
+            Checked -= Value_OnChanged;
+            Unchecked -= Value_OnChanged;
+
+            if (isEnable)
+            {
+                Checked += Value_OnChanged;
+                Unchecked += Value_OnChanged;
+            }
         }
 
         private void Value_OnChanged(object sender, RoutedEventArgs e)
         {
-            this.InvokeUIHandler();
+            ApplyAction action = new()
+            {
+                CancelAction = () =>
+                {
+                    EnableListeners(false);
+                    Value = !Value;
+                    EnableListeners(true);
+                }
+            };
+
+            this.InvokeUIHandler(action: action);
         }
 
         // IConfigParam
@@ -59,8 +78,9 @@ namespace Qualia.Controls
 
         public bool IsValid() => true;
 
-        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
+            EnableListeners(true);
             this.SetUIHandler(onChanged);
         }
 

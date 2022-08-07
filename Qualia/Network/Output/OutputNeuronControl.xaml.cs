@@ -6,7 +6,7 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputNeuronControl : NeuronBaseControl
     {
-        public OutputNeuronControl(long id, Config config, Action<Notification.ParameterChanged> onChanged, LayerBaseControl parentLayer)
+        public OutputNeuronControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged, LayerBaseControl parentLayer)
             : base(id, config, onChanged, parentLayer)
         {
             InitializeComponent();
@@ -81,9 +81,9 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(param => param.LoadConfig());
         }
 
-        private void Neuron_OnChanged(Notification.ParameterChanged _)
+        private void Neuron_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            OnChanged(Notification.ParameterChanged.Structure);
+            OnChanged(Notification.ParameterChanged.Structure, action);
         }
 
         public override void SetOrdinalNumber(int number)

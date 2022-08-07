@@ -13,7 +13,7 @@ namespace Qualia.Tools
         void SaveConfig();
         void RemoveFromConfig();
         bool IsValid();
-        void SetOnChangeEvent(Action<Notification.ParameterChanged> action);
+        void SetOnChangeEvent(ActionsManager.ApplyActionDelegate action);
         void InvalidateValue();
     }
 

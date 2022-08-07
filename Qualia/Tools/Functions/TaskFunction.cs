@@ -191,7 +191,7 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
+            public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
@@ -969,7 +969,7 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
+            public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }
@@ -1067,7 +1067,7 @@ namespace Qualia.Tools
 
             public bool IsValid() => s_control.IsValid();
 
-            public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged) => s_control.SetOnChangeEvent(onChanged);
+            public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged) => s_control.SetOnChangeEvent(onChanged);
 
             public void InvalidateValue() => throw new InvalidOperationException();
         }

@@ -9,7 +9,7 @@ namespace Qualia.Controls
     {
         public NeuronControl(long id,
                              Config config,
-                             Action<Notification.ParameterChanged> onChanged,
+                             ActionsManager.ApplyActionDelegate onChanged,
                              LayerBaseControl parentLayer)
             : base(id,
                    config,
@@ -52,9 +52,9 @@ namespace Qualia.Controls
             //(sender as Control).ToolTip = ToolTipsProvider.GetFunctionToolTip();
         }
 
-        private void Neuron_OnChanged(Notification.ParameterChanged param)
+        private void Neuron_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param);
+            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param, action);
         }
 
         public override void SetOrdinalNumber(int number)

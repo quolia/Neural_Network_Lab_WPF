@@ -44,10 +44,23 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, EventArgs e)
         {
+            ApplyAction action = new()
+            {
+                CancelAction = () =>
+                {
+                    TextChanged -= Value_OnChanged;
+                    Undo();
+                    TextChanged += Value_OnChanged;
+                }
+            };
+
             if (IsValidInput(Constants.InvalidLong))
             {
-                this.InvokeUIHandler();
+                this.InvokeUIHandler(action: action);
+                return;
             }
+
+            ActionsManager.Instance.Add(action);
         }
 
         private bool IsValidInput(long defaultValue)
@@ -127,6 +140,9 @@ namespace Qualia.Controls
         public void SaveConfig()
         {
             this.GetConfig().Set(Name, Value);
+
+            IsUndoEnabled = false;
+            IsUndoEnabled = true;
         }
 
         public void RemoveFromConfig()
@@ -134,7 +150,7 @@ namespace Qualia.Controls
             this.GetConfig().Remove(Name);
         }
 
-        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
         }

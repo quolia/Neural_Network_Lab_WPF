@@ -111,8 +111,6 @@ namespace Qualia.Controls
             LoadMainConfigParams();
             LoadNetworks();
 
-            OnConfigLoaded();
-
             SetOnChangeEvent();
         }
 
@@ -184,13 +182,18 @@ namespace Qualia.Controls
 
             SetTitle(fileName);
             ApplyChangesToStandingNetworks();
+
+            OnNetworksManagerLoaded();
         }
 
-        private void OnConfigLoaded()
+        private void OnNetworksManagerLoaded()
         {
             CtlMenuRun.IsEnabled = _networksManager != null
                                    && _networksManager.NetworkModels != null
                                    && _networksManager.NetworkModels.Any();
+
+            _applyChangesManager.Clear();
+            //TurnApplyChangesButtonOn(false);
         }
 
         private void SetOnChangeEvent()
@@ -236,7 +239,7 @@ namespace Qualia.Controls
             return true;
         }
 
-        private void UI_OnChanged(Notification.ParameterChanged param)
+        private void UI_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             if (param == Notification.ParameterChanged.DynamicSettings)
             {
@@ -244,6 +247,8 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.NoSleepMode)
             {
+                action = null;
+
                 var isNoSleepMode = CtlSettings.Settings.IsNoSleepMode;
                 SystemTools.SetPreventComputerFromSleep(isNoSleepMode);
                 CtlNoSleepLabel.Visibility = isNoSleepMode
@@ -252,20 +257,22 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Settings)
             {
-                TurnApplyChangesButtonOn(true);
-                CtlMenuStart.IsEnabled = false;
-
                 _applyChangesManager.Add(new()
                 {
                     RunningAction = CtlSettings.ApplyChanges,
-                    StandingAction = CtlSettings.ApplyChanges,
-                    CancelAction = CtlSettings.CancelChanges
+                    StandingAction = CtlSettings.ApplyChanges
                 });
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
+                action = null;
+
                 var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
                 taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
+            }
+            else if (param == Notification.ParameterChanged.IsNetworkEnabled)
+            {
+                UI_OnChanged(Notification.ParameterChanged.Structure, null);
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -284,6 +291,14 @@ namespace Qualia.Controls
             {
                 int a = 1;
             }
+            else if (param == Notification.ParameterChanged.Structure)
+            {
+                _applyChangesManager.Add(new()
+                {
+                    RunningAction = ApplyChangesToRunningNetworks,
+                    StandingAction = ApplyChangesToStandingNetworks
+                });
+            }
             else // Default handler.
             {
                 _applyChangesManager.Add(new()
@@ -291,6 +306,11 @@ namespace Qualia.Controls
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
                 });
+            }
+
+            if (action != null)
+            {
+                _applyChangesManager.Add(action);
             }
 
             if (_applyChangesManager.HasActions())
@@ -323,8 +343,6 @@ namespace Qualia.Controls
 
                 CtlCancelChanges.Background = Brushes.White;
                 CtlCancelChanges.IsEnabled = false;
-
-                _applyChangesManager.Clear();
             }
         }
 
@@ -1257,7 +1275,7 @@ namespace Qualia.Controls
                 CtlMatrixPresenter.Clear();
             }
 
-            UI_OnChanged(Notification.ParameterChanged.Structure);
+            UI_OnChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MenuStop_OnClick(object sender, RoutedEventArgs e)
@@ -1397,13 +1415,13 @@ namespace Qualia.Controls
         private void MainMenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
             _networksManager.SelectedNetworkControl.AddLayer();
-            UI_OnChanged(Notification.ParameterChanged.Structure);
+            UI_OnChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
         {
             _networksManager.SelectedNetworkControl.RemoveLayer();
-            UI_OnChanged(Notification.ParameterChanged.Structure);
+            UI_OnChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuAddNeuron_OnClick(object sender, RoutedEventArgs e)

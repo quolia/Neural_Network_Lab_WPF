@@ -124,7 +124,7 @@ namespace Qualia.Controls
             this.GetConfig().Remove(Name);
         }
 
-        public void SetOnChangeEvent(Action<Notification.ParameterChanged> onChanged)
+        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
         }

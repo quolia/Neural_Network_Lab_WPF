@@ -13,7 +13,7 @@ namespace Qualia.Controls
 
         public InputBiasControl(long id,
                                 Config config,
-                                Action<Notification.ParameterChanged> onChanged,
+                                ActionsManager.ApplyActionDelegate onChanged,
                                 LayerBaseControl parentLayer)
             : base(id,
                    config,

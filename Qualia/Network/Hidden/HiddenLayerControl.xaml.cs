@@ -13,7 +13,7 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public HiddenLayerControl(long id, Config config, Action<Notification.ParameterChanged> onChanged)
+        public HiddenLayerControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
             : base(id, config, onChanged)
         {
             InitializeComponent();
@@ -97,7 +97,7 @@ namespace Qualia.Controls
                     }
                 });
 
-                OnChanged(Notification.ParameterChanged.NeuronsCount);
+                OnChanged(Notification.ParameterChanged.NeuronsCount, null); //TODO
             }
 
             RefreshNeuronsOrdinalNumbers();
@@ -165,7 +165,7 @@ namespace Qualia.Controls
 
             RefreshNeuronsOrdinalNumbers();
 
-            OnChanged(Notification.ParameterChanged.NeuronsCount);
+            OnChanged(Notification.ParameterChanged.NeuronsCount, null);
         }
 
         public override void SetAllNeuronsSelected(bool isSelected)
