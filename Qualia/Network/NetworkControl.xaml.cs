@@ -401,15 +401,25 @@ namespace Qualia.Controls
                                                               wpfColor.R,
                                                               wpfColor.G,
                                                               wpfColor.B);
-            if (colorDialog.ShowDialog() == DialogResult.OK)
+            if (colorDialog.ShowDialog() != DialogResult.OK)
             {
-                CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A,
-                                                                   colorDialog.Color.R,
-                                                                   colorDialog.Color.G,
-                                                                   colorDialog.Color.B));
-
-                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
+                return;
             }
+
+            CtlColor.Foreground = Draw.GetBrush(Color.FromArgb(colorDialog.Color.A,
+                                                                colorDialog.Color.R,
+                                                                colorDialog.Color.G,
+                                                                colorDialog.Color.B));
+
+            ApplyAction action = new()
+            {
+                CancelAction = () =>
+                {
+                    CtlColor.Foreground = Draw.GetBrush(in wpfColor);
+                }
+            };
+
+            this.InvokeUIHandler(Notification.ParameterChanged.NetworkColor, action);
         }
 
         private void LayerContextMenu_OnOpened(object sender, RoutedEventArgs e)

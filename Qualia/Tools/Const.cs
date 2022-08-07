@@ -68,6 +68,7 @@
             IsPreventRepetition,
 
             IsNetworkEnabled,
+            NetworkColor,
 
             NeuronActivationFunction,
             NeuronActivationFunctionParam,

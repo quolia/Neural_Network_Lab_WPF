@@ -257,11 +257,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Settings)
             {
-                _applyChangesManager.Add(new()
-                {
-                    RunningAction = CtlSettings.ApplyChanges,
-                    StandingAction = CtlSettings.ApplyChanges
-                });
+                _applyChangesManager.Add(CtlSettings.GetApplyAction());
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
@@ -271,6 +267,10 @@ namespace Qualia.Controls
                 taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
             }
             else if (param == Notification.ParameterChanged.IsNetworkEnabled)
+            {
+                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction());
+            }
+            else if (param == Notification.ParameterChanged.NetworkColor)
             {
                 _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction());
             }
