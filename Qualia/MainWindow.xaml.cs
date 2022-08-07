@@ -1425,6 +1425,13 @@ namespace Qualia.Controls
 
         private void MainWindow_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_applyChangesManager.HasActions())
+            {
+                MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+
             if (!StopRequest())
             {
                 e.Cancel = true;
