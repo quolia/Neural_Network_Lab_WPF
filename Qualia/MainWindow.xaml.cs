@@ -272,7 +272,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.IsNetworkEnabled)
             {
-                UI_OnChanged(Notification.ParameterChanged.Structure, null);
+                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction());
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -418,8 +418,7 @@ namespace Qualia.Controls
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
-                var newModels = _networksManager.CreateNetworksDataModels();
-                _networksManager.MergeModels(newModels);
+                _networksManager.RefreshRunningNetworks();
 
                 CtlNetworkPresenter.ClearCache();
                 CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel,
@@ -450,9 +449,8 @@ namespace Qualia.Controls
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
-                //_networksManager.ResetLayersTabsNames(); // ?
+                _networksManager.RefreshStandingNetworks();
 
-                _networksManager.RefreshNetworksDataModels();
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
                 TurnApplyChangesButtonOn(false);
@@ -804,7 +802,7 @@ namespace Qualia.Controls
                     selectedNetworkModel = _networksManager.SelectedNetworkModel;
                     firstNetworkModel = _networksManager.NetworkModels.First;
                     statisticsToRender = selectedNetworkModel.Statistics.Copy();
-                    ErrorMatrix errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
+                    var errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
                     selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
 
                     doRenderErrorMatrix = () =>
@@ -838,7 +836,7 @@ namespace Qualia.Controls
 
                     selectedNetworkModel = selectedNetworkModel ?? _networksManager.SelectedNetworkModel;
                     firstNetworkModel = firstNetworkModel ?? _networksManager.NetworkModels.First;
-                    NetworkDataModel networkModelToRender = selectedNetworkModel.GetCopyToDraw();
+                    var networkModelToRender = selectedNetworkModel.GetCopyToDraw();
                         
                     CtlInputDataPresenter.SetInputStat(firstNetworkModel);
 
@@ -881,7 +879,7 @@ namespace Qualia.Controls
 
                     statisticsToRender = statisticsToRender ?? selectedNetworkModel.Statistics.Copy();
                     learningRate = selectedNetworkModel.LearningRate;
-                    SolutionsData solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
+                    var solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
 
                     doRenderStatistics = () =>
                     {
@@ -918,20 +916,9 @@ namespace Qualia.Controls
                             return;
                         }
 
-                        if (doRenderErrorMatrix != null)
-                        {
-                            doRenderErrorMatrix();
-                        }
-
-                        if (doRenderNetwork != null)
-                        {
-                            doRenderNetwork();
-                        }
-
-                        if (doRenderStatistics != null)
-                        {
-                            doRenderStatistics();
-                        }
+                        doRenderErrorMatrix?.Invoke();
+                        doRenderNetwork?.Invoke();
+                        doRenderStatistics?.Invoke();
                     });
 
                     Thread.Sleep(1);
