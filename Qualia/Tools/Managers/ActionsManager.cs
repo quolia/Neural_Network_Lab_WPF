@@ -6,9 +6,11 @@ namespace Qualia.Tools
 {
     public class ActionsManager
     {
+        public static readonly ActionsManager Instance = new();
+
         private readonly List<ApplyAction> _actions = new();
 
-        public ActionsManager()
+        protected ActionsManager()
         {
             //
         }

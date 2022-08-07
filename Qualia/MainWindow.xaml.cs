@@ -24,7 +24,7 @@ namespace Qualia.Controls
         private CancellationTokenSource _cancellationTokenSource;
 
         private NetworksManager _networksManager;
-        private ActionsManager _applyChangesManager = new();
+        private ActionsManager _applyChangesManager = ActionsManager.Instance;
 
         private Stopwatch _startTime;
         private long _rounds;
@@ -269,12 +269,20 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
+                _applyChangesManager.Add(new()
+                {
+                    CancelAction = _networksManager.ResetLayersTabsNames
+                });
+
                 OnNetworkStructureChanged();
             }
             else // Default handler.
             {
-                var action = new ApplyAction(ApplyChangesToRunningNetworks, ApplyChangesToStandingNetworks);
-                _applyChangesManager.Add(action);
+                _applyChangesManager.Add(new()
+                {
+                    RunningAction = ApplyChangesToRunningNetworks,
+                    StandingAction = ApplyChangesToStandingNetworks
+                });
             }
 
             if (_applyChangesManager.HasActions())

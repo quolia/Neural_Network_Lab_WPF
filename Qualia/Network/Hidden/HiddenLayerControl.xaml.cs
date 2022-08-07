@@ -87,6 +87,16 @@ namespace Qualia.Controls
 
             if (id == Constants.UnknownId)
             {
+                ActionsManager.Instance.Add(new()
+                {
+                    CancelAction = () =>
+                    {
+                        Neurons.Remove(neuron);
+                        CtlNeurons.Items.Remove(neuron);
+                        RefreshNeuronsOrdinalNumbers();
+                    }
+                });
+
                 OnChanged(Notification.ParameterChanged.NeuronsCount);
             }
 
