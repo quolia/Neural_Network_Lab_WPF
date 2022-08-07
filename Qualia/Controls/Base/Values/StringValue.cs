@@ -34,17 +34,18 @@ namespace Qualia.Controls
                     TextChanged -= Value_OnChanged;
                     Undo();
                     TextChanged += Value_OnChanged;
+
+                    InvalidateValue();
                 }
             });
 
-            if (IsValid())
+            if (RevalidateValue())
             {
-                Background = Brushes.White;
                 this.InvokeUIHandler();
             }
             else
             {
-                Background = Brushes.Tomato;
+                this.InvokeUIHandler(Notification.ParameterChanged.Invalidate);
             }
         }
 
@@ -90,6 +91,12 @@ namespace Qualia.Controls
         public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
+        }
+
+        public bool RevalidateValue()
+        {
+            InvalidateValue();
+            return IsValid();
         }
 
         public void InvalidateValue()

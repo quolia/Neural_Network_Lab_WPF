@@ -51,12 +51,21 @@ namespace Qualia.Controls
                     TextChanged -= Value_OnChanged;
                     Undo();
                     TextChanged += Value_OnChanged;
+
+                    if (IsValidInput(Constants.InvalidDouble))
+                    {
+                        // Validate value.
+                    }
                 }
             });
 
             if (IsValidInput(Constants.InvalidDouble))
             {
                 this.InvokeUIHandler();
+            }
+            else
+            {
+                this.InvokeUIHandler(Notification.ParameterChanged.Invalidate);
             }
         }
 

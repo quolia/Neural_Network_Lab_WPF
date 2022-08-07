@@ -301,6 +301,10 @@ namespace Qualia.Controls
             {
                 _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(true));
             }
+            else if (param == Notification.ParameterChanged.BackPropagationStrategy)
+            {
+                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(true));
+            }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
                 _applyChangesManager.Add(new()
@@ -326,6 +330,10 @@ namespace Qualia.Controls
                     StandingAction = ApplyChangesToStandingNetworks
                 });
             }
+            else if (param == Notification.ParameterChanged.Invalidate)
+            {
+
+            }
             else // Default handler.
             {
                 _applyChangesManager.Add(new()
@@ -338,6 +346,18 @@ namespace Qualia.Controls
             if (action != null)
             {
                 _applyChangesManager.Add(action);
+            }
+
+            if (param == Notification.ParameterChanged.Invalidate)
+            {
+                TurnApplyChangesButtonOn(false);
+
+                if (_applyChangesManager.HasCancelActions())
+                {
+                    TurnCancelChangesButtonOn(true);
+                }
+
+                return;
             }
 
             _applyChangesManager.ExecuteInstant();

@@ -55,6 +55,7 @@ namespace Qualia.Controls
 
                 CtlBackPropagationStrategy
                     .Initialize(nameof(BackPropagationStrategy.Always))
+                    .SetUIParam(Notification.ParameterChanged.BackPropagationStrategy)
             });
 
             this.GetConfigParams().ForEach(p => p.SetConfig(this.GetConfig()));

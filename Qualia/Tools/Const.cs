@@ -77,7 +77,9 @@
             NeuronsCount,
             NetworkRandomizerFunctionParam,
             NetworkRandomizerFunction,
-            NetworkLearningRate
+            NetworkLearningRate,
+            Invalidate,
+            BackPropagationStrategy
         }
     }
 }

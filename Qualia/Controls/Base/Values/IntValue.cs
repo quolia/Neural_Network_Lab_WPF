@@ -44,23 +44,29 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, EventArgs e)
         {
-            ApplyAction action = new()
+            ActionsManager.Instance.Add(new()
             {
                 CancelAction = () =>
                 {
                     TextChanged -= Value_OnChanged;
                     Undo();
                     TextChanged += Value_OnChanged;
+
+                    if (IsValidInput(Constants.InvalidLong))
+                    {
+                        // Validate value.
+                    }
                 }
-            };
+            });
 
             if (IsValidInput(Constants.InvalidLong))
             {
-                this.InvokeUIHandler(action: action);
-                return;
+                this.InvokeUIHandler();
             }
-
-            ActionsManager.Instance.Add(action);
+            else
+            {
+                this.InvokeUIHandler(Notification.ParameterChanged.Invalidate);
+            }
         }
 
         private bool IsValidInput(long defaultValue)
