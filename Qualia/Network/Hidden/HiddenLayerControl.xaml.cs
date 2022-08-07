@@ -87,7 +87,7 @@ namespace Qualia.Controls
 
             if (id == Constants.UnknownId)
             {
-                ActionsManager.Instance.Add(new()
+                ApplyAction action = new()
                 {
                     CancelAction = () =>
                     {
@@ -95,9 +95,9 @@ namespace Qualia.Controls
                         CtlNeurons.Items.Remove(neuron);
                         RefreshNeuronsOrdinalNumbers();
                     }
-                });
+                };
 
-                OnChanged(Notification.ParameterChanged.NeuronsCount, null); //TODO
+                OnChanged(Notification.ParameterChanged.NeuronsCount, action);
             }
 
             RefreshNeuronsOrdinalNumbers();
@@ -126,6 +126,36 @@ namespace Qualia.Controls
                 neuron.SetRemovingState(true);
             }
 
+            ApplyAction action = new()
+            {
+                StandingAction = () =>
+                {
+                    if (NeuronsSelector.Instance.IsSelected(neuron))
+                    {
+                        selectedNeurons.ForEach(RemoveNeuronWithoutConfirmation);
+                        //result += selectedNeurons.Count;
+                    }
+                    else
+                    {
+                        RemoveNeuronWithoutConfirmation(neuron);
+                        //++result;
+                    }
+                },
+
+                CancelAction = () =>
+                {
+                    if (NeuronsSelector.Instance.IsSelected(neuron))
+                    {
+                        selectedNeurons.ForEach(n => n.SetRemovingState(false));
+                    }
+                    else
+                    {
+                        neuron.SetRemovingState(false);
+                    }
+                }
+            };
+
+            /*
             if (MessageBoxResult.OK == 
                     MessageBox.Show("Would you really like to remove the neuron(s)?", "Confirm", MessageBoxButton.OKCancel))
             {
@@ -151,6 +181,9 @@ namespace Qualia.Controls
             {
                 neuron.SetRemovingState(false);
             }
+            */
+
+            OnChanged(Notification.ParameterChanged.NeuronsCount, action);
 
             return result;
         }

@@ -81,7 +81,7 @@ namespace Qualia.Controls
             LoadConfig();
         }
 
-        public void OnNetworkStructureChanged()
+        public void ___OnNetworkStructureChanged()
         {
             TurnApplyChangesButtonOn(true);
             CtlMenuStart.IsEnabled = false;
@@ -254,6 +254,8 @@ namespace Qualia.Controls
 
         private void UI_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
+            List<ApplyAction> additionalActions = new();
+
             if (param == Notification.ParameterChanged.DynamicSettings)
             {
                 action = null;
@@ -268,7 +270,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Settings)
             {
-                _applyChangesManager.Add(CtlSettings.GetApplyAction());
+                additionalActions.Add(CtlSettings.GetApplyAction());
             }
             else if (param == Notification.ParameterChanged.IsPreventRepetition)
             {
@@ -279,11 +281,11 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.IsNetworkEnabled)
             {
-                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(false));
+                additionalActions.Add(_networksManager.GetNetworksRefreshAction(false));
             }
             else if (param == Notification.ParameterChanged.NetworkColor)
             {
-                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(false));
+                additionalActions.Add(_networksManager.GetNetworksRefreshAction(false));
             }
             else if (param == Notification.ParameterChanged.NetworkRandomizerFunction
                      || param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
@@ -292,26 +294,56 @@ namespace Qualia.Controls
 
                 if (!IsRunning)
                 {
-                    _networksManager.RefreshStandingNetworks();
+                    _networksManager.RefresNetworks(IsRunning);
                     CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
                 }
             }
             else if (param == Notification.ParameterChanged.NetworkLearningRate)
             {
-                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(true));
+                additionalActions.Add(_networksManager.GetNetworksRefreshAction(true));
             }
             else if (param == Notification.ParameterChanged.BackPropagationStrategy)
             {
-                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(true));
+                additionalActions.Add(_networksManager.GetNetworksRefreshAction(true));
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
-                _applyChangesManager.Add(new()
-                {
-                    CancelAction = _networksManager.ResetLayersTabsNames
-                });
+                ApplyAction newAction = new();
 
-                OnNetworkStructureChanged();
+                if (IsRunning)
+                {
+                    newAction.InstantAction = () =>
+                    {
+                        _networksManager.ResetLayersTabsNames();
+                    };
+
+                    newAction.RunningAction = () =>
+                    {
+                        _networksManager.RefresNetworks(true);
+                    };
+                }
+                else
+                {
+                    newAction.InstantAction = () =>
+                    {
+                        _networksManager.ResetLayersTabsNames();
+                        _networksManager.RefresNetworks(false);
+                        CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                    };
+                }
+
+                newAction.CancelAction = newAction.InstantAction;
+ 
+                _applyChangesManager.Add(newAction);
+
+
+
+                //_applyChangesManager.Add(new()
+                //{
+                  //  CancelAction = _networksManager.ResetLayersTabsNames
+                //});
+
+                //OnNetworkStructureChanged();
             }
             else if (param == Notification.ParameterChanged.NeuronActivationFunction)
             {
@@ -323,7 +355,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Structure)
             {
-                _applyChangesManager.Add(new()
+                additionalActions.Add(new()
                 {
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
@@ -335,7 +367,7 @@ namespace Qualia.Controls
             }
             else // Default handler.
             {
-                _applyChangesManager.Add(new()
+                additionalActions.Add(new()
                 {
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
@@ -346,6 +378,8 @@ namespace Qualia.Controls
             {
                 _applyChangesManager.Add(action);
             }
+
+            _applyChangesManager.AddMany(additionalActions);
 
             if (param == Notification.ParameterChanged.Invalidate)
             {
@@ -359,21 +393,19 @@ namespace Qualia.Controls
                 return;
             }
 
-            _applyChangesManager.ExecuteInstant();
+            lock (Locker.ApplyChanges)
+            {
+                _applyChangesManager.ExecuteInstant();
+            }
 
-            if (_applyChangesManager.HasApplyActions())
+            if (_applyChangesManager.HasApplyActions() || _applyChangesManager.HasCancelActions())
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
-
-                if (!_applyChangesManager.HasCancelActions())
-                {
-                    TurnCancelChangesButtonOn(false);
-                }
             }
             else
             {
-                _applyChangesManager.Clear();
+                TurnCancelChangesButtonOn(false);
             }
         }
 
@@ -422,15 +454,15 @@ namespace Qualia.Controls
                     return;
                 }
 
-                if (_applyChangesManager.Execute(IsRunning))
-                {
-                    TurnApplyChangesButtonOn(false);
+                _applyChangesManager.Execute(IsRunning);
 
-                    if (!IsRunning)
-                    {
-                        CtlMenuStart.IsEnabled = true;
-                        CtlMenuRun.IsEnabled = true;
-                    }
+                TurnApplyChangesButtonOn(false);
+                _applyChangesManager.Clear();
+
+                if (!IsRunning)
+                {
+                    CtlMenuStart.IsEnabled = true;
+                    CtlMenuRun.IsEnabled = true;
                 }
             }
         }
@@ -442,10 +474,10 @@ namespace Qualia.Controls
             {
                 lock (Locker.ApplyChanges)
                 {
-                    if (_applyChangesManager.ExecuteCancel())
-                    {
-                        TurnApplyChangesButtonOn(false);
-                    }
+                    _applyChangesManager.ExecuteCancel();
+
+                    TurnApplyChangesButtonOn(false);
+                    _applyChangesManager.Clear();
                 }
             }
         }
@@ -462,7 +494,7 @@ namespace Qualia.Controls
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
-                _networksManager.RefreshRunningNetworks();
+                _networksManager.RefresNetworks(true);
 
                 CtlNetworkPresenter.ClearCache();
                 CtlNetworkPresenter.RenderRunning(_networksManager.SelectedNetworkModel,
@@ -493,7 +525,7 @@ namespace Qualia.Controls
                 CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
-                _networksManager.RefreshStandingNetworks();
+                _networksManager.RefresNetworks(false);
 
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
@@ -508,6 +540,12 @@ namespace Qualia.Controls
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
         {
+            if (_applyChangesManager.HasActions())
+            {
+                MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
             if (!SaveConfig())
             {
                 return;
@@ -520,6 +558,7 @@ namespace Qualia.Controls
             }
 
             ApplyChangesToStandingNetworks();
+            _applyChangesManager.Clear();
 
             _cancellationTokenSource = new();
             _cancellationToken = _cancellationTokenSource.Token;
@@ -1391,15 +1430,7 @@ namespace Qualia.Controls
                 e.Cancel = true;
             }
 
-            try
-            {
-                SaveConfig();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-                e.Cancel = true;
-            }
+            SaveConfigSafe();
         }
 
         private void MainMenuNew_OnClick(object sender, RoutedEventArgs e)

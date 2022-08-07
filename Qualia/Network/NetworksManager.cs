@@ -133,7 +133,7 @@ namespace Qualia.Controls
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
             _Tabs.SelectedIndex = Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
 
-            RefreshStandingNetworks();
+            RefresNetworks(false);
         }
 
         public void RebuildNetworksForTask(TaskFunction task)
@@ -259,16 +259,21 @@ namespace Qualia.Controls
             return networkModels;
         }
 
-        public void RefreshRunningNetworks()
+        public void RefresNetworks(bool isRunning)
         {
-            var newModels = CreateNetworksDataModels();
-            MergeModels(newModels);
+            if (isRunning)
+            {
+                var newModels = CreateNetworksDataModels();
+                MergeModels(newModels);
+            }
+            else
+            {
+                NetworkModels = CreateNetworksDataModels();
+            }
         }
 
-        public void RefreshStandingNetworks()
-        {
-            NetworkModels = CreateNetworksDataModels();
-        }
+        public void RefreshRunningNetworks() => RefresNetworks(true);
+        public void RefreshStandingNetworks() => RefresNetworks(false);
 
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {

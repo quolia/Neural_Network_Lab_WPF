@@ -103,7 +103,7 @@ namespace Qualia.Controls
 
             if (layerId == Constants.UnknownId)
             {
-                ActionsManager.Instance.Add(new()
+                ApplyAction action = new()
                 {
                     CancelAction = () =>
                     {
@@ -114,9 +114,9 @@ namespace Qualia.Controls
 
                         this.InvokeUIHandler(Notification.ParameterChanged.Structure);
                     }
-                });
+                };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
+                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount, action);
             }
 
             return hiddenLayer;
