@@ -169,7 +169,7 @@ namespace Qualia.Controls
             _networksManager = new(CtlTabs, fileName, UI_OnChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
             Config.Main.FlushToDrive();
-            
+
             CtlInputDataPresenter.SetConfig(_networksManager.Config);
             CtlInputDataPresenter.LoadConfig();
 
@@ -203,6 +203,19 @@ namespace Qualia.Controls
             CtlInputDataPresenter.SetOnChangeEvent(UI_OnChanged);
         }
 
+        private bool SaveConfigSafe()
+        {
+            try
+            {
+                return SaveConfig();
+            }
+            catch (Exception ex)
+            {
+                Logger.ShowException(ex, "Cannot save config file.");
+                return false;
+            }
+        }
+
         private bool SaveConfig()
         {
             Config.Main.Set(Constants.Param.ScreenWidth, ActualWidth);
@@ -212,7 +225,7 @@ namespace Qualia.Controls
             Config.Main.Set(Constants.Param.OnTop, Topmost);
             Config.Main.Set(Constants.Param.DataWidth, DataWidth.ActualWidth);
             Config.Main.Set(Constants.Param.NetworkHeight, NetworkHeight.ActualHeight);
-            
+
             Config.Main.FlushToDrive();
 
             if (!this.GetConfigParams().TrueForAll(p => p.IsValid()))
@@ -235,7 +248,7 @@ namespace Qualia.Controls
 
                 _networksManager.SaveConfig();
             }
- 
+
             return true;
         }
 
@@ -272,13 +285,21 @@ namespace Qualia.Controls
             {
                 _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(false));
             }
-            else if (param == Notification.ParameterChanged.NetworkRandomizerFunction)
+            else if (param == Notification.ParameterChanged.NetworkRandomizerFunction
+                     || param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
             {
-                action = null;
+                action = IsRunning ? null : new()
+                {
+                    InstantAction = () =>
+                    {
+                        _networksManager.RefreshStandingNetworks();
+                        CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                    }
+                };
             }
-            else if (param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
+            else if (param == Notification.ParameterChanged.NetworkLearningRate)
             {
-                action = null;
+                _applyChangesManager.Add(_networksManager.GetNetworksRefreshAction(true));
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
@@ -328,8 +349,7 @@ namespace Qualia.Controls
 
                 if (!_applyChangesManager.HasCancelActions())
                 {
-                    CtlCancelChanges.Background = Brushes.White;
-                    CtlCancelChanges.IsEnabled = false;
+                    TurnCancelChangesButtonOn(false);
                 }
             }
             else
@@ -344,15 +364,25 @@ namespace Qualia.Controls
             {
                 CtlApplyChanges.Background = Brushes.Yellow;
                 CtlApplyChanges.IsEnabled = true;
-
-                CtlCancelChanges.Background = Brushes.Yellow;
-                CtlCancelChanges.IsEnabled = true;
             }
             else
             {
                 CtlApplyChanges.Background = Brushes.White;
                 CtlApplyChanges.IsEnabled = false;
+            }
 
+            TurnCancelChangesButtonOn(isOn);
+        }
+
+        public void TurnCancelChangesButtonOn(bool isOn)
+        {
+            if (isOn)
+            {
+                CtlCancelChanges.Background = Brushes.Yellow;
+                CtlCancelChanges.IsEnabled = true;
+            }
+            else
+            {
                 CtlCancelChanges.Background = Brushes.White;
                 CtlCancelChanges.IsEnabled = false;
             }
@@ -360,44 +390,27 @@ namespace Qualia.Controls
 
         private void ApplyChanges_OnClick(object sender, RoutedEventArgs e)
         {
-            try
+            if (MessageBoxResult.Yes !=
+                    MessageBox.Show("Confirm applying changes.", "Confirm", MessageBoxButton.YesNo))
             {
-                SaveConfig();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
                 return;
             }
 
-            if (IsRunning)
+            lock (Locker.ApplyChanges)
             {
-                if (MessageBoxResult.Yes ==
-                        MessageBox.Show("Confirm apply changes to running networks.", "Confirm", MessageBoxButton.YesNo))
+                if (!SaveConfigSafe())
                 {
-                    lock (Locker.ApplyChanges)
-                    {
-                        if (_applyChangesManager.Execute(IsRunning))
-                        {
-                            TurnApplyChangesButtonOn(false);
-                        }
-                    }
+                    return;
                 }
-            }
-            else
-            {
-                if (MessageBoxResult.Yes ==
-                        MessageBox.Show("Confirm apply changes.", "Confirm", MessageBoxButton.YesNo))
-                {
-                    lock (Locker.ApplyChanges)
-                    {
-                        if (_applyChangesManager.Execute(IsRunning))
-                        {
-                            TurnApplyChangesButtonOn(false);
 
-                            CtlMenuStart.IsEnabled = true;
-                            CtlMenuRun.IsEnabled = true;
-                        }
+                if (_applyChangesManager.Execute(IsRunning))
+                {
+                    TurnApplyChangesButtonOn(false);
+
+                    if (!IsRunning)
+                    {
+                        CtlMenuStart.IsEnabled = true;
+                        CtlMenuRun.IsEnabled = true;
                     }
                 }
             }
@@ -410,7 +423,7 @@ namespace Qualia.Controls
             {
                 lock (Locker.ApplyChanges)
                 {
-                    if (_applyChangesManager.Cancel())
+                    if (_applyChangesManager.ExecuteCancel())
                     {
                         TurnApplyChangesButtonOn(false);
                     }

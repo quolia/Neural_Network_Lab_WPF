@@ -76,7 +76,8 @@
             Structure,
             NeuronsCount,
             NetworkRandomizerFunctionParam,
-            NetworkRandomizerFunction
+            NetworkRandomizerFunction,
+            NetworkLearningRate
         }
     }
 }

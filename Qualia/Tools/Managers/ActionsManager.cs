@@ -26,6 +26,11 @@ namespace Qualia.Tools
             _actions.Add(action);
         }
 
+        public void Remove(ApplyAction action)
+        {
+            _actions.Remove(action);
+        }
+
         public void Clear()
         {
             _actions.Clear();
@@ -35,13 +40,18 @@ namespace Qualia.Tools
         {
             bool result = HasApplyActions();
 
-            while (_actions.Any())
+            while (true)
             {
                 var actions = _applyActions.ToList();
+                if (!actions.Any())
+                {
+                    break;
+                }
+
                 foreach (var action in actions)
                 {
                     action.Execute(isForRunning);
-                    _actions.Remove(action);
+                    Remove(action);
                 }
             }
 
@@ -63,13 +73,14 @@ namespace Qualia.Tools
                 foreach (var action in actions)
                 {
                     action.ExecuteInstant();
+                    action.InstantAction = null;
                 }
             }
 
             return result;
         }
 
-        public bool Cancel()
+        public bool ExecuteCancel()
         {
             bool result = HasCancelActions();
 
@@ -84,7 +95,7 @@ namespace Qualia.Tools
                 foreach (var action in actions)
                 {
                     action.Cancel();
-                    _actions.Remove(action);
+                    Remove(action);
                 }
             }
 
@@ -103,10 +114,11 @@ namespace Qualia.Tools
         public Action CancelAction;
         public Action InstantAction;
 
-        public ApplyAction(Action runningAction = null, Action standingAction = null, Action cancelAction = null)
+        public ApplyAction(Action runningAction = null, Action standingAction = null, Action instantAction = null, Action cancelAction = null)
         {
             RunningAction = runningAction;
             StandingAction = standingAction;
+            InstantAction = instantAction;
             CancelAction = cancelAction;
         }
 
@@ -127,7 +139,6 @@ namespace Qualia.Tools
         public bool ExecuteInstant()
         {
             InstantAction?.Invoke();
-            InstantAction = null;
             return true;
         }
 

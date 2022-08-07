@@ -44,7 +44,8 @@ namespace Qualia.Controls
                     .SetUIParam(Notification.ParameterChanged.NetworkRandomizerFunctionParam),
 
                 CtlLearningRate
-                    .Initialize(defaultValue: 0.03),
+                    .Initialize(defaultValue: 0.03)
+                    .SetUIParam(Notification.ParameterChanged.NetworkLearningRate),
 
                 CtlIsNetworkEnabled
                     .Initialize(true),
