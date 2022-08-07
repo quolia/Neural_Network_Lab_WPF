@@ -280,6 +280,10 @@ namespace Qualia.Controls
             {
                 int a = 1;
             }
+            else if (param == Notification.ParameterChanged.NeuronActivationFunctionParam)
+            {
+                int a = 1;
+            }
             else // Default handler.
             {
                 _applyChangesManager.Add(new()

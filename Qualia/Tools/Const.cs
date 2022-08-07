@@ -68,6 +68,7 @@
             IsPreventRepetition,
 
             NeuronActivationFunction,
+            NeuronActivationFunctionParam,
 
             Structure,
             NeuronsCount

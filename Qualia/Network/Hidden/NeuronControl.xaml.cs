@@ -25,7 +25,8 @@ namespace Qualia.Controls
                     .SetUIParam(Notification.ParameterChanged.NeuronActivationFunction),
 
                 CtlActivationFunctionParam
-                    .Initialize(defaultValue: 1),
+                    .Initialize(defaultValue: 1)
+                    .SetUIParam(Notification.ParameterChanged.NeuronActivationFunctionParam),
 
                 CtlActivationInitializeFunction
                     .Initialize(nameof(InitializeFunction.Constant)),

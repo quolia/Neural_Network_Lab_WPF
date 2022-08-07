@@ -42,8 +42,16 @@ namespace Qualia.Controls
             TextChanged += Value_OnChanged;
         }
 
-        private void Value_OnChanged(object sender, EventArgs e)
+        private void Value_OnChanged(object sender, TextChangedEventArgs e)
         {
+            ActionsManager.Instance.Add(new()
+            {
+                CancelAction = () =>
+                {
+                    Undo();
+                }
+            });
+
             if (IsValidInput(Constants.InvalidDouble))
             {
                 this.InvokeUIHandler();
@@ -127,6 +135,9 @@ namespace Qualia.Controls
         public void SaveConfig()
         {
             this.GetConfig().Set(Name, Value);
+            
+            IsUndoEnabled = false;
+            IsUndoEnabled = true;
         }
 
         public void RemoveFromConfig()
