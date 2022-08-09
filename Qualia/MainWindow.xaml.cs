@@ -538,16 +538,22 @@ namespace Qualia.Controls
 
         private bool IsRunning => CtlMenuStop.IsEnabled;
 
+        private bool IsPaused = false;
+
         private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
         {
-            CtlMenuContinue.Visi = Visibility.Visible;
-            CtlMenuPause.Visibility = Visibility.Hidden;
+            CtlMenuContinue.IsEnabled = true;
+            CtlMenuPause.IsEnabled = false;
+
+            IsPaused = true;
         }
 
         private void MenuContinue_OnClick(object sender, RoutedEventArgs e)
         {
-            CtlMenuContinue.Visibility = Visibility.Hidden;
-            CtlMenuPause.Visibility = Visibility.Visible;
+            CtlMenuContinue.IsEnabled = false;
+            CtlMenuPause.IsEnabled = true;
+
+            IsPaused = false;
         }
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
@@ -658,6 +664,11 @@ namespace Qualia.Controls
 
             while (!_cancellationToken.IsCancellationRequested)
             {
+                if (IsPaused)
+                {
+                    continue;
+                }
+
                 swCurrentPureRoundsPerSecond.Restart();
 
                 lock (Locker.ApplyChanges)
@@ -1383,6 +1394,8 @@ namespace Qualia.Controls
             }
 
             CtlMenuStart.IsEnabled = true;
+            CtlMenuPause.IsEnabled = false;
+            CtlMenuContinue.IsEnabled = false;
             CtlMenuStop.IsEnabled = false;
             CtlMenuReset.IsEnabled = true;
         }
