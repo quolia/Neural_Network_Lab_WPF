@@ -16,6 +16,8 @@ namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, IDisposable
     {
+        public const int ThreadSleepMilliseconds = 1000;
+
         public static Main Instance;
 
         private Thread _timeThread;
@@ -537,7 +539,6 @@ namespace Qualia.Controls
         }
 
         private bool IsRunning => CtlMenuStop.IsEnabled;
-
         private bool IsPaused = false;
 
         private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
@@ -586,6 +587,8 @@ namespace Qualia.Controls
             CtlMenuStop.IsEnabled = true;
             CtlMenuPause.IsEnabled = true;
             CtlMenuRemoveNetwork.IsEnabled = false;
+
+            IsPaused = false;
 
             _networksManager.PrepareModelsForRun();
             _networksManager.PrepareModelsForRound();
@@ -666,6 +669,7 @@ namespace Qualia.Controls
             {
                 if (IsPaused)
                 {
+                    Thread.Sleep(ThreadSleepMilliseconds);
                     continue;
                 }
 
