@@ -539,14 +539,14 @@ namespace Qualia.Controls
         }
 
         private bool IsRunning => CtlMenuStop.IsEnabled;
-        private bool IsPaused = false;
+        private volatile bool _isPaused = false;
 
         private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
         {
             CtlMenuContinue.IsEnabled = true;
             CtlMenuPause.IsEnabled = false;
 
-            IsPaused = true;
+            _isPaused = true;
         }
 
         private void MenuContinue_OnClick(object sender, RoutedEventArgs e)
@@ -554,7 +554,7 @@ namespace Qualia.Controls
             CtlMenuContinue.IsEnabled = false;
             CtlMenuPause.IsEnabled = true;
 
-            IsPaused = false;
+            _isPaused = false;
         }
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
@@ -588,7 +588,7 @@ namespace Qualia.Controls
             CtlMenuPause.IsEnabled = true;
             CtlMenuRemoveNetwork.IsEnabled = false;
 
-            IsPaused = false;
+            _isPaused = false;
 
             _networksManager.PrepareModelsForRun();
             _networksManager.PrepareModelsForRound();
@@ -667,7 +667,7 @@ namespace Qualia.Controls
 
             while (!_cancellationToken.IsCancellationRequested)
             {
-                if (IsPaused)
+                if (_isPaused)
                 {
                     Thread.Sleep(ThreadSleepMilliseconds);
                     continue;
