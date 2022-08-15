@@ -166,7 +166,7 @@ namespace Qualia.Controls
 
             //UIManager.Clear();
 
-            _networksManager = new(CtlTabs, fileName, UI_OnChanged);
+            _networksManager = new(CtlTabs, fileName, NotifyUIChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
             Config.Main.FlushToDrive();
 
@@ -198,9 +198,9 @@ namespace Qualia.Controls
 
         private void SetOnChangeEvent()
         {
-            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(UI_OnChanged));
+            this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(NotifyUIChanged));
 
-            CtlInputDataPresenter.SetOnChangeEvent(UI_OnChanged);
+            CtlInputDataPresenter.SetOnChangeEvent(NotifyUIChanged);
         }
 
         private bool SaveConfigSafe()
@@ -252,7 +252,7 @@ namespace Qualia.Controls
             return true;
         }
 
-        private void UI_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void NotifyUIChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             List<ApplyAction> additionalActions = new();
 
@@ -1256,7 +1256,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            NetworksManager networksManager = new(CtlTabs, null, UI_OnChanged);
+            NetworksManager networksManager = new(CtlTabs, null, NotifyUIChanged);
 
             if (networksManager.Config != null)
             {
@@ -1345,7 +1345,7 @@ namespace Qualia.Controls
                 CtlMatrixPresenter.Clear();
             }
 
-            UI_OnChanged(Notification.ParameterChanged.Structure, null);
+            NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MenuStop_OnClick(object sender, RoutedEventArgs e)
@@ -1484,13 +1484,13 @@ namespace Qualia.Controls
         private void MainMenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
             _networksManager.SelectedNetworkControl.AddLayer();
-            UI_OnChanged(Notification.ParameterChanged.Structure, null);
+            NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
         {
             _networksManager.SelectedNetworkControl.RemoveLayer();
-            UI_OnChanged(Notification.ParameterChanged.Structure, null);
+            NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuAddNeuron_OnClick(object sender, RoutedEventArgs e)
