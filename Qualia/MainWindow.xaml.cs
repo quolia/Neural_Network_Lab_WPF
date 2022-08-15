@@ -16,6 +16,8 @@ namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, IDisposable
     {
+        public const int ThreadSleepMilliseconds = 1000;
+
         public static Main Instance;
 
         private Thread _timeThread;
@@ -537,6 +539,23 @@ namespace Qualia.Controls
         }
 
         private bool IsRunning => CtlMenuStop.IsEnabled;
+        private bool IsPaused = false;
+
+        private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
+        {
+            CtlMenuContinue.IsEnabled = true;
+            CtlMenuPause.IsEnabled = false;
+
+            IsPaused = true;
+        }
+
+        private void MenuContinue_OnClick(object sender, RoutedEventArgs e)
+        {
+            CtlMenuContinue.IsEnabled = false;
+            CtlMenuPause.IsEnabled = true;
+
+            IsPaused = false;
+        }
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
         {
@@ -566,7 +585,10 @@ namespace Qualia.Controls
             CtlMenuStart.IsEnabled = false;
             CtlMenuReset.IsEnabled = false;
             CtlMenuStop.IsEnabled = true;
+            CtlMenuPause.IsEnabled = true;
             CtlMenuRemoveNetwork.IsEnabled = false;
+
+            IsPaused = false;
 
             _networksManager.PrepareModelsForRun();
             _networksManager.PrepareModelsForRound();
@@ -645,6 +667,12 @@ namespace Qualia.Controls
 
             while (!_cancellationToken.IsCancellationRequested)
             {
+                if (IsPaused)
+                {
+                    Thread.Sleep(ThreadSleepMilliseconds);
+                    continue;
+                }
+
                 swCurrentPureRoundsPerSecond.Restart();
 
                 lock (Locker.ApplyChanges)
@@ -1370,6 +1398,8 @@ namespace Qualia.Controls
             }
 
             CtlMenuStart.IsEnabled = true;
+            CtlMenuPause.IsEnabled = false;
+            CtlMenuContinue.IsEnabled = false;
             CtlMenuStop.IsEnabled = false;
             CtlMenuReset.IsEnabled = true;
         }
