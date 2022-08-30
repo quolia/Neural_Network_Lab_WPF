@@ -72,7 +72,7 @@ namespace Qualia.Controls
             CtlNetworkPresenter.SizeChanged += (sender, e) =>
             {
                 CtlNetworkPresenter.OnSizeChanged(_networksManager,
-                                                  IsRunning,
+                                                  _isRunning,
                                                   CtlUseWeightsColors.Value,
                                                   CtlOnlyChangedWeights.Value,
                                                   CtlHighlightChangedWeights.Value,
@@ -294,9 +294,9 @@ namespace Qualia.Controls
             {
                 action = null;
 
-                if (!IsRunning)
+                if (!_isRunning)
                 {
-                    _networksManager.RefresNetworks(IsRunning);
+                    _networksManager.RefresNetworks(_isRunning);
                     CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
                 }
             }
@@ -312,7 +312,7 @@ namespace Qualia.Controls
             {
                 ApplyAction newAction = new();
 
-                if (IsRunning)
+                if (_isRunning)
                 {
                     newAction.InstantAction = () =>
                     {
@@ -456,12 +456,12 @@ namespace Qualia.Controls
                     return;
                 }
 
-                _applyChangesManager.Execute(IsRunning);
+                _applyChangesManager.Execute(_isRunning);
 
                 TurnApplyChangesButtonOn(false);
                 _applyChangesManager.Clear();
 
-                if (!IsRunning)
+                if (!_isRunning)
                 {
                     CtlMenuStart.IsEnabled = true;
                     CtlMenuRun.IsEnabled = true;
@@ -538,8 +538,8 @@ namespace Qualia.Controls
             }
         }
 
-        private bool IsRunning => CtlMenuStop.IsEnabled;
-        private volatile bool _isPaused = false;
+        private bool _isRunning => CtlMenuStop.IsEnabled;
+        private volatile bool _isPaused;
 
         private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
         {
@@ -1260,7 +1260,7 @@ namespace Qualia.Controls
 
         private bool StopRequest()
         {
-            if (!IsRunning)
+            if (!_isRunning)
             {
                 return true;
             }
@@ -1424,7 +1424,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            if (IsRunning)
+            if (_isRunning)
             {
                 lock (Locker.ApplyChanges)
                 {
@@ -1535,7 +1535,7 @@ namespace Qualia.Controls
                 CtlTabs.SelectedIndex = 1;
             }
 
-            CtlMenuStart.IsEnabled = !IsRunning && _networksManager.SelectedNetworkControl != null;
+            CtlMenuStart.IsEnabled = !_isRunning && _networksManager.SelectedNetworkControl != null;
         }
 
         private void MenuNetwork_OnSubmenuOpened(object sender, RoutedEventArgs e)
