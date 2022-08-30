@@ -137,8 +137,10 @@ namespace Qualia.Controls
 
         private void LoadNetworks()
         {
+            _actionsManager.Lock();
             var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
             LoadNetworksManager(fileName);
+            _actionsManager.Unlock();
         }
 
         private void LoadNetworksManager(string fileName)
@@ -536,7 +538,7 @@ namespace Qualia.Controls
 
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
-                TurnApplyChangesButtonOn(false);
+                TurnApplyChangesButtonOn(!_actionsManager.HasApplyActions());
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuRun.IsEnabled = true;
@@ -1516,14 +1518,16 @@ namespace Qualia.Controls
 
         private void MainMenuCloneNetwork_OnClick(object sender, RoutedEventArgs e)
         {
+            _actionsManager.Lock();
+
             var selectedNetwork = _networksManager.SelectedNetworkControl;
             var newNetwork = _networksManager.AddNetwork();
 
             ApplyChangesToStandingNetworks();
-
             selectedNetwork.CopyTo(newNetwork);
-
             ApplyChangesToStandingNetworks();
+
+            _actionsManager.Unlock();
         }
 
         private void MainMenuRemoveNetwork_OnClick(object sender, RoutedEventArgs e)

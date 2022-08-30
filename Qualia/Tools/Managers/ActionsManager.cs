@@ -15,7 +15,9 @@ namespace Qualia.Tools
         private IEnumerable<ApplyAction> _cancelActions => _actions.Where(a => a.CancelAction != null).Reverse();
         private IEnumerable<ApplyAction> _instantActions => _actions.Where(a => a.InstantAction != null);
 
-        public bool IsLocked = false;
+        private int _lockCount = 0;
+
+        public bool IsLocked => _lockCount != 0;
 
         protected ActionsManager()
         {
@@ -143,12 +145,12 @@ namespace Qualia.Tools
 
         public void Lock()
         {
-            IsLocked = true;
+            ++_lockCount;
         }
 
         public void Unlock()
         {
-            IsLocked = false;
+            --_lockCount;
         }
     }
 
