@@ -27,7 +27,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, EventArgs e)
         {
-            ActionsManager.Instance.Add(new()
+            ApplyAction action = new()
             {
                 CancelAction = () =>
                 {
@@ -37,15 +37,15 @@ namespace Qualia.Controls
 
                     InvalidateValue();
                 }
-            });
+            };
 
             if (RevalidateValue())
             {
-                this.InvokeUIHandler();
+                this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
             }
             else
             {
-                this.InvokeUIHandler(Notification.ParameterChanged.Invalidate);
+                this.InvokeUIHandler(Notification.ParameterChanged.Invalidate, action);
             }
         }
 

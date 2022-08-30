@@ -55,7 +55,7 @@ namespace Qualia.Controls
 
             if (oldValue != null && newValue != null)
             {
-                ActionsManager.Instance.Add(new()
+                ApplyAction action = new()
                 {
                     CancelAction = () =>
                     {
@@ -63,7 +63,9 @@ namespace Qualia.Controls
                         Value = oldValue as ISelectableItem;
                         SelectionChanged += Value_OnChanged;
                     }
-                });
+                };
+
+                this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
             }
 
             this.InvokeUIHandler();

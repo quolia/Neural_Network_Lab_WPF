@@ -83,30 +83,6 @@ namespace Qualia.Controls
             LoadConfig();
         }
 
-        public void ___OnNetworkStructureChanged()
-        {
-            TurnApplyChangesButtonOn(true);
-            CtlMenuStart.IsEnabled = false;
-
-            if (_networksManager != null)
-            {
-                if (_networksManager.IsValid())
-                {
-                    _networksManager.ResetLayersTabsNames();
-                }
-                else
-                {
-                    TurnApplyChangesButtonOn(false);
-                }
-            }
-
-            var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
-            if (taskFunction != null && !taskFunction.VisualControl.IsValid())
-            {
-                TurnApplyChangesButtonOn(false);
-            }
-        }
-
         private void LoadConfig()
         {
             LoadWindowSettings();
@@ -137,10 +113,8 @@ namespace Qualia.Controls
 
         private void LoadNetworks()
         {
-            _actionsManager.Lock();
             var fileName = Config.Main.Get(Constants.Param.NetworksManagerName, "");
             LoadNetworksManager(fileName);
-            _actionsManager.Unlock();
         }
 
         private void LoadNetworksManager(string fileName)
@@ -168,7 +142,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            //UIManager.Clear();
+            _actionsManager.Lock();
 
             _networksManager = new(CtlTabs, fileName, NotifyUIChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
@@ -188,6 +162,8 @@ namespace Qualia.Controls
             ApplyChangesToStandingNetworks();
 
             OnNetworksManagerLoaded();
+
+            _actionsManager.Unlock();
         }
 
         private void OnNetworksManagerLoaded()
@@ -195,9 +171,6 @@ namespace Qualia.Controls
             CtlMenuRun.IsEnabled = _networksManager != null
                                    && _networksManager.NetworkModels != null
                                    && _networksManager.NetworkModels.Any();
-
-            _actionsManager.Clear();
-            //TurnApplyChangesButtonOn(false);
         }
 
         private void SetOnChangeEvent()
@@ -538,7 +511,7 @@ namespace Qualia.Controls
 
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
-                TurnApplyChangesButtonOn(!_actionsManager.HasApplyActions());
+                TurnApplyChangesButtonOn(_actionsManager.HasApplyActions());
 
                 CtlMenuStart.IsEnabled = true;
                 CtlMenuRun.IsEnabled = true;
