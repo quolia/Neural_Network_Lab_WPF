@@ -14,12 +14,13 @@ namespace Qualia.Controls
     sealed public partial class NetworkControl : BaseUserControl
     {
         public readonly long Id;
-        
-        private OutputLayerControl _outputLayer;
 
         public InputLayerControl InputLayer { get; private set; }
 
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
+
+        private OutputLayerControl _outputLayer;
+        private ActionsManager _actionsManager = ActionsManager.Instance;
 
         public NetworkControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
         {
@@ -76,6 +77,8 @@ namespace Qualia.Controls
 
         private HiddenLayerControl AddLayer(long layerId)
         {
+            _actionsManager.Lock();
+
             HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), this.GetUIHandler());
 
             ScrollViewer scroll = new()
@@ -100,6 +103,8 @@ namespace Qualia.Controls
             var selectedItem = CtlTabsLayers.SelectedItem;
             CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
+
+            _actionsManager.Unlock();
 
             if (layerId == Constants.UnknownId)
             {
@@ -277,7 +282,9 @@ namespace Qualia.Controls
                                                                       "Confirm",
                                                                       MessageBoxButton.OKCancel))
             {
-                SelectedLayer.RemoveFromConfig();
+                var selectedLayer = SelectedLayer;
+                selectedLayer.RemoveFromConfig();
+
                 var selectedTab = CtlTabsLayers.SelectedTab();
                 var index = CtlTabsLayers.Items.IndexOf(selectedTab);
                 CtlTabsLayers.Items.Remove(selectedTab);

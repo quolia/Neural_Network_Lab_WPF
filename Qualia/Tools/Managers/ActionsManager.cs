@@ -15,6 +15,8 @@ namespace Qualia.Tools
         private IEnumerable<ApplyAction> _cancelActions => _actions.Where(a => a.CancelAction != null).Reverse();
         private IEnumerable<ApplyAction> _instantActions => _actions.Where(a => a.InstantAction != null);
 
+        public bool IsLocked = false;
+
         protected ActionsManager()
         {
             //
@@ -22,11 +24,21 @@ namespace Qualia.Tools
 
         public void Add(ApplyAction action)
         {
+            if (IsLocked)
+            {
+                return;
+            }
+
             _actions.Add(action);
         }
 
         public void AddMany(List<ApplyAction> actions)
         {
+            if (IsLocked)
+            {
+                return;
+            }
+
             _actions.AddRange(actions);
         }
 
@@ -128,6 +140,16 @@ namespace Qualia.Tools
         public bool HasApplyActions() => _applyActions.Any();
         public bool HasCancelActions() => _cancelActions.Any();
         public bool HasInstantActions() => _instantActions.Any();
+
+        public void Lock()
+        {
+            IsLocked = true;
+        }
+
+        public void Unlock()
+        {
+            IsLocked = false;
+        }
     }
 
     public class ApplyAction

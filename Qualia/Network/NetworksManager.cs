@@ -18,7 +18,6 @@ namespace Qualia.Controls
         private readonly TabControl _Tabs;
         private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
-        //private NetworkDataModel _prevSelectedNetworkModel;
 
         public NetworksManager(TabControl tabs, string fileName, ActionsManager.ApplyActionDelegate onChanged)
         {
@@ -37,8 +36,33 @@ namespace Qualia.Controls
 
         private void NetworksTabs_OnSelected(object sender, SelectionChangedEventArgs e)
         {
+            RefreshSelectedNetworkTab();
+        }
+
+        public void RefreshSelectedNetworkTab()
+        {
             var selectedNetworkControl = _Tabs.SelectedContent as NetworkControl;
-            _selectedNetworkControl = selectedNetworkControl ?? _selectedNetworkControl;
+            if (selectedNetworkControl != null)
+            {
+                _selectedNetworkControl = selectedNetworkControl;
+            }
+            else
+            {
+                bool isStillExist = false;
+                for (int i = 0; i < _Tabs.Items.Count; ++i)
+                {
+                    if ((_Tabs.Items.GetItemAt(i) as TabItem).Content == _selectedNetworkControl)
+                    {
+                        isStillExist = true;
+                        break;
+                    }
+                }
+
+                if (!isStillExist)
+                {
+                    _selectedNetworkControl = null;
+                }
+            }
         }
 
         public NetworkControl SelectedNetworkControl => _selectedNetworkControl;
@@ -195,15 +219,26 @@ namespace Qualia.Controls
                                                        "Confirm",
                                                        MessageBoxButton.OKCancel))
             {
-                SelectedNetworkControl.RemoveFromConfig();
+                var selectedNetworkControl = SelectedNetworkControl;
 
-                var index = _Tabs.Items.IndexOf(_Tabs.SelectedTab());
-                _Tabs.Items.Remove(_Tabs.SelectedTab());
+                var selectedTab = _Tabs.SelectedTab();
+                var index = _Tabs.Items.IndexOf(selectedTab);
+                _Tabs.Items.Remove(selectedTab);
                 _Tabs.SelectedIndex = index - 1;
 
                 ResetNetworksTabsNames();
 
-                this.InvokeUIHandler(Notification.ParameterChanged.Structure);
+                ApplyAction action = new()
+                {
+                    StandingAction = selectedNetworkControl.RemoveFromConfig,
+                    CancelAction = () =>
+                    {
+                        _Tabs.Items.Insert(index, selectedTab);
+                        ResetLayersTabsNames();
+                    }
+                };
+
+                this.InvokeUIHandler(Notification.ParameterChanged.Structure, action);
             }
         }
 

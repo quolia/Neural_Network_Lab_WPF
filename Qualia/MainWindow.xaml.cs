@@ -26,7 +26,7 @@ namespace Qualia.Controls
         private CancellationTokenSource _cancellationTokenSource;
 
         private NetworksManager _networksManager;
-        private ActionsManager _applyChangesManager = ActionsManager.Instance;
+        private ActionsManager _actionsManager = ActionsManager.Instance;
 
         private Stopwatch _startTime;
         private long _rounds;
@@ -194,7 +194,7 @@ namespace Qualia.Controls
                                    && _networksManager.NetworkModels != null
                                    && _networksManager.NetworkModels.Any();
 
-            _applyChangesManager.Clear();
+            _actionsManager.Clear();
             //TurnApplyChangesButtonOn(false);
         }
 
@@ -256,6 +256,11 @@ namespace Qualia.Controls
 
         private void NotifyUIChanged(Notification.ParameterChanged param, ApplyAction action)
         {
+            if (_actionsManager.IsLocked)
+            {
+                return;
+            }
+
             List<ApplyAction> additionalActions = new();
 
             if (param == Notification.ParameterChanged.DynamicSettings)
@@ -336,7 +341,7 @@ namespace Qualia.Controls
 
                 newAction.CancelAction = newAction.InstantAction;
  
-                _applyChangesManager.Add(newAction);
+                _actionsManager.Add(newAction);
 
 
 
@@ -378,16 +383,16 @@ namespace Qualia.Controls
 
             if (action != null)
             {
-                _applyChangesManager.Add(action);
+                _actionsManager.Add(action);
             }
 
-            _applyChangesManager.AddMany(additionalActions);
+            _actionsManager.AddMany(additionalActions);
 
             if (param == Notification.ParameterChanged.Invalidate)
             {
                 TurnApplyChangesButtonOn(false);
 
-                if (_applyChangesManager.HasCancelActions())
+                if (_actionsManager.HasCancelActions())
                 {
                     TurnCancelChangesButtonOn(true);
                 }
@@ -397,10 +402,10 @@ namespace Qualia.Controls
 
             lock (Locker.ApplyChanges)
             {
-                _applyChangesManager.ExecuteInstant();
+                _actionsManager.ExecuteInstant();
             }
 
-            if (_applyChangesManager.HasApplyActions() || _applyChangesManager.HasCancelActions())
+            if (_actionsManager.HasApplyActions() || _actionsManager.HasCancelActions())
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
@@ -456,10 +461,10 @@ namespace Qualia.Controls
                     return;
                 }
 
-                _applyChangesManager.Execute(_isRunning);
+                _actionsManager.Execute(_isRunning);
 
                 TurnApplyChangesButtonOn(false);
-                _applyChangesManager.Clear();
+                _actionsManager.Clear();
 
                 if (!_isRunning)
                 {
@@ -476,10 +481,10 @@ namespace Qualia.Controls
             {
                 lock (Locker.ApplyChanges)
                 {
-                    _applyChangesManager.ExecuteCancel();
+                    _actionsManager.ExecuteCancel();
 
                     TurnApplyChangesButtonOn(false);
-                    _applyChangesManager.Clear();
+                    _actionsManager.Clear();
                 }
             }
         }
@@ -559,7 +564,7 @@ namespace Qualia.Controls
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_applyChangesManager.HasActions())
+            if (_actionsManager.HasActions())
             {
                 MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
@@ -577,7 +582,7 @@ namespace Qualia.Controls
             }
 
             ApplyChangesToStandingNetworks();
-            _applyChangesManager.Clear();
+            _actionsManager.Clear();
 
             _cancellationTokenSource = new();
             _cancellationToken = _cancellationTokenSource.Token;
@@ -586,7 +591,6 @@ namespace Qualia.Controls
             CtlMenuReset.IsEnabled = false;
             CtlMenuStop.IsEnabled = true;
             CtlMenuPause.IsEnabled = true;
-            CtlMenuRemoveNetwork.IsEnabled = false;
 
             _isPaused = false;
 
@@ -694,6 +698,12 @@ namespace Qualia.Controls
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
+                        if (!_networksManager.NetworkModels.Any())
+                        {
+                            StopRunningFromThread();
+                            return;
+                        }
+
                         _networksManager.PrepareModelsForRound();
 
                         network = _networksManager.NetworkModels.First;
@@ -1404,6 +1414,14 @@ namespace Qualia.Controls
             CtlMenuReset.IsEnabled = true;
         }
 
+        private void StopRunningFromThread()
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.SystemIdle, () =>
+            {
+                StopRunning();
+            });
+        }
+
         private void MenuReset_OnClick(object sender, RoutedEventArgs e)
         {
             ApplyChangesToStandingNetworks();
@@ -1455,7 +1473,7 @@ namespace Qualia.Controls
 
         private void MainWindow_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (_applyChangesManager.HasActions())
+            if (_actionsManager.HasActions())
             {
                 MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 e.Cancel = true;
@@ -1490,8 +1508,10 @@ namespace Qualia.Controls
 
         private void MainMenuAddNetwork_OnClick(object sender, RoutedEventArgs e)
         {
+            _actionsManager.Lock();
             _networksManager.AddNetwork();
             ApplyChangesToStandingNetworks();
+            _actionsManager.Unlock();
         }
 
         private void MainMenuCloneNetwork_OnClick(object sender, RoutedEventArgs e)
@@ -1535,6 +1555,7 @@ namespace Qualia.Controls
                 CtlTabs.SelectedIndex = 1;
             }
 
+            _networksManager.RefreshSelectedNetworkTab();
             CtlMenuStart.IsEnabled = !_isRunning && _networksManager.SelectedNetworkControl != null;
         }
 
@@ -1548,7 +1569,8 @@ namespace Qualia.Controls
 
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
-            CtlMenuRemoveNetwork.IsEnabled = CtlTabs.SelectedIndex > 0;
+            CtlMenuRemoveNetwork.IsEnabled = !_isRunning && CtlTabs.SelectedIndex > 0;
+            CtlMenuAddNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
             CtlMenuCloneNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
         }
 
