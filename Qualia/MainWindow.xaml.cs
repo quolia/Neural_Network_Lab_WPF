@@ -16,7 +16,7 @@ namespace Qualia.Controls
 {
     sealed public partial class Main : WindowResizeControl, IDisposable
     {
-        public const int ThreadSleepMilliseconds = 1000;
+        private const int _pauseSleepIntervalMilliseconds = 1000;
 
         public static Main Instance;
 
@@ -30,6 +30,9 @@ namespace Qualia.Controls
 
         private Stopwatch _startTime;
         private long _rounds;
+
+        private bool _isRunning;
+        private volatile bool _isPaused;
 
         public Main()
         {
@@ -513,13 +516,10 @@ namespace Qualia.Controls
 
                 TurnApplyChangesButtonOn(_actionsManager.HasApplyActions());
 
-                CtlMenuStart.IsEnabled = true;
-                CtlMenuRun.IsEnabled = true;
+                CtlMenuStart.IsEnabled = !_isRunning && !_isPaused;
+                CtlMenuRun.IsEnabled = !_isRunning && !_isPaused;
             }
         }
-
-        private bool _isRunning => CtlMenuStop.IsEnabled;
-        private volatile bool _isPaused;
 
         private void MenuPause_OnClick(object sender, RoutedEventArgs e) 
         {
@@ -531,6 +531,12 @@ namespace Qualia.Controls
 
         private void MenuContinue_OnClick(object sender, RoutedEventArgs e)
         {
+            if (_actionsManager.HasActions())
+            {
+                MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
             CtlMenuContinue.IsEnabled = false;
             CtlMenuPause.IsEnabled = true;
 
@@ -567,6 +573,7 @@ namespace Qualia.Controls
             CtlMenuStop.IsEnabled = true;
             CtlMenuPause.IsEnabled = true;
 
+            _isRunning = true;
             _isPaused = false;
 
             _networksManager.PrepareModelsForRun();
@@ -648,7 +655,7 @@ namespace Qualia.Controls
             {
                 if (_isPaused)
                 {
-                    Thread.Sleep(ThreadSleepMilliseconds);
+                    Thread.Sleep(_pauseSleepIntervalMilliseconds);
                     continue;
                 }
 
@@ -661,9 +668,9 @@ namespace Qualia.Controls
                         settings = CtlSettings.Settings;
                         loopLimits = new LoopsLimit[3]
                         {
-                        new(settings.SkipRoundsToDrawErrorMatrix),
-                        new(settings.SkipRoundsToDrawNetworks),
-                        new(settings.SkipRoundsToDrawStatistics)
+                            new(settings.SkipRoundsToDrawErrorMatrix),
+                            new(settings.SkipRoundsToDrawNetworks),
+                            new(settings.SkipRoundsToDrawStatistics)
                         };
 
                         currentLoopLimit = LoopsLimit.Min(in loopLimits);
@@ -673,12 +680,6 @@ namespace Qualia.Controls
 
                     for (int round = 0; round < currentLoopLimit; ++round)
                     {
-                        if (!_networksManager.NetworkModels.Any())
-                        {
-                            StopRunningFromThread();
-                            return;
-                        }
-
                         _networksManager.PrepareModelsForRound();
 
                         network = _networksManager.NetworkModels.First;
@@ -1025,6 +1026,7 @@ namespace Qualia.Controls
             }
 
             _startTime.Stop();
+            _isRunning = false;
         }
 
         private void RunTimer()
@@ -1245,16 +1247,16 @@ namespace Qualia.Controls
 
         private bool StopRequest()
         {
-            if (!_isRunning)
+            if (!_isRunning && !_isPaused)
             {
                 return true;
             }
 
-            _runNetworksThread.Priority = ThreadPriority.Lowest;
-            Thread.CurrentThread.Priority = ThreadPriority.Highest;
-
             if (MessageBox.Show("Would you like to stop the network?", "Confirm", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
+                _runNetworksThread.Priority = ThreadPriority.Lowest;
+                Thread.CurrentThread.Priority = ThreadPriority.Highest;
+
                 StopRunning();
                 return true;
             }
@@ -1369,6 +1371,7 @@ namespace Qualia.Controls
         private void StopRunning()
         {
             _cancellationTokenSource.Cancel();
+            _isPaused = false;
 
             if (_timeThread != null)
             {
@@ -1381,6 +1384,8 @@ namespace Qualia.Controls
                 _runNetworksThread.Join();
                 _runNetworksThread = null;
             }
+
+            _isRunning = false;
 
             CtlMenuStart.IsEnabled = true;
             CtlMenuPause.IsEnabled = false;
@@ -1533,7 +1538,7 @@ namespace Qualia.Controls
             }
 
             _networksManager.RefreshSelectedNetworkTab();
-            CtlMenuStart.IsEnabled = !_isRunning && _networksManager.SelectedNetworkControl != null;
+            CtlMenuStart.IsEnabled = !_isRunning && !_isPaused && _networksManager.SelectedNetworkControl != null;
         }
 
         private void MenuNetwork_OnSubmenuOpened(object sender, RoutedEventArgs e)
