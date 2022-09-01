@@ -172,6 +172,8 @@ namespace Qualia.Controls
             CtlMenuRun.IsEnabled = _networksManager != null
                                    && _networksManager.NetworkModels != null
                                    && _networksManager.NetworkModels.Any();
+
+            CtlTabs.SelectionChanged += NetworkTab_OnChanged;
         }
 
         private void SetOnChangeEvent()

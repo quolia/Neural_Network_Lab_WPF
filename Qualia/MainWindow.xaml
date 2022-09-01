@@ -141,7 +141,7 @@
                 <Button Padding="3" Margin="5" Name="CtlApplyChanges" Content="Apply changes" IsEnabled="False" Click="ApplyChanges_OnClick" />
                 <Button Grid.Column="1" Padding="3" Margin="5" Name="CtlCancelChanges" Content="Cancel changes" IsEnabled="False" Click="CancelChanges_OnClick" />
             </Grid>
-            <TabControl Grid.Row="2" Name="CtlTabs" SelectionChanged="NetworkTab_OnChanged" >
+            <TabControl Grid.Row="2" Name="CtlTabs">
                 <TabControl.ContextMenu>
                     <ContextMenu Name="CtlNetworkContextMenu" Opened="NetworkContextMenu_OnOpened">
                         <MenuItem Name="CtlMenuAddNetwork" Header="Add Network" Click="MainMenuAddNetwork_OnClick" />

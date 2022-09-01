@@ -526,7 +526,7 @@ Networks:637974981656632133,637976555557679006,637976622334276985,63797663882917
 637976638841279399.PositiveTargetValue:1
 637976638841279399.NegativeTargetValue:0
 637976638829173019.SelectedLayerIndex:0
-SelectedNetworkIndex:0
+SelectedNetworkIndex:2
 InputDataPresenter.TaskFunction:DotsCount
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1
