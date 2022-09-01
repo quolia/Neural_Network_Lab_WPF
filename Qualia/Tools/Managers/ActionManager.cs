@@ -73,11 +73,11 @@ namespace Qualia.Tools
                     Remove(action);
                 }
 
-                //actions = _applyActions;
-                //if (actions.Any())
-                //{
-                //    throw new InvalidOperationException();
-                //}
+                actions = _applyActions.ToList();
+                if (actions.Any())
+                {
+                    throw new InvalidOperationException();
+                }
             }
 
             return result;

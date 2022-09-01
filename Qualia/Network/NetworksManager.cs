@@ -71,14 +71,9 @@ namespace Qualia.Controls
         {
             get
             {
-                //_prevSelectedNetworkModel = null;
-
                 var selectedNetworkModel = SelectedNetworkControl == null
-                                           ? null// _prevSelectedNetworkModel
+                                           ? null
                                            : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
-
-                //_prevSelectedNetworkModel = selectedNetworkModel;
-
                 return selectedNetworkModel;
             }
         }
@@ -222,7 +217,7 @@ namespace Qualia.Controls
                 var selectedNetworkControl = SelectedNetworkControl;
 
                 var selectedTab = _Tabs.SelectedTab();
-                var index = _Tabs.Items.IndexOf(selectedTab);
+                var index = _Tabs.SelectedIndex;
                 _Tabs.SelectedIndex = index - 1;
                 _Tabs.Items.Remove(selectedTab);
 

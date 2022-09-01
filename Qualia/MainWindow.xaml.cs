@@ -431,7 +431,7 @@ namespace Qualia.Controls
                 CtlApplyChanges.IsEnabled = false;
             }
 
-            TurnCancelChangesButtonOn(isOn);
+            TurnCancelChangesButtonOn(ActionManager.Instance.HasCancelActions());
         }
 
         public void TurnCancelChangesButtonOn(bool isOn)
@@ -464,9 +464,9 @@ namespace Qualia.Controls
                 }
 
                 ActionManager.Instance.Execute(_isRunning);
+                ActionManager.Instance.Clear();
 
                 TurnApplyChangesButtonOn(false);
-                ActionManager.Instance.Clear();
 
                 if (!_isRunning)
                 {
