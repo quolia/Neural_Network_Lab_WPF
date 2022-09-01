@@ -55,7 +55,7 @@ namespace Qualia.Controls
                 _drawArea = new(Width, Height);
                 CtlBox.Image = _drawArea;
                 G = Graphics.FromImage(_drawArea);
-                //G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             }
         }
 

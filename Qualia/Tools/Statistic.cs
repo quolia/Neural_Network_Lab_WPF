@@ -69,11 +69,10 @@ namespace Qualia.Tools
             CostData = from.CostData.Copy();
         }
 
-        public void Add(double percent, double cost)
+        public void Add(double percent, double cost, long currentTick)
         {
-            var now = DateTime.UtcNow.Ticks;
-            PercentData.Add(new(percent, now));
-            CostData.Add(new(cost, now));
+            PercentData.Add(new(percent, currentTick));
+            CostData.Add(new(cost, currentTick));
         }
 
         sealed public class PlotPoint
@@ -156,7 +155,7 @@ namespace Qualia.Tools
         public int StatisticsFramesLostPercent() => (int)(StatisticsFrames == 0 ? 0 : 100 * StatisticsFramesLost / (double)StatisticsFrames);
         public int ErrorMatrixFramesLostPercent() => (int)(ErrorMatrixFrames == 0 ? 0 : 100 * ErrorMatrixFramesLost / (double)ErrorMatrixFrames);
 
-        public void Reset()
+        public static void Reset()
         {
             Instance = new RendererStatistics();
         }

@@ -230,7 +230,11 @@ namespace Qualia.Controls
 
                 ApplyAction action = new()
                 {
-                    StandingAction = selectedNetworkControl.RemoveFromConfig,
+                    StandingAction = () =>
+                    {
+                        selectedNetworkControl.RemoveFromConfig();
+                        RefresNetworks(false);
+                    },
                     CancelAction = () =>
                     {
                         _Tabs.Items.Insert(index, selectedTab);

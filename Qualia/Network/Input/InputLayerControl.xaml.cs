@@ -78,7 +78,7 @@ namespace Qualia.Controls
 
         private void LayerParameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            OnChanged(Notification.ParameterChanged.Structure, action);
+            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param, action);
         }
 
         public override bool IsInput => true;

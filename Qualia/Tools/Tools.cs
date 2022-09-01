@@ -92,7 +92,7 @@ namespace Qualia.Tools
             ES_SYSTEM_REQUIRED = 0x00000001
         }
 
-        public static bool SetPreventComputerFromSleep(bool yes)
+        public static bool SetNoSleepMode(bool yes)
         {
             try
             {
