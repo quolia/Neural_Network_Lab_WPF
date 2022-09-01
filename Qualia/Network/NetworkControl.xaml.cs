@@ -282,23 +282,24 @@ namespace Qualia.Controls
                                                                       MessageBoxButton.OKCancel))
             {
                 var selectedLayer = SelectedLayer;
-                selectedLayer.RemoveFromConfig();
-
-                var selectedTab = CtlTabsLayers.SelectedTab();
-                var index = CtlTabsLayers.Items.IndexOf(selectedTab);
-                CtlTabsLayers.Items.Remove(selectedTab);
+                var selectedItem = CtlTabsLayers.SelectedItem;
+                var index = CtlTabsLayers.SelectedIndex;
+                CtlTabsLayers.Items.Remove(selectedItem);
                 ResetLayersTabsNames();
-                
+
                 ApplyAction action = new(this)
                 {
+                    RunningAction = selectedLayer.RemoveFromConfig,
+                    StandingAction = selectedLayer.RemoveFromConfig,
                     CancelAction = () =>
                     {
-                        CtlTabsLayers.Items.Insert(index, selectedTab);
+                        CtlTabsLayers.Items.Insert(index, selectedItem);
+                        CtlTabsLayers.SelectedItem = selectedItem;
                         ResetLayersTabsNames();
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.Structure, action);
+                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount, action);
             }
         }
 

@@ -152,7 +152,7 @@ namespace Qualia.Controls
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
             _Tabs.SelectedIndex = Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
 
-            RefresNetworks(false);
+            RefreshNetworks(false);
         }
 
         public void RebuildNetworksForTask(TaskFunction task)
@@ -233,7 +233,7 @@ namespace Qualia.Controls
                     StandingAction = () =>
                     {
                         selectedNetworkControl.RemoveFromConfig();
-                        RefresNetworks(false);
+                        RefreshNetworks(false);
                     },
                     CancelAction = () =>
                     {
@@ -299,7 +299,7 @@ namespace Qualia.Controls
             return networkModels;
         }
 
-        public void RefresNetworks(bool isRunning)
+        public void RefreshNetworks(bool isRunning)
         {
             if (isRunning)
             {
@@ -312,8 +312,8 @@ namespace Qualia.Controls
             }
         }
 
-        public void RefreshRunningNetworks() => RefresNetworks(true);
-        public void RefreshStandingNetworks() => RefresNetworks(false);
+        public void RefreshRunningNetworks() => RefreshNetworks(true);
+        public void RefreshStandingNetworks() => RefreshNetworks(false);
 
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {
