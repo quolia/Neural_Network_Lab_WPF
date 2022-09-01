@@ -82,7 +82,7 @@ namespace Qualia.Controls
             return false;
         }
 
-        override public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChange)
+        override public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChange)
         {
             this.SetUIHandler(onChange);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Parameter_OnChanged));

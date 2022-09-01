@@ -26,7 +26,6 @@ namespace Qualia.Controls
         private CancellationTokenSource _cancellationTokenSource;
 
         private NetworksManager _networksManager;
-        private ActionsManager _actionManager = ActionsManager.Instance;
 
         private Stopwatch _startTime;
         private long _rounds;
@@ -145,7 +144,7 @@ namespace Qualia.Controls
                 return;
             }
 
-            _actionManager.Lock();
+             ActionManager.Instance.Lock();
 
             _networksManager = new(CtlTabs, fileName, NotifyUIChanged);
             Config.Main.Set(Constants.Param.NetworksManagerName, fileName);
@@ -166,7 +165,7 @@ namespace Qualia.Controls
 
             OnNetworksManagerLoaded();
 
-            _actionManager.Unlock();
+            ActionManager.Instance.Unlock();
         }
 
         private void OnNetworksManagerLoaded()
@@ -234,25 +233,27 @@ namespace Qualia.Controls
 
         private void NotifyUIChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            if (_actionManager.IsLocked)
+            var manager = ActionManager.Instance;
+
+            if (manager.IsLocked)
             {
                 return;
             }
 
-            if (!_actionManager.IsValid)
+            if (!manager.IsValid)
             {
                 if (action == null)
                 {
                     throw new InvalidOperationException();
                 }
 
-                if (action.Sender == _actionManager.Invalidator && param != Notification.ParameterChanged.Invalidate)
+                if (action.Sender == manager.Invalidator && param != Notification.ParameterChanged.Invalidate)
                 {
-                    _actionManager.Invalidator = null;
+                    manager.Invalidator = null;
                 }
             }
 
-            if (!_actionManager.IsValid)
+            if (!manager.IsValid)
             {
                 if (param != Notification.ParameterChanged.Invalidate)
                 {
@@ -341,8 +342,8 @@ namespace Qualia.Controls
                 }
 
                 newAction.CancelAction = newAction.InstantAction;
- 
-                _actionManager.Add(newAction);
+
+                manager.Add(newAction);
             }
             else if (param == Notification.ParameterChanged.NeuronActivationFunction)
             {
@@ -362,7 +363,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Invalidate)
             {
-                _actionManager.Invalidator = action.Sender;
+                manager.Invalidator = action.Sender;
             }
             else // Default handler.
             {
@@ -375,16 +376,16 @@ namespace Qualia.Controls
 
             if (action != null)
             {
-                _actionManager.Add(action);
+                manager.Add(action);
             }
 
-            _actionManager.AddMany(additionalActions);
+            manager.AddMany(additionalActions);
 
             if (param == Notification.ParameterChanged.Invalidate)
             {
                 TurnApplyChangesButtonOn(false);
 
-                if (_actionManager.HasCancelActions())
+                if (manager.HasCancelActions())
                 {
                     TurnCancelChangesButtonOn(true);
                 }
@@ -396,7 +397,7 @@ namespace Qualia.Controls
             {
                 try
                 {
-                    _actionManager.ExecuteInstant();
+                    manager.ExecuteInstant();
                 }
                 catch (Exception ex)
                 {
@@ -405,7 +406,7 @@ namespace Qualia.Controls
                 }
             }
 
-            if (_actionManager.HasApplyActions() || _actionManager.HasCancelActions())
+            if (manager.HasApplyActions() || manager.HasCancelActions())
             {
                 TurnApplyChangesButtonOn(true);
                 CtlMenuStart.IsEnabled = false;
@@ -461,10 +462,10 @@ namespace Qualia.Controls
                     return;
                 }
 
-                _actionManager.Execute(_isRunning);
+                ActionManager.Instance.Execute(_isRunning);
 
                 TurnApplyChangesButtonOn(false);
-                _actionManager.Clear();
+                ActionManager.Instance.Clear();
 
                 if (!_isRunning)
                 {
@@ -481,11 +482,11 @@ namespace Qualia.Controls
             {
                 lock (Locker.ApplyChanges)
                 {
-                    _actionManager.Invalidator = null;
-                    _actionManager.ExecuteCancel();
+                    ActionManager.Instance.Invalidator = null;
+                    ActionManager.Instance.ExecuteCancel();
 
                     TurnApplyChangesButtonOn(false);
-                    _actionManager.Clear();
+                    ActionManager.Instance.Clear();
                 }
             }
         }
@@ -537,7 +538,7 @@ namespace Qualia.Controls
 
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
 
-                TurnApplyChangesButtonOn(_actionManager.HasApplyActions());
+                TurnApplyChangesButtonOn(ActionManager.Instance.HasApplyActions());
 
                 CtlMenuStart.IsEnabled = !_isRunning && !_isPaused;
                 CtlMenuRun.IsEnabled = true;
@@ -556,9 +557,9 @@ namespace Qualia.Controls
 
         private void MenuContinue_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_actionManager.HasActions())
+            if (ActionManager.Instance.HasActions())
             {
-                MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                Messages.ShowApplyOrCancel();
                 return;
             }
 
@@ -572,9 +573,9 @@ namespace Qualia.Controls
 
         private void MenuStart_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_actionManager.HasActions())
+            if (ActionManager.Instance.HasActions())
             {
-                MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                Messages.ShowApplyOrCancel();
                 return;
             }
 
@@ -590,7 +591,7 @@ namespace Qualia.Controls
             }
 
             ApplyChangesToStandingNetworks();
-            _actionManager.Clear();
+            ActionManager.Instance.Clear();
 
             _cancellationTokenSource = new();
             _cancellationToken = _cancellationTokenSource.Token;
@@ -1269,9 +1270,9 @@ namespace Qualia.Controls
 
         private void MenuReset_OnClick(object sender, RoutedEventArgs e)
         {
-            _actionManager.Lock();
+            ActionManager.Instance.Lock();
             ApplyChangesToStandingNetworks();
-            _actionManager.Unlock();
+            ActionManager.Instance.Unlock();
         }
 
         private void NetworkTab_OnChanged(object sender, SelectionChangedEventArgs e)
@@ -1320,9 +1321,9 @@ namespace Qualia.Controls
 
         private void MainWindow_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (_actionManager.HasActions())
+            if (ActionManager.Instance.HasActions())
             {
-                MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                Messages.ShowApplyOrCancel();
                 e.Cancel = true;
                 return;
             }
@@ -1360,27 +1361,27 @@ namespace Qualia.Controls
 
         private void AddNetwork()
         {
-            if (!_actionManager.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot add network. Editor has invalid value.");
                 return;
             }
 
-            _actionManager.Lock();
+            ActionManager.Instance.Lock();
             _networksManager.AddNetwork();
             ApplyChangesToStandingNetworks();
-            _actionManager.Unlock();
+            ActionManager.Instance.Unlock();
         }
 
         private void MainMenuCloneNetwork_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!_actionManager.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot clone network. Editor has invalid value.");
                 return;
             }
 
-            _actionManager.Lock();
+            ActionManager.Instance.Lock();
 
             var selectedNetwork = _networksManager.SelectedNetworkControl;
             var newNetwork = _networksManager.AddNetwork();
@@ -1389,17 +1390,23 @@ namespace Qualia.Controls
             selectedNetwork.CopyTo(newNetwork);
             ApplyChangesToStandingNetworks();
 
-            _actionManager.Unlock();
+            ActionManager.Instance.Unlock();
         }
 
         private void MainMenuRemoveNetwork_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot remove network. Editor has invalid value.");
+                return;
+            }
+
             _networksManager.RemoveNetwork();
         }
 
         private void MainMenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!_actionManager.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot add layer. Editor has invalid value.");
                 return;
@@ -1411,13 +1418,19 @@ namespace Qualia.Controls
 
         private void MainMenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot remove layer. Editor has invalid value.");
+                return;
+            }
+
             _networksManager.SelectedNetworkControl.RemoveLayer();
-            NotifyUIChanged(Notification.ParameterChanged.Structure, null);
+            //NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuAddNeuron_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!_actionManager.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot add neuron. Editor has invalid value.");
                 return;

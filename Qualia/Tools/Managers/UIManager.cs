@@ -5,11 +5,11 @@ namespace Qualia.Tools
 {
     internal class ExtendedInfo
     {
-        public static readonly ActionsManager.ApplyActionDelegate DefaultHandler = delegate { };
+        public static readonly ActionManager.ApplyActionDelegate DefaultHandler = delegate { };
 
         public Config Config;
         public readonly List<IConfigParam> ConfigParams = new();
-        public ActionsManager.ApplyActionDelegate OnChanged = DefaultHandler;
+        public ActionManager.ApplyActionDelegate OnChanged = DefaultHandler;
         public Notification.ParameterChanged UIParam;
 
         private static readonly Dictionary<object, ExtendedInfo> _dict = new();
@@ -114,7 +114,7 @@ namespace Qualia.Tools
             return info.Config;
         }
 
-        public static T SetUIHandler<T>(this T t, ActionsManager.ApplyActionDelegate onChanged) where T : class
+        public static T SetUIHandler<T>(this T t, ActionManager.ApplyActionDelegate onChanged) where T : class
         {
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
@@ -131,7 +131,7 @@ namespace Qualia.Tools
             return t;
         }
 
-        public static ActionsManager.ApplyActionDelegate GetUIHandler<T>(this T t) where T : class
+        public static ActionManager.ApplyActionDelegate GetUIHandler<T>(this T t) where T : class
         {
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)

@@ -13,5 +13,10 @@ namespace Qualia.Tools
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        public static void ShowApplyOrCancel()
+        {
+            MessageBox.Show("Apply or cancel changes!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
     }
 }

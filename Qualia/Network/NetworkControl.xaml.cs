@@ -20,9 +20,8 @@ namespace Qualia.Controls
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
         private OutputLayerControl _outputLayer;
-        private ActionsManager _actionManager = ActionsManager.Instance;
 
-        public NetworkControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
+        public NetworkControl(long id, Config config, ActionManager.ApplyActionDelegate onChanged)
         {
             InitializeComponent();
             this.SetUIHandler(onChanged);
@@ -77,7 +76,7 @@ namespace Qualia.Controls
 
         private HiddenLayerControl AddLayer(long layerId)
         {
-            _actionManager.Lock();
+            ActionManager.Instance.Lock();
 
             HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), this.GetUIHandler());
 
@@ -104,7 +103,7 @@ namespace Qualia.Controls
             CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
 
-            _actionManager.Unlock();
+            ActionManager.Instance.Unlock();
 
             if (layerId == Constants.UnknownId)
             {
@@ -463,7 +462,7 @@ namespace Qualia.Controls
 
         private void MenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!_actionManager.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot add layer. Editor has invalid value.");
                 return;
@@ -474,7 +473,7 @@ namespace Qualia.Controls
 
         private void MenuCloneLayer_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!ActionsManager.Instance.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot clone layer. Editor has invalid value.");
                 return;
@@ -485,6 +484,12 @@ namespace Qualia.Controls
 
         private void MenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot remove layer. Editor has invalid value.");
+                return;
+            }
+
             RemoveLayer();
         }
 

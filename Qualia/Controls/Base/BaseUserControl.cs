@@ -45,7 +45,7 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
         }
 
-        virtual public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
+        virtual public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(cp => cp.SetOnChangeEvent(onChanged));

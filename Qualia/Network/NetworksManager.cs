@@ -19,7 +19,7 @@ namespace Qualia.Controls
         private TaskFunction _taskFunction;
         private NetworkControl _selectedNetworkControl;
 
-        public NetworksManager(TabControl tabs, string fileName, ActionsManager.ApplyActionDelegate onChanged)
+        public NetworksManager(TabControl tabs, string fileName, ActionManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
 

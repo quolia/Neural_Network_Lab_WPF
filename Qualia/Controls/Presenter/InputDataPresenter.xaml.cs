@@ -188,7 +188,7 @@ namespace Qualia.Controls
             this.GetConfig().FlushToDrive();
         }
 
-        public override void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
+        public override void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));

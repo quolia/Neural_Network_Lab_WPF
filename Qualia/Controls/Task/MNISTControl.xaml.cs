@@ -150,7 +150,7 @@ namespace Qualia.Controls
             return this.FindVisualChildren<IConfigParam>().All(param => param.IsValid());
         }
 
-        override public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChange)
+        override public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChange)
         {
             this.SetUIHandler(onChange);
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));

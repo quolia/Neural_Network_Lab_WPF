@@ -78,7 +78,7 @@ namespace Qualia.Controls
 
         public bool IsValid() => true;
 
-        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
+        public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
         {
             EnableListeners(true);
             this.SetUIHandler(onChanged);

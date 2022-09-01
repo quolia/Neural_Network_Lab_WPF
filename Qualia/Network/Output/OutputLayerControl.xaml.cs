@@ -7,7 +7,7 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputLayerControl : LayerBaseControl
     {
-        public OutputLayerControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
+        public OutputLayerControl(long id, Config config, ActionManager.ApplyActionDelegate onChanged)
             : base(id, config, onChanged)
         {
             InitializeComponent();
@@ -41,7 +41,7 @@ namespace Qualia.Controls
 
         private void MenuAddNeuron_OnClick(object sender, EventArgs e)
         {
-            if (!ActionsManager.Instance.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot add neuron. Editor has invalid value.");
                 return;

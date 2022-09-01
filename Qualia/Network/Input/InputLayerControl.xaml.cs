@@ -10,7 +10,7 @@ namespace Qualia.Controls
     {
         public InputLayerControl(long id,
                                  Config config,
-                                 ActionsManager.ApplyActionDelegate onChanged)
+                                 ActionManager.ApplyActionDelegate onChanged)
             : base(id,
                    config,
                    onChanged)

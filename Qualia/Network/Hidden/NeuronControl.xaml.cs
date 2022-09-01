@@ -9,7 +9,7 @@ namespace Qualia.Controls
     {
         public NeuronControl(long id,
                              Config config,
-                             ActionsManager.ApplyActionDelegate onChanged,
+                             ActionManager.ApplyActionDelegate onChanged,
                              LayerBaseControl parentLayer)
             : base(id,
                    config,

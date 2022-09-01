@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Qualia.Tools
 {
-    public class ActionsManager
+    public class ActionManager
     {
         public delegate void ApplyActionDelegate(Notification.ParameterChanged sender, ApplyAction action);
-        public static readonly ActionsManager Instance = new();
+        public static readonly ActionManager Instance = new();
 
         private readonly List<ApplyAction> _actions = new();
         private IEnumerable<ApplyAction> _applyActions => _actions.Where(a => a.RunningAction != null || a.StandingAction != null);
@@ -20,7 +20,7 @@ namespace Qualia.Tools
 
         public bool IsValid => Invalidator == null;
 
-        protected ActionsManager()
+        protected ActionManager()
         {
             //
         }

@@ -54,7 +54,7 @@ namespace Qualia.Controls
 
         // IConfigParam
 
-        override public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
+        override public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
 

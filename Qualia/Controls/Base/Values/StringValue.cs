@@ -88,7 +88,7 @@ namespace Qualia.Controls
             this.GetConfig().Remove(Name);
         }
 
-        public void SetOnChangeEvent(ActionsManager.ApplyActionDelegate onChanged)
+        public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
         {
             this.SetUIHandler(onChanged);
         }

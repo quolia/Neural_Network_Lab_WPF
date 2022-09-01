@@ -13,7 +13,7 @@ namespace Qualia.Controls
             InitializeComponent();
         }
 
-        public HiddenLayerControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
+        public HiddenLayerControl(long id, Config config, ActionManager.ApplyActionDelegate onChanged)
             : base(id, config, onChanged)
         {
             InitializeComponent();

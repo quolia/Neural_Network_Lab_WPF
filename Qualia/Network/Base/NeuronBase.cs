@@ -28,7 +28,7 @@ namespace Qualia.Controls
 
         public NeuronBaseControl(long id,
                                  Config config,
-                                 ActionsManager.ApplyActionDelegate onChanged,
+                                 ActionManager.ApplyActionDelegate onChanged,
                                  LayerBaseControl parentLayer)
         {
             _parentLayer = parentLayer;
@@ -81,7 +81,7 @@ namespace Qualia.Controls
 
         private void AddNeuron_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!ActionsManager.Instance.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot add neuron. Editor has invalid value.");
                 return;
@@ -92,7 +92,7 @@ namespace Qualia.Controls
 
         private void CloneNeuron_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!ActionsManager.Instance.IsValid)
+            if (!ActionManager.Instance.IsValid)
             {
                 Messages.ShowError("Cannot clone neuron. Editor has invalid value.");
                 return;
@@ -104,6 +104,12 @@ namespace Qualia.Controls
 
         private void RemoveNeuron_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot remove neuron. Editor has invalid value.");
+                return;
+            }
+
             RemoveNeuron();
         }
 

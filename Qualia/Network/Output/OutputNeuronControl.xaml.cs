@@ -6,7 +6,7 @@ namespace Qualia.Controls
 {
     sealed public partial class OutputNeuronControl : NeuronBaseControl
     {
-        public OutputNeuronControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged, LayerBaseControl parentLayer)
+        public OutputNeuronControl(long id, Config config, ActionManager.ApplyActionDelegate onChanged, LayerBaseControl parentLayer)
             : base(id, config, onChanged, parentLayer)
         {
             InitializeComponent();
