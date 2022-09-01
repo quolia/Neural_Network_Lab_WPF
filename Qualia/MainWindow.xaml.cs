@@ -73,8 +73,7 @@ namespace Qualia.Controls
 
             CtlNetworkPresenter.SizeChanged += (sender, e) =>
             {
-                CtlNetworkPresenter.OnSizeChanged(_networksManager,
-                                                  _isRunning,
+                CtlNetworkPresenter.OnSizeChanged(_isRunning,
                                                   CtlUseWeightsColors.Value,
                                                   CtlOnlyChangedWeights.Value,
                                                   CtlHighlightChangedWeights.Value,
@@ -304,7 +303,7 @@ namespace Qualia.Controls
                 if (!_isRunning)
                 {
                     _networksManager.RefresNetworks(_isRunning);
-                    CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                    CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
                 }
             }
             else if (param == Notification.ParameterChanged.NetworkLearningRate)
@@ -337,7 +336,7 @@ namespace Qualia.Controls
                     {
                         _networksManager.ResetLayersTabsNames();
                         _networksManager.RefresNetworks(false);
-                        CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                        CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
                     };
                 }
 
@@ -536,7 +535,7 @@ namespace Qualia.Controls
                 _networksManager.RebuildNetworksForTask(taskFunction);
                 _networksManager.RefresNetworks(false);
 
-                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
 
                 TurnApplyChangesButtonOn(ActionManager.Instance.HasApplyActions());
 
@@ -1315,7 +1314,7 @@ namespace Qualia.Controls
             }
             else
             {
-                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel);
+                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
             }
         }
 

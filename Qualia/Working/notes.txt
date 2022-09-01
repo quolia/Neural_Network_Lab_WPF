@@ -7,7 +7,6 @@ TODO:
 - Save config on dynamic settings is changed.
 - Add learning limit activation.
 - Add datasets.
-- If ApplyChanges is On - do not save config on exit.
 - Optimize task array filling.
 - IDN neuron.
 - Pos and Neg LR value.

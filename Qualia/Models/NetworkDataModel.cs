@@ -81,70 +81,8 @@ namespace Qualia.Model
             RandomizeMode.Do(this, RandomizerParam);
         }
 
-        /*
-        public void FeedForward2()
-        {
-            var layerModel = Layers.First;
-            while (layerModel != Layers.Last)
-            {
-                var nextNeuron = layerModel.Next.Neurons.First;
-                while (nextNeuron != null)
-                {
-                    if (nextNeuron.IsBiasConnected && nextNeuron.IsBias)
-                    {
-                        nextNeuron.Activation = 0;
-
-                        var neuron = layerModel.Neurons.First;
-                        while (neuron != null)
-                        {
-                            if (neuron.IsBias)
-                            {
-                                nextNeuron.Activation += neuron.AxW(nextNeuron);
-                            }
-                            neuron = neuron.Next;
-                        }
-
-                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParam);
-                    }
-
-                    if (!nextNeuron.IsBias)
-                    {
-                        nextNeuron.Activation = 0;
-
-                        var neuron = layerModel.Neurons.First;
-                        while (neuron != null)
-                        {
-                            if (neuron.Activation != 0)
-                            {
-                                if (neuron.Activation == 1)
-                                {
-                                    nextNeuron.Activation += neuron.WeightTo(nextNeuron).Weight;
-                                }
-                                else
-                                {
-                                    nextNeuron.Activation += neuron.AxW(nextNeuron);
-                                }
-                            }
-                            neuron = neuron.Next;
-                        }
-
-                        nextNeuron.Activation = nextNeuron.ActivationFunction.Do(nextNeuron.Activation, nextNeuron.ActivationFuncParam);
-                    }
-
-                    nextNeuron = nextNeuron.Next;
-                }
-
-                // not connected bias doesn't change it's activation
-
-                layerModel = layerModel.Next;
-            }
-        }
-        */
-
         unsafe public void FeedForward()
         {
-            //long blocked = 0;
-
             var layer = Layers.First;
             var lastLayer = Layers.Last;
             double sum;
@@ -169,8 +107,6 @@ namespace Qualia.Model
 
                 layer = layer.Next;
             }
-
-            //Statistics.BlockedWeights = blocked;
         }
 
         unsafe public void BackPropagation()

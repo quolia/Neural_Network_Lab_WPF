@@ -16,10 +16,10 @@ namespace Qualia.Controls
         private const int BOTTOM_OFFSET = 25;
         private const int NEURON_SIZE = 8;
         private const double NEURON_RADIUS = NEURON_SIZE / 2;
-        private const int BIAS_SIZE = 14;
-        private const double BIAS_RADIUS = BIAS_SIZE / 2;
 
         public long ResizeTicks;
+
+        private NetworkDataModel _networkModel;
 
         private readonly Dictionary<NeuronDataModel, Point> _coordinator = new();
         private readonly Dictionary<WeightDataModel, double> _prevWeights = new();
@@ -51,17 +51,14 @@ namespace Qualia.Controls
             //ClearCache();
         }
 
-        public void OnSizeChanged(NetworksManager networksManager,
-                                  bool isRunning,
+        public void OnSizeChanged(bool isRunning,
                                   bool isUseWeightsColors,
                                   bool isOnlyChangedWeights,
                                   bool isHighlightChangedWeights,
                                   bool isShowOnlyUnchangedWeights,
                                   bool isShowActivationLabels)
         {
-            //CtlNetworkPresenter.Height = QMath.Max(CtlNetworkPresenter.Height, 400);
-
-            if (networksManager == null)
+            if (_networkModel == null)
             {
                 return;
             }
@@ -79,7 +76,7 @@ namespace Qualia.Controls
                 if (isRunning)
                 {
                     ClearCache();
-                    RenderRunning(networksManager.SelectedNetworkModel,
+                    RenderRunning(_networkModel,
                                   isUseWeightsColors,
                                   isOnlyChangedWeights,
                                   isHighlightChangedWeights,
@@ -88,7 +85,7 @@ namespace Qualia.Controls
                 }
                 else
                 {
-                    RenderStanding(networksManager.SelectedNetworkModel);
+                    RenderStanding(_networkModel);
                 }
 
             }, DispatcherPriority.Render);
@@ -472,6 +469,7 @@ namespace Qualia.Controls
                             bool isShowActivationLabels)
         {
             CtlCanvas.Clear();
+            _networkModel = networkModel;
 
             if (networkModel == null)
             {
