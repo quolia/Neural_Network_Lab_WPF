@@ -223,8 +223,13 @@ namespace Qualia.Controls
 
                 var selectedTab = _Tabs.SelectedTab();
                 var index = _Tabs.Items.IndexOf(selectedTab);
-                _Tabs.Items.Remove(selectedTab);
                 _Tabs.SelectedIndex = index - 1;
+                _Tabs.Items.Remove(selectedTab);
+
+                if (_Tabs.SelectedIndex == 0 && _Tabs.Items.Count > 1)
+                {
+                    _Tabs.SelectedIndex = 1;
+                }
 
                 ResetNetworksTabsNames();
 
@@ -238,7 +243,8 @@ namespace Qualia.Controls
                     CancelAction = () =>
                     {
                         _Tabs.Items.Insert(index, selectedTab);
-                        ResetLayersTabsNames();
+                        _Tabs.SelectedItem = selectedTab;
+                        ResetNetworksTabsNames();
                     }
                 };
 

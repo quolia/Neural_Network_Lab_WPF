@@ -1316,7 +1316,8 @@ namespace Qualia.Controls
             }
             else
             {
-                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
+                var networkModel = _networksManager.SelectedNetworkModel;
+                CtlNetworkPresenter.RenderStanding(networkModel == null ? null : networkModel.GetCopyToDraw());
             }
         }
 
@@ -1356,11 +1357,6 @@ namespace Qualia.Controls
         }
 
         private void MainMenuAddNetwork_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddNetwork();
-        }
-
-        private void AddNetwork()
         {
             if (!ActionManager.Instance.IsValid)
             {
