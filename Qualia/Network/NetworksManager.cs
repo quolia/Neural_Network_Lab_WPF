@@ -165,14 +165,14 @@ namespace Qualia.Controls
             _taskFunction = task;
             NetworksControls.ForEach(n => n.NetworkTask_OnChanged(task));
 
-            this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount);
+            this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount, new(this));
         }
 
         public ApplyAction GetNetworksRefreshAction(bool isNeedConfirmation)
         {
             if (isNeedConfirmation)
             {
-                return new()
+                return new(this)
                 {
                     RunningAction = RefreshRunningNetworks,
                     StandingAction = RefreshStandingNetworks
@@ -180,7 +180,7 @@ namespace Qualia.Controls
             }
             else
             {
-                return new()
+                return new(this)
                 {
                     InstantAction = RefreshRunningNetworks
                 };
@@ -228,7 +228,7 @@ namespace Qualia.Controls
 
                 ResetNetworksTabsNames();
 
-                ApplyAction action = new()
+                ApplyAction action = new(this)
                 {
                     StandingAction = () =>
                     {

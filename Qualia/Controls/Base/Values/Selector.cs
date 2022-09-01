@@ -55,7 +55,7 @@ namespace Qualia.Controls
 
             if (oldValue != null && newValue != null)
             {
-                ApplyAction action = new()
+                ApplyAction action = new(this)
                 {
                     CancelAction = () =>
                     {

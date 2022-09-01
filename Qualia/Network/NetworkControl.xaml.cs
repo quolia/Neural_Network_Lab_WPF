@@ -20,7 +20,7 @@ namespace Qualia.Controls
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
         private OutputLayerControl _outputLayer;
-        private ActionsManager _actionsManager = ActionsManager.Instance;
+        private ActionsManager _actionManager = ActionsManager.Instance;
 
         public NetworkControl(long id, Config config, ActionsManager.ApplyActionDelegate onChanged)
         {
@@ -77,7 +77,7 @@ namespace Qualia.Controls
 
         private HiddenLayerControl AddLayer(long layerId)
         {
-            _actionsManager.Lock();
+            _actionManager.Lock();
 
             HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), this.GetUIHandler());
 
@@ -104,11 +104,11 @@ namespace Qualia.Controls
             CtlTabsLayers.SelectedItem = tabItem;
             ResetLayersTabsNames();
 
-            _actionsManager.Unlock();
+            _actionManager.Unlock();
 
             if (layerId == Constants.UnknownId)
             {
-                ApplyAction action = new()
+                ApplyAction action = new(this)
                 {
                     CancelAction = () =>
                     {
@@ -117,7 +117,7 @@ namespace Qualia.Controls
                         CtlTabsLayers.SelectedItem = selectedItem;
                         ResetLayersTabsNames();
 
-                        this.InvokeUIHandler(Notification.ParameterChanged.Structure);
+                        this.InvokeUIHandler(Notification.ParameterChanged.Structure, new(this));
                     }
                 };
 
@@ -290,7 +290,7 @@ namespace Qualia.Controls
                 CtlTabsLayers.Items.Remove(selectedTab);
                 ResetLayersTabsNames();
                 
-                ApplyAction action = new()
+                ApplyAction action = new(this)
                 {
                     CancelAction = () =>
                     {
@@ -444,7 +444,7 @@ namespace Qualia.Controls
                                                                 colorDialog.Color.G,
                                                                 colorDialog.Color.B));
 
-            ApplyAction action = new()
+            ApplyAction action = new(this)
             {
                 CancelAction = () =>
                 {
@@ -463,11 +463,23 @@ namespace Qualia.Controls
 
         private void MenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!_actionManager.IsValid)
+            {
+                Messages.ShowError("Cannot add layer. Editor has invalid value.");
+                return;
+            }
+
             AddLayer();
         }
 
         private void MenuCloneLayer_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionsManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot clone layer. Editor has invalid value.");
+                return;
+            }
+
             SelectedLayer.CopyTo(AddLayer());
         }
 

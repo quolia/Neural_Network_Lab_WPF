@@ -7,17 +7,18 @@ namespace Qualia.Tools
     public class ActionsManager
     {
         public delegate void ApplyActionDelegate(Notification.ParameterChanged sender, ApplyAction action);
-
         public static readonly ActionsManager Instance = new();
 
         private readonly List<ApplyAction> _actions = new();
         private IEnumerable<ApplyAction> _applyActions => _actions.Where(a => a.RunningAction != null || a.StandingAction != null);
         private IEnumerable<ApplyAction> _cancelActions => _actions.Where(a => a.CancelAction != null).Reverse();
         private IEnumerable<ApplyAction> _instantActions => _actions.Where(a => a.InstantAction != null);
-
-        private int _lockCount = 0;
-
+        private int _lockCount;
         public bool IsLocked => _lockCount != 0;
+        
+        public object Invalidator;
+
+        public bool IsValid => Invalidator == null;
 
         protected ActionsManager()
         {
@@ -156,6 +157,7 @@ namespace Qualia.Tools
 
     public class ApplyAction
     {
+        public object Sender;
         public Action RunningAction;
         public Action StandingAction;
         public Action CancelAction;
@@ -163,12 +165,9 @@ namespace Qualia.Tools
 
         public ApplyAction NextAction;
 
-        public ApplyAction(Action runningAction = null, Action standingAction = null, Action instantAction = null, Action cancelAction = null)
+        public ApplyAction(object sender)
         {
-            RunningAction = runningAction;
-            StandingAction = standingAction;
-            InstantAction = instantAction;
-            CancelAction = cancelAction;
+            Sender = sender;
         }
 
         public bool Execute(bool isRunning)

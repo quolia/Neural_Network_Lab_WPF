@@ -27,7 +27,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, EventArgs e)
         {
-            ApplyAction action = new()
+            ApplyAction action = new(this)
             {
                 CancelAction = () =>
                 {

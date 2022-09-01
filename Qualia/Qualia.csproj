@@ -237,6 +237,7 @@
     <Compile Include="Tools\Managers\UIManager.cs" />
     <Compile Include="Tools\Managers\NeuronsSelector.cs" />
     <Compile Include="Tools\Math.cs" />
+    <Compile Include="Tools\Messages.cs" />
     <Compile Include="Tools\Rand.cs" />
     <Compile Include="Tools\Functions\RandomizeFunction.cs" />
     <Compile Include="Tools\Range.cs" />

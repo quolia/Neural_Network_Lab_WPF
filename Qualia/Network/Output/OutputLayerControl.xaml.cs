@@ -41,6 +41,12 @@ namespace Qualia.Controls
 
         private void MenuAddNeuron_OnClick(object sender, EventArgs e)
         {
+            if (!ActionsManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot add neuron. Editor has invalid value.");
+                return;
+            }
+
             AddNeuron(Constants.UnknownId);
         }
 

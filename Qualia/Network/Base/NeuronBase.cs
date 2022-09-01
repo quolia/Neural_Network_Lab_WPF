@@ -81,11 +81,23 @@ namespace Qualia.Controls
 
         private void AddNeuron_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionsManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot add neuron. Editor has invalid value.");
+                return;
+            }
+
             _parentLayer.AddNeuron();
         }
 
         private void CloneNeuron_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!ActionsManager.Instance.IsValid)
+            {
+                Messages.ShowError("Cannot clone neuron. Editor has invalid value.");
+                return;
+            }
+
             var newNeuron = _parentLayer.AddNeuron();
             CopyTo(newNeuron);
         }

@@ -44,7 +44,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, TextChangedEventArgs e)
         {
-            ApplyAction action = new()
+            ApplyAction action = new(this)
             {
                 CancelAction = () =>
                 {

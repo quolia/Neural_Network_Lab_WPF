@@ -87,7 +87,7 @@ namespace Qualia.Controls
 
             if (id == Constants.UnknownId)
             {
-                ApplyAction action = new()
+                ApplyAction action = new(this)
                 {
                     CancelAction = () =>
                     {
@@ -126,7 +126,7 @@ namespace Qualia.Controls
                 neuron.SetRemovingState(true);
             }
 
-            ApplyAction action = new()
+            ApplyAction action = new(this)
             {
                 StandingAction = () =>
                 {

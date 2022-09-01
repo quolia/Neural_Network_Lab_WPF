@@ -79,7 +79,8 @@
             NetworkRandomizerFunction,
             NetworkLearningRate,
             Invalidate,
-            BackPropagationStrategy
+            BackPropagationStrategy,
+            LayersCount
         }
     }
 }

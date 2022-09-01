@@ -239,6 +239,29 @@ namespace Qualia.Controls
                 return;
             }
 
+            if (!_actionManager.IsValid)
+            {
+                if (action == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (action.Sender == _actionManager.Invalidator && param != Notification.ParameterChanged.Invalidate)
+                {
+                    _actionManager.Invalidator = null;
+                }
+            }
+
+            if (!_actionManager.IsValid)
+            {
+                if (param != Notification.ParameterChanged.Invalidate)
+                {
+                    Messages.ShowError("Cannot execute operation.");
+                }
+
+                return;
+            }
+
             List<ApplyAction> additionalActions = new();
 
             if (param == Notification.ParameterChanged.DynamicSettings)
@@ -293,7 +316,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.NeuronsCount)
             {
-                ApplyAction newAction = new();
+                ApplyAction newAction = new(this);
 
                 if (_isRunning)
                 {
@@ -331,7 +354,7 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Structure)
             {
-                additionalActions.Add(new()
+                additionalActions.Add(new(this)
                 {
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
@@ -339,11 +362,11 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Invalidate)
             {
-
+                _actionManager.Invalidator = action.Sender;
             }
             else // Default handler.
             {
-                additionalActions.Add(new()
+                additionalActions.Add(new(this)
                 {
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
@@ -371,7 +394,15 @@ namespace Qualia.Controls
 
             lock (Locker.ApplyChanges)
             {
-                _actionManager.ExecuteInstant();
+                try
+                {
+                    _actionManager.ExecuteInstant();
+                }
+                catch (Exception ex)
+                {
+                    Logger.ShowException(ex, "Cannot execute operation.");
+                    CancelChanges_OnClick(null, null);
+                }
             }
 
             if (_actionManager.HasApplyActions() || _actionManager.HasCancelActions())
@@ -450,6 +481,7 @@ namespace Qualia.Controls
             {
                 lock (Locker.ApplyChanges)
                 {
+                    _actionManager.Invalidator = null;
                     _actionManager.ExecuteCancel();
 
                     TurnApplyChangesButtonOn(false);
@@ -1193,7 +1225,7 @@ namespace Qualia.Controls
                 CtlMatrixPresenter.Clear();
             }
 
-            NotifyUIChanged(Notification.ParameterChanged.Structure, null);
+            //NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MenuStop_OnClick(object sender, RoutedEventArgs e)
@@ -1237,7 +1269,9 @@ namespace Qualia.Controls
 
         private void MenuReset_OnClick(object sender, RoutedEventArgs e)
         {
+            _actionManager.Lock();
             ApplyChangesToStandingNetworks();
+            _actionManager.Unlock();
         }
 
         private void NetworkTab_OnChanged(object sender, SelectionChangedEventArgs e)
@@ -1321,6 +1355,17 @@ namespace Qualia.Controls
 
         private void MainMenuAddNetwork_OnClick(object sender, RoutedEventArgs e)
         {
+            AddNetwork();
+        }
+
+        private void AddNetwork()
+        {
+            if (!_actionManager.IsValid)
+            {
+                Messages.ShowError("Cannot add network. Editor has invalid value.");
+                return;
+            }
+
             _actionManager.Lock();
             _networksManager.AddNetwork();
             ApplyChangesToStandingNetworks();
@@ -1329,6 +1374,12 @@ namespace Qualia.Controls
 
         private void MainMenuCloneNetwork_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!_actionManager.IsValid)
+            {
+                Messages.ShowError("Cannot clone network. Editor has invalid value.");
+                return;
+            }
+
             _actionManager.Lock();
 
             var selectedNetwork = _networksManager.SelectedNetworkControl;
@@ -1348,8 +1399,14 @@ namespace Qualia.Controls
 
         private void MainMenuAddLayer_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!_actionManager.IsValid)
+            {
+                Messages.ShowError("Cannot add layer. Editor has invalid value.");
+                return;
+            }
+
             _networksManager.SelectedNetworkControl.AddLayer();
-            NotifyUIChanged(Notification.ParameterChanged.Structure, null);
+            //NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
@@ -1360,6 +1417,12 @@ namespace Qualia.Controls
 
         private void MainMenuAddNeuron_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!_actionManager.IsValid)
+            {
+                Messages.ShowError("Cannot add neuron. Editor has invalid value.");
+                return;
+            }
+
             _networksManager.SelectedNetworkControl.SelectedLayer.AddNeuron();
         }
 

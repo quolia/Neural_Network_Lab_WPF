@@ -77,7 +77,7 @@ namespace Qualia.Controls
 
         public ApplyAction GetApplyAction()
         {
-            return new()
+            return new(this)
             {
                 RunningAction = ApplyChanges,
                 StandingAction = ApplyChanges
