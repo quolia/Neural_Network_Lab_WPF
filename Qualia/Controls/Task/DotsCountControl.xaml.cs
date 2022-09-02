@@ -38,10 +38,14 @@ namespace Qualia.Controls
 
         private void Parameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            if (IsValid())
+            if (param == Notification.ParameterChanged.Invalidate)
             {
                 OnChanged(param, action);
+                return;
             }
+
+            bool isValid = IsValid();
+            OnChanged(param, action);
         }
 
         // IConfigParam
@@ -76,10 +80,9 @@ namespace Qualia.Controls
                 {
                     return true;
                 }
-
-                InvalidateValue();
             }
-
+            
+            InvalidateValue();
             return false;
         }
 

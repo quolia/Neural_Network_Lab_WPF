@@ -240,7 +240,6 @@ namespace Qualia.Controls
             {
                 return;
             }
-
             if (!manager.IsValid)
             {
                 if (action == null)
@@ -252,16 +251,20 @@ namespace Qualia.Controls
                 {
                     manager.Invalidator = null;
                 }
-            }
-
-            if (!manager.IsValid)
-            {
-                if (param != Notification.ParameterChanged.Invalidate)
+                else
                 {
-                    Messages.ShowError("Cannot execute operation.");
-                }
+                    if (manager.Invalidator != action.Sender)
+                    {
+                        Messages.ShowError("Cannot execute operation.");
 
-                return;
+                        Dispatcher.BeginInvoke(() =>
+                        {
+                            action.Cancel();
+                        });
+
+                        return;
+                    }
+                }
             }
 
             List<ApplyAction> additionalActions = new();
