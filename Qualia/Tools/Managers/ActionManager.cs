@@ -163,8 +163,6 @@ namespace Qualia.Tools
         public Action CancelAction;
         public Action InstantAction;
 
-        public ApplyAction NextAction;
-
         public ApplyAction(object sender)
         {
             Sender = sender;
