@@ -255,12 +255,15 @@ namespace Qualia.Controls
                 {
                     if (manager.Invalidator != action.Sender)
                     {
-                        Messages.ShowError("Cannot execute operation.");
-
-                        Dispatcher.BeginInvoke(() =>
+                        if (action.CancelAction != null)
                         {
-                            action.Cancel();
-                        });
+                            Messages.ShowError("Cannot execute operation.");
+
+                            Dispatcher.BeginInvoke(() =>
+                            {
+                                action.Cancel();
+                            });
+                        }
 
                         return;
                     }

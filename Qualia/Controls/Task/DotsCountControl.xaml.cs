@@ -40,12 +40,13 @@ namespace Qualia.Controls
         {
             if (param == Notification.ParameterChanged.Invalidate)
             {
+                InvalidateValue();
                 OnChanged(param, action);
                 return;
             }
 
             bool isValid = IsValid();
-            OnChanged(param, action);
+            OnChanged(isValid ? param : Notification.ParameterChanged.Invalidate, action);
         }
 
         // IConfigParam

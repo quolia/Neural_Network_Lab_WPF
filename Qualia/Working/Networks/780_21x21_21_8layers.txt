@@ -803,3 +803,4 @@ InputDataPresenter.TaskFunction.DotsCount.IsPreventRepetition:0
 InputDataPresenter.TaskFunction.DotsCount.CommonDotsAmount:780
 InputDataPresenter.TaskFunction.DotsCount.MinDotsAmountToCount:0
 InputDataPresenter.TaskFunction.DotsCount.MaxDotsAmoutToCount:20
+InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.Constant.Param:1

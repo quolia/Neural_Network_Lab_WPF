@@ -68,7 +68,7 @@ namespace Qualia.Controls
                 this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
             }
 
-            this.InvokeUIHandler();
+            this.InvokeUIHandler(Notification.ParameterChanged.Unknown, new(this));
         }
 
         public new ISelectableItem SelectedItem

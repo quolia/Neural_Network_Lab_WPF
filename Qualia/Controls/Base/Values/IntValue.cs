@@ -96,7 +96,7 @@ namespace Qualia.Controls
 
         public bool IsValid()
         {
-            return IsValidInput(DefaultValue);
+            return IsValidInput(Constants.InvalidLong);
         }
 
         private bool IsNull(long defaultValue) => string.IsNullOrEmpty(Text) && Constants.IsInvalid(defaultValue);
