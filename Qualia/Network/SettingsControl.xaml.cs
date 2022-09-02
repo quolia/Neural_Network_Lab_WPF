@@ -38,7 +38,7 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
             ApplyChanges();
-            Value_OnChanged(Notification.ParameterChanged.NoSleepMode, null);
+            Value_OnChanged(Notification.ParameterChanged.NoSleepMode, new(this));
         }
 
         private void Value_OnChanged(Notification.ParameterChanged param, ApplyAction action)

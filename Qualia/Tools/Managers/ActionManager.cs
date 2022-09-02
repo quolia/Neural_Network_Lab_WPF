@@ -168,6 +168,8 @@ namespace Qualia.Tools
             Sender = sender;
         }
 
+        public bool IsActive => RunningAction != null || StandingAction != null || CancelAction != null || InstantAction != null;
+
         public bool Execute(bool isRunning)
         {
             if (isRunning)

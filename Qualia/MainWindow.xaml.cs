@@ -240,6 +240,7 @@ namespace Qualia.Controls
             {
                 return;
             }
+
             if (!manager.IsValid)
             {
                 if (action == null)

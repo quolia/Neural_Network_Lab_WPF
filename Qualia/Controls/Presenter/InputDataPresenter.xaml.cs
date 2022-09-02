@@ -72,28 +72,40 @@ namespace Qualia.Controls
                     return;
                 }
 
-                var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
+                ApplyAction instantAction = new(this)
+                {
+                    InstantAction = () =>
+                    {
+                        ActionManager.Instance.Lock();
 
-                var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
-                                                         .Extend(CtlTaskFunction.Value.Text);
+                        var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
 
-                CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
-                CtlDistributionFunction.LoadConfig();
+                        var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                                 .Extend(CtlTaskFunction.Value.Text);
 
-                CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
-                CtlIsPreventRepetition.LoadConfig();
+                        CtlDistributionFunction.SetConfig<DistributionFunction>(taskFunctionConfig);
+                        CtlDistributionFunction.LoadConfig();
 
-                var taskControl = taskFunction.VisualControl;
+                        CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+                        CtlIsPreventRepetition.LoadConfig();
 
-                _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
-                _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
+                        var taskControl = taskFunction.VisualControl;
 
-                taskControl.SetConfig(taskFunctionConfig);
-                taskControl.LoadConfig();
-                taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
+                        _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
+                        _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
 
-                CtlTaskControlHolder.Children.Clear();
-                CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
+                        taskControl.SetConfig(taskFunctionConfig);
+                        taskControl.LoadConfig();
+                        taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
+
+                        CtlTaskControlHolder.Children.Clear();
+                        CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
+                        
+                        ActionManager.Instance.Unlock();
+                    }
+                };
+
+                base.OnChanged(Notification.ParameterChanged.TaskFunction, instantAction);
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
