@@ -139,7 +139,7 @@ namespace Qualia.Tools
             return result;
         }
 
-        public bool HasActions() => _actions.Any();
+        public bool HasActions() => HasApplyActions() || HasInstantActions() || HasCancelActions();
         public bool HasApplyActions() => _applyActions.Any();
         public bool HasCancelActions() => _cancelActions.Any();
         public bool HasInstantActions() => _instantActions.Any();
