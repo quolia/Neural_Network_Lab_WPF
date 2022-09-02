@@ -56,6 +56,8 @@ namespace Qualia.Controls
                     {
                         // Validate value.
                     }
+
+                    this.InvokeUIHandler(Notification.ParameterChanged.Unknown, new(this));
                 }
             };
 
