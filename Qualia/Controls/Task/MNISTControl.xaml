@@ -14,10 +14,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:TextControl Grid.Row="0"
                            Text="Min number:" />
@@ -35,43 +31,5 @@
                                MinValue="1"
                                MaxValue="9"
                                DefaultValue="9" />
-        <local:TextControl Grid.Row="2"
-                           Grid.ColumnSpan="2"
-                           Text="Path to train images (*.gz):" />
-        <Grid Grid.Row="3"
-              Grid.ColumnSpan="2">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            
-            <local:StringValueControl x:Name="CtlImagesPath" />
-            
-            <Button Name="CtlBrowseImagesPath"
-                    Grid.Column="1"
-                    Content="Browse"
-                    Click="BrowseImagesPath_OnClick" />
-        </Grid>
-        
-        <local:TextControl Grid.Row="4"
-                           Grid.ColumnSpan="2"
-                           Text="Path to labels (*.gz):" />
-        
-        <Grid Grid.Row="5"
-              Grid.ColumnSpan="2">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            
-            <local:StringValueControl x:Name="CtlLabelsPath" />
-            
-            <Button Name="CtlBrowseLabelsPath"
-                    Grid.Column="1"
-                    Content="Browse"
-                    Click="BrowseLabelsPath_OnClick" />
-        </Grid>
     </Grid>
 </local:BaseUserControl>

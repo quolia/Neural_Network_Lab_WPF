@@ -14,15 +14,15 @@ namespace Qualia.Controls
     {
         public readonly List<MNISTImage> Images = new();
 
+        private string _imagesGzPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
+        private string _labelsGzPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
+
+        private string _imagesPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "images.bin";
+        private string _labelsPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "labels.bin";
+
         public MNISTControl()
         {
             InitializeComponent();
-
-            CtlImagesPath
-                .Initialize(App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz");
-
-            CtlLabelsPath
-                .Initialize(App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz");
         }
 
         public int MaxNumber => (int)CtlMaxNumber.Value;
@@ -52,92 +52,48 @@ namespace Qualia.Controls
         {
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
-            var fileNameImagesBin = Extension.GetDirectoryName(CtlImagesPath.Text,
-                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "images.bin";
-            
-            if (!File.Exists(fileNameImagesBin))
+            if (!File.Exists(_imagesPath))
             {
-                if (!File.Exists(CtlImagesPath.Text))
+                try
                 {
-                    CtlImagesPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
-                }
-
-                fileNameImagesBin = Extension.GetDirectoryName(CtlImagesPath.Text,
-                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "images.bin";
-
-                if (!File.Exists(fileNameImagesBin))
-                {
-                    fileNameImagesBin = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "images.bin";
-                    if (!File.Exists(fileNameImagesBin))
+                    if (!File.Exists(_imagesGzPath))
                     {
-                        try
-                        {
-                            if (!File.Exists(CtlImagesPath.Text))
-                            {
-                                throw new Exception($"Cannot find file '{CtlImagesPath.Text}'.");
-                            }
-
-                            Decompress(CtlImagesPath.Text, fileNameImagesBin);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Cannot open MNIST images file.\r\n\r\n" + ex.Message);
-                            return;
-                        }
+                        throw new Exception($"Cannot find file \"{_imagesGzPath}\".");
                     }
+
+                    Decompress(_imagesGzPath, _imagesPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Cannot open MNIST images file.\r\n\r\n" + ex.Message);
+                    return;
                 }
             }
 
-            LoadImages(fileNameImagesBin);
-            var fileNameImagesGz = Extension.GetDirectoryName(fileNameImagesBin,
-                                                              App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
-
-            CtlImagesPath.Text = fileNameImagesGz;
+            LoadImages(_imagesPath);
 
             //
 
 
-            var fileNameLabelsBin = Extension.GetDirectoryName(CtlLabelsPath.Text,
-                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "labels.bin";
-
-            if (!File.Exists(fileNameLabelsBin))
+            if (!File.Exists(_labelsPath))
             {
-                if (!File.Exists(CtlLabelsPath.Text))
+                try
                 {
-                    CtlLabelsPath.Text = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
-                }
-
-                fileNameLabelsBin = Extension.GetDirectoryName(CtlLabelsPath.Text,
-                                                               App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "labels.bin";
-
-                if (!File.Exists(fileNameLabelsBin))
-                {
-                    fileNameLabelsBin = App.WorkingDirectory + "MNIST" + Path.DirectorySeparatorChar + "labels.bin";
-                    if (!File.Exists(fileNameLabelsBin))
+                    if (!File.Exists(_labelsGzPath))
                     {
-                        try
-                        {
-                            if (!File.Exists(CtlLabelsPath.Text))
-                            {
-                                throw new Exception($"Cannot find file '{CtlLabelsPath.Text}'.");
-                            }
-
-                            Decompress(CtlLabelsPath.Text, fileNameLabelsBin);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Cannot open MNIST labels file.\r\n\r\n" + ex.Message);
-                            return;
-                        }
+                        throw new Exception($"Cannot find file \"{_labelsGzPath}\".");
                     }
+
+                    Decompress(_labelsGzPath, _labelsPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Cannot open MNIST labels file.\r\n\r\n" + ex.Message);
+                    return;
                 }
             }
 
-            LoadLabels(fileNameLabelsBin);
-            var fileNameLabelsGz = Extension.GetDirectoryName(fileNameLabelsBin,
-                                                              App.WorkingDirectory + "MNIST") + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
-
-            CtlLabelsPath.Text = fileNameLabelsGz;
+            LoadLabels(_labelsPath);
         }
 
         override public void SaveConfig()
@@ -299,55 +255,6 @@ namespace Qualia.Controls
                 var image = Images[i];
                 image.Label = (byte)file.ReadByte();
             }
-        }
-
-        private void BrowseImagesPath_OnClick(object sender, RoutedEventArgs e)
-        {
-            BrowseFile(CtlImagesPath, "images.bin");
-        }
-
-        private void BrowseLabelsPath_OnClick(object sender, RoutedEventArgs e)
-        {
-            BrowseFile(CtlLabelsPath, "labels.bin");
-        }
-
-        private void BrowseFile(TextBox textBox, string targetFileName)
-        {
-            var fileName = BrowseGzFile();
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return;
-            }
-
-            try
-            {
-                Decompress(fileName, Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar + targetFileName);
-                textBox.Text = fileName;
-            }
-            catch (Exception ex)
-            {
-                textBox.Text = string.Empty;
-                MessageBox.Show("Cannot unzip file with the following message:\r\n\r\n" + ex.Message);
-            }
-        }
-
-        private string BrowseGzFile()
-        {
-            OpenFileDialog loadDialog = new()
-            {
-                InitialDirectory = Path.GetFullPath("."),
-                DefaultExt = "gz",
-                Filter = "WinZip files (*.gz)|*.gz|All files (*.*)|*.*",
-                FilterIndex = 1,
-                RestoreDirectory = true
-            };
-
-            if (loadDialog.ShowDialog() == true)
-            {
-                return loadDialog.FileName;
-            }
-
-            return null;
         }
 
         private void Decompress(string sourceGz, string destBin)

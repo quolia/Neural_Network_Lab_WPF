@@ -19,7 +19,14 @@ namespace Qualia.Tools
                 Directory.CreateDirectory(networksPath);
             }
 
-            var mnistPath = App.WorkingDirectory + "MNIST";
+            var datasetsPath = App.WorkingDirectory + "Datasets";
+
+            if (!Directory.Exists(datasetsPath))
+            {
+                Directory.CreateDirectory(datasetsPath);
+            }
+
+            var mnistPath = datasetsPath + Path.DirectorySeparatorChar + "MNIST";
 
             if (!Directory.Exists(mnistPath))
             {
