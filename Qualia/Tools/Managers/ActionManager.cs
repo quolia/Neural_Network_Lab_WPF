@@ -75,8 +75,8 @@ namespace Qualia.Tools
 
                 actions = _applyActions.ToList();
                 if (actions.Any())
-                {
-                    throw new InvalidOperationException();
+                { 
+                    //throw new InvalidOperationException();
                 }
             }
 

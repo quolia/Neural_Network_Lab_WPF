@@ -363,14 +363,11 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.Structure)
             {
-                /*
                 additionalActions.Add(new(this)
                 {
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
                 });
-                */
-                
             }
             else if (param == Notification.ParameterChanged.Invalidate)
             {
@@ -475,11 +472,13 @@ namespace Qualia.Controls
                     return;
                 }
 
+                /*
                 ActionManager.Instance.Add(new(this)
                 {
                     RunningAction = ApplyChangesToRunningNetworks,
                     StandingAction = ApplyChangesToStandingNetworks
                 });
+                */
 
                 ActionManager.Instance.Execute(_isRunning);
                 ActionManager.Instance.Clear();
@@ -610,7 +609,9 @@ namespace Qualia.Controls
             }
 
             ApplyChangesToStandingNetworks();
+            ActionManager.Instance.Execute(false);
             ActionManager.Instance.Clear();
+            TurnApplyChangesButtonOn(false);
 
             _cancellationTokenSource = new();
             _cancellationToken = _cancellationTokenSource.Token;

@@ -107,12 +107,10 @@ namespace Qualia.Controls
 
         public override int RemoveNeuron(NeuronBaseControl neuron)
         {
-            int result = 0;
-
             if (!CanNeuronBeRemoved(neuron))
             {
                 MessageBox.Show("At least one neuron must exist.", "Warning", MessageBoxButton.OK);
-                return result;
+                return 0;
             }
 
             var selectedNeurons = Neurons.Where(n => n.IsSelected).ToList();
@@ -133,13 +131,14 @@ namespace Qualia.Controls
                     if (NeuronsSelector.Instance.IsSelected(neuron))
                     {
                         selectedNeurons.ForEach(RemoveNeuronWithoutConfirmation);
-                        //result += selectedNeurons.Count;
                     }
                     else
                     {
                         RemoveNeuronWithoutConfirmation(neuron);
-                        //++result;
                     }
+
+                    RefreshNeuronsOrdinalNumbers();
+                    OnChanged(Notification.ParameterChanged.NeuronsCount, new(this));
                 },
 
                 CancelAction = () =>
@@ -155,37 +154,11 @@ namespace Qualia.Controls
                 }
             };
 
-            /*
-            if (MessageBoxResult.OK == 
-                    MessageBox.Show("Would you really like to remove the neuron(s)?", "Confirm", MessageBoxButton.OKCancel))
-            {
-                if (NeuronsSelector.Instance.IsSelected(neuron))
-                {
-                    selectedNeurons.ForEach(RemoveNeuronWithoutConfirmation);
-                    result += selectedNeurons.Count;
-                }
-                else
-                {
-                    RemoveNeuronWithoutConfirmation(neuron);
-                    ++result;
-                }
+            action.RunningAction = action.StandingAction;
 
-                return result;
-            }
+            OnChanged(Notification.ParameterChanged.Structure, action);
 
-            if (NeuronsSelector.Instance.IsSelected(neuron))
-            {
-                selectedNeurons.ForEach(n => n.SetRemovingState(false));
-            }
-            else
-            {
-                neuron.SetRemovingState(false);
-            }
-            */
-
-            OnChanged(Notification.ParameterChanged.NeuronsCount, action);
-
-            return result;
+            return 0;
         }
 
         private void RemoveNeuronWithoutConfirmation(NeuronBaseControl neuron)
@@ -195,10 +168,6 @@ namespace Qualia.Controls
 
             neuron.RemoveFromConfig();
             neuron.SaveConfig();
-
-            RefreshNeuronsOrdinalNumbers();
-
-            OnChanged(Notification.ParameterChanged.NeuronsCount, null);
         }
 
         public override void SetAllNeuronsSelected(bool isSelected)

@@ -449,6 +449,7 @@ namespace Qualia.Controls
                 CancelAction = () =>
                 {
                     CtlColor.Foreground = Draw.GetBrush(in wpfColor);
+                    this.InvokeUIHandler(Notification.ParameterChanged.NetworkColor, new(this));
                 }
             };
 
