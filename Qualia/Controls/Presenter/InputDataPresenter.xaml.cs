@@ -59,7 +59,7 @@ namespace Qualia.Controls
 
         private void TaskFunction_OnChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            TaskFunction = GetTaskFunction();
+            //TaskFunction = GetTaskFunction();
             CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
@@ -74,6 +74,10 @@ namespace Qualia.Controls
 
                 ApplyAction instantAction = new(this)
                 {
+                    Apply = (isRunning) =>
+                    {
+                        ApplyChanges();
+                    },
                     ApplyInstant = (isRunning) =>
                     {
                         ActionManager.Instance.Lock();
@@ -91,9 +95,6 @@ namespace Qualia.Controls
 
                         var taskControl = taskFunction.VisualControl;
 
-                        _pointsRearrangeSnap = taskControl.GetPointsRearrangeSnap();
-                        _isGridSnapAdjustmentAllowed = taskControl.IsGridSnapAdjustmentAllowed();
-
                         taskControl.SetConfig(taskFunctionConfig);
                         taskControl.LoadConfig();
                         taskControl.SetOnChangeEvent(TaskParameter_OnChanged);
@@ -110,40 +111,58 @@ namespace Qualia.Controls
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
-                ApplyAction instantAction = new(this)
+                //if (action.IsActive)
                 {
-                    ApplyInstant = (isRunning) =>
+                    ApplyAction instantAction = new(this)
                     {
-                        if (CtlDistributionFunction.SelectedFunction == null)
+                        ApplyInstant = (isRunning) =>
                         {
-                            return;
+                            if (CtlDistributionFunction.SelectedFunction == null)
+                            {
+                                return;
+                            }
+
+                            var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
+                            var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                                     .Extend(CtlTaskFunction.Value.Text);
+
+                            ActionManager.Instance.Lock();
+
+                            CtlDistributionFunction.SetConfig(taskFunctionConfig);
+                            CtlDistributionFunction.LoadConfig();
+
+                            CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+                            CtlIsPreventRepetition.LoadConfig();
+
+                            ActionManager.Instance.Unlock();
                         }
+                    };
 
-                        var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
-                        var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
-                                                                 .Extend(CtlTaskFunction.Value.Text);
-
-                        CtlDistributionFunction.SetConfig(taskFunctionConfig);
-                        CtlDistributionFunction.LoadConfig();
-
-                        CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
-                        CtlIsPreventRepetition.LoadConfig();
+                    base.OnChanged(param, instantAction);
+                    if (!action.IsActive)
+                    {
+                        return;
                     }
-                };
-
-                base.OnChanged(param, instantAction);
+                }
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunctionParam)
             {
-                ApplyAction instantAction = new(this)
+                if (action.IsActive)
                 {
-                    Apply = (isRunning) =>
+                    ApplyAction instantAction = new(this)
                     {
-                        RearrangeWithNewPointsCount();
-                    }
-                };
+                        Apply = (isRunning) =>
+                        {
+                            ApplyChanges();
+                        }
+                    };
 
-                base.OnChanged(param, instantAction);
+                    base.OnChanged(param, instantAction);
+                }
+                else
+                {
+                    return;
+                }
             }
 
             base.OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.TaskParameter : param, action);
@@ -267,8 +286,9 @@ namespace Qualia.Controls
         {
             _data = null;
 
-            var taskFunction = GetTaskFunction();
-            Rearrange(taskFunction.VisualControl.GetInputCount());
+            //var taskFunction = GetTaskFunction();
+            //Rearrange(taskFunction.VisualControl.GetInputCount());
+            Rearrange(TaskFunction.VisualControl.GetInputCount());
         }
 
         private int GetSnaps()
@@ -370,7 +390,7 @@ namespace Qualia.Controls
             }
         }
 
-        private TaskFunction GetTaskFunction()
+        public TaskFunction GetTaskFunction()
         {
             var taskFunction = TaskFunction.GetInstance(CtlTaskFunction);
             var distributionFunction = DistributionFunction.GetInstance(CtlDistributionFunction);
@@ -383,6 +403,21 @@ namespace Qualia.Controls
             }
 
             return taskFunction;
+        }
+
+        public void ApplyChanges()
+        {
+            var newFunction = GetTaskFunction();
+            var newTaskControl = newFunction.VisualControl;
+
+            if (newFunction != TaskFunction || newTaskControl.GetInputCount() != _pointsCount)
+            {
+                TaskFunction = newFunction;
+                
+                _pointsRearrangeSnap = newTaskControl.GetPointsRearrangeSnap();
+                _isGridSnapAdjustmentAllowed = newTaskControl.IsGridSnapAdjustmentAllowed();
+                RearrangeWithNewPointsCount();
+            }
         }
     }
 }

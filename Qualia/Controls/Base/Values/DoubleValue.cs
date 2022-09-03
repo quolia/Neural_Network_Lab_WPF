@@ -125,6 +125,12 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
+            var oldConfig = this.GetConfig();
+            if (oldConfig != null)
+            {
+                //SaveConfig();
+            }
+
             this.PutConfig(config);
         }
 

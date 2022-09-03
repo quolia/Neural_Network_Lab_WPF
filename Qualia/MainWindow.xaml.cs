@@ -567,10 +567,11 @@ namespace Qualia.Controls
             {
                 CtlSettings.ApplyChanges(true);
 
-                var taskFunction = CtlInputDataPresenter.TaskFunction;
+                var taskFunction = CtlInputDataPresenter.GetTaskFunction();
+                //var taskFunction = CtlInputDataPresenter.TaskFunction;
                 taskFunction.VisualControl.ApplyChanges();
 
-                CtlInputDataPresenter.RearrangeWithNewPointsCount();
+                CtlInputDataPresenter.ApplyChanges();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
                 _networksManager.RefreshNetworks(true);
@@ -598,10 +599,12 @@ namespace Qualia.Controls
             {
                 CtlSettings.ApplyChanges(false);
 
-                var taskFunction = CtlInputDataPresenter.TaskFunction;
+                var taskFunction = CtlInputDataPresenter.GetTaskFunction();
+                //var taskFunction = CtlInputDataPresenter.TaskFunction;
                 taskFunction.VisualControl.ApplyChanges();
 
-                CtlInputDataPresenter.RearrangeWithNewPointsCount();
+                CtlInputDataPresenter.ApplyChanges();
+                //CtlInputDataPresenter.RearrangeWithNewPointsCount();
 
                 _networksManager.RebuildNetworksForTask(taskFunction);
                 _networksManager.RefreshNetworks(false);
