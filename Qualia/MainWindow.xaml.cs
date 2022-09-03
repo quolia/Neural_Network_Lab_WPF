@@ -234,6 +234,11 @@ namespace Qualia.Controls
 
         private void NotifyUIChanged(Notification.ParameterChanged param, ApplyAction action)
         {
+            if (action == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             var manager = ActionManager.Instance;
 
             if (manager.IsLocked)
@@ -243,11 +248,6 @@ namespace Qualia.Controls
 
             if (!manager.IsValid)
             {
-                if (action == null)
-                {
-                    throw new InvalidOperationException();
-                }
-
                 if (action.Sender == manager.Invalidator && param != Notification.ParameterChanged.Invalidate)
                 {
                     manager.Invalidator = null;
@@ -258,7 +258,7 @@ namespace Qualia.Controls
                     {
                         if (action.Cancel != null)
                         {
-                            Messages.ShowError("Cannot execute operation.");
+                            Messages.ShowError("Cannot execute operation. Editor has invalid value.");
 
                             Dispatcher.BeginInvoke(() =>
                             {
@@ -407,22 +407,12 @@ namespace Qualia.Controls
                 */
             }
 
-            if (action != null)
-            {
-                manager.Add(action);
-            }
-
+            manager.Add(action);
             manager.AddMany(additionalActions);
 
             if (param == Notification.ParameterChanged.Invalidate)
             {
                 TurnApplyChangesButtonOn(false);
-
-                if (manager.HasCancelActions())
-                {
-                    TurnCancelChangesButtonOn(true);
-                }
-
                 return;
             }
 
@@ -539,6 +529,7 @@ namespace Qualia.Controls
                     ActionManager.Instance.ExecuteCancel(_isRunning);
 
                     TurnApplyChangesButtonOn(false);
+                    //? ApplyCancelButton state?
                     ActionManager.Instance.Clear();
                 }
             }

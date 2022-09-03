@@ -27,7 +27,7 @@ namespace Qualia.Tools
 
         public void Add(ApplyAction action)
         {
-            if (IsLocked)
+            if (action == null || IsLocked)
             {
                 return;
             }
