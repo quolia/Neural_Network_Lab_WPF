@@ -69,6 +69,11 @@ namespace Qualia.Tools
 
                 foreach (var action in actions)
                 {
+                    if (!_applyActions.ToList().Contains(action))
+                    {
+                        throw new InvalidOperationException();
+                    }
+
                     action.Execute(isForRunning);
                     Remove(action);
                 }
@@ -97,6 +102,11 @@ namespace Qualia.Tools
 
                 foreach (var action in actions)
                 {
+                    if (!_instantActions.ToList().Contains(action))
+                    {
+                        throw new InvalidOperationException();
+                    }
+
                     action.ExecuteInstant(isRunning);
                     action.ApplyInstant = null;
                 }
@@ -125,6 +135,11 @@ namespace Qualia.Tools
 
                 foreach (var action in actions)
                 {
+                    if (!_cancelActions.ToList().Contains(action))
+                    {
+                        throw new InvalidOperationException();
+                    }
+
                     action.ExecuteCancel(isRunning);
                     Remove(action);
                 }
@@ -132,7 +147,7 @@ namespace Qualia.Tools
                 actions = _cancelActions.ToList();
                 if (actions.Any())
                 {
-                    throw new InvalidOperationException();
+                    // RemoveNetwork cann add instand actions, which can add apply-actions.
                 }
             }
 

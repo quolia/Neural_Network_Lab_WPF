@@ -93,12 +93,17 @@ namespace Qualia.Controls
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            CtlNeurons.Items.Clear();
-            Neurons.Clear();
+            var newNeuronsCount = taskFunction.VisualControl.GetInputCount();
 
-            if (taskFunction != null)
+            if (Neurons.Count != newNeuronsCount)
             {
-                Range.For(taskFunction.VisualControl.GetInputCount(), _ => Neurons.Insert(0, AddNeuron()));
+                CtlNeurons.Items.Clear();
+                Neurons.Clear();
+
+                //if (taskFunction != null)
+                {
+                    Range.For(taskFunction.VisualControl.GetInputCount(), _ => Neurons.Insert(0, AddNeuron()));
+                }
             }
         }
 

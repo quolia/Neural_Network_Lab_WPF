@@ -232,211 +232,227 @@ namespace Qualia.Controls
             return true;
         }
 
+        bool _notify;
         private void NotifyUIChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            if (action == null)
+            if (_notify)
             {
                 throw new InvalidOperationException();
             }
 
-            var manager = ActionManager.Instance;
-
-            if (manager.IsLocked)
+            _notify = true;
+            try
             {
-                return;
-            }
 
-            if (!manager.IsValid)
-            {
-                if (action.Sender == manager.Invalidator && param != Notification.ParameterChanged.Invalidate)
+                if (action == null)
                 {
-                    manager.Invalidator = null;
+                    throw new InvalidOperationException();
                 }
-                else
-                {
-                    if (manager.Invalidator != action.Sender)
-                    {
-                        if (action.Cancel != null)
-                        {
-                            Messages.ShowError("Cannot execute operation. Editor has invalid value.");
 
-                            Dispatcher.BeginInvoke(() =>
+                var manager = ActionManager.Instance;
+
+                if (manager.IsLocked)
+                {
+                    return;
+                }
+
+                if (!manager.IsValid)
+                {
+                    if (action.Sender == manager.Invalidator && param != Notification.ParameterChanged.Invalidate)
+                    {
+                        manager.Invalidator = null;
+                    }
+                    else
+                    {
+                        if (manager.Invalidator != action.Sender)
+                        {
+                            if (action.Cancel != null)
                             {
-                                action.ExecuteCancel(_isRunning);
-                            });
+                                Messages.ShowError("Cannot execute operation. Editor has invalid value.");
+
+                                Dispatcher.BeginInvoke(() =>
+                                {
+                                    action.ExecuteCancel(_isRunning);
+                                });
+                            }
+
+                            return;
                         }
+                    }
+                }
+
+                List<ApplyAction> additionalActions = new();
+
+                if (param == Notification.ParameterChanged.DynamicSettings)
+                {
+                    action = null;
+                }
+                else if (param == Notification.ParameterChanged.NoSleepMode)
+                {
+                    action = null;
+
+                    var isNoSleepMode = CtlSettings.CtlIsNoSleepMode.Value;
+                    SystemTools.SetNoSleepMode(isNoSleepMode);
+                    CtlNoSleepLabel.Visibility = isNoSleepMode ? Visibility.Visible : Visibility.Collapsed;
+                }
+                else if (param == Notification.ParameterChanged.Settings)
+                {
+                    additionalActions.Add(CtlSettings.GetApplyAction(_isRunning));
+                }
+                else if (param == Notification.ParameterChanged.IsPreventRepetition)
+                {
+                    action = null;
+
+                    var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
+                    taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
+                }
+                else if (param == Notification.ParameterChanged.IsNetworkEnabled)
+                {
+                    additionalActions.Add(_networksManager.GetNetworksRefreshAction(false));
+                }
+                else if (param == Notification.ParameterChanged.NetworkColor)
+                {
+                    additionalActions.Add(_networksManager.GetNetworksRefreshAction(false));
+                }
+                else if (param == Notification.ParameterChanged.NetworkRandomizerFunction
+                         || param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
+                {
+                    action = new(action.Sender)
+                    {
+                        ApplyInstant = (isRunning) =>
+                        {
+                            if (!isRunning)
+                            {
+                                _networksManager.RefreshNetworks(false);
+                                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
+                            }
+                        }
+                    };
+                }
+                else if (param == Notification.ParameterChanged.NetworkLearningRate)
+                {
+                    additionalActions.Add(_networksManager.GetNetworksRefreshAction(true));
+                }
+                else if (param == Notification.ParameterChanged.BackPropagationStrategy)
+                {
+                    additionalActions.Add(_networksManager.GetNetworksRefreshAction(true));
+                }
+                else if (param == Notification.ParameterChanged.NeuronsAdded ||
+                         param == Notification.ParameterChanged.NeuronsRemoved)
+                {
+                    ApplyAction newAction = new(this)
+                    {
+                        Apply = (isRunning) =>
+                        {
+                            _networksManager.RefreshNetworks(isRunning);
+                        },
+                        ApplyInstant = (isRunning) =>
+                        {
+                            if (isRunning)
+                            {
+                                _networksManager.ResetLayersTabsNames();
+                            }
+                            else
+                            {
+                                _networksManager.ResetLayersTabsNames();
+                                _networksManager.RefreshNetworks(isRunning);
+                                CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
+                            }
+                        }
+                    };
+                    newAction.Cancel = newAction.ApplyInstant;
+
+                    if (param == Notification.ParameterChanged.NeuronsAdded)
+                    {
+                        manager.Add(newAction);
+                    }
+                    else
+                    {
+                        additionalActions.Add(newAction);
+                    }
+                }
+                else if (param == Notification.ParameterChanged.NeuronActivationFunction)
+                {
+                    int a = 1;
+                }
+                else if (param == Notification.ParameterChanged.NeuronActivationFunctionParam)
+                {
+                    int a = 1;
+                }
+                else if (param == Notification.ParameterChanged.Structure)
+                {
+                    additionalActions.Add(new(this)
+                    {
+                        Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
+                    });
+                }
+                else if (param == Notification.ParameterChanged.TaskParameter)
+                {
+                    additionalActions.Add(new(this)
+                    {
+                        Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
+                    });
+                }
+                else if (param == Notification.ParameterChanged.Invalidate)
+                {
+                    manager.Invalidator = action.Sender;
+                }
+                else // Default handler.
+                {
+                    /*
+                    additionalActions.Add(new(this)
+                    {
+                        RunningAction = ApplyChangesToRunningNetworks,
+                        StandingAction = ApplyChangesToStandingNetworks
+                    });
+                    */
+                }
+
+                manager.Add(action);
+                manager.AddMany(additionalActions);
+
+                if (param == Notification.ParameterChanged.Invalidate)
+                {
+                    TurnApplyChangesButtonOn(false);
+                    return;
+                }
+
+                lock (Locker.ApplyChanges)
+                {
+                    try
+                    {
+                        if (param == Notification.ParameterChanged.NeuronActivationFunctionParam)
+                        {
+                            throw new Exception("test");
+                        }
+                        manager.ExecuteInstant(_isRunning);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.ShowException(ex, "Cannot execute operation.");
+
+                        Dispatcher.BeginInvoke(() =>
+                        {
+                            CancelActions();
+                        });
 
                         return;
                     }
                 }
-            }
 
-            List<ApplyAction> additionalActions = new();
-
-            if (param == Notification.ParameterChanged.DynamicSettings)
-            {
-                action = null;
-            }
-            else if (param == Notification.ParameterChanged.NoSleepMode)
-            {
-                action = null;
-
-                var isNoSleepMode = CtlSettings.CtlIsNoSleepMode.Value;
-                SystemTools.SetNoSleepMode(isNoSleepMode);
-                CtlNoSleepLabel.Visibility = isNoSleepMode ? Visibility.Visible : Visibility.Collapsed;
-            }
-            else if (param == Notification.ParameterChanged.Settings)
-            {
-                additionalActions.Add(CtlSettings.GetApplyAction(_isRunning));
-            }
-            else if (param == Notification.ParameterChanged.IsPreventRepetition)
-            {
-                action = null;
-
-                var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
-                taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
-            }
-            else if (param == Notification.ParameterChanged.IsNetworkEnabled)
-            {
-                additionalActions.Add(_networksManager.GetNetworksRefreshAction(false));
-            }
-            else if (param == Notification.ParameterChanged.NetworkColor)
-            {
-                additionalActions.Add(_networksManager.GetNetworksRefreshAction(false));
-            }
-            else if (param == Notification.ParameterChanged.NetworkRandomizerFunction
-                     || param == Notification.ParameterChanged.NetworkRandomizerFunctionParam)
-            {
-                action = null;
-
-                if (!_isRunning)
+                if (manager.HasApplyActions() || manager.HasCancelActions())
                 {
-                    _networksManager.RefreshNetworks(_isRunning);
-                    CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
+                    TurnApplyChangesButtonOn(true);
+                    CtlMenuStart.IsEnabled = false;
+                }
+                else
+                {
+                    TurnCancelChangesButtonOn(false);
                 }
             }
-            else if (param == Notification.ParameterChanged.NetworkLearningRate)
+            finally
             {
-                additionalActions.Add(_networksManager.GetNetworksRefreshAction(true));
-            }
-            else if (param == Notification.ParameterChanged.BackPropagationStrategy)
-            {
-                additionalActions.Add(_networksManager.GetNetworksRefreshAction(true));
-            }
-            else if (param == Notification.ParameterChanged.NeuronsAdded)
-            {
-                ApplyAction newAction = new(this)
-                {
-                    Apply = (isRunning) =>
-                    {
-                        _networksManager.RefreshNetworks(true);
-                    },
-                    ApplyInstant = (isRunning) =>
-                    {
-                        if (isRunning)
-                        {
-                            _networksManager.ResetLayersTabsNames();
-                        }
-                        else
-                        {
-                            _networksManager.ResetLayersTabsNames();
-                            _networksManager.RefreshNetworks(false);
-                            CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
-                        }
-                    }
-                };
-
-                newAction.Cancel = newAction.ApplyInstant;
-                manager.Add(newAction);
-            }
-            else if (param == Notification.ParameterChanged.NeuronsRemoved)
-            {
-                ApplyAction newAction = new(this)
-                {
-                    Apply = (isRunning) =>
-                    {
-                        _networksManager.RefreshNetworks(true);
-                        _networksManager.ResetLayersTabsNames();
-                    },
-                    ApplyInstant = (isRunning) =>
-                    {
-                        if (isRunning)
-                        {
-                            _networksManager.ResetLayersTabsNames();
-                        }
-                        else
-                        {
-                            _networksManager.RefreshNetworks(false);
-                            CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
-                        }
-                    }
-                };
-
-                newAction.Cancel = newAction.ApplyInstant;
-
-                //manager.Add(newAction);
-                additionalActions.Add(newAction);
-            }
-            else if (param == Notification.ParameterChanged.NeuronActivationFunction)
-            {
-                int a = 1;
-            }
-            else if (param == Notification.ParameterChanged.NeuronActivationFunctionParam)
-            {
-                int a = 1;
-            }
-            else if (param == Notification.ParameterChanged.Structure)
-            {
-                additionalActions.Add(new(this)
-                {
-                    Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
-                });
-            }
-            else if (param == Notification.ParameterChanged.Invalidate)
-            {
-                manager.Invalidator = action.Sender;
-            }
-            else // Default handler.
-            {
-                /*
-                additionalActions.Add(new(this)
-                {
-                    RunningAction = ApplyChangesToRunningNetworks,
-                    StandingAction = ApplyChangesToStandingNetworks
-                });
-                */
-            }
-
-            manager.Add(action);
-            manager.AddMany(additionalActions);
-
-            if (param == Notification.ParameterChanged.Invalidate)
-            {
-                TurnApplyChangesButtonOn(false);
-                return;
-            }
-
-            lock (Locker.ApplyChanges)
-            {
-                try
-                {
-                    manager.ExecuteInstant(_isRunning);
-                }
-                catch (Exception ex)
-                {
-                    Logger.ShowException(ex, "Cannot execute operation.");
-                    CancelChanges_OnClick(null, null);
-                }
-            }
-
-            if (manager.HasApplyActions() || manager.HasCancelActions())
-            {
-                TurnApplyChangesButtonOn(true);
-                CtlMenuStart.IsEnabled = false;
-            }
-            else
-            {
-                TurnCancelChangesButtonOn(false);
+                _notify = false;
             }
         }
 
@@ -523,15 +539,20 @@ namespace Qualia.Controls
             if (MessageBoxResult.Yes ==
                     MessageBox.Show("Confirm cancel changes.", "Confirm", MessageBoxButton.YesNo))
             {
-                lock (Locker.ApplyChanges)
-                {
-                    ActionManager.Instance.Invalidator = null;
-                    ActionManager.Instance.ExecuteCancel(_isRunning);
+                CancelActions();
+            }
+        }
 
-                    TurnApplyChangesButtonOn(false);
-                    //? ApplyCancelButton state?
-                    ActionManager.Instance.Clear();
-                }
+        private void CancelActions()
+        {
+            lock (Locker.ApplyChanges)
+            {
+                ActionManager.Instance.Invalidator = null;
+                ActionManager.Instance.ExecuteCancel(_isRunning);
+
+                TurnApplyChangesButtonOn(false);
+                //? ApplyCancelButton state?
+                ActionManager.Instance.Clear();
             }
         }
 

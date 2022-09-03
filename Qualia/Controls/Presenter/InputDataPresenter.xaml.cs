@@ -115,20 +115,14 @@ namespace Qualia.Controls
                 }
 
                 var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
-                
-                //if (distributionFunction != TaskFunction.DistributionFunction)
-                {
-                    //TaskFunction.DistributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
+                var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                         .Extend(CtlTaskFunction.Value.Text);
 
-                    var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
-                                                             .Extend(CtlTaskFunction.Value.Text);
+                CtlDistributionFunction.SetConfig(taskFunctionConfig);
+                CtlDistributionFunction.LoadConfig();
 
-                    CtlDistributionFunction.SetConfig(taskFunctionConfig);
-                    CtlDistributionFunction.LoadConfig();
-
-                    CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
-                    CtlIsPreventRepetition.LoadConfig();
-                }
+                //CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+                //CtlIsPreventRepetition.LoadConfig();
             }
 
             base.OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.TaskParameter : param, action);
