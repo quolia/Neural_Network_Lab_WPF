@@ -63,7 +63,7 @@ namespace Qualia.Controls
             CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
-        private void OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private new void OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
             if (param == Notification.ParameterChanged.TaskFunction)
             {
@@ -105,24 +105,45 @@ namespace Qualia.Controls
                     }
                 };
 
-                base.OnChanged(Notification.ParameterChanged.TaskFunction, instantAction);
+                base.OnChanged(param, instantAction);
+                //return;
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
-                if (CtlDistributionFunction.SelectedFunction == null)
+                ApplyAction instantAction = new(this)
                 {
-                    return;
-                }
+                    ApplyInstant = (isRunning) =>
+                    {
+                        if (CtlDistributionFunction.SelectedFunction == null)
+                        {
+                            return;
+                        }
 
-                var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
-                var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
-                                                         .Extend(CtlTaskFunction.Value.Text);
+                        var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
+                        var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                                 .Extend(CtlTaskFunction.Value.Text);
 
-                CtlDistributionFunction.SetConfig(taskFunctionConfig);
-                CtlDistributionFunction.LoadConfig();
+                        CtlDistributionFunction.SetConfig(taskFunctionConfig);
+                        CtlDistributionFunction.LoadConfig();
 
-                //CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
-                //CtlIsPreventRepetition.LoadConfig();
+                        CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
+                        CtlIsPreventRepetition.LoadConfig();
+                    }
+                };
+
+                base.OnChanged(param, instantAction);
+            }
+            else if (param == Notification.ParameterChanged.TaskDistributionFunctionParam)
+            {
+                ApplyAction instantAction = new(this)
+                {
+                    Apply = (isRunning) =>
+                    {
+                        RearrangeWithNewPointsCount();
+                    }
+                };
+
+                base.OnChanged(param, instantAction);
             }
 
             base.OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.TaskParameter : param, action);

@@ -158,7 +158,9 @@ namespace Qualia.Controls
         public void RebuildNetworksForTask(TaskFunction task)
         {
             _taskFunction = task;
+            ActionManager.Instance.Lock();
             NetworksControls.ForEach(n => n.NetworkTask_OnChanged(task));
+            ActionManager.Instance.Unlock();
 
             this.InvokeUIHandler(Notification.ParameterChanged.NeuronsAdded, new(this));
         }

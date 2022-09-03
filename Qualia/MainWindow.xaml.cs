@@ -237,7 +237,7 @@ namespace Qualia.Controls
         {
             if (_notify)
             {
-                throw new InvalidOperationException();
+                //throw new InvalidOperationException();
             }
 
             _notify = true;
@@ -305,6 +305,7 @@ namespace Qualia.Controls
 
                     var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
                     taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
+                    return;
                 }
                 else if (param == Notification.ParameterChanged.IsNetworkEnabled)
                 {
@@ -350,6 +351,7 @@ namespace Qualia.Controls
                         {
                             if (isRunning)
                             {
+                                _networksManager.RefreshNetworks(isRunning);
                                 _networksManager.ResetLayersTabsNames();
                             }
                             else
@@ -396,6 +398,13 @@ namespace Qualia.Controls
                 else if (param == Notification.ParameterChanged.Invalidate)
                 {
                     manager.Invalidator = action.Sender;
+                }
+                else if (param == Notification.ParameterChanged.TaskFunction)
+                {
+                    additionalActions.Add(new(this)
+                    {
+                        Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
+                    });
                 }
                 else // Default handler.
                 {
