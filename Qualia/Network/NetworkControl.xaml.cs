@@ -408,18 +408,6 @@ namespace Qualia.Controls
                 }
             }
 
-            /*
-            var lastLayer = network.Layers.Last;
-            //lastLayer.VisualId = Constants.OutputLayerId;
-            {
-                var ctlNeurons = _outputLayer.Neurons.ToArray();
-                for (int i = 0; i < ctlNeurons.Length; ++i)
-                {
-                    lastLayer.Neurons[i].VisualId = ctlNeurons[i].Id;
-
-                }
-            }
-            */
             if (!isCopy)
             {
                 var copy = CreateNetworkDataModel(taskFunction, true);

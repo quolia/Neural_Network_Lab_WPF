@@ -3,13 +3,7 @@
     public static class Constants
     {
         public const int UnknownId = -1;
-        public const int NewId = UnknownId - 1;
-        //public const int InputLayerId = 0;
-        //public const int OutputLayerId = 1;
         public const double SkipValue = double.NaN;
-
-        public const int DefaultInputNeuronsCount = 100;
-        public const int DefaultOutputNeuronsCount = 11; // 0 1 2 3 4 5 6 7 8 9 10
 
         public const int SquareRoot = 32;
         public const int SquareRootMNIST = 28;
