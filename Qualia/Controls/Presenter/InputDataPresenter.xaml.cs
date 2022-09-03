@@ -11,10 +11,6 @@ namespace Qualia.Controls
     {
         public TaskFunction TaskFunction { get; private set; }
 
-        private const int CURRENT_POINTS_COUNT = -1;
-
-        //public bool IsPreventDataRepetition => CtlIsPreventRepetition.Value;
-
         private int _pointsRearrangeSnap;
         private bool _isGridSnapAdjustmentAllowed;
 
@@ -59,7 +55,6 @@ namespace Qualia.Controls
 
         private void TaskFunction_OnChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            //TaskFunction = GetTaskFunction();
             CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
@@ -173,7 +168,7 @@ namespace Qualia.Controls
             var taskFunction = GetTaskFunction();
             if (taskFunction != null && taskFunction.VisualControl.IsGridSnapAdjustmentAllowed())
             {
-                Rearrange(CURRENT_POINTS_COUNT);
+                Rearrange(_pointsCount);
             }
         }
 
@@ -285,9 +280,6 @@ namespace Qualia.Controls
         public void RearrangeWithNewPointsCount()
         {
             _data = null;
-
-            //var taskFunction = GetTaskFunction();
-            //Rearrange(taskFunction.VisualControl.GetInputCount());
             Rearrange(TaskFunction.VisualControl.GetInputCount());
         }
 
@@ -303,11 +295,7 @@ namespace Qualia.Controls
         private void Rearrange(int pointsCount)
         {
             CtlCanvas.Clear();
-
-            if (pointsCount != CURRENT_POINTS_COUNT)
-            {
-                _pointsCount = pointsCount;
-            }
+            _pointsCount = pointsCount;
 
             if (_data == null || _data.Length != _pointsCount)
             {

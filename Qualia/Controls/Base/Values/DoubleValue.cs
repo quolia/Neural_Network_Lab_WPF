@@ -37,7 +37,6 @@ namespace Qualia.Controls
         {
             Padding = new(0);
             Margin = new(3);
-            //MinWidth = 30;
 
             TextChanged += Value_OnChanged;
         }
@@ -125,12 +124,6 @@ namespace Qualia.Controls
 
         public void SetConfig(Config config)
         {
-            var oldConfig = this.GetConfig();
-            if (oldConfig != null)
-            {
-                //SaveConfig();
-            }
-
             this.PutConfig(config);
         }
 

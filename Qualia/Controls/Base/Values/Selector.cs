@@ -69,8 +69,6 @@ namespace Qualia.Controls
 
                 this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
             }
-
-            //this.InvokeUIHandler(Notification.ParameterChanged.Unknown, new(this));
         }
 
         public new ISelectableItem SelectedItem
@@ -171,7 +169,6 @@ namespace Qualia.Controls
             else
             {
                 return PresenterProvider.GetDefaultSelectableItemPresenter(name);
-                //throw new Exception($"Unknown type '{type.Name}' is trying to get presenter.");
             }
         }
 
