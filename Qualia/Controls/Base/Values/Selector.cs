@@ -57,7 +57,7 @@ namespace Qualia.Controls
             {
                 ApplyAction action = new(this)
                 {
-                    CancelAction = () =>
+                    Cancel = (isRunning) =>
                     {
                         SelectionChanged -= Value_OnChanged;
                         Value = oldValue as ISelectableItem;

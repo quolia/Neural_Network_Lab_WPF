@@ -29,7 +29,7 @@ namespace Qualia.Controls
         {
             ApplyAction action = new(this)
             {
-                CancelAction = () =>
+                Cancel = (isRunning) =>
                 {
                     TextChanged -= Value_OnChanged;
                     Undo();

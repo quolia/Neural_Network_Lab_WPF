@@ -43,7 +43,7 @@ namespace Qualia.Controls
         {
             ApplyAction action = new(this)
             {
-                CancelAction = () =>
+                Cancel = (isRunning) =>
                 {
                     EnableListeners(false);
                     Value = !Value;

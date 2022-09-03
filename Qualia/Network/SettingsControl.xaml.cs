@@ -37,7 +37,7 @@ namespace Qualia.Controls
             this.SetUIHandler(onChanged);
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
-            ApplyChanges();
+            ApplyChanges(false);
             Value_OnChanged(Notification.ParameterChanged.NoSleepMode, new(this));
         }
 
@@ -70,17 +70,16 @@ namespace Qualia.Controls
             };
         }
 
-        public void ApplyChanges()
+        public void ApplyChanges(bool isRunning)
         {
             Settings = Get();
         }
 
-        public ApplyAction GetApplyAction()
+        public ApplyAction GetApplyAction(bool isRunning)
         {
             return new(this)
             {
-                RunningAction = ApplyChanges,
-                StandingAction = ApplyChanges
+                Apply = (isRunning) => ApplyChanges(isRunning)
             };
         }
     }

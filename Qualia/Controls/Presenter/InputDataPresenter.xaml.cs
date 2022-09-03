@@ -74,7 +74,7 @@ namespace Qualia.Controls
 
                 ApplyAction instantAction = new(this)
                 {
-                    InstantAction = () =>
+                    ApplyInstant = (isRunning) =>
                     {
                         ActionManager.Instance.Lock();
 

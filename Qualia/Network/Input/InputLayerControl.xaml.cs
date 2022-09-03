@@ -129,7 +129,7 @@ namespace Qualia.Controls
 
             if (biasNeuronId == Constants.UnknownId)
             {
-                OnChanged(Notification.ParameterChanged.NeuronsCount, null);
+                OnChanged(Notification.ParameterChanged.NeuronsAdded, null);
             }
 
             RefreshNeuronsOrdinalNumbers();

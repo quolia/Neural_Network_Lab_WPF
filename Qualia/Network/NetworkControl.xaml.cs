@@ -109,7 +109,7 @@ namespace Qualia.Controls
             {
                 ApplyAction action = new(this)
                 {
-                    CancelAction = () =>
+                    Cancel = (isRunning) =>
                     {
                         hiddenLayer.RemoveFromConfig();
                         CtlTabsLayers.Items.Remove(tabItem);
@@ -120,7 +120,7 @@ namespace Qualia.Controls
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount, action);
+                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsAdded, action);
             }
 
             return hiddenLayer;
@@ -289,9 +289,8 @@ namespace Qualia.Controls
 
                 ApplyAction action = new(this)
                 {
-                    RunningAction = selectedLayer.RemoveFromConfig,
-                    StandingAction = selectedLayer.RemoveFromConfig,
-                    CancelAction = () =>
+                    Apply = (isRunning) => selectedLayer.RemoveFromConfig(),
+                    Cancel = (isRunning) =>
                     {
                         CtlTabsLayers.Items.Insert(index, selectedItem);
                         CtlTabsLayers.SelectedItem = selectedItem;
@@ -299,7 +298,7 @@ namespace Qualia.Controls
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount, action);
+                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsRemoved, action);
             }
         }
 
@@ -446,7 +445,7 @@ namespace Qualia.Controls
 
             ApplyAction action = new(this)
             {
-                CancelAction = () =>
+                Cancel = (isRunning) =>
                 {
                     CtlColor.Foreground = Draw.GetBrush(in wpfColor);
                     this.InvokeUIHandler(Notification.ParameterChanged.NetworkColor, new(this));

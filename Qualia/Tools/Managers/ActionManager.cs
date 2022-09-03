@@ -10,9 +10,9 @@ namespace Qualia.Tools
         public static readonly ActionManager Instance = new();
 
         private readonly List<ApplyAction> _actions = new();
-        private IEnumerable<ApplyAction> _applyActions => _actions.Where(a => a.RunningAction != null || a.StandingAction != null);
-        private IEnumerable<ApplyAction> _cancelActions => _actions.Where(a => a.CancelAction != null).Reverse();
-        private IEnumerable<ApplyAction> _instantActions => _actions.Where(a => a.InstantAction != null);
+        private IEnumerable<ApplyAction> _applyActions => _actions.Where(a => a.Apply != null);
+        private IEnumerable<ApplyAction> _instantActions => _actions.Where(a => a.ApplyInstant != null);
+        private IEnumerable<ApplyAction> _cancelActions => _actions.Where(a => a.Cancel != null).Reverse();
         private int _lockCount;
         public bool IsLocked => _lockCount != 0;
         
@@ -83,7 +83,7 @@ namespace Qualia.Tools
             return result;
         }
 
-        public bool ExecuteInstant()
+        public bool ExecuteInstant(bool isRunning)
         {
             bool result = HasInstantActions();
 
@@ -97,8 +97,8 @@ namespace Qualia.Tools
 
                 foreach (var action in actions)
                 {
-                    action.ExecuteInstant();
-                    action.InstantAction = null;
+                    action.ExecuteInstant(isRunning);
+                    action.ApplyInstant = null;
                 }
 
                 actions = _instantActions.ToList();
@@ -111,7 +111,7 @@ namespace Qualia.Tools
             return result;
         }
 
-        public bool ExecuteCancel()
+        public bool ExecuteCancel(bool isRunning)
         {
             bool result = HasCancelActions();
 
@@ -125,7 +125,7 @@ namespace Qualia.Tools
 
                 foreach (var action in actions)
                 {
-                    action.Cancel();
+                    action.ExecuteCancel(isRunning);
                     Remove(action);
                 }
 
@@ -158,41 +158,32 @@ namespace Qualia.Tools
     public class ApplyAction
     {
         public object Sender;
-        public Action RunningAction;
-        public Action StandingAction;
-        public Action CancelAction;
-        public Action InstantAction;
+        public Action<bool> Apply;
+        public Action<bool> ApplyInstant;
+        public Action<bool> Cancel;
 
         public ApplyAction(object sender)
         {
             Sender = sender;
         }
 
-        public bool IsActive => RunningAction != null || StandingAction != null || CancelAction != null || InstantAction != null;
+        public bool IsActive => Apply != null || ApplyInstant != null || Cancel != null;
 
         public bool Execute(bool isRunning)
         {
-            if (isRunning)
-            {
-                RunningAction?.Invoke();
-            }
-            else
-            {
-                StandingAction?.Invoke();
-            }
-
+            Apply?.Invoke(isRunning);
             return true;
         }
 
-        public bool ExecuteInstant()
+        public bool ExecuteInstant(bool isRunning)
         {
-            InstantAction?.Invoke();
+            ApplyInstant?.Invoke(isRunning);
             return true;
         }
 
-        public bool Cancel()
+        public bool ExecuteCancel(bool isRunning)
         {
-            CancelAction?.Invoke();
+            Cancel?.Invoke(isRunning);
             return true;
         }
     }

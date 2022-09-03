@@ -74,7 +74,8 @@
             NeuronActivationFunctionParam,
 
             Structure,
-            NeuronsCount,
+            NeuronsAdded,
+            NeuronsRemoved,
             NetworkRandomizerFunctionParam,
             NetworkRandomizerFunction,
             NetworkLearningRate,

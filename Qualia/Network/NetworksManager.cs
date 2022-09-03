@@ -160,7 +160,7 @@ namespace Qualia.Controls
             _taskFunction = task;
             NetworksControls.ForEach(n => n.NetworkTask_OnChanged(task));
 
-            this.InvokeUIHandler(Notification.ParameterChanged.NeuronsCount, new(this));
+            this.InvokeUIHandler(Notification.ParameterChanged.NeuronsAdded, new(this));
         }
 
         public ApplyAction GetNetworksRefreshAction(bool isNeedConfirmation)
@@ -169,15 +169,14 @@ namespace Qualia.Controls
             {
                 return new(this)
                 {
-                    RunningAction = RefreshRunningNetworks,
-                    StandingAction = RefreshStandingNetworks
+                    Apply = (isRunning) => RefreshNetworks(isRunning)
                 };
             }
             else
             {
                 return new(this)
                 {
-                    InstantAction = RefreshRunningNetworks
+                    ApplyInstant = (isRunning) => RefreshNetworks(isRunning)
                 };
             }
         }
@@ -230,12 +229,15 @@ namespace Qualia.Controls
 
                 ApplyAction action = new(this)
                 {
-                    StandingAction = () =>
+                    Apply = (isRunning) =>
                     {
-                        selectedNetworkControl.RemoveFromConfig();
-                        RefreshNetworks(false);
+                        if (isRunning)
+                        {
+                            selectedNetworkControl.RemoveFromConfig();
+                            RefreshNetworks(false);
+                        }
                     },
-                    CancelAction = () =>
+                    Cancel = (isRunning) =>
                     {
                         _Tabs.Items.Insert(index, selectedTab);
                         _Tabs.SelectedItem = selectedTab;
