@@ -91,7 +91,7 @@ namespace Qualia.Controls
         public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.Value;
 
-        public void NetworkTask_OnChanged(TaskFunction taskFunction)
+        public void SetTaskFunction(TaskFunction taskFunction)
         {
             var newNeuronsCount = taskFunction.VisualControl.GetInputCount();
 
@@ -102,7 +102,7 @@ namespace Qualia.Controls
 
                 //if (taskFunction != null)
                 {
-                    Range.For(taskFunction.VisualControl.GetInputCount(), _ => Neurons.Insert(0, AddNeuron()));
+                    Range.For(newNeuronsCount, _ => Neurons.Insert(0, AddNeuron()));
                 }
             }
         }

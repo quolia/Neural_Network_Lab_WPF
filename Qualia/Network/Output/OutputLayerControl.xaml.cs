@@ -95,7 +95,7 @@ namespace Qualia.Controls
             Neurons.ToList().ForEach(n => n.RemoveFromConfig());
         }
 
-        public void NetworkTask_OnChanged(TaskFunction taskFunction)
+        public void SetTaskFunction(TaskFunction taskFunction)
         {
             var newCount = taskFunction.VisualControl.GetOutputClasses().Count;
             var count = Neurons.Count;

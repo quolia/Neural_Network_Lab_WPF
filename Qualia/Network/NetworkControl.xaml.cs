@@ -174,8 +174,10 @@ namespace Qualia.Controls
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            InputLayer.NetworkTask_OnChanged(taskFunction);
-            _outputLayer.NetworkTask_OnChanged(taskFunction);
+            InputLayer.SetTaskFunction(taskFunction);
+            _outputLayer.SetTaskFunction(taskFunction);
+
+            ResetLayersTabsNames();
         }
 
         public override void RemoveFromConfig()
@@ -258,6 +260,8 @@ namespace Qualia.Controls
             }
 
             CtlTabsLayers.SelectedIndex = this.GetConfig().Get(Constants.Param.SelectedLayerIndex, 0);
+
+            ResetLayersTabsNames();
         }
 
         public int[] GetLayersSizes()
@@ -366,8 +370,8 @@ namespace Qualia.Controls
                         neuron.PositiveTargetValue = ctlNeurons[neuronInd].PositiveTargetValue;
                         neuron.NegativeTargetValue = ctlNeurons[neuronInd].NegativeTargetValue;
                     }
-
-                    if (layerInd == 0)
+                    
+                    if (layer.Previous == null) // Input layer.
                     {
                         neuron.WeightsInitializer = InputLayer.WeightsInitializeFunction;
                         neuron.WeightsInitializerParam = InputLayer.WeightsInitializeFunctionParam;
@@ -390,7 +394,6 @@ namespace Qualia.Controls
                         }
                     }
 
-                   
                     if (!isCopy && prevLayer != null && prevLayer.Neurons.Count > 0)
                     {
                         neuron.WeightsToPreviousLayer = new(prevLayer.Neurons.Count);
@@ -405,6 +408,7 @@ namespace Qualia.Controls
                 }
             }
 
+            /*
             var lastLayer = network.Layers.Last;
             //lastLayer.VisualId = Constants.OutputLayerId;
             {
@@ -412,9 +416,10 @@ namespace Qualia.Controls
                 for (int i = 0; i < ctlNeurons.Length; ++i)
                 {
                     lastLayer.Neurons[i].VisualId = ctlNeurons[i].Id;
+
                 }
             }
-
+            */
             if (!isCopy)
             {
                 var copy = CreateNetworkDataModel(taskFunction, true);

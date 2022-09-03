@@ -202,8 +202,7 @@ namespace Qualia.Controls
 
             if (networkId == Constants.UnknownId)
             {
-                network.InputLayer.NetworkTask_OnChanged(_taskFunction);
-                network.ResetLayersTabsNames();
+                network.NetworkTask_OnChanged(_taskFunction);
             }
 
             return network;
