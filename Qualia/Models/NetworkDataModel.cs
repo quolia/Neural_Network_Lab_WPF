@@ -266,11 +266,11 @@ namespace Qualia.Model
                             double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
                             if (!InitializeFunction.IsSkipValue(initValue))
                             {
-                                var newWeightModel = newNeuron.Weights.First;
-                                while (newWeightModel != null)
+                                var newWeight = newNeuron.Weights.First;
+                                while (newWeight != null)
                                 {
-                                    newWeightModel.Weight = initValue;
-                                    newWeightModel = newWeightModel.Next;
+                                    newWeight.Weight = initValue;
+                                    newWeight = newWeight.Next;
                                 }
                             }
                         }
@@ -283,6 +283,14 @@ namespace Qualia.Model
                                 if (weight != null)
                                 {
                                     newWeight.Weight = weight.Weight;
+                                }
+                                else
+                                {
+                                    double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
+                                    if (!InitializeFunction.IsSkipValue(initValue))
+                                    {
+                                        newWeight.Weight = initValue;
+                                    }
                                 }
 
                                 newWeight = newWeight.Next;

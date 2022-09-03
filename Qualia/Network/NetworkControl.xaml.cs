@@ -406,7 +406,7 @@ namespace Qualia.Controls
             }
 
             var lastLayer = network.Layers.Last;
-            lastLayer.VisualId = Constants.OutputLayerId;
+            //lastLayer.VisualId = Constants.OutputLayerId;
             {
                 var ctlNeurons = _outputLayer.Neurons.ToArray();
                 for (int i = 0; i < ctlNeurons.Length; ++i)

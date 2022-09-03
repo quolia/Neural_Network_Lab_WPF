@@ -25,7 +25,7 @@ namespace Qualia.Controls
 
         private void Param_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            this.InvokeUIHandler(param);
+            this.InvokeUIHandler(param, action);
         }
     }
 }

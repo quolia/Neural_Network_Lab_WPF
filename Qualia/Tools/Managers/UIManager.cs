@@ -142,7 +142,7 @@ namespace Qualia.Tools
             return info.OnChanged;
         }
 
-        public static void InvokeUIHandler<T>(this T t, Notification.ParameterChanged param = Notification.ParameterChanged.Unknown, ApplyAction action = null) where T : class
+        public static void InvokeUIHandler<T>(this T t, Notification.ParameterChanged param, ApplyAction action) where T : class
         {
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)

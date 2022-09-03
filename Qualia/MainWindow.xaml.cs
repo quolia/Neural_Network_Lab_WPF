@@ -351,7 +351,7 @@ namespace Qualia.Controls
                         {
                             if (isRunning)
                             {
-                                _networksManager.RefreshNetworks(isRunning);
+                                //_networksManager.RefreshNetworks(isRunning);
                                 _networksManager.ResetLayersTabsNames();
                             }
                             else

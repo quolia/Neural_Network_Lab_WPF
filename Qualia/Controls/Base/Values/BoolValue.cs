@@ -48,10 +48,12 @@ namespace Qualia.Controls
                     EnableListeners(false);
                     Value = !Value;
                     EnableListeners(true);
+
+                    this.InvokeUIHandler(Notification.ParameterChanged.Unknown, new(this));
                 }
             };
 
-            this.InvokeUIHandler(action: action);
+            this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
         }
 
         // IConfigParam
