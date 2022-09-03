@@ -421,10 +421,6 @@ namespace Qualia.Controls
                 {
                     try
                     {
-                        if (param == Notification.ParameterChanged.NeuronActivationFunctionParam)
-                        {
-                            throw new Exception("test");
-                        }
                         manager.ExecuteInstant(_isRunning);
                     }
                     catch (Exception ex)

@@ -80,8 +80,8 @@ namespace Qualia.Tools
 
                 actions = _applyActions.ToList();
                 if (actions.Any())
-                { 
-                    //throw new InvalidOperationException();
+                {
+                    // RemoveNetwork cann add instand actions, which can add apply-actions.
                 }
             }
 
@@ -147,7 +147,7 @@ namespace Qualia.Tools
                 actions = _cancelActions.ToList();
                 if (actions.Any())
                 {
-                    // RemoveNetwork cann add instand actions, which can add apply-actions.
+                    throw new InvalidOperationException();
                 }
             }
 
