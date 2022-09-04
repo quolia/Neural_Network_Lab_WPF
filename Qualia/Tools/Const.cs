@@ -68,14 +68,15 @@
             NeuronActivationFunction,
             NeuronActivationFunctionParam,
 
-            Structure,
+            NetworksCount,
             NeuronsAdded,
             NeuronsRemoved,
             NetworkRandomizerFunctionParam,
             NetworkRandomizerFunction,
             NetworkLearningRate,
             Invalidate,
-            BackPropagationStrategy
+            BackPropagationStrategy,
+            NetworkUpdated
         }
     }
 }

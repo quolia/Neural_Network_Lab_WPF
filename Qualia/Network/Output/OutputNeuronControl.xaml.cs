@@ -93,7 +93,7 @@ namespace Qualia.Controls
 
         private void Neuron_OnChanged(ApplyAction action)
         {
-            action.Param = Notification.ParameterChanged.Structure;
+            action.Param = Notification.ParameterChanged.NetworkUpdated;
             OnChanged(action);
         }
 

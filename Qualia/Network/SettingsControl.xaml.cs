@@ -77,14 +77,6 @@ namespace Qualia.Controls
         {
             Settings = Get();
         }
-
-        public ApplyAction GetApplyAction(bool isRunning)
-        {
-            return new(this)
-            {
-                Apply = (isRunning) => ApplyChanges(isRunning)
-            };
-        }
     }
 
     sealed public class Settings

@@ -152,7 +152,7 @@ namespace Qualia.Controls
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
             _Tabs.SelectedIndex = Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
 
-            RefreshNetworks(false, null);
+            RefreshNetworks(null);
         }
 
         public void RebuildNetworksForTask(TaskFunction task)
@@ -165,20 +165,20 @@ namespace Qualia.Controls
             this.InvokeUIHandler(new(this, Notification.ParameterChanged.NeuronsAdded));
         }
 
-        public ApplyAction GetNetworksRefreshAction(bool isNeedConfirmation)
+        public ApplyAction GetNetworksRefreshAction(object sender, bool isNeedConfirmation)
         {
             if (isNeedConfirmation)
             {
                 return new(this)
                 {
-                    Apply = (isRunning) => RefreshNetworks(isRunning, this)
+                    Apply = (isRunning) => RefreshNetworks(sender)
                 };
             }
             else
             {
                 return new(this)
                 {
-                    ApplyInstant = (isRunning) => RefreshNetworks(isRunning, this)
+                    ApplyInstant = (isRunning) => RefreshNetworks(sender)
                 };
             }
         }
@@ -203,6 +203,18 @@ namespace Qualia.Controls
             if (networkId == Constants.UnknownId)
             {
                 network.NetworkTask_OnChanged(_taskFunction);
+
+                /*
+                ApplyAction action = new(this, Notification.ParameterChanged.NetworksCount)
+                {
+                    Apply = (isRunning) =>
+                    {
+                        RefreshNetworks(null);
+                    }
+                };
+
+                this.InvokeUIHandler(action);
+                */
             }
 
             return network;
@@ -228,15 +240,12 @@ namespace Qualia.Controls
 
                 ResetNetworksTabsNames();
 
-                ApplyAction action = new(this, Notification.ParameterChanged.Structure)
+                ApplyAction action = new(this, Notification.ParameterChanged.NetworksCount)
                 {
                     Apply = (isRunning) =>
                     {
-                        if (isRunning)
-                        {
-                            selectedNetworkControl.RemoveFromConfig();
-                            RefreshNetworks(false, this);
-                        }
+                        selectedNetworkControl.RemoveFromConfig();
+                        RefreshNetworks(null);
                     },
                     Cancel = (isRunning) =>
                     {
@@ -339,22 +348,10 @@ namespace Qualia.Controls
             return networkModel;
         }
 
-        public void RefreshNetworks(bool isRunning, object control)
+        public void RefreshNetworks(object control)
         {
-            if (isRunning)
-            {
-                //var newModels = CreateNetworksDataModels(control);
-                NetworkModels = CreateNetworksDataModels(control);
-                //MergeModels(newModels);
-            }
-            else
-            {
-                NetworkModels = CreateNetworksDataModels(control);
-            }
+            NetworkModels = CreateNetworksDataModels(control);
         }
-
-        public void RefreshRunningNetworks(object control) => RefreshNetworks(true, control);
-        public void RefreshStandingNetworks(object control) => RefreshNetworks(false, control);
 
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {

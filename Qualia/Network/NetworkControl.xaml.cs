@@ -62,7 +62,8 @@ namespace Qualia.Controls
         {
             if (action.Param == Notification.ParameterChanged.Unknown)
             {
-                action.Param = Notification.ParameterChanged.Structure;
+                throw new InvalidOperationException();
+                action.Param = Notification.ParameterChanged.NetworkUpdated;
             }
 
             this.InvokeUIHandler(action);
@@ -115,7 +116,7 @@ namespace Qualia.Controls
                         CtlTabsLayers.SelectedItem = selectedItem;
                         ResetLayersTabsNames();
 
-                        this.InvokeUIHandler(new(this, Notification.ParameterChanged.Structure));
+                        this.InvokeUIHandler(new(this, Notification.ParameterChanged.NetworkUpdated));
                     }
                 };
 
@@ -308,6 +309,11 @@ namespace Qualia.Controls
 
         unsafe public NetworkDataModel CreateNetworkDataModel(TaskFunction taskFunction, bool isCopy)
         {
+            if (taskFunction == null)
+            {
+                //throw new InvalidOperationException();
+            }
+
             ErrorMatrix matrix = null;
             if (taskFunction != null)
             {
@@ -334,7 +340,9 @@ namespace Qualia.Controls
 
                 CostFunction = CostFunction.GetInstance(CtlCostFunction),
                 BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropagationStrategy),
-                IsAdjustFirstLayerWeights = _inputLayer.IsAdjustFirstLayerWeights
+                IsAdjustFirstLayerWeights = _inputLayer.IsAdjustFirstLayerWeights,
+                PlotterStatistics = new(),
+                Statistics = new()
             };
 
             network.ActivateNetwork();

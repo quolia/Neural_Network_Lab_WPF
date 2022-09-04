@@ -125,7 +125,7 @@ namespace Qualia.Controls
         private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
         {
             NeuronsSelector.Instance.CopyNeuronToSelectedNeurons(this);
-            OnChanged(new(this, Notification.ParameterChanged.Structure));
+            OnChanged(new(this, Notification.ParameterChanged.NetworkUpdated));
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)

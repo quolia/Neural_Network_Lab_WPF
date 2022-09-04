@@ -80,7 +80,8 @@ namespace Qualia.Controls
         {
             if (action.Param == Notification.ParameterChanged.Unknown)
             {
-                action.Param = Notification.ParameterChanged.Structure;
+                throw new InvalidOperationException();
+                action.Param = Notification.ParameterChanged.NetworkUpdated;
             }
             OnChanged(action);
         }
