@@ -183,6 +183,18 @@ namespace Qualia.Controls
             }
         }
 
+        public void SetNetworkEnabled(object sender)
+        {
+            var network = GetParentNetworkControl(sender);
+            var model = NetworkModels.Find(m => m.VisualId == network.VisualId);
+            if (model == null)
+            {
+                return;
+            }
+
+            model.IsEnabled = network.CtlIsNetworkEnabled.Value;
+        }
+
         public NetworkControl AddNetwork()
         {
             return AddNetwork(Constants.UnknownId);
@@ -202,6 +214,7 @@ namespace Qualia.Controls
 
             if (networkId == Constants.UnknownId)
             {
+                network.CtlIsNetworkEnabled.Value = false;
                 network.NetworkTask_OnChanged(_taskFunction);
 
                 /*
@@ -322,6 +335,18 @@ namespace Qualia.Controls
 
         public NetworkDataModel CreateNetworkDataModel(object control)
         {
+            var network = GetParentNetworkControl(control);
+            if (network == null)
+            {
+                return null;
+            }
+
+            NetworkDataModel networkModel = network.CreateNetworkDataModel(_taskFunction, false);
+            return networkModel;
+        }
+
+        public NetworkControl GetParentNetworkControl(object control)
+        {
             if (control == null)
             {
                 return null;
@@ -339,13 +364,7 @@ namespace Qualia.Controls
                 network = fe.GetParentOfType<NetworkControl>();
             }
 
-            if (network == null)
-            {
-                throw new InvalidOperationException();
-            }
-
-            NetworkDataModel networkModel = network.CreateNetworkDataModel(_taskFunction, false);
-            return networkModel;
+            return network;
         }
 
         public void RefreshNetworks(object control)
@@ -387,7 +406,7 @@ namespace Qualia.Controls
             var network = NetworkModels.Find(n => n.VisualId == newNetwork.VisualId);
             if (network == null)
             {
-                return;
+                throw new InvalidOperationException();
             }
 
             var ind = NetworkModels.IndexOf(network);
@@ -397,12 +416,17 @@ namespace Qualia.Controls
 
         unsafe public void PrepareModelsForRun()
         {
-            NetworkModels.ForEach(network => network.ActivateFirstLayer());
-            NetworkModels.ForEach(network => network.BackPropagationStrategy.PrepareForRun(network));
+            NetworkModels.ForEach(PrepareModelForRun);
+        }
 
-            ResetModelsPlotterStatistics();
-            ResetModelsStatistics();
-            ResetErrorMatrix();
+        unsafe public void PrepareModelForRun(NetworkDataModel network)
+        {
+            network.ActivateFirstLayer();
+            network.BackPropagationStrategy.PrepareForRun(network);
+            network.PlotterStatistics = new();
+            network.Statistics = new();
+            network.ErrorMatrix.ClearData();
+            network.ErrorMatrix.Next.ClearData();
         }
 
         unsafe public void PrepareModelsForRound()
@@ -454,7 +478,15 @@ namespace Qualia.Controls
 
         unsafe public void PrepareModelsForLoop()
         {
-            NetworkModels.ForEach(network => network.BackPropagationStrategy.PrepareForLoop(network));
+            NetworkModels.ForEach(network =>
+            {
+                if (network.Statistics == null)
+                {
+                    PrepareModelForRun(network);
+                }
+
+                network.BackPropagationStrategy.PrepareForLoop(network);
+            });
         }
 
         public void FeedForward()

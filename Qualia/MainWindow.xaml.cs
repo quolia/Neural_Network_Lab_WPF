@@ -321,7 +321,8 @@ namespace Qualia.Controls
                 }
                 else if (param == Notification.ParameterChanged.IsNetworkEnabled)
                 {
-                    additionalActions.Add(_networksManager.GetNetworksRefreshAction(action.Sender, false));
+                    _networksManager.SetNetworkEnabled(action.Sender);
+                    action = null;
                 }
                 else if (param == Notification.ParameterChanged.NetworkColor)
                 {
@@ -1349,6 +1350,9 @@ namespace Qualia.Controls
             {
                 lock (Locker.ApplyChanges)
                 {
+                    CtlNetworkPresenter.ClearCache();
+
+                    /*
                     var firstNetworkModel = _networksManager.NetworkModels.First;
                     var selectedNetworkModel = _networksManager.SelectedNetworkModel;
 
@@ -1366,6 +1370,7 @@ namespace Qualia.Controls
                                               selectedNetworkModel);
 
                     CtlStatisticsPresenter.Draw(selectedNetworkModel.LastStatistics);
+                    */
                 }
             }
             else
@@ -1418,10 +1423,14 @@ namespace Qualia.Controls
                 return;
             }
 
-            ActionManager.Instance.Lock();
-            _networksManager.AddNetwork();
-            ApplyChangesToStandingNetworks();
-            ActionManager.Instance.Unlock();
+            lock (Locker.ApplyChanges)
+            {
+                ActionManager.Instance.Lock();
+                _networksManager.AddNetwork();
+                ApplyChangesToNetworks(_isRunning);
+                var selected = _networksManager.SelectedNetworkModel;
+                ActionManager.Instance.Unlock();
+            }
         }
 
         private void MainMenuCloneNetwork_OnClick(object sender, RoutedEventArgs e)
@@ -1512,7 +1521,7 @@ namespace Qualia.Controls
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
             CtlMenuRemoveNetwork.IsEnabled = !_isRunning && CtlTabs.SelectedIndex > 0;
-            CtlMenuAddNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
+            //CtlMenuAddNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
             CtlMenuCloneNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
         }
 
