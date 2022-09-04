@@ -64,6 +64,7 @@
             IsNetworkEnabled,
             NetworkColor,
 
+            NeuronParam,
             NeuronActivationFunction,
             NeuronActivationFunctionParam,
 

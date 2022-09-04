@@ -12,8 +12,16 @@ namespace Qualia.Controls
             Visibility = Visibility.Collapsed; // Do not show input neuron.
         }
 
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
-        public override double WeightsInitializeFunctionParam => 1;
+        public override InitializeFunction WeightsInitializeFunction
+        {
+            get => InitializeFunction.Skip.Instance;
+            set { }
+        }
+        public override double WeightsInitializeFunctionParam
+        {
+            get => 1;
+            set {}
+        }
         public override ActivationFunction ActivationFunction { get; set; }
         public override double ActivationFunctionParam { get; set; }
 

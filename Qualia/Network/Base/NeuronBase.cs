@@ -126,6 +126,7 @@ namespace Qualia.Controls
         private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
         {
             NeuronsSelector.Instance.CopyNeuronToSelectedNeurons(this);
+            OnChanged(Notification.ParameterChanged.Structure, new(this));
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)
@@ -139,8 +140,8 @@ namespace Qualia.Controls
 
         abstract public InitializeFunction ActivationInitializeFunction { get; }
         abstract public double ActivationInitializeFunctionParam { get; }
-        abstract public InitializeFunction WeightsInitializeFunction { get; }
-        abstract public double WeightsInitializeFunctionParam { get; }
+        abstract public InitializeFunction WeightsInitializeFunction { get; set; }
+        abstract public double WeightsInitializeFunctionParam { get; set; }
 
         abstract public ActivationFunction ActivationFunction { get; set; }
         abstract public double ActivationFunctionParam { get; set; }
@@ -189,6 +190,9 @@ namespace Qualia.Controls
 
             neuron.ActivationFunction = ActivationFunction;
             neuron.ActivationFunctionParam = ActivationFunctionParam;
+
+            neuron.WeightsInitializeFunction = WeightsInitializeFunction;
+            neuron.WeightsInitializeFunctionParam = WeightsInitializeFunctionParam;
 
             if (neuron is OutputNeuronControl && this is OutputNeuronControl)
             {

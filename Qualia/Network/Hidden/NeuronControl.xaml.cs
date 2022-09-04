@@ -54,7 +54,7 @@ namespace Qualia.Controls
 
         private void Neuron_OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param, action);
+            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.NeuronParam : param, action);
         }
 
         public override void SetOrdinalNumber(int number)
@@ -64,8 +64,8 @@ namespace Qualia.Controls
 
         public override InitializeFunction ActivationInitializeFunction => InitializeFunction.GetInstance(CtlActivationInitializeFunction);
         public override double ActivationInitializeFunctionParam => CtlActivationInitializeFunctionParam.Value;
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
-        public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
+        //public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
+        //public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
         public override ActivationFunction ActivationFunction
         {
             get => ActivationFunction.GetInstance(CtlActivationFunction);
@@ -74,11 +74,23 @@ namespace Qualia.Controls
                 CtlActivationFunction.SelectByText(ActivationFunction.GetNameByInstance(value));
             }
         }
-
         public override double ActivationFunctionParam
         {
             get => CtlActivationFunctionParam.Value;
             set => CtlActivationFunctionParam.Value = value;
+        }
+        public override InitializeFunction WeightsInitializeFunction
+        {
+            get => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
+            set
+            {
+                CtlWeightsInitializeFunction.SelectByText(WeightsInitializeFunction.GetNameByInstance(value));
+            }
+        }
+        public override double WeightsInitializeFunctionParam
+        {
+            get => CtlWeightsInitializeFunctionParam.Value;
+            set => CtlWeightsInitializeFunctionParam.Value = value;
         }
 
         public override string Label => null;

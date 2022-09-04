@@ -35,8 +35,18 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
         }
 
-        public override InitializeFunction WeightsInitializeFunction => InitializeFunction.Skip.Instance;
-        public override double WeightsInitializeFunctionParam => 1;
+        public override InitializeFunction WeightsInitializeFunction
+        {
+            get => InitializeFunction.Skip.Instance;
+            set { }
+        }
+
+        public override double WeightsInitializeFunctionParam
+        {
+            get => 1;
+            set {}
+        }       
+
         public override ActivationFunction ActivationFunction
         {
             get => ActivationFunction.GetInstance(CtlActivationFunction);

@@ -382,12 +382,16 @@ namespace Qualia.Controls
                     }
 
                     double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
+                    if (initValue == 0.33)
+                    {
+                        int a = 1;
+                    }
                     if (!InitializeFunction.IsSkipValue(initValue))
                     {
                         neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
                     }
 
-                    if (!isCopy && prevLayer != null && prevLayer.Neurons.Count > 0)
+                    if (!isCopy && prevLayer != null)// && prevLayer.Neurons.Count > 0)
                     {
                         neuron.WeightsToPreviousLayer = new(prevLayer.Neurons.Count);
 

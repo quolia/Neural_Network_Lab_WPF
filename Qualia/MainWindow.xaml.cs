@@ -373,13 +373,17 @@ namespace Qualia.Controls
                         additionalActions.Add(newAction);
                     }
                 }
-                else if (param == Notification.ParameterChanged.NeuronActivationFunction)
+                else if (param == Notification.ParameterChanged.NeuronParam 
+                         ||param == Notification.ParameterChanged.NeuronActivationFunction
+                         || param == Notification.ParameterChanged.NeuronActivationFunctionParam)
                 {
-                    int a = 1;
-                }
-                else if (param == Notification.ParameterChanged.NeuronActivationFunctionParam)
-                {
-                    int a = 1;
+                    additionalActions.Add(new(this)
+                    {
+                        Apply = (isRunning) =>
+                        {
+                            _networksManager.RefreshNetworks(isRunning);
+                        }
+                    });
                 }
                 else if (param == Notification.ParameterChanged.Structure)
                 {
@@ -401,10 +405,13 @@ namespace Qualia.Controls
                 }
                 else if (param == Notification.ParameterChanged.TaskFunction)
                 {
-                    additionalActions.Add(new(this)
+                    if (action.Apply != null)
                     {
-                        Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
-                    });
+                        additionalActions.Add(new(this)
+                        {
+                            Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
+                        });
+                    }
                 }
                 else // Default handler.
                 {
@@ -568,7 +575,6 @@ namespace Qualia.Controls
                 CtlSettings.ApplyChanges(true);
 
                 var taskFunction = CtlInputDataPresenter.GetTaskFunction();
-                //var taskFunction = CtlInputDataPresenter.TaskFunction;
                 taskFunction.VisualControl.ApplyChanges();
 
                 CtlInputDataPresenter.ApplyChanges();
@@ -983,9 +989,9 @@ namespace Qualia.Controls
                     }
                 }
 
-                NetworkDataModel firstNetworkModel = null;
-                NetworkDataModel selectedNetworkModel = null;
-                Statistics statisticsToRender = null;
+                //NetworkDataModel firstNetworkModel = null;
+                //NetworkDataModel selectedNetworkModel = null;
+                //Statistics statisticsToRender = null;
                 RendererStatistics statisticsAboutRender = RendererStatistics.Instance;
 
                 Action doRenderErrorMatrix = null;
@@ -996,11 +1002,11 @@ namespace Qualia.Controls
                 {
                     isErrorMatrixRendering = true;
 
-                    selectedNetworkModel = _networksManager.SelectedNetworkModel;
-                    firstNetworkModel = _networksManager.NetworkModels.First;
-                    statisticsToRender = selectedNetworkModel.Statistics.Copy();
-                    var errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
-                    selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
+                    //selectedNetworkModel = _networksManager.SelectedNetworkModel;
+                    //firstNetworkModel = _networksManager.NetworkModels.First;
+                    //statisticsToRender = selectedNetworkModel.Statistics.Copy();
+                    //var errorMatrixToRender = selectedNetworkModel.ErrorMatrix;
+                    //selectedNetworkModel.ErrorMatrix = errorMatrixToRender.Next;
 
                     doRenderErrorMatrix = () =>
                     {
@@ -1010,6 +1016,12 @@ namespace Qualia.Controls
                         }
 
                         swRenderTime.Restart();
+
+                        var network = _networksManager.SelectedNetworkModel;
+                        var firstNetwork = _networksManager.NetworkModels.First;
+                        var networkModelToRender = network.GetCopyToDraw();
+                        var errorMatrixToRender = network.ErrorMatrix;
+                        var statisticsToRender = network.Statistics.Copy();
 
                         CtlMatrixPresenter.DrawErrorMatrix(errorMatrixToRender,
                                                            statisticsToRender.LastInput,
@@ -1031,11 +1043,11 @@ namespace Qualia.Controls
                 {
                     isNetworksRendering = true;
 
-                    selectedNetworkModel = selectedNetworkModel ?? _networksManager.SelectedNetworkModel;
-                    firstNetworkModel = firstNetworkModel ?? _networksManager.NetworkModels.First;
-                    var networkModelToRender = selectedNetworkModel.GetCopyToDraw();
+                    //selectedNetworkModel = selectedNetworkModel ?? _networksManager.SelectedNetworkModel;
+                    //firstNetworkModel = firstNetworkModel ?? _networksManager.NetworkModels.First;
+                    //var networkModelToRender = selectedNetworkModel.GetCopyToDraw();
                         
-                    CtlInputDataPresenter.SetInputStat(firstNetworkModel);
+                    //CtlInputDataPresenter.SetInputStat(firstNetworkModel);
 
                     doRenderNetwork = () =>
                     {
@@ -1045,6 +1057,14 @@ namespace Qualia.Controls
                         }
 
                         swRenderTime.Restart();
+
+                        var network = _networksManager.SelectedNetworkModel;
+                        var firstNetwork = _networksManager.NetworkModels.First;
+                        var networkModelToRender = network.GetCopyToDraw();
+                        var errorMatrixToRender = network.ErrorMatrix;
+                        var statisticsToRender = network.Statistics.Copy();
+
+                        CtlInputDataPresenter.SetInputStat(firstNetwork);
 
                         DrawNetworkAndInputData(networkModelToRender,
                                                 CtlUseWeightsColors.Value,
@@ -1068,14 +1088,14 @@ namespace Qualia.Controls
                 {
                     isStatisticsRendering = true;
 
-                    selectedNetworkModel ??= _networksManager.SelectedNetworkModel;
-                    firstNetworkModel ??= _networksManager.NetworkModels.First;
-                    double learningRate = 0;
+                    //selectedNetworkModel ??= _networksManager.SelectedNetworkModel;
+                    //firstNetworkModel ??= _networksManager.NetworkModels.First;
+                    //double learningRate = 0;
 
-                    CtlPlotPresenter.OptimizePlotPointsCount(firstNetworkModel);
+                    //CtlPlotPresenter.OptimizePlotPointsCount(firstNetworkModel);
 
-                    statisticsToRender = statisticsToRender ?? selectedNetworkModel.Statistics.Copy();
-                    learningRate = selectedNetworkModel.LearningRate;
+                    //statisticsToRender = statisticsToRender ?? selectedNetworkModel.Statistics.Copy();
+                    //learningRate = selectedNetworkModel.LearningRate;
                     var solutionsData = CtlInputDataPresenter.TaskFunction.GetSolutionsData();
 
                     doRenderStatistics = () =>
@@ -1085,11 +1105,20 @@ namespace Qualia.Controls
                             return;
                         }
 
+                        var network = _networksManager.SelectedNetworkModel;
+                        var firstNetwork = _networksManager.NetworkModels.First;
+                        var networkModelToRender = network.GetCopyToDraw();
+                        var errorMatrixToRender = network.ErrorMatrix;
+                        var statisticsToRender = network.Statistics.Copy();
+                        var learningRate = network.LearningRate;
+
+                        CtlPlotPresenter.OptimizePlotPointsCount(firstNetwork);
+
                         swRenderTime.Restart();
-                        CtlPlotPresenter.DrawPlot(firstNetworkModel, selectedNetworkModel);
+                        CtlPlotPresenter.DrawPlot(firstNetwork, network);
 
                         var lastStats = CtlStatisticsPresenter.DrawStatistics(statisticsToRender, statisticsAboutRender.Copy(), learningRate, _startTime.Elapsed);
-                        selectedNetworkModel.LastStatistics = lastStats;
+                        network.LastStatistics = lastStats;
 
                         CtlTaskSolutionsPresenter.ShowSolutionsData(solutionsData);
 

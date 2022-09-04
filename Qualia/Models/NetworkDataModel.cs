@@ -254,6 +254,8 @@ namespace Qualia.Model
             var newLayer = newNetwork.Layers.First;
             while (newLayer != null)
             {
+                var nextNewLayer = newLayer.Next;
+
                 var layer = Layers.Find(l => l.VisualId == newLayer.VisualId);
                 if (layer != null)
                 {
@@ -261,41 +263,42 @@ namespace Qualia.Model
                     while (newNeuron != null)
                     {
                         var neuron = layer.Neurons.Find(n => n.VisualId == newNeuron.VisualId);
-                        if (neuron == null)
+                        var newWeight = newNeuron.Weights.First;
+                        while (newWeight != null)
                         {
-                            double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
-                            if (!InitializeFunction.IsSkipValue(initValue))
+                            var weight = neuron?.Weights.Find(w => w.Id == newWeight.Id);
+                            if (weight != null)
                             {
-                                var newWeight = newNeuron.Weights.First;
-                                while (newWeight != null)
+                                if (weight.Weight == 0.33)
+                                {
+                                    int a = 1;
+                                }
+                                newWeight.Weight = weight.Weight;
+                            }
+                            else
+                            {
+                                double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
+                                if (!InitializeFunction.IsSkipValue(initValue))
                                 {
                                     newWeight.Weight = initValue;
-                                    newWeight = newWeight.Next;
                                 }
                             }
-                        }
-                        else
-                        {
-                            var newWeight = newNeuron.Weights.First;
-                            while (newWeight != null)
-                            {
-                                var weight = neuron.Weights.Find(w => w.Id == newWeight.Id);
-                                if (weight != null)
-                                {
-                                    newWeight.Weight = weight.Weight;
-                                }
-                                else
-                                {
-                                    double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
-                                    if (!InitializeFunction.IsSkipValue(initValue))
-                                    {
-                                        newWeight.Weight = initValue;
-                                    }
-                                }
 
-                                newWeight = newWeight.Next;
+                            newWeight = newWeight.Next;
+                        }
+
+                        if (nextNewLayer != null)
+                        {
+                            var nextNewNeuron = nextNewLayer.Neurons.First;
+                            while (nextNewNeuron != null)
+                            {
+                                var weightToPrev = nextNewNeuron.WeightsToPreviousLayer.Find(w => w.Neuron == newNeuron);
+                                weightToPrev.Weight.Weight = newNeuron.WeightTo(nextNewNeuron).Weight;
+
+                                nextNewNeuron = nextNewNeuron.Next;
                             }
                         }
+
 
                         newNeuron = newNeuron.Next;
                     }
