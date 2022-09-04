@@ -77,7 +77,7 @@ namespace Qualia.Controls
         {
             ActionManager.Instance.Lock();
 
-            HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), this.GetUIHandler());
+            HiddenLayerControl hiddenLayer = new(layerId, this.GetConfig(), OnChanged);
 
             ScrollViewer scroll = new()
             {
@@ -229,7 +229,7 @@ namespace Qualia.Controls
             var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Constants.UnknownId;
             var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
-            _inputLayer = new(inputLayerId, this.GetConfig(), this.GetUIHandler());
+            _inputLayer = new(inputLayerId, this.GetConfig(), OnChanged);
             ScrollViewer scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -239,7 +239,7 @@ namespace Qualia.Controls
             CtlTabInput.Content = scroll;
             scroll.ScrollChanged += _inputLayer.Scroll_OnChanged;
 
-            _outputLayer = new(outputLayerId, this.GetConfig(), this.GetUIHandler());
+            _outputLayer = new(outputLayerId, this.GetConfig(), OnChanged);
             scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,

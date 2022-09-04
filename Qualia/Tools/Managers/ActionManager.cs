@@ -81,7 +81,7 @@ namespace Qualia.Tools
                 actions = _applyActions.ToList();
                 if (actions.Any())
                 {
-                    // RemoveNetwork cann add instand actions, which can add apply-actions.
+                    // RemoveNetwork can add instant actions, which can add apply-actions.
                 }
             }
 
