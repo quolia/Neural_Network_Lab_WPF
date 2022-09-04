@@ -233,8 +233,15 @@ namespace Qualia.Controls
         }
 
         bool _notify;
-        private void NotifyUIChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void NotifyUIChanged(ApplyAction action)
         {
+            var param = action.Param;
+
+            if (param == Notification.ParameterChanged.Unknown)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (_notify)
             {
                 //throw new InvalidOperationException();
@@ -381,7 +388,15 @@ namespace Qualia.Controls
                     {
                         Apply = (isRunning) =>
                         {
-                            _networksManager.RefreshNetworks(isRunning);
+                            var parent = _networksManager.GetParent(action.Sender);
+                            if (parent != null)
+                            {
+                                _networksManager.RefreshElement(isRunning, parent);
+                            }
+                            else
+                            {
+                                _networksManager.RefreshNetworks(isRunning);
+                            }
                         }
                     });
                 }

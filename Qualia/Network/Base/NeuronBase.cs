@@ -8,7 +8,6 @@ namespace Qualia.Controls
 {
     abstract public partial class NeuronBaseControl : BaseUserControl
     {
-        public readonly long Id;
         public readonly Config Config;
 
         private readonly MenuItem _menuAdd;
@@ -30,6 +29,7 @@ namespace Qualia.Controls
                                  Config config,
                                  ActionManager.ApplyActionDelegate onChanged,
                                  LayerBaseControl parentLayer)
+            : base(UniqId.GetNextId(id))
         {
             _parentLayer = parentLayer;
 
@@ -60,7 +60,6 @@ namespace Qualia.Controls
             ContextMenu.Items.Add(_menuDeselectAll);
             _menuDeselectAll.Click += DeselectAll_OnClick;
 
-            Id = UniqId.GetNextId(id);
             if (config != null)
             {
                 Config = config.ExtendWithId(Id);
@@ -126,7 +125,7 @@ namespace Qualia.Controls
         private void CopyParamsToSelected_OnClick(object sender, RoutedEventArgs e)
         {
             NeuronsSelector.Instance.CopyNeuronToSelectedNeurons(this);
-            OnChanged(Notification.ParameterChanged.Structure, new(this));
+            OnChanged(new(this, Notification.ParameterChanged.Structure));
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)

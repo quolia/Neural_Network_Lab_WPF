@@ -41,11 +41,12 @@ namespace Qualia.Controls
 
             if (RevalidateValue())
             {
-                this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
+                this.InvokeUIHandler(action);
             }
             else
             {
-                this.InvokeUIHandler(Notification.ParameterChanged.Invalidate, action);
+                action.Param = Notification.ParameterChanged.Invalidate;
+                this.InvokeUIHandler(action);
             }
         }
 

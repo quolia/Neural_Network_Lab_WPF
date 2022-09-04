@@ -7,6 +7,7 @@ namespace Qualia.Controls
     sealed public partial class DotsCountControl : BaseUserControl
     {
         public DotsCountControl()
+            : base(0)
         {
             InitializeComponent();
 
@@ -36,17 +37,22 @@ namespace Qualia.Controls
         public int MaxDotsAmountToCount => (int)CtlMaxDotsAmoutToCount.Value;
         public int MinDotsAmountToCount => (int)CtlMinDotsAmountToCount.Value;
 
-        private void Parameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void Parameter_OnChanged(ApplyAction action)
         {
-            if (param == Notification.ParameterChanged.Invalidate)
+            if (action.Param == Notification.ParameterChanged.Invalidate)
             {
                 InvalidateValue();
-                OnChanged(param, action);
+                OnChanged(action);
                 return;
             }
 
             bool isValid = IsValid();
-            OnChanged(isValid ? param : Notification.ParameterChanged.Invalidate, action);
+            if (!isValid)
+            {
+                action.Param = Notification.ParameterChanged.Invalidate;
+            }
+
+            OnChanged(action);
         }
 
         // IConfigParam

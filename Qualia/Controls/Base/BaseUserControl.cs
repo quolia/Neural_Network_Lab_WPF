@@ -6,14 +6,17 @@ namespace Qualia.Controls
 {
     abstract public partial class BaseUserControl : UserControl, IConfigParam
     {
-        public BaseUserControl()
+        public readonly long Id;
+
+        public BaseUserControl(long id)
         {
+            Id = id;
             //
         }
 
-        public void OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        public void OnChanged(ApplyAction action)
         {
-            this.InvokeUIHandler(param, action);
+            this.InvokeUIHandler(action);
         }
 
         // IConfigParam

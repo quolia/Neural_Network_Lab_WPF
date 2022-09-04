@@ -52,9 +52,10 @@ namespace Qualia.Controls
             //(sender as Control).ToolTip = ToolTipsProvider.GetFunctionToolTip();
         }
 
-        private void Neuron_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void Neuron_OnChanged(ApplyAction action)
         {
-            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.NeuronParam : param, action);
+            action.Param = Notification.ParameterChanged.NeuronParam;
+            OnChanged(action);
         }
 
         public override void SetOrdinalNumber(int number)

@@ -32,6 +32,7 @@ namespace Qualia.Controls
         }
 
         public FunctionControl()
+            : base(0)
         {
             InitializeComponent();
 
@@ -42,14 +43,14 @@ namespace Qualia.Controls
             });
         }
 
-        private void Function_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void Function_OnChanged(ApplyAction action)
         {
-            OnChanged(param, action);
+            OnChanged(action);
         }
 
-        private void Param_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void Param_OnChanged(ApplyAction action)
         {
-            OnChanged(param, action);
+            OnChanged(action);
         }
 
         // IConfigParam

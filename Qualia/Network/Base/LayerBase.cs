@@ -9,20 +9,18 @@ namespace Qualia.Controls
 {
     abstract public partial class LayerBaseControl : BaseUserControl
     {
-        public readonly long Id;
-
         public ObservableCollection<NeuronBaseControl> Neurons { get; } = new();
 
         public LayerBaseControl(long configId,
                                 Config config,
                                 ActionManager.ApplyActionDelegate onChanged)
+            : base(UniqId.GetNextId(configId))
         {
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
-            Id = UniqId.GetNextId(configId);
             this.PutConfig(config.ExtendWithId(Id));
 
             SetOnChangeEvent(onChanged);

@@ -32,6 +32,7 @@ namespace Qualia.Controls
 
 
         public PlotterPresenter()
+            : base(0)
         {
             InitializeComponent();
 

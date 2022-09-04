@@ -6,7 +6,7 @@ namespace Qualia.Tools
 {
     public class ActionManager
     {
-        public delegate void ApplyActionDelegate(Notification.ParameterChanged sender, ApplyAction action);
+        public delegate void ApplyActionDelegate(ApplyAction action);
         public static readonly ActionManager Instance = new();
 
         private readonly List<ApplyAction> _actions = new();
@@ -173,13 +173,15 @@ namespace Qualia.Tools
     public class ApplyAction
     {
         public object Sender;
+        public Notification.ParameterChanged Param;
         public Action<bool> Apply;
         public Action<bool> ApplyInstant;
         public Action<bool> Cancel;
 
-        public ApplyAction(object sender)
+        public ApplyAction(object sender, Notification.ParameterChanged param = Notification.ParameterChanged.Unknown)
         {
             Sender = sender;
+            Param = param;
         }
 
         public bool IsActive => Apply != null || ApplyInstant != null || Cancel != null;

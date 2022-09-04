@@ -48,6 +48,32 @@ namespace Qualia.Tools
             return Array.Find(_array, match) != null;
         }
 
+        public int IndexOf(T node)
+        {
+            return Array.IndexOf(_array, node);
+        }
+
+        public void Replace(int index, T node)
+        {
+            var prevNode = _array[index];
+            _array[index] = node;
+            node.Next = prevNode.Next;
+            node.Previous = prevNode.Previous;
+
+            if (node.Previous != null)
+            {
+                node.Previous.Next = node;
+            }
+
+            if (node.Next != null)
+            {
+                node.Next.Previous = node;
+            }
+
+            First = _array[0];
+            Last = _array[_array.Length - 1];
+        }
+
         public int CountIf(Func<T, bool> value)
         {
             int count = 0;

@@ -10,6 +10,7 @@ namespace Qualia.Controls
         public string Text => CtlText.Text;
 
         public MemoControl()
+            : base(0)
         {
             InitializeComponent();
 

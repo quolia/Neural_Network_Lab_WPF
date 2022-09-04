@@ -142,7 +142,7 @@ namespace Qualia.Tools
             return info.OnChanged;
         }
 
-        public static void InvokeUIHandler<T>(this T t, Notification.ParameterChanged param, ApplyAction action) where T : class
+        public static void InvokeUIHandler<T>(this T t, ApplyAction action) where T : class
         {
             var info = ExtendedInfo.GetInfo(t);
             if (info == null)
@@ -150,7 +150,12 @@ namespace Qualia.Tools
                 throw new InvalidOperationException();
             }
 
-            t.GetUIHandler()(param == Notification.ParameterChanged.Unknown ? t.GetUIParam() : param, action);
+            if (action.Param == Notification.ParameterChanged.Unknown)
+            {
+                action.Param = t.GetUIParam();
+            }
+
+            t.GetUIHandler()(action);
         }
     }
 }

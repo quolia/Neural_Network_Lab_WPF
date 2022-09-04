@@ -9,6 +9,7 @@ namespace Qualia.Controls
         public Settings Settings;
 
         public SettingsControl()
+            : base(0)
         {
             InitializeComponent();
 
@@ -38,11 +39,13 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(Value_OnChanged));
 
             ApplyChanges(false);
-            Value_OnChanged(Notification.ParameterChanged.NoSleepMode, new(this));
+            Value_OnChanged(new(this, Notification.ParameterChanged.NoSleepMode));
         }
 
-        private void Value_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void Value_OnChanged(ApplyAction action)
         {
+            var param = action.Param;
+
             if (param == Notification.ParameterChanged.Settings
                 || param == Notification.ParameterChanged.NoSleepMode)
             {
@@ -51,7 +54,7 @@ namespace Qualia.Controls
                     //ActionsManager.Instance.Add(GetApplyAction());
                 }
 
-                OnChanged(param, action);
+                OnChanged(action);
             }
             else
             {

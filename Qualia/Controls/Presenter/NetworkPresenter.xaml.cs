@@ -37,6 +37,7 @@ namespace Qualia.Controls
                                                           FontWeights.Bold,
                                                           FontStretches.Normal);
         public NetworkPresenter()
+            : base(0)
         {
             InitializeComponent();
             

@@ -23,6 +23,7 @@ namespace Qualia.Controls
         private readonly System.Windows.Media.Pen _penBlack = Draw.GetPen(in ColorsX.Black);
 
         public InputDataPresenter()
+            : base(0)
         {
             InitializeComponent();
 
@@ -58,8 +59,10 @@ namespace Qualia.Controls
             CtlTaskDescription.Text = TaskFunction.GetDescription(CtlTaskFunction);
         }
 
-        private new void OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private new void OnChanged(ApplyAction action)
         {
+            var param = action.Param;
+
             if (param == Notification.ParameterChanged.TaskFunction)
             {
                 if (CtlTaskFunction.SelectedItem == null)
@@ -67,7 +70,7 @@ namespace Qualia.Controls
                     return;
                 }
 
-                ApplyAction instantAction = new(this)
+                ApplyAction instantAction = new(this, param)
                 {
                     Apply = (isRunning) =>
                     {
@@ -96,19 +99,19 @@ namespace Qualia.Controls
 
                         CtlTaskControlHolder.Children.Clear();
                         CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
-                        
+
                         ActionManager.Instance.Unlock();
                     }
                 };
 
-                base.OnChanged(param, instantAction);
+                base.OnChanged(instantAction);
                 //return;
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
                 //if (action.IsActive)
                 {
-                    ApplyAction instantAction = new(this)
+                    ApplyAction instantAction = new(this, param)
                     {
                         ApplyInstant = (isRunning) =>
                         {
@@ -130,7 +133,7 @@ namespace Qualia.Controls
                         }
                     };
 
-                    base.OnChanged(param, instantAction);
+                    base.OnChanged(instantAction);
                     if (!action.IsActive)
                     {
                         return;
@@ -141,7 +144,7 @@ namespace Qualia.Controls
             {
                 if (action.IsActive)
                 {
-                    ApplyAction instantAction = new(this)
+                    ApplyAction instantAction = new(this, param)
                     {
                         Apply = (isRunning) =>
                         {
@@ -149,7 +152,7 @@ namespace Qualia.Controls
                         }
                     };
 
-                    base.OnChanged(param, instantAction);
+                    base.OnChanged(instantAction);
                 }
                 else
                 {
@@ -157,7 +160,11 @@ namespace Qualia.Controls
                 }
             }
 
-            base.OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.TaskParameter : param, action);
+            if (param == Notification.ParameterChanged.Unknown)
+            {
+                action.Param = Notification.ParameterChanged.TaskParameter;
+            }
+            base.OnChanged(action);
         }
 
         private void Size_OnChanged(object sender, EventArgs e)
@@ -203,10 +210,9 @@ namespace Qualia.Controls
             CtlTaskControlHolder.Children.Add(taskControl.GetVisualControl());
         }
 
-        void TaskParameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        void TaskParameter_OnChanged(ApplyAction action)
         {
-            //RearrangeWithNewPointsCount();
-            OnChanged(param, action);
+            OnChanged(action);
         }
 
         public override void SaveConfig()

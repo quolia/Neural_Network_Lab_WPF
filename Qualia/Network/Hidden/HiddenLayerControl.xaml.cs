@@ -87,7 +87,7 @@ namespace Qualia.Controls
 
             if (id == Constants.UnknownId)
             {
-                ApplyAction action = new(this)
+                ApplyAction action = new(this, Notification.ParameterChanged.NeuronsAdded)
                 {
                     Cancel = (isRunning) =>
                     {
@@ -97,7 +97,7 @@ namespace Qualia.Controls
                     }
                 };
 
-                OnChanged(Notification.ParameterChanged.NeuronsAdded, action);
+                OnChanged(action);
             }
 
             RefreshNeuronsOrdinalNumbers();
@@ -124,7 +124,7 @@ namespace Qualia.Controls
                 neuron.SetRemovingState(true);
             }
 
-            ApplyAction action = new(this)
+            ApplyAction action = new(this, Notification.ParameterChanged.NeuronsRemoved)
             {
                 Apply = (isRunning) =>
                 {
@@ -152,7 +152,7 @@ namespace Qualia.Controls
                 }
             };
 
-            OnChanged(Notification.ParameterChanged.NeuronsRemoved, action);
+            OnChanged(action);
 
             return 0;
         }

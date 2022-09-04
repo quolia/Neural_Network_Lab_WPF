@@ -76,9 +76,13 @@ namespace Qualia.Controls
             CtlContent.Content = CtlNeurons;
         }
 
-        private void LayerParameter_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void LayerParameter_OnChanged(ApplyAction action)
         {
-            OnChanged(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param, action);
+            if (action.Param == Notification.ParameterChanged.Unknown)
+            {
+                action.Param = Notification.ParameterChanged.Structure;
+            }
+            OnChanged(action);
         }
 
         public override bool IsInput => true;
@@ -134,7 +138,7 @@ namespace Qualia.Controls
 
             if (biasNeuronId == Constants.UnknownId)
             {
-                OnChanged(Notification.ParameterChanged.NeuronsAdded, null);
+                OnChanged(new(this, Notification.ParameterChanged.NeuronsAdded));
             }
 
             RefreshNeuronsOrdinalNumbers();

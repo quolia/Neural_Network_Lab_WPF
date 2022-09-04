@@ -162,7 +162,7 @@ namespace Qualia.Controls
             NetworksControls.ForEach(n => n.NetworkTask_OnChanged(task));
             ActionManager.Instance.Unlock();
 
-            this.InvokeUIHandler(Notification.ParameterChanged.NeuronsAdded, new(this));
+            this.InvokeUIHandler(new(this, Notification.ParameterChanged.NeuronsAdded));
         }
 
         public ApplyAction GetNetworksRefreshAction(bool isNeedConfirmation)
@@ -228,7 +228,7 @@ namespace Qualia.Controls
 
                 ResetNetworksTabsNames();
 
-                ApplyAction action = new(this)
+                ApplyAction action = new(this, Notification.ParameterChanged.Structure)
                 {
                     Apply = (isRunning) =>
                     {
@@ -246,7 +246,7 @@ namespace Qualia.Controls
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.Structure, action);
+                this.InvokeUIHandler(action);
             }
         }
 
@@ -315,6 +315,32 @@ namespace Qualia.Controls
             }
         }
 
+        public void RefreshElement(bool isRunning, BaseUserControl element)
+        {
+            if (isRunning)
+            {
+                var network = element.GetParentOfType<NetworkControl>();
+                var model = network.CreateNetworkDataModel(_taskFunction, false);
+
+                MergeModel(model);
+            }
+            else
+            {
+                NetworkModels = CreateNetworksDataModels();
+            }
+        }
+
+        public BaseUserControl GetParent(object sender)
+        {
+            var fe = sender as FrameworkElement;
+            if (fe == null)
+            {
+                return null;
+            }
+
+            return fe.GetParentOfType<BaseUserControl>();
+        }
+
         public void RefreshRunningNetworks() => RefreshNetworks(true);
         public void RefreshStandingNetworks() => RefreshNetworks(false);
 
@@ -339,6 +365,21 @@ namespace Qualia.Controls
             }
 
             NetworkModels = newModels;
+        }
+
+        public void MergeModel(NetworkDataModel newNetwork)
+        {
+            var network = NetworkModels.Find(n => n.VisualId == newNetwork.VisualId);
+            if (network == null)
+            {
+                return;
+            }
+
+            var ind = NetworkModels.IndexOf(network);
+
+            newNetwork = network.Merge(newNetwork);
+
+            NetworkModels.Replace(ind, newNetwork);
         }
 
         unsafe public void PrepareModelsForRun()

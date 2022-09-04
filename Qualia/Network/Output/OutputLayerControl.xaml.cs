@@ -61,7 +61,7 @@ namespace Qualia.Controls
 
             if (neuronId == Constants.UnknownId)
             {
-                OnChanged(Notification.ParameterChanged.NeuronsAdded, new(this));
+                OnChanged(new(this, Notification.ParameterChanged.NeuronsAdded));
             }
 
             RefreshNeuronsOrdinalNumbers();

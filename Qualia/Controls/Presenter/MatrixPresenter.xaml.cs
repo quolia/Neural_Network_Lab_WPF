@@ -42,6 +42,7 @@ namespace Qualia.Controls
         private List<string> _classes;
 
         public MatrixPresenter()
+            : base(0)
         {
             InitializeComponent();
 

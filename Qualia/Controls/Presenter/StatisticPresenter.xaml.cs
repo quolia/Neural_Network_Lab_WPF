@@ -17,6 +17,7 @@ namespace Qualia.Controls
         private static readonly StringBuilder s_stringBuilder = new();
 
         public StatisticsPresenter()
+            : base (0)
         {
             InitializeComponent();
         }

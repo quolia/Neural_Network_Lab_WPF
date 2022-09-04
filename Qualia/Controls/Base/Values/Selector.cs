@@ -63,11 +63,11 @@ namespace Qualia.Controls
                         Value = oldValue as ISelectableItem;
                         SelectionChanged += Value_OnChanged;
 
-                        this.InvokeUIHandler(Notification.ParameterChanged.Unknown, new(this));
+                        this.InvokeUIHandler(new(this));
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.Unknown, action);
+                this.InvokeUIHandler(action);
             }
         }
 

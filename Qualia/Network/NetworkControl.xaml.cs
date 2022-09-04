@@ -13,19 +13,17 @@ namespace Qualia.Controls
 {
     sealed public partial class NetworkControl : BaseUserControl
     {
-        public readonly long Id;
-
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
         private InputLayerControl _inputLayer;
         private OutputLayerControl _outputLayer;
 
         public NetworkControl(long id, Config config, ActionManager.ApplyActionDelegate onChanged)
+            : base(UniqId.GetNextId(id))
         {
             InitializeComponent();
             this.SetUIHandler(onChanged);
 
-            Id = UniqId.GetNextId(id);
             this.PutConfig(config.ExtendWithId(Id));
 
             this.SetConfigParams(new()
@@ -62,7 +60,12 @@ namespace Qualia.Controls
 
         private new void OnChanged(Notification.ParameterChanged param, ApplyAction action)
         {
-            this.InvokeUIHandler(param == Notification.ParameterChanged.Unknown ? Notification.ParameterChanged.Structure : param, action);
+            if (action.Param == Notification.ParameterChanged.Unknown)
+            {
+                action.Param = Notification.ParameterChanged.Structure;
+            }
+
+            this.InvokeUIHandler(action);
 
             //var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy.SelectedItem);
             //CtlBackPropagationStrategyDescription.Text = description;
@@ -106,7 +109,7 @@ namespace Qualia.Controls
 
             if (layerId == Constants.UnknownId)
             {
-                ApplyAction action = new(this)
+                ApplyAction action = new(this, Notification.ParameterChanged.NeuronsAdded)
                 {
                     Cancel = (isRunning) =>
                     {
@@ -115,11 +118,12 @@ namespace Qualia.Controls
                         CtlTabsLayers.SelectedItem = selectedItem;
                         ResetLayersTabsNames();
 
-                        this.InvokeUIHandler(Notification.ParameterChanged.Structure, new(this));
+                        this.InvokeUIHandler(new(this, Notification.ParameterChanged.Structure));
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsAdded, action);
+
+                this.InvokeUIHandler(action);
             }
 
             return hiddenLayer;
@@ -290,7 +294,7 @@ namespace Qualia.Controls
                 CtlTabsLayers.Items.Remove(selectedItem);
                 ResetLayersTabsNames();
 
-                ApplyAction action = new(this)
+                ApplyAction action = new(this, Notification.ParameterChanged.NeuronsRemoved)
                 {
                     Apply = (isRunning) => selectedLayer.RemoveFromConfig(),
                     Cancel = (isRunning) =>
@@ -301,7 +305,7 @@ namespace Qualia.Controls
                     }
                 };
 
-                this.InvokeUIHandler(Notification.ParameterChanged.NeuronsRemoved, action);
+                this.InvokeUIHandler(action);
             }
         }
 
@@ -414,6 +418,36 @@ namespace Qualia.Controls
             return network;
         }
 
+        public BaseUserControl FindElementById(long id)
+        {
+            if (Id == id)
+            {
+                return this;
+            }
+
+            var ctlLayers = GetLayersControls();
+            for (int layerInd = 0; layerInd < ctlLayers.Count; ++layerInd)
+            {
+                var layer = ctlLayers[layerInd];
+                if (layer.Id == id)
+                {
+                    return layer;
+                }
+
+                var ctlNeurons = layer.Neurons;
+                for (int neuronInd = 0; neuronInd < ctlNeurons.Count; ++neuronInd)
+                {
+                    var neuron = ctlNeurons[neuronInd];
+                    if (neuron.Id == id)
+                    {
+                        return neuron;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private void Color_OnClick(object sender, MouseButtonEventArgs e)
         {
             using ColorDialog colorDialog = new();
@@ -433,16 +467,16 @@ namespace Qualia.Controls
                                                                 colorDialog.Color.G,
                                                                 colorDialog.Color.B));
 
-            ApplyAction action = new(this)
+            ApplyAction action = new(this, Notification.ParameterChanged.NetworkColor)
             {
                 Cancel = (isRunning) =>
                 {
                     CtlColor.Foreground = Draw.GetBrush(in wpfColor);
-                    this.InvokeUIHandler(Notification.ParameterChanged.NetworkColor, new(this));
+                    this.InvokeUIHandler(new(this, Notification.ParameterChanged.NetworkColor));
                 }
             };
 
-            this.InvokeUIHandler(Notification.ParameterChanged.NetworkColor, action);
+            this.InvokeUIHandler(action);
         }
 
         private void LayerContextMenu_OnOpened(object sender, RoutedEventArgs e)

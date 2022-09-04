@@ -91,9 +91,10 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(param => param.LoadConfig());
         }
 
-        private void Neuron_OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private void Neuron_OnChanged(ApplyAction action)
         {
-            OnChanged(Notification.ParameterChanged.Structure, action);
+            action.Param = Notification.ParameterChanged.Structure;
+            OnChanged(action);
         }
 
         public override void SetOrdinalNumber(int number)

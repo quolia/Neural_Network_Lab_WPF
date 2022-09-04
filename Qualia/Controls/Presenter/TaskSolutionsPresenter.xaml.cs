@@ -10,6 +10,7 @@ namespace Qualia.Controls
     public partial class TaskSolutionsPresenter : BaseUserControl
     {
         public TaskSolutionsPresenter()
+            : base(0)
         {
             InitializeComponent();
 
