@@ -1369,7 +1369,10 @@ namespace Qualia.Controls
                     CtlPlotPresenter.DrawPlot(firstNetworkModel,
                                               selectedNetworkModel);
 
-                    CtlStatisticsPresenter.Draw(selectedNetworkModel.LastStatistics);
+                    if (selectedNetworkModel != null)
+                    {
+                        CtlStatisticsPresenter.Draw(selectedNetworkModel.LastStatistics);
+                    }
                     */
                 }
             }
@@ -1520,9 +1523,9 @@ namespace Qualia.Controls
 
         private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
         {
-            CtlMenuRemoveNetwork.IsEnabled = !_isRunning && CtlTabs.SelectedIndex > 0;
+            //CtlMenuRemoveNetwork.IsEnabled = !_isRunning && CtlTabs.SelectedIndex > 0;
             //CtlMenuAddNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
-            CtlMenuCloneNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
+            //CtlMenuCloneNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
         }
 
         public void Dispose()

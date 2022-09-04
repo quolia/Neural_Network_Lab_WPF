@@ -83,6 +83,8 @@ namespace Qualia.Controls
 
             CtlDataCanvas.Clear();
 
+            var firstNetwork = network;
+
             while (network != null)
             { 
                 if (!network.IsEnabled)
@@ -102,6 +104,11 @@ namespace Qualia.Controls
                            true);
 
                 network = network.Next;
+            }
+
+            if (selectedNetwork == null || selectedNetwork.PlotterStatistics.PercentData.Count == 0 || !selectedNetwork.IsEnabled)
+            {
+                selectedNetwork = firstNetwork;
             }
 
             if (selectedNetwork != null && selectedNetwork.PlotterStatistics.PercentData.Count > 0)
