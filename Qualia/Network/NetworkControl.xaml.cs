@@ -15,10 +15,9 @@ namespace Qualia.Controls
     {
         public readonly long Id;
 
-        public InputLayerControl InputLayer { get; private set; }
-
         public bool IsNetworkEnabled => CtlIsNetworkEnabled.Value;
 
+        private InputLayerControl _inputLayer;
         private OutputLayerControl _outputLayer;
 
         public NetworkControl(long id, Config config, ActionManager.ApplyActionDelegate onChanged)
@@ -174,7 +173,7 @@ namespace Qualia.Controls
 
         public void NetworkTask_OnChanged(TaskFunction taskFunction)
         {
-            InputLayer.SetTaskFunction(taskFunction);
+            _inputLayer.SetTaskFunction(taskFunction);
             _outputLayer.SetTaskFunction(taskFunction);
 
             ResetLayersTabsNames();
@@ -229,15 +228,15 @@ namespace Qualia.Controls
             var inputLayerId = layerIds.Length > 0 ? layerIds[0] : Constants.UnknownId;
             var outputLayerId = layerIds.Length > 0 ? layerIds[layerIds.Length - 1] : Constants.UnknownId;
 
-            InputLayer = new(inputLayerId, this.GetConfig(), this.GetUIHandler());
+            _inputLayer = new(inputLayerId, this.GetConfig(), this.GetUIHandler());
             ScrollViewer scroll = new()
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Content = InputLayer
+                Content = _inputLayer
             };
 
             CtlTabInput.Content = scroll;
-            scroll.ScrollChanged += InputLayer.Scroll_OnChanged;
+            scroll.ScrollChanged += _inputLayer.Scroll_OnChanged;
 
             _outputLayer = new(outputLayerId, this.GetConfig(), this.GetUIHandler());
             scroll = new()
@@ -326,15 +325,15 @@ namespace Qualia.Controls
                 RandomizeMode = _randomizeMode,
                 RandomizerParam = _randomizerParam,
                 LearningRate = _learningRate,
-                InputInitial0 = InputLayer.ActivationFunction.Do(InputLayer.Initial0,
-                                                                 InputLayer.ActivationFunctionParam),
+                InputInitial0 = _inputLayer.ActivationFunction.Do(_inputLayer.Initial0,
+                                                                  _inputLayer.ActivationFunctionParam),
 
-                InputInitial1 = InputLayer.ActivationFunction.Do(InputLayer.Initial1,
-                                                                 InputLayer.ActivationFunctionParam),
+                InputInitial1 = _inputLayer.ActivationFunction.Do(_inputLayer.Initial1,
+                                                                  _inputLayer.ActivationFunctionParam),
 
                 CostFunction = CostFunction.GetInstance(CtlCostFunction),
                 BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropagationStrategy),
-                IsAdjustFirstLayerWeights = InputLayer.IsAdjustFirstLayerWeights
+                IsAdjustFirstLayerWeights = _inputLayer.IsAdjustFirstLayerWeights
             };
 
             network.ActivateNetwork();
@@ -373,25 +372,19 @@ namespace Qualia.Controls
                     
                     if (layer.Previous == null) // Input layer.
                     {
-                        neuron.WeightsInitializer = InputLayer.WeightsInitializeFunction;
-                        neuron.WeightsInitializerParam = InputLayer.WeightsInitializeFunctionParam;
-
-                        double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
-                        if (!InitializeFunction.IsSkipValue(initValue))
-                        {
-                            neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
-                        }
+                        neuron.WeightsInitializer = _inputLayer.WeightsInitializeFunction;
+                        neuron.WeightsInitializerParam = _inputLayer.WeightsInitializeFunctionParam;
                     }
                     else
                     {
                         neuron.WeightsInitializer = ctlNeurons[neuronInd].WeightsInitializeFunction;
                         neuron.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializeFunctionParam;
+                    }
 
-                        double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
-                        if (!InitializeFunction.IsSkipValue(initValue))
-                        {
-                            neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
-                        }
+                    double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
+                    if (!InitializeFunction.IsSkipValue(initValue))
+                    {
+                        neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
                     }
 
                     if (!isCopy && prevLayer != null && prevLayer.Neurons.Count > 0)

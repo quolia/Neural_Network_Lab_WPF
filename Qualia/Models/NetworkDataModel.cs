@@ -260,8 +260,8 @@ namespace Qualia.Model
                     var newNeuron = newLayer.Neurons.First;
                     while (newNeuron != null)
                     {
-                        var neuronModel = layer.Neurons.Find(n => n.VisualId == newNeuron.VisualId);
-                        if (neuronModel == null)
+                        var neuron = layer.Neurons.Find(n => n.VisualId == newNeuron.VisualId);
+                        if (neuron == null)
                         {
                             double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
                             if (!InitializeFunction.IsSkipValue(initValue))
@@ -279,7 +279,7 @@ namespace Qualia.Model
                             var newWeight = newNeuron.Weights.First;
                             while (newWeight != null)
                             {
-                                var weight = neuronModel.Weights.Find(w => w.Id == newWeight.Id);
+                                var weight = neuron.Weights.Find(w => w.Id == newWeight.Id);
                                 if (weight != null)
                                 {
                                     newWeight.Weight = weight.Weight;

@@ -144,7 +144,9 @@ namespace Qualia.Tools
 
                     network.TargetOutputNeuronId = intNumber - _minDotsAmountToCount;
 
-                    if (!_isPreventRepetition || network.TargetOutputNeuronId != _prevTargetOutputNeuronId)
+                    if (!_isPreventRepetition 
+                        || network.TargetOutputNeuronId != _prevTargetOutputNeuronId
+                        || _maxDotsAmountToCount == _minDotsAmountToCount)
                     {
                         _prevTargetOutputNeuronId = network.TargetOutputNeuronId;
                         break;

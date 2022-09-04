@@ -126,9 +126,6 @@ namespace Qualia.Controls
                             CtlDistributionFunction.SetConfig(taskFunctionConfig);
                             CtlDistributionFunction.LoadConfig();
 
-                            CtlIsPreventRepetition.SetConfig(taskFunctionConfig);
-                            CtlIsPreventRepetition.LoadConfig();
-
                             ActionManager.Instance.Unlock();
                         }
                     };
@@ -397,11 +394,12 @@ namespace Qualia.Controls
         {
             var newFunction = GetTaskFunction();
             var newTaskControl = newFunction.VisualControl;
-
+            
             if (newFunction != TaskFunction || newTaskControl.GetInputCount() != _pointsCount)
             {
                 TaskFunction = newFunction;
-                
+                TaskFunction.VisualControl.SetIsPreventRepetition(CtlIsPreventRepetition.Value);
+
                 _pointsRearrangeSnap = newTaskControl.GetPointsRearrangeSnap();
                 _isGridSnapAdjustmentAllowed = newTaskControl.IsGridSnapAdjustmentAllowed();
                 RearrangeWithNewPointsCount();
