@@ -143,6 +143,7 @@ namespace Qualia.Tools
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Do(NetworkDataModel networkModel, double a)
             {
+                int layerNumber = 0;
                 var layer = networkModel.Layers.First;
                 while (layer != null)
                 {
@@ -152,13 +153,14 @@ namespace Qualia.Tools
                         var weight = neuron.Weights.First;
                         while (weight != null)
                         {
-                            weight.Weight = a * InitializeFunction.Centered.Do(layer.Id + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
+                            weight.Weight = a * InitializeFunction.Centered.Do(layerNumber + 1) * Math.Cos(weight.Id / Math.PI) * Math.Cos(neuron.Id / Math.PI);
                             weight = weight.Next;
                         }
 
                         neuron = neuron.Next;
                     }
 
+                    ++layerNumber;
                     layer = layer.Next;
                 }
             }

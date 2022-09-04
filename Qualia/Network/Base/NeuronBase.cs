@@ -62,7 +62,7 @@ namespace Qualia.Controls
 
             if (config != null)
             {
-                Config = config.ExtendWithId(Id);
+                Config = config.ExtendWithId(VisualId);
             }
 
             SetOnChangeEvent(onChanged);

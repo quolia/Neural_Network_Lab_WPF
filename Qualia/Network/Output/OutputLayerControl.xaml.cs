@@ -85,7 +85,7 @@ namespace Qualia.Controls
 
         public override void SaveConfig()
         {
-            this.GetConfig().Set(Constants.Param.Neurons, Neurons.Select(n => n.Id));
+            this.GetConfig().Set(Constants.Param.Neurons, Neurons.Select(n => n.VisualId));
             Neurons.ToList().ForEach(n => n.SaveConfig());
         }
 

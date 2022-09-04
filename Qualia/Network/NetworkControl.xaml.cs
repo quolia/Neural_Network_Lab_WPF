@@ -24,7 +24,7 @@ namespace Qualia.Controls
             InitializeComponent();
             this.SetUIHandler(onChanged);
 
-            this.PutConfig(config.ExtendWithId(Id));
+            this.PutConfig(config.ExtendWithId(VisualId));
 
             this.SetConfigParams(new()
             {
@@ -166,7 +166,7 @@ namespace Qualia.Controls
 
             var layers = GetLayersControls();
             layers.ForEach(l => l.SaveConfig());
-            this.GetConfig().Set(Constants.Param.Layers, layers.Select(l => l.Id));
+            this.GetConfig().Set(Constants.Param.Layers, layers.Select(l => l.VisualId));
 
             //
 
@@ -323,7 +323,7 @@ namespace Qualia.Controls
                 nextMatrix.Next = matrix;
             }
 
-            NetworkDataModel network = new(Id, GetLayersSizes())
+            NetworkDataModel network = new(VisualId, GetLayersSizes())
             {
                 ErrorMatrix = matrix,
                 OutputClasses = taskFunction?.VisualControl.GetOutputClasses(),
@@ -359,14 +359,14 @@ namespace Qualia.Controls
 
                 var layer = network.Layers[layerInd];
 
-                layer.VisualId = ctlLayers[layerInd].Id;
+                layer.VisualId = ctlLayers[layerInd].VisualId;
 
                 var ctlNeurons = ctlLayers[layerInd].Neurons.ToArray();
 
                 for (int neuronInd = 0; neuronInd < ctlNeurons.Length; ++neuronInd)
                 {
                     var neuron = network.Layers[layerInd].Neurons[neuronInd];
-                    neuron.VisualId = ctlNeurons[neuronInd].Id;
+                    neuron.VisualId = ctlNeurons[neuronInd].VisualId;
 
                     neuron.ActivationFunction = ctlNeurons[neuronInd].ActivationFunction;
                     neuron.ActivationFunctionParam = ctlNeurons[neuronInd].ActivationFunctionParam;
@@ -391,10 +391,6 @@ namespace Qualia.Controls
                     }
 
                     double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
-                    if (initValue == 0.33)
-                    {
-                        int a = 1;
-                    }
                     if (!InitializeFunction.IsSkipValue(initValue))
                     {
                         neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
@@ -421,36 +417,6 @@ namespace Qualia.Controls
             }
 
             return network;
-        }
-
-        public BaseUserControl FindElementById(long id)
-        {
-            if (Id == id)
-            {
-                return this;
-            }
-
-            var ctlLayers = GetLayersControls();
-            for (int layerInd = 0; layerInd < ctlLayers.Count; ++layerInd)
-            {
-                var layer = ctlLayers[layerInd];
-                if (layer.Id == id)
-                {
-                    return layer;
-                }
-
-                var ctlNeurons = layer.Neurons;
-                for (int neuronInd = 0; neuronInd < ctlNeurons.Count; ++neuronInd)
-                {
-                    var neuron = ctlNeurons[neuronInd];
-                    if (neuron.Id == id)
-                    {
-                        return neuron;
-                    }
-                }
-            }
-
-            return null;
         }
 
         private void Color_OnClick(object sender, MouseButtonEventArgs e)

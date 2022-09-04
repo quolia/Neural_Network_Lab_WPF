@@ -6,11 +6,11 @@ namespace Qualia.Controls
 {
     abstract public partial class BaseUserControl : UserControl, IConfigParam
     {
-        public readonly long Id;
+        public readonly long VisualId;
 
-        public BaseUserControl(long id)
+        public BaseUserControl(long visualId)
         {
-            Id = id;
+            VisualId = visualId;
             //
         }
 

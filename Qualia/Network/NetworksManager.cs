@@ -73,7 +73,7 @@ namespace Qualia.Controls
             {
                 var selectedNetworkModel = SelectedNetworkControl == null
                                            ? null
-                                           : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.Id);
+                                           : NetworkModels.FirstOrDefault(model => model.VisualId == SelectedNetworkControl.VisualId);
                 return selectedNetworkModel;
             }
         }
@@ -274,7 +274,7 @@ namespace Qualia.Controls
 
         public void SaveConfig()
         {
-            Config.Set(Constants.Param.Networks, NetworksControls.Select(n => n.Id));
+            Config.Set(Constants.Param.Networks, NetworksControls.Select(n => n.VisualId));
             Config.Set(Constants.Param.SelectedNetworkIndex, _Tabs.SelectedIndex - 1);
 
             NetworksControls.ForEach(n => n.SaveConfig());

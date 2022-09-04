@@ -21,7 +21,7 @@ namespace Qualia.Controls
                 throw new ArgumentNullException(nameof(config));
             }
 
-            this.PutConfig(config.ExtendWithId(Id));
+            this.PutConfig(config.ExtendWithId(VisualId));
 
             SetOnChangeEvent(onChanged);
 

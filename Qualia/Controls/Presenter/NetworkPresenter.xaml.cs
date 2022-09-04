@@ -342,7 +342,7 @@ namespace Qualia.Controls
 
             while (neuron != null)
             {
-                if (fullState || neuron.Activation > threshold || layer.Id > 0)
+                if (fullState || neuron.Activation > threshold || layer.Previous != null)
                 {
                     if (!_coordinator.ContainsKey(neuron))
                     {
@@ -413,7 +413,7 @@ namespace Qualia.Controls
 
             while (neuronModel != null)
             {
-                if (fullState || neuronModel.Activation > threshold || layerModel.Id > 0)
+                if (fullState || neuronModel.Activation > threshold || layerModel.Previous != null)
                 {
                     if (!_coordinator.ContainsKey(neuronModel))
                     {

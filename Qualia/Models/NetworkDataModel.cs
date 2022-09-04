@@ -168,93 +168,9 @@ namespace Qualia.Model
             }
         }
 
-        /*unsafe public void BackPropagation2()
-        {
-            var lastLayer = Layers.Last;
-            var neuron = lastLayer.Neurons.First;
-
-            while (neuron != null)
-            {
-                neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.Activation, neuron.ActivationFuncParam);
-                neuron = neuron.Next;
-            }
-
-            var layer = lastLayer;
-            var finalLayer = Layers[IsAdjustFirstLayerWeights ? 0 : 1];
-
-            while (layer != finalLayer)
-            {
-                var neuronPrev = layer.Previous.Neurons.First;
-                while (neuronPrev != null)
-                {
-                    neuronPrev.Error = 0;
-
-                    neuron = layer.Neurons.First;
-                    while (neuron != null)
-                    {
-                        if (neuronPrev.IsBias)
-                        {
-                            if (neuron.IsBiasConnected)
-                            {
-                                neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParam);
-                            }
-                        }
-                        else
-                        {
-                            neuronPrev.Error += neuron.Error * neuronPrev.WeightTo(neuron).Weight * neuronPrev.ActivationFunction.Derivative(neuronPrev.Activation, neuronPrev.ActivationFuncParam);
-                        }
-
-                        neuron = neuron.Next;
-                    }
-
-                    neuronPrev = neuronPrev.Next;
-                }
-
-                layer = layer.Previous;
-            }
-
-            // update weights
-
-            layer = lastLayer;
-            while (layer != finalLayer)
-            {
-                var neuronPrev = layer.Previous.Neurons.First;
-                while (neuronPrev != null)
-                {
-                    neuron = layer.Neurons.First;
-                    while (neuron != null)
-                    {
-                        if (neuronPrev.Activation != 0)
-                        {
-                            if (neuronPrev.Activation == 1)
-                            {
-                                neuronPrev.WeightTo(neuron).Add(neuron.Error * LearningRate);
-                            }
-                            else
-                            {
-                                neuronPrev.WeightTo(neuron).Add(neuron.Error * neuronPrev.Activation * LearningRate);
-                            }
-                        }
-
-                        neuron = neuron.Next;
-                    }
-
-                    neuronPrev = neuronPrev.Next;
-                }
-
-                layer = layer.Previous;
-            }
-        }
-        */
-
         public NetworkDataModel Merge(NetworkDataModel newNetwork)
         {
             newNetwork.Statistics = Statistics;
-            if (newNetwork.Statistics == null)
-            {
-                //throw new InvalidOperationException();
-            }
-
             newNetwork.PlotterStatistics = PlotterStatistics;
 
             var newLayer = newNetwork.Layers.First;
@@ -275,10 +191,6 @@ namespace Qualia.Model
                             var weight = neuron?.Weights.Find(w => w.Id == newWeight.Id);
                             if (weight != null)
                             {
-                                if (weight.Weight == 0.33)
-                                {
-                                    int a = 1;
-                                }
                                 newWeight.Weight = weight.Weight;
                             }
                             else
@@ -363,49 +275,6 @@ namespace Qualia.Model
             _copy.TargetOutputNeuronId = TargetOutputNeuronId;
 
             return _copy;
-        }
-
-        public void BlockWeights__(NetworkDataModel prev)
-        {
-            if (prev == null)
-            {
-                return;
-            }
-
-            Statistics.BlockedWeights = 0;
-
-            var layerModel = Layers.First;
-            var layerModelCopy = prev.Layers.First;
-
-            while (layerModel != null)
-            {
-                var neuronModel = layerModel.Neurons.First;
-                var neuronModelCopy = layerModelCopy.Neurons.First;
-
-                while (neuronModel != null)
-                {
-                    var weightModel = neuronModel.Weights.First;
-                    var weightModelCopy = neuronModelCopy.Weights.First;
-
-                    while (weightModel != null)
-                    {
-                        if (weightModelCopy.Weight == weightModel.Weight)
-                        {
-                            //weightModel.IsBlocked = true;
-                            Statistics.BlockedWeights++;
-                        }
-
-                        weightModel = weightModel.Next;
-                        weightModelCopy = weightModelCopy.Next;
-                    }
-
-                    neuronModel = neuronModel.Next;
-                    neuronModelCopy = neuronModelCopy.Next;
-                }
-
-                layerModel = layerModel.Next;
-                layerModelCopy = layerModelCopy.Next;
-            }
         }
     }
 }
