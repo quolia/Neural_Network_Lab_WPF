@@ -152,7 +152,7 @@ namespace Qualia.Controls
             Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
             _Tabs.SelectedIndex = Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
 
-            RefreshNetworks(false);
+            RefreshNetworks(false, null);
         }
 
         public void RebuildNetworksForTask(TaskFunction task)
@@ -171,14 +171,14 @@ namespace Qualia.Controls
             {
                 return new(this)
                 {
-                    Apply = (isRunning) => RefreshNetworks(isRunning)
+                    Apply = (isRunning) => RefreshNetworks(isRunning, this)
                 };
             }
             else
             {
                 return new(this)
                 {
-                    ApplyInstant = (isRunning) => RefreshNetworks(isRunning)
+                    ApplyInstant = (isRunning) => RefreshNetworks(isRunning, this)
                 };
             }
         }
@@ -235,7 +235,7 @@ namespace Qualia.Controls
                         if (isRunning)
                         {
                             selectedNetworkControl.RemoveFromConfig();
-                            RefreshNetworks(false);
+                            RefreshNetworks(false, this);
                         }
                     },
                     Cancel = (isRunning) =>
@@ -294,58 +294,76 @@ namespace Qualia.Controls
             File.Copy(Config.Main.Get(Constants.Param.NetworksManagerName, ""), fileName);
         }
 
-        public ListX<NetworkDataModel> CreateNetworksDataModels()
+        public ListX<NetworkDataModel> CreateNetworksDataModels(object control)
         {
-            ListX<NetworkDataModel> networkModels = new(NetworksControls.Count);
-            NetworksControls.ForEach(network => networkModels.Add(network.CreateNetworkDataModel(_taskFunction, false)));
+            var model = CreateNetworkDataModel(control);
+            if (model == null)
+            {
+                ListX<NetworkDataModel> newkModels = new(NetworksControls.Count);
+                NetworksControls.ForEach(network => newkModels.Add(network.CreateNetworkDataModel(_taskFunction, false)));
+                MergeModels(newkModels);
 
-            return networkModels;
+                return newkModels;
+            }
+
+            MergeModel(model);
+
+            return NetworkModels;
         }
 
-        public void RefreshNetworks(bool isRunning)
+        public NetworkDataModel CreateNetworkDataModel(object control)
         {
-            if (isRunning)
+            if (control == null)
             {
-                var newModels = CreateNetworksDataModels();
-                MergeModels(newModels);
+                return null;
             }
-            else
-            {
-                NetworkModels = CreateNetworksDataModels();
-            }
-        }
 
-        public void RefreshElement(bool isRunning, BaseUserControl element)
-        {
-            if (isRunning)
-            {
-                var network = element.GetParentOfType<NetworkControl>();
-                var model = network.CreateNetworkDataModel(_taskFunction, false);
-
-                MergeModel(model);
-            }
-            else
-            {
-                NetworkModels = CreateNetworksDataModels();
-            }
-        }
-
-        public BaseUserControl GetParent(object sender)
-        {
-            var fe = sender as FrameworkElement;
+            var fe = control as FrameworkElement;
             if (fe == null)
             {
                 return null;
             }
 
-            return fe.GetParentOfType<BaseUserControl>();
+            var network = control as NetworkControl;
+            if (network == null)
+            {
+                network = fe.GetParentOfType<NetworkControl>();
+            }
+
+            if (network == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            NetworkDataModel networkModel = network.CreateNetworkDataModel(_taskFunction, false);
+            return networkModel;
         }
 
-        public void RefreshRunningNetworks() => RefreshNetworks(true);
-        public void RefreshStandingNetworks() => RefreshNetworks(false);
+        public void RefreshNetworks(bool isRunning, object control)
+        {
+            if (isRunning)
+            {
+                //var newModels = CreateNetworksDataModels(control);
+                NetworkModels = CreateNetworksDataModels(control);
+                //MergeModels(newModels);
+            }
+            else
+            {
+                NetworkModels = CreateNetworksDataModels(control);
+            }
+        }
+
+        public void RefreshRunningNetworks(object control) => RefreshNetworks(true, control);
+        public void RefreshStandingNetworks(object control) => RefreshNetworks(false, control);
 
         public void MergeModels(ListX<NetworkDataModel> networkModels)
         {
+            if (NetworkModels == null)
+            {
+                NetworkModels = networkModels;
+                return;
+            }
+
             ListX<NetworkDataModel> newModels = new(networkModels.Count);
             var newNetworkModel = networkModels.First;
 
@@ -376,9 +394,7 @@ namespace Qualia.Controls
             }
 
             var ind = NetworkModels.IndexOf(network);
-
             newNetwork = network.Merge(newNetwork);
-
             NetworkModels.Replace(ind, newNetwork);
         }
 

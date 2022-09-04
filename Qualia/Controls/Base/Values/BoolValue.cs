@@ -41,7 +41,7 @@ namespace Qualia.Controls
 
         private void Value_OnChanged(object sender, RoutedEventArgs e)
         {
-            ApplyAction action = new(this, Notification.ParameterChanged.Unknown)
+            ApplyAction action = new(this)
             {
                 Cancel = (isRunning) =>
                 {
@@ -49,7 +49,7 @@ namespace Qualia.Controls
                     Value = !Value;
                     EnableListeners(true);
 
-                    this.InvokeUIHandler(new(this, Notification.ParameterChanged.Unknown));
+                    this.InvokeUIHandler(new(this));
                 }
             };
 

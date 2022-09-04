@@ -1,5 +1,6 @@
 ﻿using Qualia.Controls;
 using Qualia.Tools;
+using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 
@@ -249,6 +250,11 @@ namespace Qualia.Model
         public NetworkDataModel Merge(NetworkDataModel newNetwork)
         {
             newNetwork.Statistics = Statistics;
+            if (newNetwork.Statistics == null)
+            {
+                //throw new InvalidOperationException();
+            }
+
             newNetwork.PlotterStatistics = PlotterStatistics;
 
             var newLayer = newNetwork.Layers.First;

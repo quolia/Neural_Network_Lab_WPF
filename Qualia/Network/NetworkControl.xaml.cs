@@ -58,7 +58,7 @@ namespace Qualia.Controls
             this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));
         }
 
-        private new void OnChanged(Notification.ParameterChanged param, ApplyAction action)
+        private new void OnChanged(ApplyAction action)
         {
             if (action.Param == Notification.ParameterChanged.Unknown)
             {
@@ -66,9 +66,6 @@ namespace Qualia.Controls
             }
 
             this.InvokeUIHandler(action);
-
-            //var description = BackPropagationStrategy.GetDescription(CtlBackPropagationStrategy.SelectedItem);
-            //CtlBackPropagationStrategyDescription.Text = description;
         }
 
         public HiddenLayerControl AddLayer()
