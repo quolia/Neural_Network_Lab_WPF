@@ -1429,9 +1429,10 @@ namespace Qualia.Controls
             lock (Locker.ApplyChanges)
             {
                 ActionManager.Instance.Lock();
+
                 _networksManager.AddNetwork();
                 ApplyChangesToNetworks(_isRunning);
-                var selected = _networksManager.SelectedNetworkModel;
+                
                 ActionManager.Instance.Unlock();
             }
         }
@@ -1444,16 +1445,21 @@ namespace Qualia.Controls
                 return;
             }
 
-            ActionManager.Instance.Lock();
+            lock (Locker.ApplyChanges)
+            {
+                ActionManager.Instance.Lock();
 
-            var selectedNetwork = _networksManager.SelectedNetworkControl;
-            var newNetwork = _networksManager.AddNetwork();
+                var selectedNetwork = _networksManager.SelectedNetworkControl;
+                var newNetwork = _networksManager.AddNetwork();
 
-            ApplyChangesToStandingNetworks();
-            selectedNetwork.CopyTo(newNetwork);
-            ApplyChangesToStandingNetworks();
+                ApplyChangesToStandingNetworks();
+                selectedNetwork.CopyTo(newNetwork);
+                var newModel = _networksManager.CreateNetworkDataModel(newNetwork);
+                _networksManager.MergeModel(newModel);
+                ApplyChangesToStandingNetworks();
 
-            ActionManager.Instance.Unlock();
+                ActionManager.Instance.Unlock();
+            }
         }
 
         private void MainMenuRemoveNetwork_OnClick(object sender, RoutedEventArgs e)

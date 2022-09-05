@@ -493,24 +493,5 @@ namespace Qualia.Controls
         {
             NetworkModels.ForEach(network => network.FeedForward());
         }
-
-        public void ResetModelsStatistics()
-        {
-            NetworkModels.ForEach(network => network.Statistics = new());
-        }
-
-        private void ResetModelsPlotterStatistics()
-        {
-            NetworkModels.ForEach(network => network.PlotterStatistics = new());
-        }
-
-        public void ResetErrorMatrix()
-        {
-            NetworkModels.ForEach(network =>
-            {
-                network.ErrorMatrix.ClearData();
-                network.ErrorMatrix.Next.ClearData();
-            });
-        }
     }
 }
