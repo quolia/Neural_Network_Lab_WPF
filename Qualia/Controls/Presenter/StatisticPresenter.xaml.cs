@@ -2,18 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
-using System.Windows.Media;
 
 namespace Qualia.Controls
 {
     sealed public partial class StatisticsPresenter : BaseUserControl
     {
-        private static readonly Typeface s_font = new(new("Tahoma"),
-                                                      FontStyles.Normal,
-                                                      FontWeights.Bold,
-                                                      FontStretches.Normal);
-
         private static readonly StringBuilder s_stringBuilder = new();
 
         public StatisticsPresenter()
@@ -185,7 +178,7 @@ namespace Qualia.Controls
 
         public void Draw(Dictionary<string, string> stats)
         {
-            CtlCanvas.Clear();
+            CtlText.Text = string.Empty;
 
             if (stats == null)
             {
@@ -204,17 +197,7 @@ namespace Qualia.Controls
                 s_stringBuilder.AppendLine($"{item.Key}: {item.Value}");
             }
 
-            FormattedText formattedText = new(s_stringBuilder.ToString(),
-                                              Culture.Current,
-                                              FlowDirection.LeftToRight,
-                                              s_font,
-                                              10,
-                                              Brushes.Black,
-                                              RenderSettings.PixelsPerDip);
-
-            CtlCanvas.DrawText(formattedText, ref Points.Get(10, 0));
-
-            Width = MathX.Max(ActualWidth, formattedText.WidthIncludingTrailingWhitespace + 10);
+            CtlText.Text = s_stringBuilder.ToString();
         }
 
         public void Clear()
