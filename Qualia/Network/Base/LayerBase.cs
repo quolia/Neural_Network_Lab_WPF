@@ -82,7 +82,7 @@ namespace Qualia.Controls
 
         abstract public void SetAllNeuronsSelected(bool isSelected);
 
-        public void CopyTo(LayerBaseControl newLayer)
+        virtual public void CopyTo(LayerBaseControl newLayer)
         {
             if (GetType() != newLayer.GetType())
             {

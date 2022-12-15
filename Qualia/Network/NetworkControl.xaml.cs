@@ -497,6 +497,12 @@ namespace Qualia.Controls
 
         public void CopyTo(NetworkControl newNetwork)
         {
+            newNetwork.CtlRandomizeFunction.Value = CtlRandomizeFunction.Value;
+            newNetwork.CtlRandomizeFunctionParam.Value = CtlRandomizeFunctionParam.Value;
+            newNetwork.CtlLearningRate.Value = CtlLearningRate.Value;
+            newNetwork.CtlCostFunction.Value = CtlCostFunction.Value;
+            newNetwork.CtlBackPropagationStrategy.Value = CtlBackPropagationStrategy.Value;
+
             var layers = GetLayersControls();
             var newLayers = newNetwork.GetLayersControls();
 

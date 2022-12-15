@@ -137,7 +137,9 @@ namespace Qualia.Controls
 
             stat.Add("5", null);
 
-            double totalRoundsPerSecond = statistics.Rounds / TimeSpan.FromTicks(statistics.TotalTicksElapsed).TotalSeconds;
+            double totalRoundsPerSecond = statistics.TotalTicksElapsed > 0
+                                          ? statistics.Rounds / TimeSpan.FromTicks(statistics.TotalTicksElapsed).TotalSeconds
+                                          : 0;
             stat.Add("Total rounds/sec",
                      string.Format(Culture.Current,
                                    Converter.IntToText((long)totalRoundsPerSecond)));

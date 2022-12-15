@@ -78,6 +78,8 @@ namespace Qualia.Controls
             return 0;
         }
 
+        //
+
         public override bool IsValid()
         {
             return Neurons.All(n => n.IsValid());
@@ -126,6 +128,8 @@ namespace Qualia.Controls
         {
             throw new InvalidOperationException();
         }
+
+        //
 
         public override void SetAllNeuronsSelected(bool isSelected)
         {

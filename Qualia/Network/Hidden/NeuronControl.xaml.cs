@@ -21,12 +21,10 @@ namespace Qualia.Controls
             this.SetConfigParams(new() 
             {
                 CtlActivationFunction
-                    .Initialize(nameof(ActivationFunction.LogisticSigmoid))
-                    .SetUIParam(Notification.ParameterChanged.NeuronActivationFunction),
+                    .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
 
                 CtlActivationFunctionParam
-                    .Initialize(defaultValue: 1)
-                    .SetUIParam(Notification.ParameterChanged.NeuronActivationFunctionParam),
+                    .Initialize(defaultValue: 1),
 
                 CtlActivationInitializeFunction
                     .Initialize(nameof(InitializeFunction.Constant)),

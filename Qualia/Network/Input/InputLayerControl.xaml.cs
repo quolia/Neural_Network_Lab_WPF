@@ -80,9 +80,9 @@ namespace Qualia.Controls
         {
             if (action.Param == Notification.ParameterChanged.Unknown)
             {
-                throw new InvalidOperationException();
                 action.Param = Notification.ParameterChanged.NetworkUpdated;
             }
+
             OnChanged(action);
         }
 
@@ -159,6 +159,25 @@ namespace Qualia.Controls
         public override void SetAllNeuronsSelected(bool isSelected)
         {
             Range.ForEach(Neurons, n => n.IsSelected = isSelected);
+        }
+
+        override public void CopyTo(LayerBaseControl layer)
+        {
+            var newLayer = layer as InputLayerControl;
+
+            if (newLayer == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            newLayer.CtlInputInitial0.Value = CtlInputInitial0.Value;
+            newLayer.CtlInputInitial1.Value = CtlInputInitial1.Value;
+            newLayer.CtlActivationFunction.SelectedIndex = CtlActivationFunction.SelectedIndex;
+            newLayer.CtlActivationFunctionParam.Value = CtlActivationFunctionParam.Value;
+            newLayer.CtlWeightsInitializeFunction.Value = CtlWeightsInitializeFunction.Value;
+            newLayer.CtlWeightsInitializeFunctionParam.Value = CtlWeightsInitializeFunctionParam.Value;
+
+            base.CopyTo(newLayer);
         }
 
         // IConfigParam

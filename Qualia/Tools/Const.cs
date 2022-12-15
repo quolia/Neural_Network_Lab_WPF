@@ -65,8 +65,6 @@
             NetworkColor,
 
             NeuronParam,
-            NeuronActivationFunction,
-            NeuronActivationFunctionParam,
 
             NetworksCount,
             NeuronsAdded,

@@ -247,9 +247,9 @@ namespace Qualia.Controls
                 throw new InvalidOperationException();
             }
 
-            _notify = true;
             try
             {
+                _notify = true;
 
                 if (action == null)
                 {
