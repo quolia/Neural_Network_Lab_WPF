@@ -76,13 +76,6 @@ namespace Qualia.Controls
 
         public override string Label => CtlLabel.Text;
 
-        public override InitializeFunction ActivationInitializeFunction
-        {
-            get => throw new InvalidOperationException();
-        }
-
-        public override double ActivationInitializeFunctionParam => throw new NotImplementedException();
-
         public override void LoadConfig()
         {
             CtlActivationFunction

@@ -137,8 +137,6 @@ namespace Qualia.Controls
             }
         }
 
-        abstract public InitializeFunction ActivationInitializeFunction { get; }
-        abstract public double ActivationInitializeFunctionParam { get; }
         abstract public InitializeFunction WeightsInitializeFunction { get; set; }
         abstract public double WeightsInitializeFunctionParam { get; set; }
 

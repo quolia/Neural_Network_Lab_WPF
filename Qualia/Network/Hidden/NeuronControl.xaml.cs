@@ -26,12 +26,6 @@ namespace Qualia.Controls
                 CtlActivationFunctionParam
                     .Initialize(defaultValue: 1),
 
-                CtlActivationInitializeFunction
-                    .Initialize(nameof(InitializeFunction.Constant)),
-
-                CtlActivationInitializeFunctionParam
-                    .Initialize(defaultValue: 1),
-
                 CtlWeightsInitializeFunction
                     .Initialize(nameof(InitializeFunction.Skip)),
 
@@ -61,10 +55,6 @@ namespace Qualia.Controls
             CtlNumber.Text = Converter.IntToText(number);
         }
 
-        public override InitializeFunction ActivationInitializeFunction => InitializeFunction.GetInstance(CtlActivationInitializeFunction);
-        public override double ActivationInitializeFunctionParam => CtlActivationInitializeFunctionParam.Value;
-        //public override InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
-        //public override double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
         public override ActivationFunction ActivationFunction
         {
             get => ActivationFunction.GetInstance(CtlActivationFunction);
@@ -104,9 +94,6 @@ namespace Qualia.Controls
             CtlWeightsInitializeFunction
                 .Fill<InitializeFunction>(Config);
 
-            CtlActivationInitializeFunction
-                .Fill<InitializeFunction>(Config);
-
             CtlActivationFunction
                 .Fill<ActivationFunction>(Config);
 
@@ -117,15 +104,12 @@ namespace Qualia.Controls
 
         public override bool IsValid()
         {
-            return CtlWeightsInitializeFunctionParam.IsValid() && CtlActivationInitializeFunctionParam.IsValid();
+            return CtlWeightsInitializeFunctionParam.IsValid();
         }
 
         public override void SaveConfig()
         {
             this.GetConfigParams().ForEach(param => param.SaveConfig());
-
-            CtlActivationInitializeFunction.RemoveFromConfig();
-            CtlActivationInitializeFunctionParam.RemoveFromConfig();
         }
 
         public override void RemoveFromConfig()

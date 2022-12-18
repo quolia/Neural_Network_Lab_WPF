@@ -24,7 +24,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <local:TextControl Grid.Column="4"
@@ -34,11 +33,11 @@
                            VerticalAlignment="Top" />
 
         <local:TextControl Grid.Row="1"
-                           Text="Activation init-er:" />
+                           Text="Weights init-er:" />
         
         <local:SelectorControl Grid.Row="1"
                                Grid.Column="1"
-                               x:Name="CtlActivationInitializeFunction" />
+                               x:Name="CtlWeightsInitializeFunction" />
         
         <local:TextControl Grid.Row="1"
                            Grid.Column="2"
@@ -47,42 +46,24 @@
         <local:DoubleValueControl Grid.Row="1"
                                   Grid.Column="3"
                                   Grid.ColumnSpan="2"
-                                  x:Name="CtlActivationInitializeFunctionParam"
-                                  MinValue="-100"
-                                  MaxValue="100" />
-
-        <local:TextControl Grid.Row="2"
-                           Text="Weights init-er:" />
-        
-        <local:SelectorControl Grid.Row="2"
-                               Grid.Column="1"
-                               x:Name="CtlWeightsInitializeFunction" />
-        
-        <local:TextControl Grid.Row="2"
-                           Grid.Column="2"
-                           Text="a:" />
-        
-        <local:DoubleValueControl Grid.Row="2"
-                                  Grid.Column="3"
-                                  Grid.ColumnSpan="2"
                                   x:Name="CtlWeightsInitializeFunctionParam"
                                   MinValue="-100"
                                   MaxValue="100" />
 
-        <local:TextControl Grid.Row="3"
+        <local:TextControl Grid.Row="2"
                            Grid.ColumnSpan="2"
                            Text="Activation function:" />
         
-        <local:SelectorControl Grid.Row="4"
+        <local:SelectorControl Grid.Row="3"
                                Grid.RowSpan="2"
                                Grid.ColumnSpan="2"
                                x:Name="CtlActivationFunction" />
         
-        <local:TextControl Grid.Row="4"
+        <local:TextControl Grid.Row="3"
                            Grid.Column="2"
                            Text="a:" />
         
-        <local:DoubleValueControl Grid.Row="4"
+        <local:DoubleValueControl Grid.Row="3"
                                   Grid.Column="3"
                                   Grid.ColumnSpan="2"
                                   x:Name="CtlActivationFunctionParam"

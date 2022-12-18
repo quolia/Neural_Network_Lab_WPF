@@ -25,10 +25,6 @@ namespace Qualia.Controls
         public override ActivationFunction ActivationFunction { get; set; }
         public override double ActivationFunctionParam { get; set; }
 
-        public override InitializeFunction ActivationInitializeFunction => throw new InvalidOperationException();
-
-        public override double ActivationInitializeFunctionParam => throw new InvalidOperationException();
-
         public override string Label => null;
 
         public override double PositiveTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
