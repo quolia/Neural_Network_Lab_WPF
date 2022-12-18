@@ -20,6 +20,11 @@ namespace Qualia.Tools
 
         public void Add(T node)
         {
+            if (IndexOf(node) >= 0)
+            {
+                return;
+            }
+
             if (Last != null)
             { 
                 Last.Next = node;
@@ -28,6 +33,35 @@ namespace Qualia.Tools
 
             Array.Resize(ref _array, Count + 1);
             _array[Count - 1] = node;
+
+            First = _array[0];
+            Last = node;
+        }
+
+        public void Remove(T node)
+        {
+            if (node == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var index = IndexOf(node);
+            if (index < 0)
+            {
+                return;
+            }
+
+            if (node.Previous != null)
+            {
+                node.Previous.Next = node.Next;
+            }
+
+            if (node.Next != null)
+            {
+                node.Next.Previous = node.Previous;
+            }
+
+            Array.Resize(ref _array, Count - 1);
 
             First = _array[0];
             Last = node;

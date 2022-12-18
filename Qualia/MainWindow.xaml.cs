@@ -1010,8 +1010,6 @@ namespace Qualia.Controls
                         swRenderTime.Restart();
 
                         var network = _networksManager.SelectedNetworkModel;
-                        //var firstNetwork = _networksManager.NetworkModels.First;
-                        //var networkModelToRender = network.GetCopyToDraw();
                         var errorMatrixToRender = network.ErrorMatrix;
                         var statisticsToRender = network.Statistics.Copy();
 
@@ -1047,8 +1045,6 @@ namespace Qualia.Controls
                         var network = _networksManager.SelectedNetworkModel;
                         var firstNetwork = _networksManager.NetworkModels.First;
                         var networkModelToRender = network.GetCopyToDraw();
-                        //var errorMatrixToRender = network.ErrorMatrix;
-                        //var statisticsToRender = network.Statistics.Copy();
 
                         CtlInputDataPresenter.SetInputStat(firstNetwork);
 
@@ -1085,8 +1081,6 @@ namespace Qualia.Controls
 
                         var network = _networksManager.SelectedNetworkModel;
                         var firstNetwork = _networksManager.NetworkModels.First;
-                        //var networkModelToRender = network.GetCopyToDraw();
-                        //var errorMatrixToRender = network.ErrorMatrix;
                         var statisticsToRender = network.Statistics.Copy();
                         var learningRate = network.LearningRate;
 
