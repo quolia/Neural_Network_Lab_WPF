@@ -12,12 +12,6 @@ namespace Qualia.Model
         public double Activation;
         public double Error;
 
-        public InitializeFunction ActivationInitializer;
-        public double ActivationInitializerParam;
-
-        public InitializeFunction WeightsInitializer;
-        public double WeightsInitializerParam;
-
         public ActivationFunction ActivationFunction;
         public double ActivationFunctionParam;
 

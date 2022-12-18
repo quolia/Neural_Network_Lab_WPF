@@ -195,11 +195,7 @@ namespace Qualia.Model
                             }
                             else
                             {
-                                double initValue = newNeuron.WeightsInitializer.Do(newNeuron.WeightsInitializerParam);
-                                if (!InitializeFunction.IsSkipValue(initValue))
-                                {
-                                    newWeight.Weight = initValue;
-                                }
+                                newWeight.Weight = 0; // The new neuron weight.
                             }
 
                             newWeight = newWeight.Next;

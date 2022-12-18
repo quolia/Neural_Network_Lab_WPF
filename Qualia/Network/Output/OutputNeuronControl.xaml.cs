@@ -1,6 +1,4 @@
 ﻿using Qualia.Tools;
-using System;
-using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -34,18 +32,6 @@ namespace Qualia.Controls
 
             this.GetConfigParams().ForEach(param => param.SetOnChangeEvent(Neuron_OnChanged));
         }
-
-        public override InitializeFunction WeightsInitializeFunction
-        {
-            get => InitializeFunction.Skip.Instance;
-            set { }
-        }
-
-        public override double WeightsInitializeFunctionParam
-        {
-            get => 1;
-            set {}
-        }       
 
         public override ActivationFunction ActivationFunction
         {

@@ -1,7 +1,5 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Collections.Generic;
-using System.Windows;
 
 namespace Qualia.Controls
 {
@@ -24,12 +22,6 @@ namespace Qualia.Controls
                     .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
 
                 CtlActivationFunctionParam
-                    .Initialize(defaultValue: 1),
-
-                CtlWeightsInitializeFunction
-                    .Initialize(nameof(InitializeFunction.Skip)),
-
-                CtlWeightsInitializeFunctionParam
                     .Initialize(defaultValue: 1)
             });
 
@@ -68,19 +60,6 @@ namespace Qualia.Controls
             get => CtlActivationFunctionParam.Value;
             set => CtlActivationFunctionParam.Value = value;
         }
-        public override InitializeFunction WeightsInitializeFunction
-        {
-            get => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
-            set
-            {
-                CtlWeightsInitializeFunction.SelectByText(WeightsInitializeFunction.GetNameByInstance(value));
-            }
-        }
-        public override double WeightsInitializeFunctionParam
-        {
-            get => CtlWeightsInitializeFunctionParam.Value;
-            set => CtlWeightsInitializeFunctionParam.Value = value;
-        }
 
         public override string Label => null;
 
@@ -91,20 +70,15 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            CtlWeightsInitializeFunction
-                .Fill<InitializeFunction>(Config);
-
             CtlActivationFunction
                 .Fill<ActivationFunction>(Config);
 
             this.GetConfigParams().ForEach(param => param.LoadConfig());
-
-            //CtlActivation.Height = CtlIsBias.Value ? new(0, GridUnitType.Auto) : new(0, GridUnitType.Pixel);
         }
 
         public override bool IsValid()
         {
-            return CtlWeightsInitializeFunctionParam.IsValid();
+            return true;
         }
 
         public override void SaveConfig()

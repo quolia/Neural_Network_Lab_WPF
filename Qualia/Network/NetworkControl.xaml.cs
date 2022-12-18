@@ -379,24 +379,7 @@ namespace Qualia.Controls
                         neuron.NegativeTargetValue = ctlNeurons[neuronInd].NegativeTargetValue;
                     }
                     
-                    if (layer.Previous == null) // Input layer.
-                    {
-                        neuron.WeightsInitializer = _inputLayer.WeightsInitializeFunction;
-                        neuron.WeightsInitializerParam = _inputLayer.WeightsInitializeFunctionParam;
-                    }
-                    else
-                    {
-                        neuron.WeightsInitializer = ctlNeurons[neuronInd].WeightsInitializeFunction;
-                        neuron.WeightsInitializerParam = ctlNeurons[neuronInd].WeightsInitializeFunctionParam;
-                    }
-
-                    double initValue = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam);
-                    if (!InitializeFunction.IsSkipValue(initValue))
-                    {
-                        neuron.Weights.ForEach(w => w.Weight = neuron.WeightsInitializer.Do(neuron.WeightsInitializerParam));
-                    }
-
-                    if (!isCopy && prevLayer != null)// && prevLayer.Neurons.Count > 0)
+                    if (!isCopy && prevLayer != null)
                     {
                         neuron.WeightsToPreviousLayer = new(prevLayer.Neurons.Count);
 

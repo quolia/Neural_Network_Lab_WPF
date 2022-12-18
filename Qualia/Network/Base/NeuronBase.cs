@@ -137,9 +137,6 @@ namespace Qualia.Controls
             }
         }
 
-        abstract public InitializeFunction WeightsInitializeFunction { get; set; }
-        abstract public double WeightsInitializeFunctionParam { get; set; }
-
         abstract public ActivationFunction ActivationFunction { get; set; }
         abstract public double ActivationFunctionParam { get; set; }
         abstract public double PositiveTargetValue { get; set; }
@@ -187,9 +184,6 @@ namespace Qualia.Controls
 
             neuron.ActivationFunction = ActivationFunction;
             neuron.ActivationFunctionParam = ActivationFunctionParam;
-
-            neuron.WeightsInitializeFunction = WeightsInitializeFunction;
-            neuron.WeightsInitializeFunctionParam = WeightsInitializeFunctionParam;
 
             if (neuron is OutputNeuronControl && this is OutputNeuronControl)
             {
