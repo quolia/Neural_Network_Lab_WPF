@@ -985,6 +985,12 @@ namespace Qualia.Tools
 
             private static readonly MNISTControl s_control = new();
 
+            private static int _minNumber;
+            private static int _maxNumber;
+
+            private static bool _isPreventRepetition;
+            private static int _prevTargetOutputNeuronId = -1;
+
             public Control GetVisualControl() => s_control;
 
             public int GetPointsRearrangeSnap() => 28;
@@ -993,12 +999,13 @@ namespace Qualia.Tools
 
             public void ApplyChanges()
             {
-                //
+                _minNumber = s_control.MinNumber;
+                _maxNumber = s_control.MaxNumber;
             }
 
             public void SetIsPreventRepetition(bool isPreventDataRepetition)
             {
-                //TODO
+                _isPreventRepetition = isPreventDataRepetition;
             }
 
             public void SetConfig(Config config) => s_control.SetConfig(config);
@@ -1025,44 +1032,67 @@ namespace Qualia.Tools
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Do(NetworkDataModel networkModel, DistributionFunction distributionFunction, double distributionFunctionParam)
+            public static void Do(NetworkDataModel network, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
-                double randNumber = distributionFunction.Do(distributionFunctionParam);
+                int intNumber;
 
-                /* todo
-                randNumber = (1 + _maxCrossesAmountToCount - _minCrossesAmountToCount) * randNumber + _minCrossesAmountToCount;
+                while (true)
+                { 
+                    double randNumber = distributionFunction.Do(distributionFunctionParam);
 
-                var intNumber = (int)randNumber;
+                    randNumber = (1 + _maxNumber - _minNumber) * randNumber + _minNumber;
 
-                intNumber = (int)randNumber;
+                    intNumber = (int)randNumber;
 
-                if (intNumber < _minCrossesAmountToCount)
-                {
-                    intNumber = _minCrossesAmountToCount;
+                    if (intNumber < _minNumber)
+                    {
+                        intNumber = _minNumber;
+                    }
+                    else if (intNumber > _maxNumber)
+                    {
+                        intNumber = _maxNumber;
+                    }
+
+                    if (!_isPreventRepetition
+                        || intNumber != _prevTargetOutputNeuronId
+                        || _maxNumber == _minNumber)
+                    {
+                        _prevTargetOutputNeuronId = network.TargetOutputNeuronId;
+                        break;
+                    }
                 }
-                else if (intNumber > _maxCrossesAmountToCount)
-                {
-                    intNumber = _maxCrossesAmountToCount;
-                }
-                */
 
-                var image = s_control.Images[(int)(s_control.Images.Count * distributionFunction.Do(distributionFunctionParam))];
-                var count = networkModel.Layers.First.Neurons.Count;
+                var rand = Rand.RandomFlat.NextDouble();
+
+                var id = (int)(s_control.Images.Count * rand);
+                var image = s_control.Images[id];
+                while (image.Label != intNumber)
+                {
+                    ++id;
+                    if (id == s_control.Images.Count)
+                    {
+                        id = 0;
+                    }
+
+                    image = s_control.Images[id];
+                }
+
+                var count = network.Layers.First.Neurons.Count;
 
                 for (int i = 0; i < count; ++i)
                 {
-                    networkModel.Layers.First.Neurons[i].X = networkModel.InputInitial1 * image.Image[i]; // ?
-                    networkModel.Layers.First.Neurons[i].Activation = networkModel.InputInitial1 * image.Image[i];
+                    network.Layers.First.Neurons[i].X = network.InputInitial1 * image.Image[i] / 255; // ?
+                    network.Layers.First.Neurons[i].Activation = network.InputInitial1 * image.Image[i] / 255;
                 }
 
-                var neuron = networkModel.Layers.Last.Neurons.First;
+                network.TargetOutputNeuronId = image.Label - _minNumber;
+
+                var neuron = network.Layers.Last.Neurons.First;
                 while (neuron != null)
                 {
-                    neuron.Target = (neuron.Id == image.Label) ? neuron.PositiveTargetValue : neuron.NegativeTargetValue;
+                    neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? neuron.PositiveTargetValue : neuron.NegativeTargetValue;
                     neuron = neuron.Next;
                 }
-
-                networkModel.TargetOutputNeuronId = image.Label;
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();

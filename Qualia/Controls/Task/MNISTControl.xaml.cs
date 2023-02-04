@@ -123,7 +123,11 @@ namespace Qualia.Controls
             Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
         }
 
-        override public void InvalidateValue() => throw new InvalidOperationException();
+        //override public void InvalidateValue() => throw new InvalidOperationException();
+        override public void InvalidateValue()
+        {
+            this.GetConfigParams().ForEach(p => p.InvalidateValue());
+        }
 
         //
 

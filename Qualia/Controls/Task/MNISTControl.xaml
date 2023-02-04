@@ -21,14 +21,14 @@
                                Grid.Column="1"
                                x:Name="CtlMinNumber"
                                MinValue="0"
-                               MaxValue="8"
+                               MaxValue="9"
                                DefaultValue="0" />
         <local:TextControl Grid.Row="1"
                            Text="Max number:" />
         <local:IntValueControl Grid.Row="1"
                                Grid.Column="1"
                                x:Name="CtlMaxNumber"
-                               MinValue="1"
+                               MinValue="0"
                                MaxValue="9"
                                DefaultValue="9" />
     </Grid>
