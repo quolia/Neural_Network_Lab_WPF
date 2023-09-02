@@ -244,7 +244,7 @@ namespace Qualia.Controls
 
             if (_notify)
             {
-                //throw new InvalidOperationException();
+                //throw new InvalidOperationException(); // this could be if some action causes another actions
             }
 
             try
@@ -431,11 +431,11 @@ namespace Qualia.Controls
                 }
                 else if (param == Notification.ParameterChanged.TaskDistributionFunction)
                 {
-
+                    //
                 }
                 else if (param == Notification.ParameterChanged.TaskDistributionFunctionParam)
                 {
-
+                    //
                 }
                 else // Default handler.
                 {
