@@ -13,7 +13,8 @@ namespace Qualia.Controls
         public TextControl()
         {
             //Padding = new(3);
-            Margin = new(0);
+            Margin = new(0, 0, 0, 0);
+            Padding = new(3, 3, 0, 3);
         }
     }
 }
