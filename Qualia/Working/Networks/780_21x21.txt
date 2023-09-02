@@ -319,10 +319,10 @@ Networks:637976622334276985,638292548967553035
 638292548967553035.SelectedLayerIndex:3
 SelectedNetworkIndex:1
 InputDataPresenter.TaskFunction:DotsCount
-InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:GaussNormal
-InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.GaussNormal.Param:1
+InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom
+InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1
 InputDataPresenter.TaskFunction.DotsCount.IsPreventRepetition:0
 InputDataPresenter.TaskFunction.DotsCount.CommonDotsAmount:784
 InputDataPresenter.TaskFunction.DotsCount.MinDotsAmountToCount:0
 InputDataPresenter.TaskFunction.DotsCount.MaxDotsAmoutToCount:10
-InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1
+InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.GaussNormal.Param:1

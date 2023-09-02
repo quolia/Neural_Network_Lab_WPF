@@ -48,7 +48,8 @@ namespace Qualia.Controls
                 Cancel = (isRunning) =>
                 {
                     TextChanged -= Value_OnChanged;
-                    Undo();
+                    //Undo();
+                    LoadConfig();
                     TextChanged += Value_OnChanged;
 
                     if (IsValidInput(Constants.InvalidDouble))
