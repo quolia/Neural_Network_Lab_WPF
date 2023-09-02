@@ -221,7 +221,6 @@ namespace Qualia.Model
                 newLayer = newLayer.Next;
             }
 
-
             return newNetwork;
         }
 

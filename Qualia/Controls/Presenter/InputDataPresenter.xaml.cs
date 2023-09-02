@@ -17,7 +17,10 @@ namespace Qualia.Controls
         private readonly int _pointSize;
         private int _pointsCount;
         private double _threshold;
-        private double[] _data;
+
+        // Array to keep input values.
+        private double[] _data; 
+
         private double[] _stat;
 
         private readonly System.Windows.Media.Pen _penBlack = Draw.GetPen(in ColorsX.Black);
@@ -257,7 +260,7 @@ namespace Qualia.Controls
 
         public void SetInputDataAndDraw(NetworkDataModel network)
         {
-            _threshold = network.InputThreshold;
+            _threshold = network.InputInitial0;// network.InputThreshold;
             var count = network.Layers.First.Neurons.Count;
 
             if (_data == null || _data.Length != count)
@@ -306,7 +309,7 @@ namespace Qualia.Controls
                 _stat = new double[_pointsCount];
             }
 
-            double maxStat = MaxStat();
+            double maxStat = GetMaxStat();
 
             for (int i = 0; i < _pointsCount; ++i)
             {
@@ -321,15 +324,17 @@ namespace Qualia.Controls
                 }
                 else
                 {
+                    var statValue = maxStat > 0 ? _stat[i] / maxStat : 0;
+
                     DrawPoint(pointPosition.X,
                               pointPosition.Y,
-                              maxStat > 0 ? _stat[i] / maxStat : 0,
+                              statValue,
                               false);
                 }
             }
         }
 
-        private double MaxStat()
+        private double GetMaxStat()
         {
             if (_stat == null)
             {

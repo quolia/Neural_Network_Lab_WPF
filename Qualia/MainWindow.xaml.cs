@@ -244,7 +244,7 @@ namespace Qualia.Controls
 
             if (_notify)
             {
-                throw new InvalidOperationException();
+                //throw new InvalidOperationException();
             }
 
             try
@@ -428,6 +428,14 @@ namespace Qualia.Controls
                             Apply = (isRunning) => ApplyChangesToNetworks(isRunning)
                         });
                     }
+                }
+                else if (param == Notification.ParameterChanged.TaskDistributionFunction)
+                {
+
+                }
+                else if (param == Notification.ParameterChanged.TaskDistributionFunctionParam)
+                {
+
                 }
                 else // Default handler.
                 {

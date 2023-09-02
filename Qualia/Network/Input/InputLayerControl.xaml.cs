@@ -26,7 +26,7 @@ namespace Qualia.Controls
                     .Initialize(defaultValue: 1),
 
                 CtlActivationFunction
-                    .Initialize(nameof(ActivationFunction.LogisticSigmoid)),
+                    .Initialize(nameof(ActivationFunction.Identiy)),
 
                 CtlActivationFunctionParam
                     .Initialize(defaultValue: 1),
@@ -98,7 +98,7 @@ namespace Qualia.Controls
 
         public void SetTaskFunction(TaskFunction taskFunction)
         {
-            var newNeuronsCount = taskFunction.VisualControl.GetInputCount();
+            var newNeuronsCount = taskFunction != null ? taskFunction.VisualControl.GetInputCount() : 0;
 
             if (Neurons.Count != newNeuronsCount)
             {

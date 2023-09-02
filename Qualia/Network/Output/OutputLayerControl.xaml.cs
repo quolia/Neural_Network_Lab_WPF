@@ -99,7 +99,7 @@ namespace Qualia.Controls
 
         public void SetTaskFunction(TaskFunction taskFunction)
         {
-            var newCount = taskFunction.VisualControl.GetOutputClasses().Count;
+            var newCount = taskFunction != null ? taskFunction.VisualControl.GetOutputClasses().Count : 0;
             var count = Neurons.Count;
 
             if (newCount > count)

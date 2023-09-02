@@ -156,7 +156,7 @@ namespace Qualia.Tools
             public static readonly ActivationFunction Instance = new(&Do, &Derivative);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static double Do(double x, double a) => x < 0 ? 0 : 1;
+            public static double Do(double x, double a) => x <= 0 ? 0 : 1;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static double Derivative(double x, double f, double a) => 0;

@@ -158,7 +158,7 @@ namespace Qualia.Tools
 
                 while (neuron != null)
                 {
-                    neuron.X = network.InputInitial0; // ?
+                    neuron.X = network.InputInitial0;
                     neuron.Activation = network.InputInitial0;
                     neuron = neuron.Next;
                 }
@@ -1081,8 +1081,13 @@ namespace Qualia.Tools
 
                 for (int i = 0; i < count; ++i)
                 {
-                    network.Layers.First.Neurons[i].X = network.InputInitial1 * image.Image[i] / 255; // ?
-                    network.Layers.First.Neurons[i].Activation = network.InputInitial1 * image.Image[i] / 255;
+                    var n = network.Layers.First.Neurons[i];
+
+                    //network.Layers.First.Neurons[i].X = image.Image[i];// > 0 ? network.InputInitial1 : network.InputInitial0;
+                    //network.Layers.First.Neurons[i].Activation = image.Image[i];// > 0 ? network.InputInitial1 : network.InputInitial0;
+                    //n.X = network.InputInitial1 * image.Image[i] / 255;
+                    n.Activation =
+                    n.X = n.ActivationFunction.Do(network.InputInitial1 * image.Image[i] / 255, n.ActivationFunctionParam);
                 }
 
                 network.TargetOutputNeuronId = image.Label - _minNumber;

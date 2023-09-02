@@ -332,12 +332,8 @@ namespace Qualia.Controls
                 RandomizeMode = _randomizeMode,
                 RandomizerParam = _randomizerParam,
                 LearningRate = _learningRate,
-                InputInitial0 = _inputLayer.ActivationFunction.Do(_inputLayer.Initial0,
-                                                                  _inputLayer.ActivationFunctionParam),
-
-                InputInitial1 = _inputLayer.ActivationFunction.Do(_inputLayer.Initial1,
-                                                                  _inputLayer.ActivationFunctionParam),
-
+                InputInitial0 = _inputLayer.Initial0,
+                InputInitial1 = _inputLayer.Initial1,
                 CostFunction = CostFunction.GetInstance(CtlCostFunction),
                 BackPropagationStrategy = BackPropagationStrategy.GetInstance(CtlBackPropagationStrategy),
                 IsAdjustFirstLayerWeights = _inputLayer.IsAdjustFirstLayerWeights,
