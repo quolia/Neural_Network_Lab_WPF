@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Qualia.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace Qualia.Tools
 {
@@ -133,6 +135,8 @@ namespace Qualia.Tools
                     break;
                 }
 
+                List<ApplyAction> prevCancelActions = new();
+
                 foreach (var action in actions)
                 {
                     if (!_cancelActions.ToList().Contains(action))
@@ -140,14 +144,19 @@ namespace Qualia.Tools
                         throw new InvalidOperationException();
                     }
 
-                    action.ExecuteCancel(isRunning);
+                    if (!prevCancelActions.Any(x => x.Sender == action.Sender && action.Sender is TextBox))
+                    {
+                        action.ExecuteCancel(isRunning);
+                    }
+
                     Remove(action);
+                    prevCancelActions.Add(action);
                 }
 
                 actions = _cancelActions.ToList();
                 if (actions.Any())
                 {
-                    throw new InvalidOperationException();
+                    //throw new InvalidOperationException();
                 }
             }
 
