@@ -156,7 +156,7 @@ namespace Qualia.Tools
                 actions = _cancelActions.ToList();
                 if (actions.Any())
                 {
-                    //throw new InvalidOperationException(); // this could be if cancel action creates another cancel action
+                    throw new InvalidOperationException(); // this could be if cancel action creates another cancel action
                 }
             }
 

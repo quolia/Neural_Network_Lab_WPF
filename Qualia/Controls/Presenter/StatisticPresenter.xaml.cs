@@ -9,6 +9,8 @@ namespace Qualia.Controls
     {
         private static readonly StringBuilder s_stringBuilder = new();
 
+        private double _maxWidth;
+
         public StatisticsPresenter()
             : base (0)
         {
@@ -182,6 +184,8 @@ namespace Qualia.Controls
 
             if (stats == null)
             {
+                _maxWidth = 0;
+                CtlText.Width = 0;
                 return;
             }
 
@@ -198,6 +202,12 @@ namespace Qualia.Controls
             }
 
             CtlText.Text = s_stringBuilder.ToString();
+            if (CtlText.ActualWidth > _maxWidth)
+            {
+                _maxWidth = CtlText.ActualWidth;
+            }
+
+            CtlText.Width = _maxWidth;
         }
 
         public void Clear()

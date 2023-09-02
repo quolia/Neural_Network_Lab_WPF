@@ -707,6 +707,8 @@ namespace Qualia.Controls
                                     CtlShowOnlyUnchangedWeights.Value,
                                     CtlShowActivationLabels.Value);
 
+            CtlStatisticsPresenter.Clear();
+
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
             GC.WaitForFullGCComplete();
