@@ -532,6 +532,7 @@ namespace Qualia.Controls
                 }
 
                 ActionManager.Instance.Execute(_isRunning);
+                ApplyChangesToNetworks(_isRunning);
                 ActionManager.Instance.Clear();
 
                 TurnApplyChangesButtonOn(false);
