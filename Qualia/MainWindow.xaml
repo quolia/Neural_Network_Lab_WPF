@@ -78,7 +78,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" MinWidth="20" />
-                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <local:PlotterPresenter x:Name="CtlPlotPresenter"/>
                     <local:StatisticsPresenter Grid.Column="1" x:Name="CtlStatisticsPresenter" />

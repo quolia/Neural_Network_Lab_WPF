@@ -41,6 +41,8 @@ namespace Qualia.Controls
 
         private List<string> _classes;
 
+        private double _maxWidth;
+
         public MatrixPresenter()
             : base(0)
         {
@@ -116,6 +118,9 @@ namespace Qualia.Controls
                                                               POINTS_SIZE));
                 }
             }
+
+            _maxWidth = matrix.Output.Length * POINT_SIZE + AXIS_OFFSET + 11 + BOUND;
+            Width = _maxWidth;
 
             for (int x = 0; x < matrix.Output.Length; ++x)
             {
