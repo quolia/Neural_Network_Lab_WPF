@@ -1384,7 +1384,7 @@ namespace Qualia.Controls
             else
             {
                 var networkModel = _networksManager.SelectedNetworkModel;
-                CtlNetworkPresenter.RenderStanding(networkModel == null ? null : networkModel.GetCopyToDraw());
+                CtlNetworkPresenter.RenderStanding(networkModel?.GetCopyToDraw());
             }
         }
 
