@@ -712,7 +712,7 @@ namespace Qualia.Controls
 
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
-            GC.WaitForFullGCComplete();
+            GC.WaitForPendingFinalizers();
 
             _rounds = 0;
             _startTime = Stopwatch.StartNew();

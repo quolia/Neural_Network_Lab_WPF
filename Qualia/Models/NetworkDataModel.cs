@@ -1,6 +1,5 @@
 ﻿using Qualia.Controls;
 using Qualia.Tools;
-using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 
