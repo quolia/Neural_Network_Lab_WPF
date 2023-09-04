@@ -229,7 +229,7 @@ Networks:638294369390675487,638294371445871030
 638294371447372442.ActivationFunction:SymmetricSigmoid
 638294371447372442.ActivationFunctionParam:1
 638294371445871030.SelectedLayerIndex:0
-SelectedNetworkIndex:0
+SelectedNetworkIndex:1
 InputDataPresenter.TaskFunction:DotsCount
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction:FlatRandom
 InputDataPresenter.TaskFunction.DotsCount.DistributionFunction.FlatRandom.Param:1
