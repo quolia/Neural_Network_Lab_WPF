@@ -51,12 +51,12 @@ namespace Qualia.Controls
 
         override public void SetConfig(Config config)
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
+            Qualia.Tools.Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetConfig(config));
         }
 
         override public void LoadConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
+            Qualia.Tools.Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.LoadConfig());
 
             if (!File.Exists(_imagesPath))
             {
@@ -104,12 +104,12 @@ namespace Qualia.Controls
 
         override public void SaveConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
+            Qualia.Tools.Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SaveConfig());
         }
 
         override public void RemoveFromConfig()
         {
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
+            Qualia.Tools.Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.RemoveFromConfig());
         }
 
         override public bool IsValid()
@@ -120,7 +120,7 @@ namespace Qualia.Controls
         override public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChange)
         {
             this.SetUIHandler(onChange);
-            Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
+            Qualia.Tools.Range.ForEach(this.FindVisualChildren<IConfigParam>(), param => param.SetOnChangeEvent(Parameter_OnChanged));
         }
 
         override public void InvalidateValue()

@@ -168,7 +168,7 @@ namespace Qualia.Controls
 
         public override void SetAllNeuronsSelected(bool isSelected)
         {
-            Range.ForEach(Neurons, n => n.IsSelected = isSelected);
+            Qualia.Tools.Range.ForEach(Neurons, n => n.IsSelected = isSelected);
         }
     }
 }

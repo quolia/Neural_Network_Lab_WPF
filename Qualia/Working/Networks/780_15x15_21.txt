@@ -183,7 +183,7 @@ Networks:638294024995130387,638294100972158526
 638294026018847784.ActivationFunctionParam:1
 638294026019952945.ActivationFunction:SymmetricSigmoid
 638294026019952945.ActivationFunctionParam:1
-638294024995130387.SelectedLayerIndex:0
+638294024995130387.SelectedLayerIndex:3
 638294100972158526.RandomizeFunction:Centered
 638294100972158526.CostFunction:MeanSquaredError
 638294100972158526.BackPropagationStrategy:Always

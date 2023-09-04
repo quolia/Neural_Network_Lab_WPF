@@ -149,7 +149,7 @@ namespace Qualia.Controls
         {
             var networkIds = Config.Get(Constants.Param.Networks, new long[] { Constants.UnknownId });
 
-            Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
+            Qualia.Tools.Range.For(networkIds.Length, i => AddNetwork(networkIds[i]));
             _Tabs.SelectedIndex = Config.Get(Constants.Param.SelectedNetworkIndex, 0) + 1;
 
             RefreshNetworks(null);

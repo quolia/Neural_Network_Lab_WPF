@@ -107,7 +107,7 @@ namespace Qualia.Controls
 
                 //if (taskFunction != null)
                 {
-                    Range.For(newNeuronsCount, _ => Neurons.Insert(0, AddNeuron()));
+                    Qualia.Tools.Range.For(newNeuronsCount, _ => Neurons.Insert(0, AddNeuron()));
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace Qualia.Controls
 
         public override void SetAllNeuronsSelected(bool isSelected)
         {
-            Range.ForEach(Neurons, n => n.IsSelected = isSelected);
+            Qualia.Tools.Range.ForEach(Neurons, n => n.IsSelected = isSelected);
         }
 
         override public void CopyTo(LayerBaseControl layer)

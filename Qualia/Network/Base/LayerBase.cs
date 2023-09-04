@@ -31,7 +31,7 @@ namespace Qualia.Controls
         public void RefreshNeuronsOrdinalNumbers()
         {
             int ordinalNumber = 0;
-            Range.ForEach(Neurons, n => n.SetOrdinalNumber(++ordinalNumber));
+            Qualia.Tools.Range.ForEach(Neurons, n => n.SetOrdinalNumber(++ordinalNumber));
         }
 
         private void LayerBaseControl_Loaded(object sender, RoutedEventArgs e)

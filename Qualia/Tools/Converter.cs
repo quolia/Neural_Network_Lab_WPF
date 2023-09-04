@@ -58,7 +58,7 @@ namespace Qualia.Tools
             return defaultValue;
         }
 
-        public static string DoubleToText(double value, string format = "F20", bool trim = true)
+        public static string DoubleToText(double value, string format = "G", bool trim = true)
         {
             if (double.IsNaN(value))
             {
