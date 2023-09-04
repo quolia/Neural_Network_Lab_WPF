@@ -86,13 +86,16 @@ namespace Qualia.Model
             var lastLayer = Layers.Last;
             double sum;
 
+            NeuronDataModel nextLayerNeuron;
+            ForwardNeuron AxW;
+
             while (layer != lastLayer)
             {
-                var nextLayerNeuron = layer.Next.Neurons.First;
+                nextLayerNeuron = layer.Next.Neurons.First;
                 while (nextLayerNeuron != null)
                 {
                     sum = 0;
-                    var AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
+                    AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
                         sum += AxW.AxW;
@@ -122,15 +125,18 @@ namespace Qualia.Model
             var layer = lastLayer;
             var finalLayer = IsAdjustFirstLayerWeights ? Layers.First : Layers.First.Next;
 
+            ForwardNeuron AxW;
+            NeuronDataModel prevNeuron;
+
             while (layer != finalLayer)
             {
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var AxW = neuron.WeightsToPreviousLayer.First;
+                    AxW = neuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
-                        var prevNeuron = AxW.Neuron;
+                        prevNeuron = AxW.Neuron;
                         if (prevNeuron.Activation != 0)
                         {
                             prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
@@ -147,7 +153,7 @@ namespace Qualia.Model
                 neuron = layer.Neurons.First;
                 while (neuron != null)
                 {
-                    var AxW = neuron.WeightsToPreviousLayer.First;
+                    AxW = neuron.WeightsToPreviousLayer.First;
                     while (AxW != null)
                     {
                         if (AxW.Neuron.Activation != 0)
