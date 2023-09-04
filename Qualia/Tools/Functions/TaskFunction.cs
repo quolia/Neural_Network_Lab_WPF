@@ -164,7 +164,8 @@ namespace Qualia.Tools
 
                 while (neuron != null)
                 {
-                    neuron.Activation = neuron.X = network.InputInitial0;
+                    neuron.X = network.InputInitial0;
+                    neuron.Activation = neuron.ActivationFunction.Do(network.InputInitial0, neuron.ActivationFunctionParam);
                     neuron = neuron.Next;
                 }
 
@@ -172,12 +173,13 @@ namespace Qualia.Tools
                 {
                     neuron = neurons[Rand.RandomFlat.Next(neuronsCount)];
 
-                    while (neuron.Activation == network.InputInitial1)
+                    while (neuron.X == network.InputInitial1)
                     {
                         neuron = neuron.Next ?? neurons.First;
                     }
 
-                    neuron.Activation = neuron.X = network.InputInitial1;
+                    neuron.X = network.InputInitial1;
+                    neuron.Activation = neuron.ActivationFunction.Do(network.InputInitial1, neuron.ActivationFunctionParam);
                     --intNumber;
                 }
 
