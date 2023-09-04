@@ -8,6 +8,7 @@ namespace Qualia.Controls
     sealed public partial class StatisticsPresenter : BaseUserControl
     {
         private static readonly StringBuilder s_stringBuilder = new();
+        readonly Dictionary<string, string> _stat = new(30);
 
         private double _maxWidth;
 
@@ -25,8 +26,6 @@ namespace Qualia.Controls
                 return null;
             }
 
-            Dictionary<string, string> stat = new(30);
-
             var remainingTime = "...";
 
             if (statistics.Percent > 0)
@@ -35,71 +34,71 @@ namespace Qualia.Controls
                 remainingTime = TimeSpan.FromTicks(linerRemains).ToString(Culture.TimeFormat, Culture.Current);
             }
 
-            stat.Add("Time / remaining",
-                     startTimeElapsed.ToString(Culture.TimeFormat, Culture.Current) + " / " + remainingTime);
+            _stat["Time / remaining"] = 
+                     startTimeElapsed.ToString(Culture.TimeFormat, Culture.Current) + " / " + remainingTime;
 
-            stat.Add("Learning rate",
-                     Converter.DoubleToText(learningRate));
+            _stat["Learning rate"] =
+                     Converter.DoubleToText(learningRate);
 
-            stat.Add("1", null);
+            _stat["1"] = null;
 
             if (statistics.LastGoodOutput != null)
             {
-                stat.Add("Last good output",
+                _stat["Last good output"] =
                          $"{statistics.LastGoodInput}={statistics.LastGoodOutput} " +
-                         $"({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N4")} %)");
+                         $"({Converter.DoubleToText(100 * statistics.LastGoodOutputActivation, "N4")} %)";
 
-                stat.Add("Last good cost",
-                         Converter.DoubleToText(statistics.LastGoodCost, "N6"));
+                _stat["Last good cost"] =
+                         Converter.DoubleToText(statistics.LastGoodCost, "N6");
             }
             else
             {
-                stat.Add("Last good output", "none");
-                stat.Add("Last good cost", "none");
+                _stat["Last good output"] = "none";
+                _stat["Last good cost"] = "none";
             }
 
-            stat.Add("2", null);
+            _stat["2"] = null;
 
             if (statistics.LastBadOutput != null)
             {
-                stat.Add("Last bad output",
+                _stat["Last bad output"] =
                          $"{statistics.LastBadInput}={statistics.LastBadOutput} " +
-                         $"({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N4")} %)");
+                         $"({Converter.DoubleToText(100 * statistics.LastBadOutputActivation, "N4")} %)";
 
-                stat.Add("Last bad cost",
-                         Converter.DoubleToText(statistics.LastBadCost, "N6"));
+                _stat["Last bad cost"] =
+                         Converter.DoubleToText(statistics.LastBadCost, "N6");
             }
             else
             {
-                stat.Add("Last bad output", "none");
-                stat.Add("Last bad cost", "none");
+                _stat["Last bad output"] = "none";
+                _stat["Last bad cost"] = "none";
             }
 
-            stat.Add("3", null);
+            _stat["3"] = null;
 
-            stat.Add("Average cost",
-                     Converter.DoubleToText(statistics.CostAvg, "N6"));
+            _stat["Average cost"] =
+                     Converter.DoubleToText(statistics.CostAvg, "N6");
 
-            stat.Add("4", null);
+            _stat["4"] = null;
 
-            stat.Add("Rounds",
-                     Converter.RoundsToString(statistics.Rounds));
+            _stat["Rounds"] =
+                     Converter.RoundsToString(statistics.Rounds);
 
-            stat.Add("Percent / Max",
+            _stat["Percent / Max"] =
                      Converter.DoubleToText(statistics.Percent, "N6")
                      + " / "
                      + Converter.DoubleToText(statistics.MaxPercent, "N6")
-                     + " %");
+                     + " %";
 
-            stat.Add("4.5", null);
+            _stat["4.5"] = null;
 
-            stat.Add("First 100%, time (round)",
+            _stat["First 100%, time (round)"] =
                       statistics.First100PercentOnTick > 0
                       ? TimeSpan.FromTicks(statistics.First100PercentOnTick).ToString(Culture.TimeFormat, Culture.Current)
                                                                              + " ("
                                                                              + Converter.RoundsToString(statistics.First100PercentOnRound)
                                                                              + ")"
-                      : "...");
+                      : "...";
 
             string currentPeriod;
 
@@ -128,54 +127,54 @@ namespace Qualia.Controls
                 }
             }
 
-            stat.Add("Current 100% period, time (from round)", currentPeriod);
+            _stat["Current 100% period, time (from round)"] = currentPeriod;
 
-            stat.Add("5", null);
+            _stat["5"] = null;
 
             double totalRoundsPerSecond = statistics.TotalTicksElapsed > 0
                                           ? statistics.Rounds / TimeSpan.FromTicks(statistics.TotalTicksElapsed).TotalSeconds
                                           : 0;
-            stat.Add("Total rounds/sec",
+            _stat["Total rounds/sec"] =
                      string.Format(Culture.Current,
-                                   Converter.IntToText((long)totalRoundsPerSecond)));
+                                   Converter.IntToText((long)totalRoundsPerSecond));
 
-            stat.Add("Microseconds / pure round",
-                     Converter.IntToText(statistics.MicrosecondsPerPureRound));
+            _stat["Microseconds / pure round"] =
+                     Converter.IntToText(statistics.MicrosecondsPerPureRound);
 
-            stat.Add("Current / Max pure rounds/sec",
+            _stat["Current / Max pure rounds/sec"] =
                      string.Format(Culture.Current,
-                                   $"{(int)statistics.CurrentPureRoundsPerSecond} / {(int)statistics.MaxPureRoundsPerSecond}"));
+                                   $"{(int)statistics.CurrentPureRoundsPerSecond} / {(int)statistics.MaxPureRoundsPerSecond}");
 
-            stat.Add("Current / Max lost rounds/sec",
+            _stat["Current / Max lost rounds/sec"] =
                      string.Format(Culture.Current,
-                                   $"{(int)statistics.CurrentLostRoundsPerSecond} / {(int)statistics.MaxLostRoundsPerSecond}"));
+                                   $"{(int)statistics.CurrentLostRoundsPerSecond} / {(int)statistics.MaxLostRoundsPerSecond}");
 
-            stat.Add("6", null);
+            _stat["6"] = null;
 
-            stat.Add("Render time, mcsec / Max / Frames lost, %", string.Empty);
-            stat.Add("Network & Data",
+            _stat["Render time, mcsec / Max / Frames lost, %"] = string.Empty;
+            _stat["Network & Data"] =
                      Converter.IntToText(TimeSpan.FromTicks(statisticsAboutRender.NetworkRenderTime).TotalMicroseconds())
                      + " / "
                      + Converter.IntToText(TimeSpan.FromTicks(statisticsAboutRender.NetworkRenderTimeMax).TotalMicroseconds())
                      + " / "
-                     + Converter.IntToText(statisticsAboutRender.NetworkFramesLostPercent()));
+                     + Converter.IntToText(statisticsAboutRender.NetworkFramesLostPercent());
 
-            stat.Add("Statistics & Plotter",
+            _stat["Statistics & Plotter"] =
                      Converter.IntToText(TimeSpan.FromTicks(statisticsAboutRender.StatisticsRenderTime).TotalMicroseconds())
                      + " / "
                      + Converter.IntToText(TimeSpan.FromTicks(statisticsAboutRender.StatisticsRenderTimeMax).TotalMicroseconds())
                      + " / "
-                     + Converter.IntToText(statisticsAboutRender.StatisticsFramesLostPercent()));
+                     + Converter.IntToText(statisticsAboutRender.StatisticsFramesLostPercent());
 
-            stat.Add("Error matrix",
+            _stat["Error matrix"] =
                      Converter.IntToText(TimeSpan.FromTicks(statisticsAboutRender.ErrorMatrixRenderTime).TotalMicroseconds())
                      + " / "
                      + Converter.IntToText(TimeSpan.FromTicks(statisticsAboutRender.ErrorMatrixRenderTimeMax).TotalMicroseconds())
                      + " / "
-                     + Converter.IntToText(statisticsAboutRender.ErrorMatrixFramesLostPercent()));
+                     + Converter.IntToText(statisticsAboutRender.ErrorMatrixFramesLostPercent());
 
-            Draw(stat);
-            return stat;
+            Draw(_stat);
+            return _stat;
         }
 
         public void Draw(Dictionary<string, string> stats)

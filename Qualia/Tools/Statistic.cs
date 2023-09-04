@@ -127,7 +127,7 @@ namespace Qualia.Tools
 
     public class RendererStatistics
     {
-        public static RendererStatistics Instance = new();
+        public static RendererStatistics Instance { get; private set; } = new();
 
         public long NetworkRenderTime;
         public long NetworkRenderTimeMax;

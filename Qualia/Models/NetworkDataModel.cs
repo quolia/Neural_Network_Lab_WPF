@@ -28,7 +28,6 @@ namespace Qualia.Model
         public Statistics Statistics;
         public PlotterStatistics PlotterStatistics;
         public ErrorMatrix ErrorMatrix;
-        public Dictionary<string, string> LastStatistics;
 
         private NetworkDataModel _copy;
 

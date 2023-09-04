@@ -1102,7 +1102,6 @@ namespace Qualia.Controls
                         CtlPlotPresenter.DrawPlot(firstNetwork, network);
 
                         var lastStats = CtlStatisticsPresenter.DrawStatistics(statisticsToRender, statisticsAboutRender.Copy(), learningRate, _startTime.Elapsed);
-                        network.LastStatistics = lastStats;
 
                         CtlTaskSolutionsPresenter.ShowSolutionsData(solutionsData);
 
