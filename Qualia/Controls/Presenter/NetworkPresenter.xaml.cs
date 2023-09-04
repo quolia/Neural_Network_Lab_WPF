@@ -158,7 +158,6 @@ namespace Qualia.Controls
                     {
                         Pen pen = null;
                         double opacity = 1;
-                        const double opacityFactor = 1000;
 
                         bool isWeightChanged = false;
                         var weightModel = neuron1.WeightTo(neuron2);
@@ -174,7 +173,6 @@ namespace Qualia.Controls
                         else
                         {
                             prevWeight = 0;
-                            //_prevWeights.Add(weightModel, weightModel.Weight);
                             _prevWeights.Add(weightModel, 0);
                             isWeightChanged = true;
                         }
@@ -185,38 +183,6 @@ namespace Qualia.Controls
                             if (changeFraction < 0.00001 && changeFraction > -0.00001)
                             {
                                 isWeightChanged = false;
-                                //opacity = 1 / opacityFactor / 2;
-                            }
-
-                            //opacity = MathX.Max(0, opacity - MathX.Abs(changeFraction * opacityFactor));
-                            //isWeightChanged = false;
-
-                            if (false)
-                            {
-                                if (changeFraction < 0.000001 && changeFraction > -0.000001)
-                                {
-                                    isWeightChanged = false;
-                                }
-                                else if (changeFraction < 0.00001 && changeFraction > -0.00001)
-                                {
-                                    isWeightChanged = false;
-                                    opacity = 1 / opacityFactor;
-                                }
-                                else if (changeFraction < 0.0001 && changeFraction > -0.0001)
-                                {
-                                    isWeightChanged = false;
-                                    opacity = 1 / opacityFactor / 2;
-                                }
-                                else if (changeFraction < 0.001 && changeFraction > -0.001)
-                                {
-                                    isWeightChanged = false;
-                                    opacity = 1 / opacityFactor / 3;
-                                }
-                                else if (changeFraction < 0.01 && changeFraction > -0.01)
-                                {
-                                    isWeightChanged = false;
-                                    opacity = 1 / opacityFactor / 4;
-                                }
                             }
                         }
 

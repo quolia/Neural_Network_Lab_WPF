@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using static Qualia.Tools.Threads;
 
 namespace Qualia.Controls
 {
@@ -71,7 +72,7 @@ namespace Qualia.Controls
 
         private void MainWindow_OnLoaded(object sender, EventArgs e)
         {
-            Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
+            //Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
             FileHelper.InitWorkingDirectories();
 
@@ -727,7 +728,7 @@ namespace Qualia.Controls
                 Priority = ThreadPriority.Highest,
                 IsBackground = false
             };
-            _runNetworksThread.SetApartmentState(ApartmentState.STA);
+            _runNetworksThread.SetApartmentState(ApartmentState.MTA);
             _runNetworksThread.Start(new object[] { Threads.Processor.None });
 
             _timeThread = new(new ThreadStart(RunTimer))
@@ -1129,9 +1130,14 @@ namespace Qualia.Controls
                             return;
                         }
 
+                        var priority = Thread.CurrentThread.Priority;
+                        Thread.CurrentThread.Priority = ThreadPriority.Highest;
+                        Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
                         doRenderErrorMatrix?.Invoke();
                         doRenderNetwork?.Invoke();
                         doRenderStatistics?.Invoke();
+                        Thread.CurrentThread.Priority = priority;
+                        Threads.SetThreadPriority(ThreadPriorityLevel.Normal);      
                     });
 
                     Thread.Sleep(1);

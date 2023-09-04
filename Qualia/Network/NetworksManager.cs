@@ -464,8 +464,6 @@ namespace Qualia.Controls
 
                 while (neuron != null)
                 {
-                    //neuron.Target = baseNeuron.Target;
-
                     if (baseNeuron.Target == baseNeuron.PositiveTargetValue)
                     {
                         neuron.Target = neuron.PositiveTargetValue;
