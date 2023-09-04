@@ -170,13 +170,10 @@ namespace Qualia.Tools
                     while (active.Activation == network.InputInitial1)
                     {
                         active = active.Next;
-                        if (active == null)
-                        {
-                            active = neurons.First;
-                        }
+                        active ??= neurons.First;
                     }
 
-                    active.X = network.InputInitial1; // ?
+                    active.X = network.InputInitial1; 
                     active.Activation = network.InputInitial1;
                     --intNumber;
                 }
