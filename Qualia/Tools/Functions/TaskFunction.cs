@@ -124,17 +124,17 @@ namespace Qualia.Tools
             public static void Do(NetworkDataModel network, DistributionFunction distributionFunction, double distributionFunctionParam)
             {
                 int intNumber;
-
                 double randNumber;
                 int targetOutputNeuronId;
+                int range = 1 + _maxDotsAmountToCount - _minDotsAmountToCount;
 
                 do
                 {
                     randNumber = distributionFunction.Do(distributionFunctionParam);
-                    randNumber = (1 + _maxDotsAmountToCount - _minDotsAmountToCount) * randNumber + _minDotsAmountToCount;
+                    randNumber = range * randNumber + _minDotsAmountToCount;
 
                     intNumber = (int)randNumber;
-
+                    
                     if (intNumber < _minDotsAmountToCount)
                     {
                         intNumber = _minDotsAmountToCount;
