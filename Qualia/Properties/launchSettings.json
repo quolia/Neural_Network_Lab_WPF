@@ -2,7 +2,7 @@
   "profiles": {
     "Qualia": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Projects\\GitHub\\quolia\\Neural_Network_Lab_WPF\\Qualia\\Working"
+      "workingDirectory": "$(ProjectDir)\\Working"
     }
   }
 }

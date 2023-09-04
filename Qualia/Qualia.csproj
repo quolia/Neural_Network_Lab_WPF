@@ -71,6 +71,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Authors>echoviser@gmail.com</Authors>
+    <Description>Neural Networks Lab.</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Controls\Presenter\PresenterControl.cs">
