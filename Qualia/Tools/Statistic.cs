@@ -74,16 +74,10 @@ namespace Qualia.Tools
             CostData.Add(new(cost, currentTick));
         }
 
-        sealed public class PlotPoint
+        sealed public class PlotPoint(double value, long timeTicks)
         {
-            public readonly double Value;
-            public readonly long TimeTicks;
-
-            public PlotPoint(double value, long timeTicks)
-            {
-                Value = value;
-                TimeTicks = timeTicks;
-            }
+            public readonly double Value = value;
+            public readonly long TimeTicks = timeTicks;
         }
 
         public class PlotPointsList : List<PlotPoint>

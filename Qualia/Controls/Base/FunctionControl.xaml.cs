@@ -1,6 +1,4 @@
 ﻿using Qualia.Tools;
-using System;
-using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -118,15 +116,9 @@ namespace Qualia.Controls
         }
     }
 
-    public class SelectedFunction
+    public class SelectedFunction(string name, double param)
     {
-        public readonly string Name;
-        public readonly double Param;
-
-        public SelectedFunction(string name, double param)
-        {
-            Name = name;
-            Param = param;
-        }
+        public readonly string Name = name;
+        public readonly double Param = param;
     }
 }

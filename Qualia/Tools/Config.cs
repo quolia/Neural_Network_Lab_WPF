@@ -312,11 +312,6 @@ namespace Qualia.Tools
                 }
 
                 var parts = line.Split(new[] { ':' });
-                //if (_fileName != "config.txt" && !parts[0].Contains("."))
-                //{
-                    //continue;                        
-                //}
-
                 if (parts.Length > 1)
                 {
                     result[parts[0]] = string.Join(":", parts.Except(parts.Take(1)));

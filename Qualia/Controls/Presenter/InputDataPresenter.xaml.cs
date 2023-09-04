@@ -1,7 +1,6 @@
 ﻿using Qualia.Model;
 using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 
 namespace Qualia.Controls
 {
@@ -108,39 +107,35 @@ namespace Qualia.Controls
                 };
 
                 base.OnChanged(instantAction);
-                //return;
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunction)
             {
-                //if (action.IsActive)
+                ApplyAction instantAction = new(this, param)
                 {
-                    ApplyAction instantAction = new(this, param)
+                    ApplyInstant = (isRunning) =>
                     {
-                        ApplyInstant = (isRunning) =>
+                        if (CtlDistributionFunction.SelectedFunction == null)
                         {
-                            if (CtlDistributionFunction.SelectedFunction == null)
-                            {
-                                return;
-                            }
-
-                            var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
-                            var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
-                                                                     .Extend(CtlTaskFunction.Value.Text);
-
-                            ActionManager.Instance.Lock();
-
-                            CtlDistributionFunction.SetConfig(taskFunctionConfig);
-                            CtlDistributionFunction.LoadConfig();
-
-                            ActionManager.Instance.Unlock();
+                            return;
                         }
-                    };
 
-                    base.OnChanged(instantAction);
-                    if (!action.IsActive)
-                    {
-                        return;
+                        var distributionFunction = CtlDistributionFunction.GetInstance<DistributionFunction>();
+                        var taskFunctionConfig = this.GetConfig().Extend(CtlTaskFunction.Name)
+                                                                    .Extend(CtlTaskFunction.Value.Text);
+
+                        ActionManager.Instance.Lock();
+
+                        CtlDistributionFunction.SetConfig(taskFunctionConfig);
+                        CtlDistributionFunction.LoadConfig();
+
+                        ActionManager.Instance.Unlock();
                     }
+                };
+
+                base.OnChanged(instantAction);
+                if (!action.IsActive)
+                {
+                    return;
                 }
             }
             else if (param == Notification.ParameterChanged.TaskDistributionFunctionParam)
@@ -260,7 +255,7 @@ namespace Qualia.Controls
 
         public void SetInputDataAndDraw(NetworkDataModel network)
         {
-            _threshold = network.InputInitial0;// network.InputThreshold;
+            _threshold = network.InputInitial0;
             var count = network.Layers.First.Neurons.Count;
 
             if (_data == null || _data.Length != count)

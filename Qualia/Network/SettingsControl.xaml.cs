@@ -49,11 +49,6 @@ namespace Qualia.Controls
             if (param == Notification.ParameterChanged.Settings
                 || param == Notification.ParameterChanged.NoSleepMode)
             {
-                if (param == Notification.ParameterChanged.Settings)
-                {
-                    //ActionsManager.Instance.Add(GetApplyAction());
-                }
-
                 OnChanged(action);
             }
             else

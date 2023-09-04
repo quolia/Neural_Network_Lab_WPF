@@ -216,18 +216,6 @@ namespace Qualia.Controls
             {
                 network.CtlIsNetworkEnabled.Value = false;
                 network.NetworkTask_OnChanged(_taskFunction);
-
-                /*
-                ApplyAction action = new(this, Notification.ParameterChanged.NetworksCount)
-                {
-                    Apply = (isRunning) =>
-                    {
-                        RefreshNetworks(null);
-                    }
-                };
-
-                this.InvokeUIHandler(action);
-                */
             }
 
             return network;

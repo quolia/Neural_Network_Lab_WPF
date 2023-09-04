@@ -63,7 +63,6 @@ namespace Qualia.Controls
             if (action.Param == Notification.ParameterChanged.Unknown)
             {
                 throw new InvalidOperationException();
-                action.Param = Notification.ParameterChanged.NetworkUpdated;
             }
 
             this.InvokeUIHandler(action);

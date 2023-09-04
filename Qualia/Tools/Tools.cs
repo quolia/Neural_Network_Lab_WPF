@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 
 namespace Qualia.Tools
 {
-    sealed public class LoopsLimit
+    sealed public class LoopsLimit(int limit)
     {
         public const int ERROR_MATRIX = 0;
         public const int NETWORK = 1;
         public const int STATISTICS = 2;
 
-        public int CurrentLimit;
-        public readonly int OriginalLimit;
+        public int CurrentLimit = limit;
+        public readonly int OriginalLimit = limit;
 
         public bool IsLimitReached => CurrentLimit <= 0;
 
@@ -33,12 +33,6 @@ namespace Qualia.Tools
             }
 
             return min;
-        }
-
-        public LoopsLimit(int limit)
-        {
-            CurrentLimit = limit;
-            OriginalLimit = limit;
         }
     }
 

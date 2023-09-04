@@ -1,9 +1,8 @@
 ﻿using Qualia.Tools;
-using System.Text;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Linq;
 using System;
+using System.Linq;
+using System.Text;
+using System.Windows.Media;
 
 namespace Qualia.Controls
 {
@@ -21,13 +20,6 @@ namespace Qualia.Controls
         {
             var builder = new StringBuilder();
 
-            /*
-            var solutions = data.Solutions.OrderBy(s => s.ErrorsCount)
-                                          .ThenBy(s => s.AverageTime)
-                                          .ThenBy(s => s.MinTime)
-                                          .ThenBy(s => s.LastTime)
-                                          .ToList();
-            */
             var solutions = data.Solutions.OrderBy(s => s.Rating)
                                           .ToList();
 

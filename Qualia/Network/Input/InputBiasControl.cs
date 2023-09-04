@@ -1,5 +1,4 @@
 ﻿using Qualia.Tools;
-using System;
 
 namespace Qualia.Controls
 {

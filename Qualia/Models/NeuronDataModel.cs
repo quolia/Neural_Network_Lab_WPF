@@ -40,30 +40,19 @@ namespace Qualia.Model
         public WeightDataModel WeightTo(NeuronDataModel neuron) => Weights[neuron.Id];
     }
 
-    sealed public class WeightDataModel : ListXNode<WeightDataModel>
+    sealed public class WeightDataModel(int id) : ListXNode<WeightDataModel>
     {
-        public readonly int Id;
+        public readonly int Id = id;
         public double Weight;
-        
-        public WeightDataModel(int id)
-        {
-            Id = id;
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(double weight) => Weight += weight;
     }
 
-    sealed public class ForwardNeuron : ListXNode<ForwardNeuron>
+    sealed public class ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight) : ListXNode<ForwardNeuron>
     {
-        public readonly NeuronDataModel Neuron;
-        public readonly WeightDataModel Weight;
-
-        public ForwardNeuron(NeuronDataModel neuron, WeightDataModel weight)
-        {
-            Neuron = neuron;
-            Weight = weight;
-        }
+        public readonly NeuronDataModel Neuron = neuron;
+        public readonly WeightDataModel Weight = weight;
 
         public double AxW => Neuron.Activation * Weight.Weight;
     }

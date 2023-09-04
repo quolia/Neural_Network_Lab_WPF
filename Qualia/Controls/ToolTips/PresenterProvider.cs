@@ -1,5 +1,4 @@
 ﻿using Qualia.Controls;
-using System;
 
 namespace Qualia.Tools
 {
@@ -25,7 +24,6 @@ namespace Qualia.Tools
             control.Loaded += (sender, e) =>
             {
                 control.DrawBase();
-                //control.DrawFunction(x => instance.Do(x, 1), in ColorsX.Red);
             };
 
             return control;

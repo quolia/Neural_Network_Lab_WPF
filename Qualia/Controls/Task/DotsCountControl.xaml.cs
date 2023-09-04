@@ -1,6 +1,4 @@
 ﻿using Qualia.Tools;
-using System;
-using System.Collections.Generic;
 
 namespace Qualia.Controls
 {

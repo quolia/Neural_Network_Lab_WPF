@@ -11,11 +11,6 @@ namespace Qualia.Controls
         private const double AXIS_OFFSET = 6;
         private const double DATA_STEP = 0.2;
 
-        private readonly Typeface _font = new(new("Tahoma"),
-                                              FontStyles.Normal,
-                                              FontWeights.Bold,
-                                              FontStretches.Normal);
-
         private readonly Pen _penBlack = Draw.GetPen(in ColorsX.Black);
         private readonly Pen _penLightGray = Draw.GetPen(in ColorsX.LightGray);
 

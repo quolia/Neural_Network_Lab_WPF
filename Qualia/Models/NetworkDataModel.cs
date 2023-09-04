@@ -169,7 +169,6 @@ namespace Qualia.Model
 
         public NetworkDataModel Merge(NetworkDataModel newNetwork)
         {
-            //newNetwork.Statistics = Statistics;
             newNetwork.PlotterStatistics = PlotterStatistics;
 
             var newLayer = newNetwork.Layers.First;

@@ -19,11 +19,6 @@ namespace Qualia.Controls
         {
             var neuronIds = this.GetConfig().Get(Constants.Param.Neurons, Array.Empty<long>());
             neuronIds.ToList().ForEach(id => AddNeuron(id));
-
-            //if (neuronIds.Length == 0)
-            //{
-            //    Range.For(Constants.DefaultOutputNeuronsCount, _ => AddNeuron(Constants.UnknownId));
-            //}
         }
 
         public override void LayerControl_OnLoaded()

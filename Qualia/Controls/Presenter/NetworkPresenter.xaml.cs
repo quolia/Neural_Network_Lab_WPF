@@ -49,7 +49,7 @@ namespace Qualia.Controls
 
         private void NetworkPresenter_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //ClearCache();
+            //  
         }
 
         public void OnSizeChanged(bool isRunning,
@@ -124,8 +124,7 @@ namespace Qualia.Controls
                                      bool isUseColorOfWeight,
                                      bool isShowOnlyChangedWeights,
                                      bool isHighlightChangedWeights,
-                                     bool isShowOnlyUnchangedWeights,
-                                     bool isShowActivationLabels)
+                                     bool isShowOnlyUnchangedWeights)
         {
             double threshold = layer1.Previous == null ? network.InputThreshold : 0;
 
@@ -368,7 +367,7 @@ namespace Qualia.Controls
             }
         }
 
-        private void DrawNeuronsActivationLabels(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel, bool isShowActivationLabels)
+        private void DrawNeuronsActivationLabels(bool fullState, NetworkDataModel networkModel, LayerDataModel layerModel)
         {
             const int TEXT_OFFSET = 6;
 
@@ -462,8 +461,7 @@ namespace Qualia.Controls
                                     isUseWeightsColors,
                                     isOnlyChangedWeights,
                                     isHighlightChangedWeights,
-                                    isShowOnlyUnchangedWeights,
-                                    isShowActivationLabels);
+                                    isShowOnlyUnchangedWeights);
                     
                     layerModel = layerModel.Next;
                 }
@@ -480,7 +478,7 @@ namespace Qualia.Controls
                     layerModel = networkModel.Layers.First;
                     while (layerModel != null)
                     {
-                        DrawNeuronsActivationLabels(fullState, networkModel, layerModel, isShowActivationLabels);
+                        DrawNeuronsActivationLabels(fullState, networkModel, layerModel);
                         layerModel = layerModel.Next;
                     }
                 }

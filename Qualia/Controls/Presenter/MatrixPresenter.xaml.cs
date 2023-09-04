@@ -328,7 +328,7 @@ namespace Qualia.Controls
                 }
             }
 
-            return max;// MathX.Max(max, 1);
+            return max;
         }
 
         public void ClearData()

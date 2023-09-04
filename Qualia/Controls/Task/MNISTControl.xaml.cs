@@ -1,12 +1,10 @@
-﻿using Microsoft.Win32;
-using Qualia.Tools;
+﻿using Qualia.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Qualia.Controls
 {

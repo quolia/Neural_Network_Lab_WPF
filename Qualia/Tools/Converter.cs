@@ -79,9 +79,9 @@ namespace Qualia.Tools
                     ++ind;
                     while (result[ind++] == '0')
                     {
-                        //
+                        // For ind++.
                     }
-                    result = result.Substring(0, ind);
+                    result = result[..ind];
                 }
             }
 
@@ -96,7 +96,7 @@ namespace Qualia.Tools
 
             while (s.EndsWith("000", true, Culture.Current) && postfixId < _postfixes.Length - 1)
             {
-                s = s.Substring(0, s.Length - 3);
+                s = s[..^3];
                 ++postfixId;
             }
 

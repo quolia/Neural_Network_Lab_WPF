@@ -1,6 +1,5 @@
 ﻿using Qualia.Tools;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -105,10 +104,7 @@ namespace Qualia.Controls
                 CtlNeurons.Items.Clear();
                 Neurons.Clear();
 
-                //if (taskFunction != null)
-                {
-                    Qualia.Tools.Range.For(newNeuronsCount, _ => Neurons.Insert(0, AddNeuron()));
-                }
+                Qualia.Tools.Range.For(newNeuronsCount, _ => Neurons.Insert(0, AddNeuron()));
             }
         }
 
@@ -163,9 +159,7 @@ namespace Qualia.Controls
 
         override public void CopyTo(LayerBaseControl layer)
         {
-            var newLayer = layer as InputLayerControl;
-
-            if (newLayer == null)
+            if (layer is not InputLayerControl newLayer)
             {
                 throw new InvalidOperationException();
             }
@@ -196,8 +190,6 @@ namespace Qualia.Controls
         {
             this.GetConfig().Remove(Constants.Param.Neurons);
             this.GetConfigParams().ForEach(cp => cp.RemoveFromConfig());
-
-            //Neurons.ToList().ForEach(n => n.RemoveFromConfig()); Input neurons are not in config.
         }
 
         public override void SetConfig(Config config)

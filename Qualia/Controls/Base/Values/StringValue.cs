@@ -32,7 +32,6 @@ namespace Qualia.Controls
                 Cancel = (isRunning) =>
                 {
                     TextChanged -= Value_OnChanged;
-                    //Undo();
                     LoadConfig();
                     TextChanged += Value_OnChanged;
 

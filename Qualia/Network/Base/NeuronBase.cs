@@ -1,5 +1,4 @@
 ﻿using Qualia.Tools;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -147,7 +146,7 @@ namespace Qualia.Controls
 
         private void RemoveNeuron()
         {
-            var removedCount = _parentLayer.RemoveNeuron(this);
+            var _ = _parentLayer.RemoveNeuron(this);
         }
 
         //

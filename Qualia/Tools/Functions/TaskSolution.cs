@@ -6,19 +6,14 @@ using System.Reflection;
 
 namespace Qualia.Tools
 {
-    public class TaskSolutions
+    public class TaskSolutions(Type taskFunctionType)
     {
         public IList<Solution> Solutions => _solutions;
 
         private readonly List<Solution> _solutions = new();
         private readonly Stopwatch _solutionTimer = new();
         private readonly Stopwatch _commonTimer = new();
-        private readonly Type _taskFunctionType;
-
-        public TaskSolutions(Type taskFunctionType)
-        {
-            _taskFunctionType = taskFunctionType;
-        }
+        private readonly Type _taskFunctionType = taskFunctionType;
 
         public void Add(string functionName)
         {

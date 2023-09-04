@@ -22,7 +22,7 @@ namespace Qualia.Controls
             }
         }
 
-        public void Save(string fileName)
+        public void Save()
         {
             File.WriteAllText(FileHelper.NotesPath, Text);
         }

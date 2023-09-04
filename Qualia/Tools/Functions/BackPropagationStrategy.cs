@@ -1,5 +1,4 @@
 ﻿using Qualia.Model;
-using System;
 using System.Runtime.CompilerServices;
 
 namespace Qualia.Tools

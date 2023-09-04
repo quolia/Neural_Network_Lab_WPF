@@ -389,7 +389,7 @@ namespace Qualia.Controls
             }
         }
 
-        private bool IsSameLine(Point p1, Point p2, Point p3)
+        private static bool IsSameLine(Point p1, Point p2, Point p3)
         {
             int x1 = (int)p1.X;
             int y1 = (int)p1.Y;
@@ -411,8 +411,8 @@ namespace Qualia.Controls
             return (int)a1 == (int)a2;
         }
 
-        private void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,
-                                         GetPointDelegate getPoint)
+        private static void DensityOptimization(PlotterStatistics.PlotPointsList pointsData,
+                                                GetPointDelegate getPoint)
         {
             const int VANISH_AREA = 6;
             const int MIN_POINTS_COUNT = 10;
@@ -468,11 +468,6 @@ namespace Qualia.Controls
 
                 pointsData.CommitRemove();
             }
-        }
-
-        private double Angle(in Point point1, in Point point2)
-        {
-            return Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
         }
 
         public void Clear()

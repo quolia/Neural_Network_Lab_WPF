@@ -1,8 +1,6 @@
 ﻿using Qualia.Controls;
 using System;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls.Primitives;
 
 namespace Qualia.Tools
 {
@@ -61,7 +59,6 @@ namespace Qualia.Tools
 
         public static T GetInstanceByName(string name)
         {
-            //var funcName = Config.PrepareParamName(name);
             var funcName = name;
 
             if (!GetItems().Contains(funcName)) // Call it just to tell compiler to compile GetItems, but not to exclude it.

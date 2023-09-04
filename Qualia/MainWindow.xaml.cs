@@ -71,8 +71,6 @@ namespace Qualia.Controls
 
         private void MainWindow_OnLoaded(object sender, EventArgs e)
         {
-            //Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
-
             FileHelper.InitWorkingDirectories();
 
             CtlNetworkPresenter.SizeChanged += (sender, e) =>
@@ -321,7 +319,6 @@ namespace Qualia.Controls
 
                     var taskFunction = TaskFunction.GetInstance(CtlInputDataPresenter.CtlTaskFunction);
                     taskFunction.VisualControl.SetIsPreventRepetition(CtlInputDataPresenter.CtlIsPreventRepetition.Value);
-                    //return;
                 }
                 else if (param == Notification.ParameterChanged.IsNetworkEnabled)
                 {
@@ -1295,8 +1292,6 @@ namespace Qualia.Controls
                 CtlStatisticsPresenter.Clear();
                 CtlMatrixPresenter.Clear();
             }
-
-            //NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MenuStop_OnClick(object sender, RoutedEventArgs e)
@@ -1365,29 +1360,6 @@ namespace Qualia.Controls
                 lock (Locker.ApplyChanges)
                 {
                     CtlNetworkPresenter.ClearCache();
-
-                    /*
-                    var firstNetworkModel = _networksManager.NetworkModels.First;
-                    var selectedNetworkModel = _networksManager.SelectedNetworkModel;
-
-                    CtlInputDataPresenter.SetInputDataAndDraw(firstNetworkModel);
-
-                    CtlNetworkPresenter.ClearCache();
-                    CtlNetworkPresenter.RenderRunning(selectedNetworkModel,
-                                                      CtlUseWeightsColors.Value,
-                                                      CtlOnlyChangedWeights.Value,
-                                                      CtlHighlightChangedWeights.Value,
-                                                      CtlShowOnlyUnchangedWeights.Value,
-                                                      CtlShowActivationLabels.Value);
-
-                    CtlPlotPresenter.DrawPlot(firstNetworkModel,
-                                              selectedNetworkModel);
-
-                    if (selectedNetworkModel != null)
-                    {
-                        CtlStatisticsPresenter.Draw(selectedNetworkModel.LastStatistics);
-                    }
-                    */
                 }
             }
             else
@@ -1496,7 +1468,6 @@ namespace Qualia.Controls
             }
 
             _networksManager.SelectedNetworkControl.AddLayer();
-            //NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuRemoveLayer_OnClick(object sender, RoutedEventArgs e)
@@ -1508,7 +1479,6 @@ namespace Qualia.Controls
             }
 
             _networksManager.SelectedNetworkControl.RemoveLayer();
-            //NotifyUIChanged(Notification.ParameterChanged.Structure, null);
         }
 
         private void MainMenuAddNeuron_OnClick(object sender, RoutedEventArgs e)
@@ -1541,13 +1511,6 @@ namespace Qualia.Controls
             CtlMainMenuAddNeuron.IsEnabled = CtlTabs.SelectedIndex > 0;
         }
 
-        private void NetworkContextMenu_OnOpened(object sender, RoutedEventArgs e)
-        {
-            //CtlMenuRemoveNetwork.IsEnabled = !_isRunning && CtlTabs.SelectedIndex > 0;
-            //CtlMenuAddNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
-            //CtlMenuCloneNetwork.IsEnabled = CtlMenuRemoveNetwork.IsEnabled;
-        }
-
         public void Dispose()
         {
             if (_cancellationTokenSource != null)
@@ -1568,7 +1531,7 @@ namespace Qualia.Controls
 
         private void Notes_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            CtlNotes.Save(FileHelper.NotesPath);
+            CtlNotes.Save();
         }
     }
 }

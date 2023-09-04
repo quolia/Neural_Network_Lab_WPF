@@ -4,15 +4,9 @@ using System.Windows.Controls;
 
 namespace Qualia.Controls
 {
-    abstract public partial class BaseUserControl : UserControl, IConfigParam
+    abstract public partial class BaseUserControl(long visualId) : UserControl, IConfigParam
     {
-        public readonly long VisualId;
-
-        public BaseUserControl(long visualId)
-        {
-            VisualId = visualId;
-            //
-        }
+        public readonly long VisualId = visualId;
 
         public void OnChanged(ApplyAction action)
         {
