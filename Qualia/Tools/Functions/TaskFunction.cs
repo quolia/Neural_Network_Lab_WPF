@@ -162,9 +162,15 @@ namespace Qualia.Tools
                 var neuronsCount = neurons.Count;
                 var neuron = neurons.First;
 
+                int nextRand;
                 while (neuron != null)
                 {
-                    neuron.Activation = neuron.X = network.InputInitial0;
+                    nextRand = Rand.RandomFlat.Next(neuronsCount);
+                    neuron.Activation = neuron.X = neuron.Id == nextRand ? network.InputInitial1 : network.InputInitial0;
+                    if (neuron.Activation == network.InputInitial1)
+                    {
+                        --intNumber;
+                    }
                     neuron = neuron.Next;
                 }
 
