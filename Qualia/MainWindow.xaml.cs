@@ -1128,9 +1128,11 @@ namespace Qualia.Controls
                         var priority = Thread.CurrentThread.Priority;
                         Thread.CurrentThread.Priority = ThreadPriority.Highest;
                         Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
+
                         doRenderErrorMatrix?.Invoke();
                         doRenderNetwork?.Invoke();
                         doRenderStatistics?.Invoke();
+
                         Thread.CurrentThread.Priority = priority;
                         Threads.SetThreadPriority(ThreadPriorityLevel.Normal);      
                     });
@@ -1162,7 +1164,7 @@ namespace Qualia.Controls
                     });
                 }
 
-                Thread.Sleep(200);
+                Thread.Sleep(330);
             }
         }
 
