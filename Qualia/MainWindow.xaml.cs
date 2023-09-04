@@ -62,7 +62,11 @@ namespace Qualia.Controls
 
         private void SetTitle(string fileName)
         {
-            Title = "Networks - " + Path.GetFileNameWithoutExtension(fileName) + "      " + fileName;
+#if DEBUG
+            Title = "Networks - " + Path.GetFileNameWithoutExtension(fileName) + "      " + fileName + " (DEBUG)";
+#else
+            Title = "Networks - " + Path.GetFileNameWithoutExtension(fileName) + "      " + fileName + " (RELEASE)";
+#endif
         }
 
         private void MainWindow_OnLoaded(object sender, EventArgs e)
