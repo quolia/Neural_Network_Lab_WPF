@@ -2,17 +2,12 @@
 
 namespace Qualia.Tools
 {
-    sealed public class ListX<T> where T : ListXNode<T>
+    sealed public class ListX<T>(int capacity) where T : ListXNode<T>
     {
         public T First;
         public T Last;
 
         private T[] _array = Array.Empty<T>();
-
-        public ListX(int capacity)
-        {
-            //
-        }
 
         public T this[int index] => _array[index];
 

@@ -125,10 +125,12 @@ namespace Qualia.Tools
             {
                 int intNumber;
 
-                while (true)
-                {
-                    double randNumber = distributionFunction.Do(distributionFunctionParam);
+                double randNumber;
+                int targetOutputNeuronId;
 
+                do
+                {
+                    randNumber = distributionFunction.Do(distributionFunctionParam);
                     randNumber = (1 + _maxDotsAmountToCount - _minDotsAmountToCount) * randNumber + _minDotsAmountToCount;
 
                     intNumber = (int)randNumber;
@@ -142,48 +144,51 @@ namespace Qualia.Tools
                         intNumber = _maxDotsAmountToCount;
                     }
 
-                    network.TargetOutputNeuronId = intNumber - _minDotsAmountToCount;
+                    targetOutputNeuronId = intNumber - _minDotsAmountToCount;
 
-                    if (!_isPreventRepetition 
-                        || network.TargetOutputNeuronId != _prevTargetOutputNeuronId
+                    if (!_isPreventRepetition
+                        || targetOutputNeuronId != _prevTargetOutputNeuronId
                         || _maxDotsAmountToCount == _minDotsAmountToCount)
                     {
-                        _prevTargetOutputNeuronId = network.TargetOutputNeuronId;
                         break;
                     }
                 }
+                while (true);
+
+                _prevTargetOutputNeuronId = targetOutputNeuronId;
+                network.TargetOutputNeuronId = targetOutputNeuronId;
 
                 var neurons = network.Layers.First.Neurons;
+                var neuronsCount = neurons.Count;
                 var neuron = neurons.First;
 
                 while (neuron != null)
                 {
-                    neuron.X = network.InputInitial0;
-                    neuron.Activation = network.InputInitial0;
+                    neuron.Activation = neuron.X = network.InputInitial0;
                     neuron = neuron.Next;
                 }
 
                 while (intNumber > 0)
                 {
-                    var active = neurons[Rand.RandomFlat.Next(neurons.Count)];
+                    neuron = neurons[Rand.RandomFlat.Next(neuronsCount)];
 
-                    while (active.Activation == network.InputInitial1)
+                    while (neuron.Activation == network.InputInitial1)
                     {
-                        active = active.Next;
-                        active ??= neurons.First;
+                        neuron = neuron.Next ?? neurons.First;
                     }
 
-                    active.X = network.InputInitial1; 
-                    active.Activation = network.InputInitial1;
+                    neuron.Activation = neuron.X = network.InputInitial1;
                     --intNumber;
                 }
 
-                neuron = network.Layers.Last.Neurons.First;
+                neurons = network.Layers.Last.Neurons;
+                neuron = neurons.First;
                 while (neuron != null)
                 {
-                    neuron.Target = (neuron.Id == network.TargetOutputNeuronId) ? neuron.PositiveTargetValue : neuron.NegativeTargetValue;
+                    neuron.Target = neuron.NegativeTargetValue;
                     neuron = neuron.Next;
                 }
+                neurons[targetOutputNeuronId].Target = neurons[targetOutputNeuronId].PositiveTargetValue;
             }
 
             public void RemoveFromConfig() => s_control.RemoveFromConfig();
