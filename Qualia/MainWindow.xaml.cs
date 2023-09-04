@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static Qualia.Tools.Threads;
 
 namespace Qualia.Controls
 {
