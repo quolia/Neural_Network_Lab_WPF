@@ -66,6 +66,11 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <Title>Qualia</Title>
     <Copyright>echoviser@gmail.com</Copyright>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <FileVersion>1.0.*</FileVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Controls\Presenter\PresenterControl.cs">
