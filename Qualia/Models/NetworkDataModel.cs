@@ -48,8 +48,6 @@ namespace Qualia.Model
             Layers.Add(new(Layers.Count, neuronCount, weightsCount));
         }
 
-        public double InputThreshold => (InputInitial0 + InputInitial1) / 2;
-
         public NeuronDataModel GetMaxActivatedOutputNeuron()
         {
             var maxNeuron = Layers.Last.Neurons.First;

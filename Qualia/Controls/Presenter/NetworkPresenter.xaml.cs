@@ -126,8 +126,6 @@ namespace Qualia.Controls
                                      bool isHighlightChangedWeights,
                                      bool isShowOnlyUnchangedWeights)
         {
-            double threshold = layer1.Previous == null ? network.InputThreshold : 0;
-
             NeuronDataModel prevNeuron = null;
             NeuronDataModel neuron1 = layer1.Neurons.First;
 
@@ -150,7 +148,7 @@ namespace Qualia.Controls
                     }
                 }
 
-                if (fullState || layer1.Previous != null || neuron1.Activation > threshold)
+                if (fullState || layer1.Previous != null || neuron1.Activation == network.InputInitial1)
                 {
                     var neuron2 = layer2.Neurons.First;
                     while (neuron2 != null)
@@ -298,8 +296,6 @@ namespace Qualia.Controls
 
         private void DrawLayerNeurons(bool fullState, NetworkDataModel network, LayerDataModel layer)
         {
-            double threshold = network.Layers.First == layer ? network.InputThreshold : 0;
-
             NeuronDataModel prevNeuron = null;
             NeuronDataModel neuron = layer.Neurons.First;
 
@@ -307,7 +303,7 @@ namespace Qualia.Controls
 
             while (neuron != null)
             {
-                if (fullState || neuron.Activation > threshold || layer.Previous != null)
+                if (fullState || layer.Previous != null || neuron.Activation == network.InputInitial1)
                 {
                     if (!_coordinator.ContainsKey(neuron))
                     {
@@ -371,14 +367,12 @@ namespace Qualia.Controls
         {
             const int TEXT_OFFSET = 6;
 
-            double threshold = networkModel.Layers.First == layerModel ? networkModel.InputThreshold : 0;
-
             NeuronDataModel prevNeuron = null;
             NeuronDataModel neuronModel = layerModel.Neurons.First;
 
             while (neuronModel != null)
             {
-                if (fullState || neuronModel.Activation > threshold || layerModel.Previous != null)
+                if (fullState || layerModel.Previous != null || neuronModel.Activation == networkModel.InputInitial1)
                 {
                     if (!_coordinator.ContainsKey(neuronModel))
                     {
