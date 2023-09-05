@@ -75,7 +75,7 @@ namespace Qualia.Tools
             private static int _maxDotsAmountToCount;
 
             private static bool _isPreventRepetition;
-            private static int _prevTargetOutputNeuronId = -1;
+            private static int _prevTargetOutputNeuronId = -100;
 
             public Control GetVisualControl() => s_control;
 

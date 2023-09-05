@@ -192,14 +192,7 @@ namespace Qualia.Model
                         while (newWeight != null)
                         {
                             var weight = neuron?.Weights.Find(w => w.Id == newWeight.Id);
-                            if (weight != null)
-                            {
-                                newWeight.Weight = weight.Weight;
-                            }
-                            else
-                            {
-                                newWeight.Weight = 0; // The new neuron weight.
-                            }
+                            newWeight.Weight = weight?.Weight ?? 0; // The new neuron weight.
 
                             newWeight = newWeight.Next;
                         }
@@ -215,7 +208,6 @@ namespace Qualia.Model
                                 nextNewNeuron = nextNewNeuron.Next;
                             }
                         }
-
 
                         newNeuron = newNeuron.Next;
                     }
