@@ -137,7 +137,7 @@ namespace Qualia.Model
                     while (AxW != null)
                     {
                         prevNeuron = AxW.Neuron;
-                        //if (prevNeuron.Activation != 0)
+                        if (prevNeuron.Activation != 0)
                         {
                             prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
                         }

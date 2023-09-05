@@ -626,6 +626,8 @@ namespace Qualia.Controls
                 _networksManager.RebuildNetworksForTask(taskFunction);
                 _networksManager.RefreshNetworks(null);
 
+                _networksManager.PrepareModelsForRun();
+
                 CtlNetworkPresenter.RenderStanding(_networksManager.SelectedNetworkModel.GetCopyToDraw());
 
                 TurnApplyChangesButtonOn(ActionManager.Instance.HasApplyActions());

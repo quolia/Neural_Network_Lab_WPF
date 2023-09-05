@@ -24,20 +24,8 @@ namespace Qualia.Controls
                 CtlInputInitial1
                     .Initialize(defaultValue: 1),
 
-                CtlActivationFunction
-                    .Initialize(nameof(ActivationFunction.Identiy)),
-
-                CtlActivationFunctionParam
-                    .Initialize(defaultValue: 1),
-
                 CtlAdjustFirstLayerWeights
                     .Initialize(true),
-
-                CtlWeightsInitializeFunction
-                    .Initialize(nameof(InitializeFunction.FlatRandom)),
-
-                CtlWeightsInitializeFunctionParam
-                    .Initialize(defaultValue: 1)
             });
 
             this.GetConfigParams().ForEach(cp => cp.SetConfig(this.GetConfig()));
@@ -49,12 +37,6 @@ namespace Qualia.Controls
 
         public override void LoadConfig()
         {
-            CtlActivationFunction
-                .Fill<ActivationFunction>(this.GetConfig());
-
-            CtlWeightsInitializeFunction
-                 .Fill<InitializeFunction>(this.GetConfig());
-
             this.GetConfigParams().ForEach(cp => cp.LoadConfig());
 
             var neuronIds = this.GetConfig().Get(Constants.Param.Neurons, Array.Empty<long>());
@@ -89,10 +71,7 @@ namespace Qualia.Controls
 
         public double Initial0 => CtlInputInitial0.Value;
         public double Initial1 => CtlInputInitial1.Value;
-        public ActivationFunction ActivationFunction => ActivationFunction.GetInstance(CtlActivationFunction);
-        public double ActivationFunctionParam => CtlActivationFunctionParam.Value;
-        public InitializeFunction WeightsInitializeFunction => InitializeFunction.GetInstance(CtlWeightsInitializeFunction);
-        public double WeightsInitializeFunctionParam => CtlWeightsInitializeFunctionParam.Value;
+
         public bool IsAdjustFirstLayerWeights => CtlAdjustFirstLayerWeights.Value;
 
         public void SetTaskFunction(TaskFunction taskFunction)
@@ -112,8 +91,8 @@ namespace Qualia.Controls
         {
             InputNeuronControl neuron = new(Neurons.Count, this)
             {
-                ActivationFunction = ActivationFunction.GetInstance(CtlActivationFunction),
-                ActivationFunctionParam = CtlActivationFunctionParam.Value
+                ActivationFunction = ActivationFunction.Identiy.Instance,
+                ActivationFunctionParam = 1
             };
 
             return neuron;
@@ -166,10 +145,6 @@ namespace Qualia.Controls
 
             newLayer.CtlInputInitial0.Value = CtlInputInitial0.Value;
             newLayer.CtlInputInitial1.Value = CtlInputInitial1.Value;
-            newLayer.CtlActivationFunction.SelectedIndex = CtlActivationFunction.SelectedIndex;
-            newLayer.CtlActivationFunctionParam.Value = CtlActivationFunctionParam.Value;
-            newLayer.CtlWeightsInitializeFunction.Value = CtlWeightsInitializeFunction.Value;
-            newLayer.CtlWeightsInitializeFunctionParam.Value = CtlWeightsInitializeFunctionParam.Value;
 
             base.CopyTo(newLayer);
         }
