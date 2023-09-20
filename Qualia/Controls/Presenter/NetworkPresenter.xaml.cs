@@ -220,33 +220,12 @@ public sealed partial class NetworkPresenter : BaseUserControl
                             {
                                 if (!isShowOnlyUnchangedWeights)
                                 {
-                                    if (isHighlightChangedWeights)
-                                    {
-                                        pen = _penChange;
-                                    }
-                                    else
-                                    {
-                                        if (isUseColorOfWeight)
-                                        {
-                                            pen = Draw.GetPen(weightModel.Weight, 1);
-                                        }
-                                        else
-                                        {
-                                            pen = Draw.GetPen(neuron1.AxW(neuron2), 1);
-                                        }
-                                    }
+                                    pen = isHighlightChangedWeights ? _penChange : Draw.GetPen(isUseColorOfWeight ? weightModel.Weight : neuron1.AxW(neuron2), 1);
                                 }
                             }
                             else
                             {
-                                if (isUseColorOfWeight)
-                                {
-                                    pen = Draw.GetPen(weightModel.Weight, 1);
-                                }
-                                else
-                                {
-                                    pen = Draw.GetPen(neuron1.AxW(neuron2), 1);
-                                }
+                                pen = Draw.GetPen(isUseColorOfWeight ? weightModel.Weight : neuron1.AxW(neuron2), 1);
                             }
                         }
                         else // show all weights
@@ -255,14 +234,7 @@ public sealed partial class NetworkPresenter : BaseUserControl
                             {
                                 if (!isWeightChanged)
                                 {
-                                    if (isUseColorOfWeight)
-                                    {
-                                        pen = Draw.GetPen(weightModel.Weight, 1);
-                                    }
-                                    else
-                                    {
-                                        pen = Draw.GetPen(neuron1.AxW(neuron2), 1);
-                                    }
+                                    pen = Draw.GetPen(isUseColorOfWeight ? weightModel.Weight : neuron1.AxW(neuron2), 1);
                                 }
                             }
                             else
@@ -277,14 +249,7 @@ public sealed partial class NetworkPresenter : BaseUserControl
 
                                 if (pen == null)
                                 {
-                                    if (isUseColorOfWeight)
-                                    {
-                                        pen = Draw.GetPen(weightModel.Weight, 1);
-                                    }
-                                    else
-                                    {
-                                        pen = Draw.GetPen(neuron1.AxW(neuron2), 1);
-                                    }
+                                    pen = Draw.GetPen(isUseColorOfWeight ? weightModel.Weight : neuron1.AxW(neuron2), 1);
                                 }
                             }
                         }
