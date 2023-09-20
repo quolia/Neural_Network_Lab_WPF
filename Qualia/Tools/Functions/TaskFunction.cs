@@ -93,9 +93,12 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
 
             if (_activeNeurons != null)
             {
-                foreach ( var neuron in _activeNeurons )
+                foreach (var neuron in _activeNeurons)
                 {
-                    neuron.Target = neuron.NegativeTargetValue;
+                    if (neuron != null)
+                    {
+                        neuron.Target = neuron.NegativeTargetValue;
+                    }
                 }    
             }
             
