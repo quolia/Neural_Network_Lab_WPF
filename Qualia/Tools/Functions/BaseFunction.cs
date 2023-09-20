@@ -50,12 +50,7 @@ public unsafe class BaseFunction<T> : BaseFunctionInfo where T : class
 
     public static T GetInstance(FunctionControl function)
     {
-        if (function.SelectedFunction == null)
-        {
-            return default(T);
-        }
-
-        return GetInstanceByName(function.SelectedFunction.Name);
+        return function.SelectedFunction == null ? default : GetInstanceByName(function.SelectedFunction.Name);
     }
 
     public static T GetInstanceByName(string name)
@@ -67,10 +62,7 @@ public unsafe class BaseFunction<T> : BaseFunctionInfo where T : class
             throw new InvalidOperationException($"Unknown function name: {funcName}.");
         }
 
-        var type = typeof(T).GetNestedTypes()
-            .Where(type => type.Name == funcName)
-            .FirstOrDefault();
-
+        var type = typeof(T).GetNestedTypes().FirstOrDefault(type => type.Name == funcName);
         if (type == null)
         {
             throw new InvalidOperationException($"Unknown function name: {funcName}.");
@@ -97,15 +89,15 @@ public unsafe class BaseFunction<T> : BaseFunctionInfo where T : class
 
     public static string[] GetItems()
     {
-        return _getItems(false);
+        return GetItems(false);
     }
 
     public static string[] GetItemsWithDescription()
     {
-        return _getItems(true);
+        return GetItems(true);
     }
 
-    private static string[] _getItems(bool uncludeDescription)
+    private static string[] GetItems(bool uncludeDescription)
     {
         return typeof(T).GetNestedTypes()
             .Select(type => type.Name + (uncludeDescription ? "\n" + GetDescription(type.Name) : ""))

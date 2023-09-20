@@ -8,7 +8,7 @@ namespace Qualia.Controls.Misc;
 
 public class WindowResizeControl : Window
 {
-    private bool? _adjustingHeight = null;
+    private bool? _isAdjustingHeight;
 
     public WindowResizeControl()
     {
@@ -87,17 +87,17 @@ public class WindowResizeControl : Window
                     return IntPtr.Zero;
                 }
 
-                if (!_adjustingHeight.HasValue)
+                if (!_isAdjustingHeight.HasValue)
                 {
                     var p = GetMousePosition();
 
                     var diffWidth = MathX.Min(MathX.Abs(p.X - pos.x), MathX.Abs(p.X - pos.x - pos.cx));
                     var diffHeight = MathX.Min(MathX.Abs(p.Y - pos.y), MathX.Abs(p.Y - pos.y - pos.cy));
 
-                    _adjustingHeight = diffHeight > diffWidth;
+                    _isAdjustingHeight = diffHeight > diffWidth;
                 }
 
-                if (_adjustingHeight.Value)
+                if (_isAdjustingHeight.Value)
                 {
                     pos.cy = (int)(9 * pos.cx / 16);
                 }
@@ -112,7 +112,7 @@ public class WindowResizeControl : Window
                 break;
 
             case WM.EXITSIZEMOVE:
-                _adjustingHeight = null;
+                _isAdjustingHeight = null;
                 OnResizeEnd();
                 break;
         }

@@ -24,8 +24,8 @@ public sealed class BoolValueControl : CheckBox, IConfigParam
 
     public BoolValueControl()
     {
-        Padding = new(0);
-        Margin = new(3);
+        Padding = new Thickness(0);
+        Margin = new Thickness(3);
     }
 
     private void EnableListeners(bool isEnable)
@@ -50,7 +50,7 @@ public sealed class BoolValueControl : CheckBox, IConfigParam
                 Value = !Value;
                 EnableListeners(true);
 
-                this.InvokeUIHandler(new(this));
+                this.InvokeUIHandler(new ApplyAction(this));
             }
         };
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Qualia.Tools;
@@ -36,8 +37,8 @@ public sealed class IntValueControl : TextBox, IConfigParam
 
     public IntValueControl()
     {
-        Padding = new(0);
-        Margin = new(3);
+        Padding = new Thickness(0);
+        Margin = new Thickness(3);
 
         TextChanged += Value_OnChanged;
     }

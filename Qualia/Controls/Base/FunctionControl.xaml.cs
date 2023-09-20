@@ -99,18 +99,7 @@ public partial class FunctionControl : BaseUserControl
         }
     }
 
-    public SelectedFunction SelectedFunction
-    {
-        get
-        {
-            if (CtlFunction.SelectedItem == null)
-            {
-                return null;
-            }
-
-            return new SelectedFunction(CtlFunction.Value.Text, CtlParam.Value);
-        }
-    }
+    public SelectedFunction SelectedFunction => CtlFunction.SelectedItem == null ? null : new SelectedFunction(CtlFunction.Value.Text, CtlParam.Value);
         
     public T GetInstance<T>() where T : class
     {

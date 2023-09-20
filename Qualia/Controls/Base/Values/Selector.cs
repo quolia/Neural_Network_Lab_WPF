@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
-using Qualia.Controls.ToolTips;
 using Qualia.Tools;
-using Qualia.Tools.Functions;
 using Qualia.Tools.Managers;
 
 namespace Qualia.Controls.Base.Values;
 
 public sealed class SelectorControl : ComboBox, IConfigParam
 {
-    public string DefaultValue { get; set; }
+    public string DefaultValue { get; private set; }
 
     public SelectorControl Initialize(string defaultValue)
     {
@@ -32,8 +31,8 @@ public sealed class SelectorControl : ComboBox, IConfigParam
         //ItemTemplate = Main.Instance.Resources["SelectableItemTemplate"] as DataTemplate;
         //Style = Main.Instance.Resources["SelectValueStyle"] as Style;
                  
-        Padding = new(1);
-        Margin = new(3);
+        Padding = new Thickness(1);
+        Margin = new Thickness(3);
         MinWidth = 60;
 
         //Background = Draw.GetBrush(ColorsX.Lime);
@@ -56,22 +55,24 @@ public sealed class SelectorControl : ComboBox, IConfigParam
             return;
         }
 
-        if (oldValue != null && newValue != null)
+        if (oldValue == null || newValue == null)
         {
-            ApplyAction action = new(this)
-            {
-                Cancel = (isRunning) =>
-                {
-                    SelectionChanged -= Value_OnChanged;
-                    Value = oldValue as ISelectableItem;
-                    SelectionChanged += Value_OnChanged;
-
-                    this.InvokeUIHandler(new(this));
-                }
-            };
-
-            this.InvokeUIHandler(action);
+            return;
         }
+
+        ApplyAction action = new(this)
+        {
+            Cancel = (isRunning) =>
+            {
+                SelectionChanged -= Value_OnChanged;
+                Value = oldValue as ISelectableItem;
+                SelectionChanged += Value_OnChanged;
+
+                this.InvokeUIHandler(new(this));
+            }
+        };
+
+        this.InvokeUIHandler(action);
     }
 
     public new ISelectableItem SelectedItem
@@ -97,11 +98,13 @@ public sealed class SelectorControl : ComboBox, IConfigParam
     {
         foreach (var item in Items)
         {
-            if ((item as ISelectableItem).Text == text)
+            if ((item as ISelectableItem)?.Text != text)
             {
-                SelectedItem = item as ISelectableItem;
-                return;
+                continue;
             }
+
+            SelectedItem = item as ISelectableItem;
+            return;
         }
 
         throw new InvalidValueException(Name, text);
@@ -143,83 +146,4 @@ public sealed class SelectorControl : ComboBox, IConfigParam
         var name = Config.PrepareParamName(Name);
         return $"<{name} Value=\"{Value}\" /> \n";
     }
-}
-
-public sealed class SelectorControlWrapper
-{
-    private SelectorControl _selector;
-
-    private SelectorControlWrapper(SelectorControl selector)
-    {
-        _selector = selector;
-    }
-
-    public static SelectorControlWrapper Wrap(SelectorControl selector)
-    {
-        return new SelectorControlWrapper(selector);
-    }
-
-    public static ISelectableItem GetSelectableItemForName<T>(string name) where T : class
-    {
-        var instance = BaseFunction<T>.GetInstanceByName(name);
-
-        var type = typeof(T);
-
-        if (type == typeof(ActivationFunction))
-        {
-            return PresenterProvider.GetPresenter(instance as ActivationFunction, name);
-        }
-        else
-        {
-            return PresenterProvider.GetDefaultSelectableItemPresenter(name);
-        }
-    }
-
-    public void Clear()
-    {
-        _selector.Items.Clear();
-    }
-
-    public void AddItem(ISelectableItem item)
-    {
-        _selector.Items.Add(item);
-    }
-
-    public string DefaultValue
-    {
-        get => _selector.DefaultValue;
-    }
-
-    public string Name
-    {
-        get => _selector.Name;
-    }
-
-    public int Count
-    {
-        get => _selector.Items.Count;
-    }
-
-    public bool Contains(ISelectableItem item)
-    {
-        return _selector.Items.Contains(item);
-    }
-
-    public ISelectableItem GetItemAt(int index)
-    {
-        return _selector.Items.GetItemAt(index) as ISelectableItem;
-    }
-
-    public ISelectableItem SelectedItem
-    {
-        get => _selector.SelectedItem;
-        set => _selector.SelectedItem = value;
-    }
-}
-
-public interface ISelectableItem
-{
-    string Text { get; }
-    string Value { get; }
-    Control Control { get; }
 }

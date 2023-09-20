@@ -10,11 +10,11 @@ public sealed class CanvasControl : Panel
 {
     private readonly VisualCollection _visuals;
 
-    private Func<double, double> _scaleFunc = RenderSettings.Scale;
+    private readonly Func<double, double> _scaleFunc = RenderSettings.Scale;
 
     public CanvasControl()
     {
-        _visuals = new(this);
+        _visuals = new VisualCollection(this);
         SnapsToDevicePixels = true;
         UseLayoutRounding = true;
         SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
@@ -23,26 +23,6 @@ public sealed class CanvasControl : Panel
     public void Clear()
     {
         _visuals.Clear();
-    }
-
-    private DrawingContext G()
-    {
-        DrawingVisual dv = new();
-        _visuals.Add(dv);
-
-        return dv.RenderOpen();
-    }
-
-    protected override int VisualChildrenCount => _visuals.Count;
-
-    protected override Visual GetVisualChild(int index)
-    {
-        if (index < 0 || index >= _visuals.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
-
-        return _visuals[index];
     }
 
     public void DrawRectangle(Brush brush, Pen pen, ref Rect rect)
@@ -127,5 +107,25 @@ public sealed class CanvasControl : Panel
         radiusY = _scaleFunc(radiusY);
 
         g.DrawEllipse(brush, pen, center, radiusX, radiusY);
+    }
+ 
+    protected override int VisualChildrenCount => _visuals.Count;
+
+    protected override Visual GetVisualChild(int index)
+    {
+        if (index < 0 || index >= _visuals.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        return _visuals[index];
+    }
+    
+    private DrawingContext G()
+    {
+        DrawingVisual dv = new();
+        _visuals.Add(dv);
+
+        return dv.RenderOpen();
     }
 }
