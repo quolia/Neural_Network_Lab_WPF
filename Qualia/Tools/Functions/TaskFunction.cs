@@ -186,12 +186,14 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
             for (var i = 0; i < _activeNeurons.Length; ++i)
             {
                 var activeNeuron = _activeNeurons[i];
-                if (activeNeuron != null)
+                if (activeNeuron == null)
                 {
-                    activeNeuron.X =
-                        activeNeuron.Activation = network.InputInitial0;
-                    _activeNeurons[i] = null;
-                } 
+                    continue;
+                }
+
+                activeNeuron.X =
+                    activeNeuron.Activation = network.InputInitial0;
+                _activeNeurons[i] = null;
             }
 
             NeuronDataModel neuron;
@@ -333,8 +335,9 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
 
                 while (neuron != null)
                 {
-                    neuron.X = network.InputInitial0;
-                    neuron.Activation = network.InputInitial0;
+                    neuron.X = 
+                        neuron.Activation = network.InputInitial0;
+                    
                     neuron = neuron.Next;
                 }
 
@@ -359,24 +362,24 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
                         }
                     }
 
-                    activeNeuron.X = network.InputInitial1; // ?
-                    activeNeuron.Activation = network.InputInitial1;
+                    activeNeuron.X = 
+                        activeNeuron.Activation = network.InputInitial1;
 
                     var center = neurons[ind + DIMENSION];
-                    center.X = network.InputInitial1;
-                    center.Activation = network.InputInitial1;
+                    center.X = 
+                        center.Activation = network.InputInitial1;
 
                     var left = neurons[ind + DIMENSION - 1];
-                    left.X = network.InputInitial1;
-                    left.Activation = network.InputInitial1;
+                    left.X = 
+                        left.Activation = network.InputInitial1;
 
                     var right = neurons[ind + DIMENSION + 1];
-                    right.X = network.InputInitial1;
-                    right.Activation = network.InputInitial1;
+                    right.X = 
+                        right.Activation = network.InputInitial1;
 
                     var bottom = neurons[ind + DIMENSION * 2];
-                    bottom.X = network.InputInitial1;
-                    bottom.Activation = network.InputInitial1;
+                    bottom.X = 
+                        bottom.Activation = network.InputInitial1;
 
                     --number;
                 }
@@ -384,12 +387,12 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
                 for (ind = 0; ind < _noisePointsAmount; ++ind)
                 {
                     var activeNeuron = neurons[Rand.RandomFlat.Next(neurons.Count)];
-                    activeNeuron.X = network.InputInitial1;
-                    activeNeuron.Activation = network.InputInitial1;
+                    activeNeuron.X =
+                        activeNeuron.Activation = network.InputInitial1;
 
                     var inactiveNeuron = neurons[Rand.RandomFlat.Next(neurons.Count)];
-                    inactiveNeuron.X = network.InputInitial0;
-                    inactiveNeuron.Activation = network.InputInitial0;
+                    inactiveNeuron.X = 
+                        inactiveNeuron.Activation = network.InputInitial0;
                 }
 
                 ind = 0;

@@ -93,16 +93,13 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
         var lastLayer = Layers.Last;
         double sum;
 
-        NeuronDataModel nextLayerNeuron;
-        ForwardNeuron AxW;
-
         while (layer != lastLayer)
         {
-            nextLayerNeuron = layer.Next.Neurons.First;
+            var nextLayerNeuron = layer.Next.Neurons.First;
             while (nextLayerNeuron != null)
             {
                 sum = 0;
-                AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
+                var AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
                 while (AxW != null)
                 {
                     sum += AxW.AxW;
