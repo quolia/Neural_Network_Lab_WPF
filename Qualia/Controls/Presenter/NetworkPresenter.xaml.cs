@@ -18,7 +18,7 @@ public sealed partial class NetworkPresenter : BaseUserControl
     private const int NEURON_SIZE = 8;
     private const double NEURON_RADIUS = NEURON_SIZE / 2;
 
-    public long ResizeTicks;
+    private long _resizeTicks;
 
     private NetworkDataModel _networkModel;
 
@@ -66,11 +66,11 @@ public sealed partial class NetworkPresenter : BaseUserControl
         }
 
         var ticks = DateTime.UtcNow.Ticks;
-        ResizeTicks = ticks;
+        _resizeTicks = ticks;
 
         this.Dispatch(() =>
         {
-            if (ResizeTicks != ticks)
+            if (_resizeTicks != ticks)
             {
                 return;
             }
@@ -93,29 +93,56 @@ public sealed partial class NetworkPresenter : BaseUserControl
         }, DispatcherPriority.Render);
     }
 
-    public int LayerDistance(NetworkDataModel network)
+    public void ClearCache()
+    {
+        _coordinator.Clear();
+    }
+
+    public void RenderStanding(NetworkDataModel networkModel)
+    {
+        ClearCache();
+        Render(true, networkModel, false, false, false, false, false);
+    }
+
+    public void RenderRunning(NetworkDataModel networkModel,
+        bool isUseWeightsColors,
+        bool isOnlyChangedWeights,
+        bool isHighlightChangedWeights,
+        bool isShowOnlyUnchangedWeights,
+        bool isShowActivationLabels)
+    {
+        Render(false,
+            networkModel,
+            isUseWeightsColors,
+            isOnlyChangedWeights,
+            isHighlightChangedWeights,
+            isShowOnlyUnchangedWeights,
+            isShowActivationLabels);
+    }
+    
+    private int GetLayerDistance(NetworkDataModel network)
     {
         return (int)(ActualWidth - 2 * HORIZONTAL_OFFSET) / (network.Layers.Count - 1);
     }
 
-    private float VerticalDistance(int count)
+    private float GetVerticalDistance(int count)
     {
         return MathX.Min(((float)ActualHeight - TOP_OFFSET - BOTTOM_OFFSET) / count, NEURON_MAX_DIST);
     }
 
-    private int LayerX(NetworkDataModel network, LayerDataModel layer)
+    private int GetLayerX(NetworkDataModel network, LayerDataModel layer)
     {
-        return HORIZONTAL_OFFSET + LayerDistance(network) * layer.Id;
+        return HORIZONTAL_OFFSET + GetLayerDistance(network) * layer.Id;
     }
 
-    private new float MaxHeight(NetworkDataModel network)
+    private new float GetMaxHeight(NetworkDataModel network)
     {
-        return network.Layers.Max(layer => layer.Neurons.Count * VerticalDistance(layer.Neurons.Count));
+        return network.Layers.Max(layer => layer.Neurons.Count * GetVerticalDistance(layer.Neurons.Count));
     }
 
-    private float VerticalShift(NetworkDataModel network, LayerDataModel layer)
+    private float GetVerticalShift(NetworkDataModel network, LayerDataModel layer)
     {
-        return (MaxHeight(network) - layer.Neurons.Count * VerticalDistance(layer.Neurons.Count)) / 2;
+        return (GetMaxHeight(network) - layer.Neurons.Count * GetVerticalDistance(layer.Neurons.Count)) / 2;
     }
 
     private void DrawLayersLinks(bool fullState,
@@ -135,8 +162,8 @@ public sealed partial class NetworkPresenter : BaseUserControl
             if (!_coordinator.ContainsKey(neuron1))
             {
                 _coordinator.Add(neuron1,
-                    Points.Get(LayerX(network, layer1),
-                        TOP_OFFSET + VerticalShift(network, layer1) + neuron1.Id * VerticalDistance(layer1.Neurons.Count)));
+                    Points.Get(GetLayerX(network, layer1),
+                        TOP_OFFSET + GetVerticalShift(network, layer1) + neuron1.Id * GetVerticalDistance(layer1.Neurons.Count)));
             }
 
             // Skip intersected neurons on first layer to improove performance.
@@ -276,8 +303,8 @@ public sealed partial class NetworkPresenter : BaseUserControl
                     {
                         if (!_coordinator.ContainsKey(neuron2))
                         {
-                            _coordinator.Add(neuron2, Points.Get(LayerX(network, layer2),
-                                TOP_OFFSET + VerticalShift(network, layer2) + neuron2.Id * VerticalDistance(layer2.Neurons.Count)));
+                            _coordinator.Add(neuron2, Points.Get(GetLayerX(network, layer2),
+                                TOP_OFFSET + GetVerticalShift(network, layer2) + neuron2.Id * GetVerticalDistance(layer2.Neurons.Count)));
                         }
 
                         var point1 = _coordinator[neuron1];
@@ -309,8 +336,8 @@ public sealed partial class NetworkPresenter : BaseUserControl
                 if (!_coordinator.ContainsKey(neuron))
                 {
                     _coordinator.Add(neuron,
-                        Points.Get(LayerX(network, layer),
-                            TOP_OFFSET + VerticalShift(network, layer) + neuron.Id * VerticalDistance(layer.Neurons.Count)));
+                        Points.Get(GetLayerX(network, layer),
+                            TOP_OFFSET + GetVerticalShift(network, layer) + neuron.Id * GetVerticalDistance(layer.Neurons.Count)));
                 }
 
                 // Skip intersected neurons on the first layer to improve performance.
@@ -378,8 +405,8 @@ public sealed partial class NetworkPresenter : BaseUserControl
                 if (!_coordinator.ContainsKey(neuronModel))
                 {
                     _coordinator.Add(neuronModel,
-                        Points.Get(LayerX(networkModel, layerModel),
-                            TOP_OFFSET + VerticalShift(networkModel, layerModel) + neuronModel.Id * VerticalDistance(layerModel.Neurons.Count)));
+                        Points.Get(GetLayerX(networkModel, layerModel),
+                            TOP_OFFSET + GetVerticalShift(networkModel, layerModel) + neuronModel.Id * GetVerticalDistance(layerModel.Neurons.Count)));
                 }
 
                 // Skip intersected neurons on the first layer to improve performance.
@@ -437,73 +464,43 @@ public sealed partial class NetworkPresenter : BaseUserControl
             return;
         }
 
-        //lock (Main.ApplyChangesLocker)
+        if (networkModel.Layers.Count == 0)
         {
-            if (networkModel.Layers.Count == 0)
-            {
-                return;
-            }
+            return;
+        }
 
-            var lastLayerModel = networkModel.Layers.Last;
+        var lastLayerModel = networkModel.Layers.Last;
 
-            var layerModel = networkModel.Layers.First;
-            while (layerModel != lastLayerModel)
-            {
-                DrawLayersLinks(fullState,
-                    networkModel,
-                    layerModel,
-                    layerModel.Next,
-                    isUseWeightsColors,
-                    isOnlyChangedWeights,
-                    isHighlightChangedWeights,
-                    isShowOnlyUnchangedWeights);
-                    
-                layerModel = layerModel.Next;
-            }
+        var layerModel = networkModel.Layers.First;
+        while (layerModel != lastLayerModel)
+        {
+            DrawLayersLinks(fullState,
+                networkModel,
+                layerModel,
+                layerModel.Next,
+                isUseWeightsColors,
+                isOnlyChangedWeights,
+                isHighlightChangedWeights,
+                isShowOnlyUnchangedWeights);
+                
+            layerModel = layerModel.Next;
+        }
 
+        layerModel = networkModel.Layers.First;
+        while (layerModel != null)
+        {
+            DrawLayerNeurons(fullState, networkModel, layerModel);
+            layerModel = layerModel.Next;
+        }
+
+        if (isShowActivationLabels)
+        {
             layerModel = networkModel.Layers.First;
             while (layerModel != null)
             {
-                DrawLayerNeurons(fullState, networkModel, layerModel);
+                DrawNeuronsActivationLabels(fullState, networkModel, layerModel);
                 layerModel = layerModel.Next;
             }
-
-            if (isShowActivationLabels)
-            {
-                layerModel = networkModel.Layers.First;
-                while (layerModel != null)
-                {
-                    DrawNeuronsActivationLabels(fullState, networkModel, layerModel);
-                    layerModel = layerModel.Next;
-                }
-            }
         }
-    }
-
-    public void ClearCache()
-    {
-        _coordinator.Clear();
-    }
-
-    public void RenderStanding(NetworkDataModel networkModel)
-    {
-        ClearCache();
-        Render(true, networkModel, false, false, false, false, false);
-    }
-
-    public void RenderRunning(NetworkDataModel networkModel,
-        bool isUseWeightsColors,
-        bool isOnlyChangedWeights,
-        bool isHighlightChangedWeights,
-        bool isShowOnlyUnchangedWeights,
-        bool isShowActivationLabels)
-    {
-        Render(false,
-            networkModel,
-            isUseWeightsColors,
-            isOnlyChangedWeights,
-            isHighlightChangedWeights,
-            isShowOnlyUnchangedWeights,
-            isShowActivationLabels);
     }
 }
