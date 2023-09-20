@@ -28,15 +28,16 @@ public sealed partial class NetworkPresenter : BaseUserControl
     private readonly Pen _penChange = Draw.GetPen(in ColorsX.Lime);
     private readonly Pen _biasPen = Draw.GetPen(in ColorsX.Orange);
 
-    private readonly Typeface _activationLabelsFont = new(new("Tahoma"),
+    private readonly Typeface _activationLabelsFont = new(new FontFamily("Tahoma"),
         FontStyles.Normal,
         FontWeights.Bold,
         FontStretches.Normal);
 
-    private readonly Typeface _neuronLabelsFont = new(new("Tahoma"),
+    private readonly Typeface _neuronLabelsFont = new(new FontFamily("Tahoma"),
         FontStyles.Normal,
         FontWeights.Bold,
         FontStretches.Normal);
+    
     public NetworkPresenter()
         : base(0)
     {

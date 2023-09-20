@@ -14,7 +14,7 @@ public sealed partial class MatrixPresenter : BaseUserControl
     private const int AXIS_OFFSET = 12;
     private const int BOUND = 30;
 
-    private static readonly Typeface s_font = new(new("Tahoma"),
+    private static readonly Typeface s_font = new(new FontFamily("Tahoma"),
         FontStyles.Normal,
         FontWeights.Bold,
         FontStretches.Normal);
@@ -62,98 +62,6 @@ public sealed partial class MatrixPresenter : BaseUserControl
         SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
     }
 
-    bool IsClassesChanged(List<string> classes)
-    {
-        if (_classes == null || _classes.Count != classes.Count)
-        {
-            return true;
-        }
-
-        for (var i = 0; i < classes.Count; ++i)
-        {
-            if (classes[i] != _classes[i])
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    void InitClassesFormatText(List<string> classes)
-    {
-        _classesFormatText.Clear();
-
-        for (var i = 0; i < classes.Count; ++i)
-        {
-            _classesFormatText[classes[i]] = new(classes[i],
-                Culture.Current,
-                FlowDirection.LeftToRight,
-                s_font,
-                7,
-                Brushes.Black,
-                RenderSettings.PixelsPerDip);
-        }
-    }
-
-    public void DrawBase(ErrorMatrix matrix)
-    {
-        if (matrix == null)
-        {
-            throw new ArgumentNullException(nameof(matrix));
-        }
-
-        CtlBaseCanvas.Clear();
-
-        const int POINTS_SIZE = 9;
-        const int AXIS_OFFSET = 12;
- 
-        for (var y = 0; y < matrix.Output.Length; ++y)
-        {
-            for (var x = 0; x < matrix.Input.Length; ++x)
-            {
-                CtlBaseCanvas.DrawRectangle(null,
-                    _penSilver,
-                    ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE,
-                        AXIS_OFFSET + y * POINTS_SIZE,
-                        POINTS_SIZE,
-                        POINTS_SIZE));
-            }
-        }
-
-        _maxWidth = matrix.Output.Length * POINT_SIZE + AXIS_OFFSET + 11 + BOUND;
-        Width = _maxWidth;
-
-        for (var x = 0; x < matrix.Output.Length; ++x)
-        {
-            var text = _classesFormatText[matrix.OutputClasses[x]];
-            CtlBaseCanvas.DrawText(text,
-                ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
-                    1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
-        }
-
-        for (var y = 0; y < matrix.Input.Length; ++y)
-        {
-            var text = _classesFormatText[matrix.OutputClasses[y]];
-            CtlBaseCanvas.DrawText(text,
-                ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
-                    AXIS_OFFSET + y * POINTS_SIZE));
-        }
-
-        var textOutputX = MathX.Max(0, (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2);
-        CtlBaseCanvas.DrawText(_textOutput,
-            ref Points.Get(AXIS_OFFSET + textOutputX,
-                AXIS_OFFSET - _textOutput.Height - 1));
-
-        var textInputX = MathX.Max(_textInput.Width,
-            (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2);
-
-        CtlBaseCanvas.DrawText(_textInput,
-            ref Points.Get(-AXIS_OFFSET - textInputX,
-                AXIS_OFFSET - _textInput.Height - 1),
-            -90);
-    }
-
     public void DrawErrorMatrix(ErrorMatrix matrix, long lastInput, long lastOutput)
     {
         if (!IsLoaded)
@@ -179,9 +87,9 @@ public sealed partial class MatrixPresenter : BaseUserControl
         long badMax = 1;
 
 
-        for (var x = 0; x < matrix.Input.Length; ++x)
+        for ( var x = 0; x < matrix.Input.Length; ++x )
         {
-            for (var y = 0; y < matrix.Output.Length; ++y)
+            for ( var y = 0; y < matrix.Output.Length; ++y )
             {
                 if (x == y)
                 {
@@ -194,9 +102,9 @@ public sealed partial class MatrixPresenter : BaseUserControl
             }
         }
 
-        for (var y = 0; y < matrix.Output.Length; ++y)
+        for ( var y = 0; y < matrix.Output.Length; ++y )
         {
-            for (var x = 0; x < matrix.Input.Length; ++x)
+            for ( var x = 0; x < matrix.Input.Length; ++x )
             {
                 if (matrix.Matrix[y, x] > 0)
                 {
@@ -215,9 +123,9 @@ public sealed partial class MatrixPresenter : BaseUserControl
                 }
             }
         }
-        
+
         var outputMax = matrix.MaxOutput();
-        for (var x = 0; x < matrix.Output.Length; ++x)
+        for ( var x = 0; x < matrix.Output.Length; ++x )
         {
             var color = Draw.GetColorDradient(in ColorsX.White,
                 matrix.Output[x] > matrix.Input[x]
@@ -238,7 +146,7 @@ public sealed partial class MatrixPresenter : BaseUserControl
         }
 
         var inputMax = matrix.MaxInput();
-        for (var y = 0; y < matrix.Input.Length; ++y)
+        for ( var y = 0; y < matrix.Input.Length; ++y )
         {
             var color = Draw.GetColorDradient(in ColorsX.White,
                 in ColorsX.Green,
@@ -257,6 +165,103 @@ public sealed partial class MatrixPresenter : BaseUserControl
         DrawCross(lastInput, lastOutput);
     }
 
+    public void Clear()
+    {
+        CtlDataCanvas.Clear();
+    }
+    
+    private bool IsClassesChanged(IReadOnlyList<string> classes)
+    {
+        if (_classes == null || _classes.Count != classes.Count)
+        {
+            return true;
+        }
+
+        for ( var i = 0; i < classes.Count; ++i )
+        {
+            if (classes[i] != _classes[i])
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void InitClassesFormatText(List<string> classes)
+    {
+        _classesFormatText.Clear();
+
+        for ( var i = 0; i < classes.Count; ++i )
+        {
+            _classesFormatText[classes[i]] = new(classes[i],
+                Culture.Current,
+                FlowDirection.LeftToRight,
+                s_font,
+                7,
+                Brushes.Black,
+                RenderSettings.PixelsPerDip);
+        }
+    }
+
+    private void DrawBase(ErrorMatrix matrix)
+    {
+        if (matrix == null)
+        {
+            throw new ArgumentNullException(nameof(matrix));
+        }
+
+        CtlBaseCanvas.Clear();
+
+        const int POINTS_SIZE = 9;
+        const int AXIS_OFFSET = 12;
+
+        for ( var y = 0; y < matrix.Output.Length; ++y )
+        {
+            for ( var x = 0; x < matrix.Input.Length; ++x )
+            {
+                CtlBaseCanvas.DrawRectangle(null,
+                    _penSilver,
+                    ref Rects.Get(AXIS_OFFSET + x * POINTS_SIZE,
+                        AXIS_OFFSET + y * POINTS_SIZE,
+                        POINTS_SIZE,
+                        POINTS_SIZE));
+            }
+        }
+
+        _maxWidth = matrix.Output.Length * POINT_SIZE + AXIS_OFFSET + 11 + BOUND;
+        Width = _maxWidth;
+
+        for ( var x = 0; x < matrix.Output.Length; ++x )
+        {
+            var text = _classesFormatText[matrix.OutputClasses[x]];
+            CtlBaseCanvas.DrawText(text,
+                ref Points.Get(AXIS_OFFSET + x * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
+                    1 + AXIS_OFFSET + matrix.Input.Length * POINTS_SIZE));
+        }
+
+        for ( var y = 0; y < matrix.Input.Length; ++y )
+        {
+            var text = _classesFormatText[matrix.OutputClasses[y]];
+            CtlBaseCanvas.DrawText(text,
+                ref Points.Get(1 + AXIS_OFFSET + matrix.Output.Length * POINTS_SIZE + (POINTS_SIZE - text.Width) / 2,
+                    AXIS_OFFSET + y * POINTS_SIZE));
+        }
+
+        var textOutputX = MathX.Max(0, (matrix.Output.Length * POINTS_SIZE - _textOutput.Width) / 2);
+        CtlBaseCanvas.DrawText(_textOutput,
+            ref Points.Get(AXIS_OFFSET + textOutputX,
+                AXIS_OFFSET - _textOutput.Height - 1));
+
+        var textInputX = MathX.Max(_textInput.Width,
+            (matrix.Input.Length * POINTS_SIZE + _textInput.Width) / 2);
+
+        CtlBaseCanvas.DrawText(_textInput,
+            ref Points.Get(-AXIS_OFFSET - textInputX,
+                AXIS_OFFSET - _textInput.Height - 1),
+            -90);
+    }
+    
     private void DrawCross(long input, long output)
     {
         CtlDataCanvas.DrawRectangle(_correctBrush,
@@ -272,11 +277,6 @@ public sealed partial class MatrixPresenter : BaseUserControl
                 AXIS_OFFSET,
                 POINT_SIZE,
                 _classes.Count * POINT_SIZE + 11));
-    }
-
-    public void Clear()
-    {
-        CtlDataCanvas.Clear();
     }
 }
 

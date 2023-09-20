@@ -18,12 +18,12 @@ public sealed partial class PlotterPresenter : BaseUserControl
     private const int AXIS_OFFSET = 6;
     private bool _isBaseRedrawNeeded;
 
-    private readonly Typeface _font = new(new("Tahoma"),
+    private readonly Typeface _font = new(new FontFamily("Tahoma"),
         FontStyles.Normal,
         FontWeights.Bold,
         FontStretches.Normal);
 
-    private readonly Typeface _fontLabels = new(new("Tahoma"),
+    private readonly Typeface _fontLabels = new(new FontFamily("Tahoma"),
         FontStyles.Normal,
         FontWeights.Bold,
         FontStretches.Normal);

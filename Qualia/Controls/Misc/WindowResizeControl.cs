@@ -49,7 +49,7 @@ public class WindowResizeControl : Window
         public Int32 Y;
     };
 
-    public static Point GetMousePosition()
+    private static Point GetMousePosition()
     {
         Win32Point w32Mouse = new();
         GetCursorPos(ref w32Mouse);
@@ -57,7 +57,7 @@ public class WindowResizeControl : Window
         return new(w32Mouse.X, w32Mouse.Y);
     }
 
-    public virtual void OnResizeEnd()
+    protected virtual void OnResizeEnd()
     {
         //
     }

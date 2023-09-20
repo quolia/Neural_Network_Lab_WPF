@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Qualia.Controls.Base;
 using Qualia.Models;
 using Qualia.Tools;
@@ -239,23 +240,6 @@ public sealed partial class InputDataPresenter : BaseUserControl
         this.GetConfigParams().ForEach(p => p.SetOnChangeEvent(OnChanged));
     }
 
-    private void DrawPoint(double x, double y, double value, bool isData)
-    {
-        var brush = value == 0
-            ? System.Windows.Media.Brushes.CornflowerBlue
-            : (isData
-                ? Draw.GetBrush(value)
-                : Draw.GetBrush(Draw.GetColor((byte)(255 * value),
-                    in ColorsX.Green)));
-
-        CtlCanvas.DrawRectangle(brush,
-            _penBlack,
-            ref Rects.Get(_pointSize * x,
-                _pointSize * y,
-                _pointSize,
-                _pointSize));
-    }
-
     public void SetInputDataAndDraw(NetworkDataModel network)
     {
         _threshold = network.InputInitial0;
@@ -285,79 +269,6 @@ public sealed partial class InputDataPresenter : BaseUserControl
     {
         _data = null;
         Rearrange(TaskFunction.VisualControl.GetInputCount());
-    }
-
-    private int GetSnaps()
-    {
-        var width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
-
-        return _isGridSnapAdjustmentAllowed
-            ? width / (_pointsRearrangeSnap * _pointSize)
-            : 1;
-    }
-
-    private void Rearrange(int pointsCount)
-    {
-        CtlCanvas.Clear();
-        _pointsCount = pointsCount;
-
-        if (_data == null || _data.Length != _pointsCount)
-        {
-            _data = new double[_pointsCount];
-            _stat = new double[_pointsCount];
-        }
-
-        var maxStat = GetMaxStat();
-
-        for (var i = 0; i < _pointsCount; ++i)
-        {
-            ref var pointPosition = ref GetPointPosition(i);
-
-            if (_data[i] > _threshold)
-            {
-                DrawPoint(pointPosition.X,
-                    pointPosition.Y,
-                    _data[i],
-                    true);
-            }
-            else
-            {
-                var statValue = maxStat > 0 ? _stat[i] / maxStat : 0;
-
-                DrawPoint(pointPosition.X,
-                    pointPosition.Y,
-                    statValue,
-                    false);
-            }
-        }
-    }
-
-    private double GetMaxStat()
-    {
-        if (_stat == null)
-        {
-            return 0;
-        }
-
-        double max = 0;
-        for (var i = 0; i < _stat.Length; ++i)
-        {
-            if (_stat[i] > max)
-            {
-                max = _stat[i];
-            }
-        }
-
-        return max;
-    }
-
-    private ref Point GetPointPosition(int pointNumber)
-    {
-        var snaps = GetSnaps();
-        var y = (int)MathX.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
-        var x = pointNumber - y * snaps * _pointsRearrangeSnap;
-
-        return ref Points.Get(x, y);
     }
 
     public void SetInputStat(NetworkDataModel network)
@@ -413,5 +324,86 @@ public sealed partial class InputDataPresenter : BaseUserControl
             _isGridSnapAdjustmentAllowed = newTaskControl.IsGridSnapAdjustmentAllowed();
             RearrangeWithNewPointsCount();
         }
+    }
+    
+    private void DrawPoint(double x, double y, double value, bool isData)
+    {
+        var brush = value == 0
+            ? System.Windows.Media.Brushes.CornflowerBlue
+            : (isData
+                ? Draw.GetBrush(value)
+                : Draw.GetBrush(Draw.GetColor((byte)(255 * value),
+                    in ColorsX.Green)));
+
+        CtlCanvas.DrawRectangle(brush,
+            _penBlack,
+            ref Rects.Get(_pointSize * x,
+                _pointSize * y,
+                _pointSize,
+                _pointSize));
+    }
+    
+    private int GetSnaps()
+    {
+        var width = (int)MathX.Max(ActualWidth, _pointsRearrangeSnap * _pointSize);
+
+        return _isGridSnapAdjustmentAllowed
+            ? width / (_pointsRearrangeSnap * _pointSize)
+            : 1;
+    }
+
+    private void Rearrange(int pointsCount)
+    {
+        CtlCanvas.Clear();
+        _pointsCount = pointsCount;
+
+        if (_data == null || _data.Length != _pointsCount)
+        {
+            _data = new double[_pointsCount];
+            _stat = new double[_pointsCount];
+        }
+
+        var maxStat = GetMaxStat();
+
+        for (var i = 0; i < _pointsCount; ++i)
+        {
+            ref var pointPosition = ref GetPointPosition(i);
+
+            if (_data[i] > _threshold)
+            {
+                DrawPoint(pointPosition.X,
+                    pointPosition.Y,
+                    _data[i],
+                    true);
+            }
+            else
+            {
+                var statValue = maxStat > 0 ? _stat[i] / maxStat : 0;
+
+                DrawPoint(pointPosition.X,
+                    pointPosition.Y,
+                    statValue,
+                    false);
+            }
+        }
+    }
+
+    private double GetMaxStat()
+    {
+        if (_stat == null)
+        {
+            return 0;
+        }
+
+        return _stat.Prepend(0).Max();
+    }
+
+    private ref Point GetPointPosition(int pointNumber)
+    {
+        var snaps = GetSnaps();
+        var y = (int)MathX.Ceiling((double)(pointNumber / (snaps * _pointsRearrangeSnap)));
+        var x = pointNumber - y * snaps * _pointsRearrangeSnap;
+
+        return ref Points.Get(x, y);
     }
 }
