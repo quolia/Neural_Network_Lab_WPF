@@ -130,18 +130,16 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
         var layer = lastLayer;
         var finalLayer = IsAdjustFirstLayerWeights ? Layers.First : Layers.First.Next;
 
-        ForwardNeuron AxW;
-        NeuronDataModel prevNeuron;
-
         while (layer != finalLayer)
         {
             neuron = layer.Neurons.First;
+            ForwardNeuron AxW;
             while (neuron != null)
             {
                 AxW = neuron.WeightsToPreviousLayer.First;
                 while (AxW != null)
                 {
-                    prevNeuron = AxW.Neuron;
+                    var prevNeuron = AxW.Neuron;
                     if (prevNeuron.Activation != 0)
                     {
                         prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
@@ -239,7 +237,7 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
                 neuronCopy.X = neuron.X;
                 neuronCopy.Activation = neuron.Activation;
 
-                if (layer.Next == null) // Output layer.
+                if (layer.IsOutputLayer)
                 {
                     neuronCopy.Label = neuron.Label;
                     neuronCopy.PositiveTargetValue = neuron.PositiveTargetValue;

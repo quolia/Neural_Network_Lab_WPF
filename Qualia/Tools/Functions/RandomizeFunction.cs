@@ -184,7 +184,7 @@ public unsafe class RandomizeFunction : BaseFunction<RandomizeFunction>
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        if (layer.Previous == null)
+                        if (layer.IsInputLayer)
                         {
                             weight.Weight = Rand.RandomFlat.NextDouble();
                         }
@@ -224,7 +224,7 @@ public unsafe class RandomizeFunction : BaseFunction<RandomizeFunction>
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        if (layer.Previous == null)
+                        if (layer.IsInputLayer)
                         {
                             weight.Weight = Rand.Gauss.GetNormal(0, a);
                         }
@@ -262,7 +262,7 @@ public unsafe class RandomizeFunction : BaseFunction<RandomizeFunction>
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        if (layer.Previous == null)
+                        if (layer.IsInputLayer)
                         {
                             weight.Weight = Rand.RandomFlat.NextDouble();
                         }
@@ -302,7 +302,7 @@ public unsafe class RandomizeFunction : BaseFunction<RandomizeFunction>
                     var weight = neuron.Weights.First;
                     while (weight != null)
                     {
-                        if (layer.Previous == null)
+                        if (layer.IsInputLayer)
                         {
                             weight.Weight = Rand.Gauss.GetNormal(0, a);
                         }

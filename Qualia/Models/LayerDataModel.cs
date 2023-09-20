@@ -8,6 +8,9 @@ public sealed class LayerDataModel : ListXNode<LayerDataModel>
 
     public readonly int Id;
     public readonly ListX<NeuronDataModel> Neurons;
+
+    public bool IsOutputLayer => Next == null;
+    public bool IsInputLayer => Previous == null;
         
     public LayerDataModel(int id, int neuronsCount, int weightsCountPerNeuron)
     {

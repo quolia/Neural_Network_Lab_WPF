@@ -375,7 +375,7 @@ public sealed partial class NetworkControl : BaseUserControl
                 neuron.ActivationFunction = ctlNeurons[neuronInd].ActivationFunction;
                 neuron.ActivationFunctionParam = ctlNeurons[neuronInd].ActivationFunctionParam;
 
-                if (layer.Next == null) // Output layer.
+                if (layer.IsOutputLayer)
                 {
                     neuron.Label = ctlNeurons[neuronInd].Label;
 

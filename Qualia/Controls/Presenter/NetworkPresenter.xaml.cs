@@ -140,7 +140,7 @@ public sealed partial class NetworkPresenter : BaseUserControl
             }
 
             // Skip intersected neurons on first layer to improove performance.
-            if (!fullState && layer1.Previous == null && prevNeuron != null)
+            if (!fullState && layer1.IsInputLayer && prevNeuron != null)
             {
                 if (_coordinator[neuron1].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                 {
@@ -345,7 +345,7 @@ public sealed partial class NetworkPresenter : BaseUserControl
 
                 CtlCanvas.DrawEllipse(brush, pen, ref centerPoint, radius, radius);
                     
-                if (layer.Next == null // Output layer.
+                if (layer.IsOutputLayer
                     && !string.IsNullOrEmpty(neuron.Label)) 
                 {
                     FormattedText text = new(neuron.Label,
@@ -403,7 +403,7 @@ public sealed partial class NetworkPresenter : BaseUserControl
                     Draw.GetBrush(in ColorsX.Black),
                     RenderSettings.PixelsPerDip);
 
-                var x = layerModel.Next == null // Output layer.
+                var x = layerModel.IsOutputLayer
                     ? centerPoint.X - text.Width - TEXT_OFFSET * 2 - NEURON_RADIUS * 2
                     : centerPoint.X;
 
