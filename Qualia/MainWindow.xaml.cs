@@ -64,7 +64,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
 
     private void SetTitle(string fileName)
     {
-        Title = @"Networks - {Path.GetFileNameWithoutExtension(fileName)}";
+        Title = $"Networks - {fileName}";
 #if DEBUG
         Title += " (DEBUG)";
 #else
