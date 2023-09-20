@@ -78,7 +78,7 @@ public static class UIManager
         return t;
     }
 
-    public static Config GetConfig<T>(this T t) where T : class
+    public static Config GetConfig<T>(this T t) where T : class 
     {
         var info = ExtendedInfo.GetInfo(t) ?? throw new InvalidOperationException();
         return info.Config;
