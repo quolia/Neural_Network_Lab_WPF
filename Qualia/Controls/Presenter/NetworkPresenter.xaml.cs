@@ -368,17 +368,17 @@ public sealed partial class NetworkPresenter : BaseUserControl
         {
             if (fullState || layerModel.Previous != null || neuronModel.Activation == networkModel.InputInitial1)
             {
-                if (!_coordinator.ContainsKey(neuronModel))
+                if (!_coordinator.TryGetValue(neuronModel, out var value))
                 {
-                    _coordinator.Add(neuronModel,
-                        Points.Get(GetLayerX(networkModel, layerModel),
-                            TOP_OFFSET + GetVerticalShift(networkModel, layerModel) + neuronModel.Id * GetVerticalDistance(layerModel.Neurons.Count)));
+                    value = Points.Get(GetLayerX(networkModel, layerModel),
+                            TOP_OFFSET + GetVerticalShift(networkModel, layerModel) + neuronModel.Id * GetVerticalDistance(layerModel.Neurons.Count));
+                    _coordinator.Add(neuronModel, value);
                 }
 
                 // Skip intersected neurons on the first layer to improve performance.
                 if (!fullState && networkModel.Layers.First == layerModel && prevNeuron != null)
                 {
-                    if (_coordinator[neuronModel].Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
+                    if (value.Y - _coordinator[prevNeuron].Y < NEURON_SIZE)
                     {
                         neuronModel = neuronModel.Next;
                         continue;

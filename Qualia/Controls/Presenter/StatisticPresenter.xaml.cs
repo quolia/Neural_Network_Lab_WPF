@@ -9,7 +9,7 @@ namespace Qualia.Controls.Presenter;
 public sealed partial class StatisticsPresenter : BaseUserControl
 {
     private static readonly StringBuilder s_stringBuilder = new();
-    readonly Dictionary<string, string> _stat = new(30);
+    private readonly Dictionary<string, string> _stat = new(30);
 
     private double _maxWidth;
 
@@ -178,7 +178,12 @@ public sealed partial class StatisticsPresenter : BaseUserControl
         return _stat;
     }
 
-    public void Draw(Dictionary<string, string> stats)
+    public void Clear()
+    {
+        Draw(null);
+    }
+    
+    private void Draw(Dictionary<string, string> stats)
     {
         CtlText.Text = string.Empty;
 
@@ -208,10 +213,5 @@ public sealed partial class StatisticsPresenter : BaseUserControl
         }
 
         CtlText.Width = _maxWidth;
-    }
-
-    public void Clear()
-    {
-        Draw(null);
     }
 }

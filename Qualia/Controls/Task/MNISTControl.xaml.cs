@@ -14,11 +14,11 @@ public sealed partial class MNISTControl : BaseUserControl
 {
     public readonly List<MNISTImage> Images = new();
 
-    private string _imagesGzPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
-    private string _labelsGzPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
+    private readonly string _imagesGzPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "train-images-idx3-ubyte.gz";
+    private readonly string _labelsGzPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "train-labels-idx1-ubyte.gz";
 
-    private string _imagesPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "images.bin";
-    private string _labelsPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "labels.bin";
+    private readonly string _imagesPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "images.bin";
+    private readonly string _labelsPath = App.WorkingDirectory + "Datasets" + Path.DirectorySeparatorChar + "MNIST" + Path.DirectorySeparatorChar + "labels.bin";
 
     public MNISTControl()
         : base(0)

@@ -40,13 +40,8 @@ public partial class TaskSolutionsPresenter : BaseUserControl
             "count"));
         builder.AppendLine();
 
-        foreach (var solution in solutions)
+        foreach (var solution in solutions.Where(solution => !solution.IsExcluded) )
         {
-            if (solution.IsExcluded)
-            {
-                continue;
-            }
-
             builder.AppendLine(string.Format(Culture.Current,
                 "{0, -10} {1, 7} {2, 5} {3, 9} {4, 6} {5, 8}",
                 solution.Name,

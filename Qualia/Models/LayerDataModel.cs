@@ -4,9 +4,9 @@ namespace Qualia.Models;
 
 public sealed class LayerDataModel : ListXNode<LayerDataModel>
 {
-    public long VisualId;
-
     public readonly int Id;
+    public long VisualId;
+    
     public readonly ListX<NeuronDataModel> Neurons;
 
     public bool IsOutputLayer => Next == null;

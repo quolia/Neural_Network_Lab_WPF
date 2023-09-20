@@ -38,6 +38,7 @@ public partial class FunctionPresenter : UserControl, ISelectableItem
     public void DrawFunction(Func<double, double> func, in Color color, int dataShiftFactor)
     {
         const double STEP = 20;
+        
         var yc = CtlCanvas.Height / 2;
         var xc = CtlCanvas.Width / 2;
 

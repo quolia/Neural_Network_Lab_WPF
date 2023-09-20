@@ -21,26 +21,6 @@ public sealed partial class PresenterControl : UserControl
         Disposed += Presenter_OnDisposed;
     }
 
-    private void Presenter_OnDisposed(object sender, EventArgs e)
-    {
-        if (_drawArea != null)
-        {
-            _drawArea.Dispose();
-            _drawArea = null;
-        }
-
-        if (G != null)
-        {
-            G.Dispose();
-            G = null;
-        }
-    }
-
-    private void DrawBox_OnSizeChanged(object sender, EventArgs e)
-    {
-        _isRenderNeeded = true;
-    }
-
     public void StartRender()
     {
         if (_isRenderNeeded && Width > 0 && Height > 0)
@@ -62,5 +42,25 @@ public sealed partial class PresenterControl : UserControl
     public void Clear()
     {
         G.Clear(BackColor);
+    }
+    
+    private void Presenter_OnDisposed(object sender, EventArgs e)
+    {
+        if (_drawArea != null)
+        {
+            _drawArea.Dispose();
+            _drawArea = null;
+        }
+
+        if (G != null)
+        {
+            G.Dispose();
+            G = null;
+        }
+    }
+
+    private void DrawBox_OnSizeChanged(object sender, EventArgs e)
+    {
+        _isRenderNeeded = true;
     }
 }

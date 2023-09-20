@@ -33,21 +33,16 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
 
     private NetworkDataModel _copy;
 
-    public NetworkDataModel(long visualId, int[] layersSizes)
+    public NetworkDataModel(long visualId, IReadOnlyList<int> layersSizes)
     {
         VisualId = visualId;
-        Layers = new(layersSizes.Length);
-        Range.For(layersSizes.Length, i => CreateLayer(layersSizes[i], i < layersSizes.Length - 1 ? layersSizes[i + 1] : 0));
+        Layers = new ListX<LayerDataModel>(layersSizes.Count);
+        Range.For(layersSizes.Count, i => CreateLayer(layersSizes[i], i < layersSizes.Count - 1 ? layersSizes[i + 1] : 0));
     }
 
     public void SetCopy(NetworkDataModel networkModelCopy)
     {
         _copy = networkModelCopy;
-    }
-
-    public void CreateLayer(int neuronCount, int weightsCount)
-    {
-        Layers.Add(new(Layers.Count, neuronCount, weightsCount));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -91,14 +86,13 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
     {
         var layer = Layers.First;
         var lastLayer = Layers.Last;
-        double sum;
 
         while (layer != lastLayer)
         {
             var nextLayerNeuron = layer.Next.Neurons.First;
             while (nextLayerNeuron != null)
             {
-                sum = 0;
+                double sum = 0;
                 var AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
                 while (AxW != null)
                 {
@@ -269,5 +263,10 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
         _copy.TargetOutputNeuronId = TargetOutputNeuronId;
 
         return _copy;
+    }
+    
+    private void CreateLayer(int neuronCount, int weightsCount)
+    {
+        Layers.Add(new(Layers.Count, neuronCount, weightsCount));
     }
 }

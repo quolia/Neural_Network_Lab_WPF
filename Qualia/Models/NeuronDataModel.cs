@@ -29,7 +29,7 @@ public sealed class NeuronDataModel : ListXNode<NeuronDataModel>
 
     public NeuronDataModel(int id, int weightsCount)
     {
-        Weights = new(weightsCount);
+        Weights = new ListX<WeightDataModel>(weightsCount);
         Id = id;
         Range.For(weightsCount, i => Weights.Add(new(i)));
     }
