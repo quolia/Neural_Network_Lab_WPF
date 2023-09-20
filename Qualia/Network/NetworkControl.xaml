@@ -1,9 +1,10 @@
-﻿<local:BaseUserControl x:Class="Qualia.Controls.NetworkControl"
+﻿<base:BaseUserControl x:Class="Qualia.Network.NetworkControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Qualia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:base="clr-namespace:Qualia.Controls.Base"
+             xmlns:values="clr-namespace:Qualia.Controls.Base.Values"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -14,34 +15,34 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <local:BoolValueControl x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
-                    <local:TextControl Text="Color:" Margin="20,0,0,0" />
-                    <local:TextControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Text="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="Color_OnClick" />
+                    <values:BoolValueControl x:Name="CtlIsNetworkEnabled" DefaultValue="True" Content="Enable" VerticalAlignment="Center" />
+                    <values:TextControl Text="Color:" Margin="20,0,0,0" />
+                    <values:TextControl x:Name="CtlColor" Height="18" Padding="3,0,3,0" Text="Color" Background="White" Foreground="Black" BorderThickness="1" BorderBrush="Black" Cursor="Hand" MouseLeftButtonUp="Color_OnClick" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Text="Weights randomizer:" />
-                <local:SelectorControl x:Name="CtlRandomizeFunction" />
-                <local:TextControl Text="a:" />
-                <local:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaxValue="1000" MinValue="-1000" />
+                <values:TextControl Text="Weights randomizer:" />
+                <values:SelectorControl x:Name="CtlRandomizeFunction" />
+                <values:TextControl Text="a:" />
+                <values:DoubleValueControl x:Name="CtlRandomizeFunctionParam" MinWidth="60" MaxValue="1000" MinValue="-1000" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button Name="CtlRandomizerButton" Content="View randomizer" Margin="2" Padding="3" Click="RandomizerButton_OnClick" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Text="Learning rate:" />
-                <local:DoubleValueControl x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaxValue="100" MinValue="-1" />
+                <values:TextControl Text="Learning rate:" />
+                <values:DoubleValueControl x:Name="CtlLearningRate" MinWidth="60" DefaultValue="0.05" Text="0.05" MaxValue="100" MinValue="-1" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Text="Cost function:" />
-                <local:SelectorControl x:Name="CtlCostFunction" />
+                <values:TextControl Text="Cost function:" />
+                <values:SelectorControl x:Name="CtlCostFunction" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:TextControl Text="Back propagation strategy:" />
-                <local:SelectorControl x:Name="CtlBackPropagationStrategy" />
+                <values:TextControl Text="Back propagation strategy:" />
+                <values:SelectorControl x:Name="CtlBackPropagationStrategy" />
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <local:TextControl Text="Description:" />
+                <values:TextControl Text="Description:" />
                 <TextBlock x:Name="CtlBackPropagationStrategyDescription" Padding="3" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>
@@ -57,4 +58,4 @@
             <TabItem Name="CtlTabOutput" Header="Output" Margin="0" VerticalContentAlignment="Stretch" />
         </TabControl>
     </Grid>
-</local:BaseUserControl>
+</base:BaseUserControl>

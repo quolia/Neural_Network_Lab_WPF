@@ -1,9 +1,10 @@
-﻿<local:NeuronBaseControl x:Class="Qualia.Controls.OutputNeuronControl"
+﻿<base:NeuronBaseControl x:Class="Qualia.Network.Output.OutputNeuronControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Qualia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:base="clr-namespace:Qualia.Network.Base"
+             xmlns:values="clr-namespace:Qualia.Controls.Base.Values"
              mc:Ignorable="d" 
              BorderThickness="0,1,0,0"
              BorderBrush="Gray"
@@ -32,21 +33,21 @@
         <Label Grid.Column="2" Content="a:" />
         <local:DoubleValueControl Grid.Column="3" x:Name="CtlActivationFunctionParam" MinValue="-100" MaxValue="100" />
         -->
-        <local:TextControl  Grid.Column="4" x:Name="CtlNumber" Text="1" />
+        <values:TextControl  Grid.Column="4" x:Name="CtlNumber" Text="1" />
         
-        <local:TextControl Grid.ColumnSpan="2"
+        <values:TextControl Grid.ColumnSpan="2"
                            Text="Activation function:" />
 
-        <local:SelectorControl Grid.Row="1"
+        <values:SelectorControl Grid.Row="1"
                                Grid.RowSpan="2"
                                Grid.ColumnSpan="2"
                                x:Name="CtlActivationFunction" />
 
-        <local:TextControl Grid.Row="1"
+        <values:TextControl Grid.Row="1"
                            Grid.Column="2"
                            Text="a:" />
 
-        <local:DoubleValueControl Grid.Row="1"
+        <values:DoubleValueControl Grid.Row="1"
                                   Grid.Column="3"
                                   Grid.ColumnSpan="2"
                                   x:Name="CtlActivationFunctionParam"
@@ -55,23 +56,23 @@
                                   MaxValue="100" />
         
         <Label Grid.Row="3" Content="Label:" />
-        <local:StringValueControl x:Name="CtlLabel"
+        <values:StringValueControl x:Name="CtlLabel"
                                   Grid.Row="3"
                                   Grid.Column="3"
                                   IsEmptyAllowed="True"
                                   Grid.ColumnSpan="2" />
 
         <Label Grid.Row="4" Content="Positive target value:" />
-        <local:DoubleValueControl x:Name="CtlPositiveTargetValue"
+        <values:DoubleValueControl x:Name="CtlPositiveTargetValue"
                                   Grid.Row="4"
                                   Grid.Column="3"
                                   Grid.ColumnSpan="2" />
 
         <Label Grid.Row="5" Content="Negative target value:" />
-        <local:DoubleValueControl x:Name="CtlNegativeTargetValue"
+        <values:DoubleValueControl x:Name="CtlNegativeTargetValue"
                                   Grid.Row="5"
                                   Grid.Column="3"
                                   Grid.ColumnSpan="2" />
 
     </Grid>
-</local:NeuronBaseControl>
+</base:NeuronBaseControl>

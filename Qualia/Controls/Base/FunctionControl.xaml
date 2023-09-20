@@ -1,9 +1,10 @@
-﻿<local:BaseUserControl x:Class="Qualia.Controls.FunctionControl" 
+﻿<base:BaseUserControl x:Class="Qualia.Controls.Base.FunctionControl" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Qualia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:base="clr-namespace:Qualia.Controls.Base"
+             xmlns:values="clr-namespace:Qualia.Controls.Base.Values"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -14,13 +15,13 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <local:SelectorControl x:Name="CtlFunction" />
+            <values:SelectorControl x:Name="CtlFunction" />
             
-            <local:TextControl Text="a:"
+            <values:TextControl Text="a:"
                                Grid.Column="1" />
             
-            <local:DoubleValueControl x:Name="CtlParam"
+            <values:DoubleValueControl x:Name="CtlParam"
                                       Grid.Column="2" />
         </Grid>
     </Grid>
-</local:BaseUserControl>
+</base:BaseUserControl>

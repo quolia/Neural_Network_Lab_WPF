@@ -1,9 +1,10 @@
-﻿<local:BaseUserControl x:Class="Qualia.Controls.InputDataPresenter"
+﻿<base:BaseUserControl x:Class="Qualia.Controls.Presenter.InputDataPresenter"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Qualia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:base="clr-namespace:Qualia.Controls.Base"
+             xmlns:values="clr-namespace:Qualia.Controls.Base.Values"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -16,24 +17,24 @@
         </Grid.RowDefinitions>
 
         <StackPanel  Orientation="Vertical" >
-            <local:TextControl Text="Task:" />
-            <local:SelectorControl x:Name="CtlTaskFunction" />
+            <values:TextControl Text="Task:" />
+            <values:SelectorControl x:Name="CtlTaskFunction" />
             <TextBlock x:Name="CtlTaskDescription" TextWrapping="Wrap" Margin="3 0 0 0" />
 
-            <local:TextControl Text="Task solution values distribution function:" />
-            <local:FunctionControl x:Name="CtlDistributionFunction" />
-            <local:TextControl Text="Parameters:" />
+            <values:TextControl Text="Task solution values distribution function:" />
+            <base:FunctionControl x:Name="CtlDistributionFunction" />
+            <values:TextControl Text="Parameters:" />
             
             <Grid Name="CtlTaskControlHolder" />
 
             <StackPanel Orientation="Vertical">
-                <local:BoolValueControl x:Name="CtlIsPreventRepetition"
+                <values:BoolValueControl x:Name="CtlIsPreventRepetition"
                                         Content="Prevent task solution values repetition"
                                         VerticalAlignment="Center" />
                 
-                <local:TextControl Text="Input data view:" />
+                <values:TextControl Text="Input data view:" />
             </StackPanel>
-            <local:CanvasControl x:Name="CtlCanvas" />
+            <base:CanvasControl x:Name="CtlCanvas" />
         </StackPanel>
     </Grid>
-</local:BaseUserControl>
+</base:BaseUserControl>

@@ -1,102 +1,103 @@
-﻿using Qualia.Tools;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
+using Qualia.Controls.Base;
+using Qualia.Tools;
+using Qualia.Tools.Managers;
 
-namespace Qualia.Controls
+namespace Qualia.Network.Base;
+
+public abstract partial class LayerBaseControl : BaseUserControl
 {
-    abstract public partial class LayerBaseControl : BaseUserControl
+    public ObservableCollection<NeuronBaseControl> Neurons { get; } = new();
+
+    public LayerBaseControl(long configId,
+        Config config,
+        ActionManager.ApplyActionDelegate onChanged)
+        : base(UniqId.GetNextId(configId))
     {
-        public ObservableCollection<NeuronBaseControl> Neurons { get; } = new();
-
-        public LayerBaseControl(long configId,
-                                Config config,
-                                ActionManager.ApplyActionDelegate onChanged)
-            : base(UniqId.GetNextId(configId))
+        if (config == null)
         {
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
-
-            this.PutConfig(config.ExtendWithId(VisualId));
-
-            SetOnChangeEvent(onChanged);
-
-            Loaded += LayerBaseControl_Loaded;
+            throw new ArgumentNullException(nameof(config));
         }
 
-        public void RefreshNeuronsOrdinalNumbers()
+        this.PutConfig(config.ExtendWithId(VisualId));
+
+        SetOnChangeEvent(onChanged);
+
+        Loaded += LayerBaseControl_Loaded;
+    }
+
+    public void RefreshNeuronsOrdinalNumbers()
+    {
+        var ordinalNumber = 0;
+        Qualia.Tools.Range.ForEach(Neurons, n => n.SetOrdinalNumber(++ordinalNumber));
+    }
+
+    private void LayerBaseControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        LayerControl_OnLoaded();
+    }
+
+    public void Scroll_OnChanged(object sender, ScrollChangedEventArgs e)
+    {
+        MaxWidth = (sender as ScrollViewer).ViewportWidth;
+    }
+
+    public NeuronBaseControl AddNeuron()
+    {
+        return AddNeuron(Constants.UnknownId);
+    }
+
+    public virtual bool CanNeuronBeAdded() => true;
+    public virtual bool CanNeuronBeRemoved(NeuronBaseControl neuron)
+    {
+        var count = Neurons.Count;
+
+        if (count < 2)
         {
-            int ordinalNumber = 0;
-            Qualia.Tools.Range.ForEach(Neurons, n => n.SetOrdinalNumber(++ordinalNumber));
+            return false;
         }
 
-        private void LayerBaseControl_Loaded(object sender, RoutedEventArgs e)
+        if (!neuron.IsSelected)
         {
-            LayerControl_OnLoaded();
+            return true;
         }
 
-        public void Scroll_OnChanged(object sender, ScrollChangedEventArgs e)
+        var selected = Neurons.Where(n => n.IsSelected).ToList();
+        return count - selected.Count > 0;
+    }
+
+    public abstract void LayerControl_OnLoaded();
+    public abstract NeuronBaseControl AddNeuron(long id);
+    public abstract int RemoveNeuron(NeuronBaseControl neuron);
+
+    // Layer type.
+
+    public virtual bool IsInput => false;
+    public virtual bool IsHidden => false;
+    public virtual bool IsOutput => false;
+
+    //
+
+    public abstract void SetAllNeuronsSelected(bool isSelected);
+
+    public virtual void CopyTo(LayerBaseControl newLayer)
+    {
+        if (GetType() != newLayer.GetType())
         {
-            MaxWidth = (sender as ScrollViewer).ViewportWidth;
+            throw new InvalidOperationException();
         }
 
-        public NeuronBaseControl AddNeuron()
+        var newNeuronsCount = newLayer.Neurons.Count;
+
+        for (var i = 0; i < Neurons.Count; ++i)
         {
-            return AddNeuron(Constants.UnknownId);
-        }
-
-        virtual public bool CanNeuronBeAdded() => true;
-        virtual public bool CanNeuronBeRemoved(NeuronBaseControl neuron)
-        {
-            int count = Neurons.Count;
-
-            if (count < 2)
-            {
-                return false;
-            }
-
-            if (!neuron.IsSelected)
-            {
-                return true;
-            }
-
-            var selected = Neurons.Where(n => n.IsSelected).ToList();
-            return count - selected.Count > 0;
-        }
-
-        abstract public void LayerControl_OnLoaded();
-        abstract public NeuronBaseControl AddNeuron(long id);
-        abstract public int RemoveNeuron(NeuronBaseControl neuron);
-
-        // Layer type.
-
-        virtual public bool IsInput => false;
-        virtual public bool IsHidden => false;
-        virtual public bool IsOutput => false;
-
-        //
-
-        abstract public void SetAllNeuronsSelected(bool isSelected);
-
-        virtual public void CopyTo(LayerBaseControl newLayer)
-        {
-            if (GetType() != newLayer.GetType())
-            {
-                throw new InvalidOperationException();
-            }
-
-            int newNeuronsCount = newLayer.Neurons.Count;
-
-            for (int i = 0; i < Neurons.Count; ++i)
-            {
-                var neuron = Neurons[i];
-                var newNeuron = i < newNeuronsCount ? newLayer.Neurons[i] : newLayer.AddNeuron();
-                neuron.CopyTo(newNeuron);
-            }
+            var neuron = Neurons[i];
+            var newNeuron = i < newNeuronsCount ? newLayer.Neurons[i] : newLayer.AddNeuron();
+            neuron.CopyTo(newNeuron);
         }
     }
 }

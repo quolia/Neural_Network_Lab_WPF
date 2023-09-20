@@ -1,9 +1,10 @@
-﻿<local:WindowResizeControl x:Class="Qualia.Controls.RandomizerViewer"
+﻿<misc:WindowResizeControl x:Class="Qualia.Controls.Viewer.RandomizerViewer"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Qualia.Controls"
+        xmlns:misc="clr-namespace:Qualia.Controls.Misc"
+        xmlns:presenter="clr-namespace:Qualia.Controls.Presenter"
         mc:Ignorable="d"
         Background="White"
         Title="Randomizer Viewer" Height="450" Width="800">
@@ -15,7 +16,7 @@
                    HorizontalAlignment="Right" />
         
         <Canvas Name="CtlCanvas">
-            <local:PresenterControlHost x:Name="CtlPresenter" />
+            <presenter:PresenterControlHost x:Name="CtlPresenter" />
         </Canvas>
     </Grid>
-</local:WindowResizeControl>
+</misc:WindowResizeControl>

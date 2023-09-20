@@ -1,37 +1,39 @@
-﻿using Qualia.Controls;
+﻿using Qualia.Controls.Base.Values;
+using Qualia.Controls.Presenter;
+using Qualia.Tools;
+using Qualia.Tools.Functions;
 
-namespace Qualia.Tools
+namespace Qualia.Controls.ToolTips;
+
+public static class PresenterProvider
 {
-    public static class PresenterProvider
+    public static unsafe ISelectableItem GetPresenter(ActivationFunction instance, string name)
     {
-        unsafe public static ISelectableItem GetPresenter(ActivationFunction instance, string name)
+        var control = new FunctionPresenter(name);
+        control.Loaded += (sender, e) =>
         {
-            var control = new FunctionPresenter(name);
-            control.Loaded += (sender, e) =>
-            {
-                control.CtlDescription.Text = name;
-                control.DrawBase();
-                control.DrawFunction(x => instance.Do(x, 1), in ColorsX.Red, 0);
-                control.DrawFunction(x => instance.Derivative(x, instance.Do(x, 1), 1), in ColorsX.Blue, 1);
-            };
+            control.CtlDescription.Text = name;
+            control.DrawBase();
+            control.DrawFunction(x => instance.Do(x, 1), in ColorsX.Red, 0);
+            control.DrawFunction(x => instance.Derivative(x, instance.Do(x, 1), 1), in ColorsX.Blue, 1);
+        };
 
-            return control;
-        }
+        return control;
+    }
 
-        unsafe public static ISelectableItem GetPresenter(RandomizeFunction instance, string name)
+    public static unsafe ISelectableItem GetPresenter(RandomizeFunction instance, string name)
+    {
+        var control = new FunctionPresenter(name);
+        control.Loaded += (sender, e) =>
         {
-            var control = new FunctionPresenter(name);
-            control.Loaded += (sender, e) =>
-            {
-                control.DrawBase();
-            };
+            control.DrawBase();
+        };
 
-            return control;
-        }
+        return control;
+    }
 
-        public static ISelectableItem GetDefaultSelectableItemPresenter(string name)
-        {
-            return new DefaultSelectableItemPresenter(name);
-        }
+    public static ISelectableItem GetDefaultSelectableItemPresenter(string name)
+    {
+        return new DefaultSelectableItemPresenter(name);
     }
 }

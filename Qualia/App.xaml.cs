@@ -5,81 +5,80 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Qualia
+namespace Qualia;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    //[assembly: System.Reflection.AssemblyVersion("1.0.*")]
+
+    public App()
     {
-        //[assembly: System.Reflection.AssemblyVersion("1.0.*")]
+        Logger.LogFileName = WorkingDirectory + "log.txt";
 
-        public App()
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_OnUnhandledException;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_OnUnobservedTaskException;
+    }
+
+    public static string WorkingDirectory => Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
+
+    private void TaskScheduler_OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    {
+        try
         {
-            Logger.LogFileName = WorkingDirectory + "log.txt";
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_OnUnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_OnUnobservedTaskException;
+            Logger.OnUnhandledException(e.Exception);
         }
-
-        public static string WorkingDirectory => Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
-
-        private void TaskScheduler_OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        finally
         {
-            try
-            {
-                Logger.OnUnhandledException(e.Exception);
-            }
-            finally
-            {
-                TerminateApplication();
-            }
+            TerminateApplication();
         }
+    }
 
-        private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        try
         {
-            try
-            {
-                Logger.OnUnhandledException(e.Exception);
-            }
-            finally
-            {
-                TerminateApplication();
-            }
+            Logger.OnUnhandledException(e.Exception);
         }
-
-        private void CurrentDomain_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        finally
         {
-            try
-            {
-                Logger.OnUnhandledException((Exception)e.ExceptionObject);
-            }
-            finally
-            {
-                TerminateApplication();
-            }
+            TerminateApplication();
         }
+    }
 
-        private void TerminateApplication()
+    private void CurrentDomain_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        try
         {
-            try
+            Logger.OnUnhandledException((Exception)e.ExceptionObject);
+        }
+        finally
+        {
+            TerminateApplication();
+        }
+    }
+
+    private void TerminateApplication()
+    {
+        try
+        {
+            if (Current != null)
             {
-                if (Current != null)
+                Current.Dispatcher.Invoke(() =>
                 {
-                    Current.Dispatcher.Invoke(() =>
+                    try
                     {
-                        try
-                        {
-                            Current.Shutdown();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogException(ex);
-                        }
-                    });
-                }
+                        Current.Shutdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
+                });
             }
-            catch (Exception ex2)
-            {
-                Logger.LogException(ex2);
-            }
+        }
+        catch (Exception ex2)
+        {
+            Logger.LogException(ex2);
         }
     }
 }

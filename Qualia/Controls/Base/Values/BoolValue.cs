@@ -1,99 +1,99 @@
-﻿using Qualia.Tools;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Qualia.Tools;
+using Qualia.Tools.Managers;
 
-namespace Qualia.Controls
+namespace Qualia.Controls.Base.Values;
+
+public sealed class BoolValueControl : CheckBox, IConfigParam
 {
-    sealed public class BoolValueControl : CheckBox, IConfigParam
+    public bool DefaultValue { get; set; }
+
+    public BoolValueControl Initialize(bool defaultValue)
     {
-        public bool DefaultValue { get; set; }
+        DefaultValue = defaultValue;
+        return this;
+    }
 
-        public BoolValueControl Initialize(bool defaultValue)
+    public bool Value
+    {
+        get => IsChecked == true;
+        set => IsChecked = value;
+    }
+
+    public BoolValueControl()
+    {
+        Padding = new(0);
+        Margin = new(3);
+    }
+
+    private void EnableListeners(bool isEnable)
+    {
+        Checked -= Value_OnChanged;
+        Unchecked -= Value_OnChanged;
+
+        if (isEnable)
         {
-            DefaultValue = defaultValue;
-            return this;
+            Checked += Value_OnChanged;
+            Unchecked += Value_OnChanged;
         }
+    }
 
-        public bool Value
+    private void Value_OnChanged(object sender, RoutedEventArgs e)
+    {
+        ApplyAction action = new(this)
         {
-            get => IsChecked == true;
-            set => IsChecked = value;
-        }
-
-        public BoolValueControl()
-        {
-            Padding = new(0);
-            Margin = new(3);
-        }
-
-        private void EnableListeners(bool isEnable)
-        {
-            Checked -= Value_OnChanged;
-            Unchecked -= Value_OnChanged;
-
-            if (isEnable)
+            Cancel = (isRunning) =>
             {
-                Checked += Value_OnChanged;
-                Unchecked += Value_OnChanged;
+                EnableListeners(false);
+                Value = !Value;
+                EnableListeners(true);
+
+                this.InvokeUIHandler(new(this));
             }
-        }
+        };
 
-        private void Value_OnChanged(object sender, RoutedEventArgs e)
-        {
-            ApplyAction action = new(this)
-            {
-                Cancel = (isRunning) =>
-                {
-                    EnableListeners(false);
-                    Value = !Value;
-                    EnableListeners(true);
+        this.InvokeUIHandler(action);
+    }
 
-                    this.InvokeUIHandler(new(this));
-                }
-            };
+    // IConfigParam
 
-            this.InvokeUIHandler(action);
-        }
+    public void SetConfig(Config config)
+    {
+        this.PutConfig(config);
+    }
 
-        // IConfigParam
+    public void LoadConfig()
+    {
+        Value = this.GetConfig().Get(Name, DefaultValue);
+    }
 
-        public void SetConfig(Config config)
-        {
-            this.PutConfig(config);
-        }
+    public void SaveConfig()
+    {
+        this.GetConfig().Set(Name, Value);
+    }
 
-        public void LoadConfig()
-        {
-            Value = this.GetConfig().Get(Name, DefaultValue);
-        }
+    public void RemoveFromConfig()
+    {
+        this.GetConfig().Remove(Name);
+    }
 
-        public void SaveConfig()
-        {
-            this.GetConfig().Set(Name, Value);
-        }
+    public bool IsValid() => true;
 
-        public void RemoveFromConfig()
-        {
-            this.GetConfig().Remove(Name);
-        }
+    public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
+    {
+        EnableListeners(true);
+        this.SetUIHandler(onChanged);
+    }
 
-        public bool IsValid() => true;
+    public void InvalidateValue() => throw new InvalidOperationException();
 
-        public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged)
-        {
-            EnableListeners(true);
-            this.SetUIHandler(onChanged);
-        }
+    //
 
-        public void InvalidateValue() => throw new InvalidOperationException();
-
-        //
-
-        public string ToXml()
-        {
-            string name = Config.PrepareParamName(Name);
-            return $"<{name} Value=\"{Value}\" /> \n";
-        }
+    public string ToXml()
+    {
+        var name = Config.PrepareParamName(Name);
+        return $"<{name} Value=\"{Value}\" /> \n";
     }
 }

@@ -1,4 +1,1 @@
-﻿namespace Qualia.Tools
-{
-
-}
+﻿namespace Qualia.Tools;

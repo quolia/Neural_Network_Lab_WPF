@@ -1,7 +1,6 @@
-﻿namespace Qualia.Tools
+﻿namespace Qualia.Tools;
+
+public static class Locker
 {
-    public static class Locker
-    {
-        public static readonly object ApplyChanges = new();
-    }
+    public static readonly object ApplyChanges = new();
 }

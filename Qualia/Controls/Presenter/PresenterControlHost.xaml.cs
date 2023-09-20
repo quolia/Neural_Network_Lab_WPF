@@ -1,12 +1,11 @@
 ﻿using System.Windows.Forms.Integration;
 
-namespace Qualia.Controls
+namespace Qualia.Controls.Presenter;
+
+public sealed partial class PresenterControlHost : WindowsFormsHost
 {
-    sealed public partial class PresenterControlHost : WindowsFormsHost
+    public PresenterControlHost()
     {
-        public PresenterControlHost()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

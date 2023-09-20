@@ -1,20 +1,19 @@
 ﻿using Qualia.Tools;
 
-namespace Qualia.Model
+namespace Qualia.Models;
+
+public sealed class LayerDataModel : ListXNode<LayerDataModel>
 {
-    sealed public class LayerDataModel : ListXNode<LayerDataModel>
-    {
-        public long VisualId;
+    public long VisualId;
 
-        public readonly int Id;
-        public readonly ListX<NeuronDataModel> Neurons;
+    public readonly int Id;
+    public readonly ListX<NeuronDataModel> Neurons;
         
-        public LayerDataModel(int id, int neuronsCount, int weightsCountPerNeuron)
-        {
-            Neurons = new(neuronsCount);
-            Id = id;
+    public LayerDataModel(int id, int neuronsCount, int weightsCountPerNeuron)
+    {
+        Neurons = new(neuronsCount);
+        Id = id;
 
-            Range.For(neuronsCount, neuronId => Neurons.Add(new(neuronId, weightsCountPerNeuron)));
-        }
+        Range.For(neuronsCount, neuronId => Neurons.Add(new(neuronId, weightsCountPerNeuron)));
     }
 }

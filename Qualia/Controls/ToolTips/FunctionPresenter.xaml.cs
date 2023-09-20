@@ -1,120 +1,119 @@
-﻿using Qualia.Tools;
-using System;
-using System.Windows;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Qualia.Controls.Base.Values;
+using Qualia.Tools;
 
-namespace Qualia.Controls
+namespace Qualia.Controls.ToolTips;
+
+public partial class FunctionPresenter : UserControl, ISelectableItem
 {
-    public partial class FunctionPresenter : UserControl, ISelectableItem
+    private const double AXIS_OFFSET = 6;
+    private const double DATA_STEP = 0.2;
+
+    private readonly Pen _penBlack = Draw.GetPen(in ColorsX.Black);
+    private readonly Pen _penLightGray = Draw.GetPen(in ColorsX.LightGray);
+
+    // ISelectableItem
+
+    public string Text { get; set; }
+    public string Value { get; set; }
+    public Control Control => this;
+
+    //
+
+    public FunctionPresenter()
     {
-        private const double AXIS_OFFSET = 6;
-        private const double DATA_STEP = 0.2;
+        InitializeComponent();
+    }
 
-        private readonly Pen _penBlack = Draw.GetPen(in ColorsX.Black);
-        private readonly Pen _penLightGray = Draw.GetPen(in ColorsX.LightGray);
+    public FunctionPresenter(string name)
+    {
+        InitializeComponent();
 
-        // ISelectableItem
+        Text = name;
+        Value = name;
+    }
 
-        public string Text { get; set; }
-        public string Value { get; set; }
-        public Control Control => this;
+    public void DrawFunction(Func<double, double> func, in Color color, int dataShiftFactor)
+    {
+        const double STEP = 20;
+        var yc = CtlCanvas.Height / 2;
+        var xc = CtlCanvas.Width / 2;
 
-        //
-
-        public FunctionPresenter()
+        for (var x = -2.5 + DATA_STEP / 2 * dataShiftFactor; x <= 2.5; x += DATA_STEP)
         {
-            InitializeComponent();
-        }
+            var y = func(x);
 
-        public FunctionPresenter(string name)
-        {
-            InitializeComponent();
+            var render_x = xc + x * STEP;
+            var render_y = yc - y * STEP;
 
-            Text = name;
-            Value = name;
-        }
-
-        public void DrawFunction(Func<double, double> func, in Color color, int dataShiftFactor)
-        {
-            const double STEP = 20;
-            double yc = CtlCanvas.Height / 2;
-            double xc = CtlCanvas.Width / 2;
-
-            for (double x = -2.5 + DATA_STEP / 2 * dataShiftFactor; x <= 2.5; x += DATA_STEP)
+            if (render_y < 0 || render_y > CtlCanvas.Height)
             {
-                double y = func(x);
+                continue;
+            }
 
-                var render_x = xc + x * STEP;
-                var render_y = yc - y * STEP;
+            CtlCanvas.DrawEllipse(Draw.GetBrush(in color),
+                Draw.GetPen(in color),
+                ref Points.Get(render_x, render_y),
+                1,
+                1);
+        }
+    }
 
-                if (render_y < 0 || render_y > CtlCanvas.Height)
-                {
-                    continue;
-                }
+    public void DrawBase()
+    {
+        const int SIZE_X = 10;
+        const int SIZE_Y = 6;
 
-                CtlCanvas.DrawEllipse(Draw.GetBrush(in color),
-                                      Draw.GetPen(in color),
-                                      ref Points.Get(render_x, render_y),
-                                      1,
-                                      1);
+        const double STEP = 10;
+
+        CtlCanvas.Clear();
+        CtlCanvas.Height = SIZE_Y * STEP;
+
+        var yc = CtlCanvas.Height / 2;
+        var xc = CtlCanvas.Width / 2;
+
+        for (var yn = -SIZE_Y / 2; yn <= SIZE_Y / 2; ++yn)
+        {
+            // Horizontal primary.
+            CtlCanvas.DrawLineHorizontal(_penLightGray,
+                ref Points.Get(xc - SIZE_X / 2 * STEP, yc + STEP * yn),
+                SIZE_X * STEP);
+
+            // Horizontal secondary.
+            if (yn % 2 == 0)
+            {
+                CtlCanvas.DrawLineHorizontal(_penBlack,
+                    ref Points.Get(xc - AXIS_OFFSET / 2, yc + STEP * yn),
+                    AXIS_OFFSET);
             }
         }
 
-        public void DrawBase()
+        for (var xn = -SIZE_X / 2; xn <= SIZE_X / 2; ++xn)
         {
-            const int SIZE_X = 10;
-            const int SIZE_Y = 6;
+            // Vertical primary.
+            CtlCanvas.DrawLineVertical(_penLightGray,
+                ref Points.Get(xc + STEP * xn, yc - SIZE_Y / 2 * STEP),
+                SIZE_Y * STEP);
 
-            const double STEP = 10;
-
-            CtlCanvas.Clear();
-            CtlCanvas.Height = SIZE_Y * STEP;
-
-            double yc = CtlCanvas.Height / 2;
-            double xc = CtlCanvas.Width / 2;
-
-            for (int yn = -SIZE_Y / 2; yn <= SIZE_Y / 2; ++yn)
+            // Vertical secondary.
+            if (xn % 2 == 0)
             {
-                // Horizontal primary.
-                CtlCanvas.DrawLineHorizontal(_penLightGray,
-                                             ref Points.Get(xc - SIZE_X / 2 * STEP, yc + STEP * yn),
-                                             SIZE_X * STEP);
-
-                // Horizontal secondary.
-                if (yn % 2 == 0)
-                {
-                    CtlCanvas.DrawLineHorizontal(_penBlack,
-                                                ref Points.Get(xc - AXIS_OFFSET / 2, yc + STEP * yn),
-                                                AXIS_OFFSET);
-                }
+                CtlCanvas.DrawLineVertical(_penBlack,
+                    ref Points.Get(xc + STEP * xn, yc - AXIS_OFFSET / 2),
+                    AXIS_OFFSET);
             }
-
-            for (int xn = -SIZE_X / 2; xn <= SIZE_X / 2; ++xn)
-            {
-                // Vertical primary.
-                CtlCanvas.DrawLineVertical(_penLightGray,
-                                           ref Points.Get(xc + STEP * xn, yc - SIZE_Y / 2 * STEP),
-                                           SIZE_Y * STEP);
-
-                // Vertical secondary.
-                if (xn % 2 == 0)
-                {
-                    CtlCanvas.DrawLineVertical(_penBlack,
-                                               ref Points.Get(xc + STEP * xn, yc - AXIS_OFFSET / 2),
-                                               AXIS_OFFSET);
-                }
-            }
-
-            // Center.
-
-            CtlCanvas.DrawLineVertical(_penBlack,
-                                       ref Points.Get(xc, yc - SIZE_Y / 2 * STEP),
-                                       SIZE_Y * STEP);
-
-            CtlCanvas.DrawLineHorizontal(_penBlack,
-                                         ref Points.Get(xc - SIZE_X / 2 * STEP, yc),
-                                         SIZE_X * STEP);
         }
+
+        // Center.
+
+        CtlCanvas.DrawLineVertical(_penBlack,
+            ref Points.Get(xc, yc - SIZE_Y / 2 * STEP),
+            SIZE_Y * STEP);
+
+        CtlCanvas.DrawLineHorizontal(_penBlack,
+            ref Points.Get(xc - SIZE_X / 2 * STEP, yc),
+            SIZE_X * STEP);
     }
 }

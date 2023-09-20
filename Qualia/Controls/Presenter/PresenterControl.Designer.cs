@@ -1,4 +1,4 @@
-﻿namespace Qualia.Controls
+﻿namespace Qualia.Controls.Presenter
 {
     partial class PresenterControl
     {

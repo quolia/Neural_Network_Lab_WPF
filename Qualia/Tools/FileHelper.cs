@@ -1,37 +1,36 @@
 ﻿using System.IO;
 
-namespace Qualia.Tools
+namespace Qualia.Tools;
+
+public static class FileHelper
 {
-    public static class FileHelper
+    public static string MainConfigName = "config.txt";
+    public static string NotesName = "notes.txt";
+
+    public static string ConfigPath = App.WorkingDirectory + MainConfigName;
+    public static string NotesPath = App.WorkingDirectory + NotesName;
+
+    public static void InitWorkingDirectories()
     {
-        public static string MainConfigName = "config.txt";
-        public static string NotesName = "notes.txt";
+        var networksPath = App.WorkingDirectory + "Networks";
 
-        public static string ConfigPath = App.WorkingDirectory + MainConfigName;
-        public static string NotesPath = App.WorkingDirectory + NotesName;
-
-        public static void InitWorkingDirectories()
+        if (!Directory.Exists(networksPath))
         {
-            var networksPath = App.WorkingDirectory + "Networks";
+            Directory.CreateDirectory(networksPath);
+        }
 
-            if (!Directory.Exists(networksPath))
-            {
-                Directory.CreateDirectory(networksPath);
-            }
+        var datasetsPath = App.WorkingDirectory + "Datasets";
 
-            var datasetsPath = App.WorkingDirectory + "Datasets";
+        if (!Directory.Exists(datasetsPath))
+        {
+            Directory.CreateDirectory(datasetsPath);
+        }
 
-            if (!Directory.Exists(datasetsPath))
-            {
-                Directory.CreateDirectory(datasetsPath);
-            }
+        var mnistPath = datasetsPath + Path.DirectorySeparatorChar + "MNIST";
 
-            var mnistPath = datasetsPath + Path.DirectorySeparatorChar + "MNIST";
-
-            if (!Directory.Exists(mnistPath))
-            {
-                Directory.CreateDirectory(mnistPath);
-            }
+        if (!Directory.Exists(mnistPath))
+        {
+            Directory.CreateDirectory(mnistPath);
         }
     }
 }

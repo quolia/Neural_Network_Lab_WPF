@@ -1,30 +1,30 @@
-﻿using Qualia.Tools;
-using System.IO;
+﻿using System.IO;
+using Qualia.Controls.Base;
+using Qualia.Tools;
 
-namespace Qualia.Controls
+namespace Qualia.Controls.Misc;
+
+public partial class MemoControl : BaseUserControl
 {
-    public partial class MemoControl : BaseUserControl
+    public string Caption { get; set; } = "Caption";
+
+    public string Text => CtlText.Text;
+
+    public MemoControl()
+        : base(0)
     {
-        public string Caption { get; set; } = "Caption";
+        InitializeComponent();
 
-        public string Text => CtlText.Text;
+        DataContext = this;
 
-        public MemoControl()
-            : base(0)
+        if (File.Exists(FileHelper.NotesPath))
         {
-            InitializeComponent();
-
-            DataContext = this;
-
-            if (File.Exists(FileHelper.NotesPath))
-            {
-                CtlText.Text = File.ReadAllText(FileHelper.NotesPath);
-            }
+            CtlText.Text = File.ReadAllText(FileHelper.NotesPath);
         }
+    }
 
-        public void Save()
-        {
-            File.WriteAllText(FileHelper.NotesPath, Text);
-        }
+    public void Save()
+    {
+        File.WriteAllText(FileHelper.NotesPath, Text);
     }
 }

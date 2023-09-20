@@ -1,9 +1,10 @@
-﻿<local:NeuronBaseControl x:Class="Qualia.Controls.NeuronControl"
+﻿<base:NeuronBaseControl x:Class="Qualia.Network.Hidden.NeuronControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Qualia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:base="clr-namespace:Qualia.Network.Base"
+             xmlns:values="clr-namespace:Qualia.Controls.Base.Values"
              mc:Ignorable="d" 
              BorderThickness="0,1,0,0"
              BorderBrush="Gray"
@@ -24,26 +25,26 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <local:TextControl Grid.Column="4"
+        <values:TextControl Grid.Column="4"
                            x:Name="CtlNumber"
                            Text="1"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top" />
 
-        <local:TextControl Grid.Row="1"
+        <values:TextControl Grid.Row="1"
                            Grid.ColumnSpan="2"
                            Text="Activation function:" />
         
-        <local:SelectorControl Grid.Row="2"
+        <values:SelectorControl Grid.Row="2"
                                Grid.RowSpan="2"
                                Grid.ColumnSpan="2"
                                x:Name="CtlActivationFunction" />
         
-        <local:TextControl Grid.Row="2"
+        <values:TextControl Grid.Row="2"
                            Grid.Column="2"
                            Text="a:" />
         
-        <local:DoubleValueControl Grid.Row="2"
+        <values:DoubleValueControl Grid.Row="2"
                                   Grid.Column="3"
                                   Grid.ColumnSpan="2"
                                   x:Name="CtlActivationFunctionParam"
@@ -51,4 +52,4 @@
                                   MinValue="-100"
                                   MaxValue="100" />
     </Grid>
-</local:NeuronBaseControl>
+</base:NeuronBaseControl>

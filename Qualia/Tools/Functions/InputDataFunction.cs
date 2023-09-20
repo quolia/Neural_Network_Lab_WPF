@@ -1,42 +1,41 @@
 ﻿
-namespace Qualia.Tools
+namespace Qualia.Tools.Functions;
+
+public unsafe class DistributionFunction : BaseFunction<DistributionFunction>
 {
-    unsafe public class DistributionFunction : BaseFunction<DistributionFunction>
+    public readonly delegate*<double, double> Do;
+
+    public DistributionFunction(delegate*<double, double> doFunc)
+        : base(defaultFunction: nameof(FlatRandom))
     {
-        public readonly delegate*<double, double> Do;
+        Do = doFunc;
+    }
 
-        public DistributionFunction(delegate*<double, double> doFunc)
-            : base(defaultFunction: nameof(FlatRandom))
-        {
-            Do = doFunc;
-        }
+    public sealed unsafe class Constant
+    {
+        public static readonly string Description = InitializeFunction.Constant.Description;
 
-        unsafe sealed public class Constant
-        {
-            public static readonly string Description = InitializeFunction.Constant.Description;
+        public static readonly DistributionFunction Instance = new(&InitializeFunction.Constant.Do);
+    }
 
-            public static readonly DistributionFunction Instance = new(&InitializeFunction.Constant.Do);
-        }
+    public sealed unsafe class FlatRandom
+    {
+        public static readonly string Description = InitializeFunction.FlatRandom.Description;
 
-        unsafe sealed public class FlatRandom
-        {
-            public static readonly string Description = InitializeFunction.FlatRandom.Description;
+        public static readonly DistributionFunction Instance = new(&InitializeFunction.FlatRandom.Do);
+    }
 
-            public static readonly DistributionFunction Instance = new(&InitializeFunction.FlatRandom.Do);
-        }
+    public sealed unsafe class GaussNormal
+    {
+        public static readonly string Description = InitializeFunction.GaussNormal.Description;
 
-        unsafe sealed public class GaussNormal
-        {
-            public static readonly string Description = InitializeFunction.GaussNormal.Description;
+        public static readonly DistributionFunction Instance = new(&InitializeFunction.GaussNormal.Do);
+    }
 
-            public static readonly DistributionFunction Instance = new(&InitializeFunction.GaussNormal.Do);
-        }
+    public sealed unsafe class GaussNormalInverted
+    {
+        public static readonly string Description = InitializeFunction.GaussNormalInverted.Description;
 
-        unsafe sealed public class GaussNormalInverted
-        {
-            public static readonly string Description = InitializeFunction.GaussNormalInverted.Description;
-
-            public static readonly DistributionFunction Instance = new(&InitializeFunction.GaussNormalInverted.Do);
-        }
+        public static readonly DistributionFunction Instance = new(&InitializeFunction.GaussNormalInverted.Do);
     }
 }
