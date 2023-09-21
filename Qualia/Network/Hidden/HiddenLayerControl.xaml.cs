@@ -70,7 +70,7 @@ public sealed partial class HiddenLayerControl : LayerBaseControl
         RefreshContent();
     }
 
-    public void RefreshContent()
+    private void RefreshContent()
     {
         CtlContent.Content = null;
         CtlContent.Content = CtlNeurons;

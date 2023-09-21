@@ -76,9 +76,9 @@ public abstract partial class LayerBaseControl : BaseUserControl
 
     // Layer type.
 
-    public virtual bool IsInput => false;
+    public virtual bool IsInputLayerControl => false;
     public virtual bool IsHidden => false;
-    public virtual bool IsOutput => false;
+    public virtual bool IsOutputLayerControl => false;
 
     //
 

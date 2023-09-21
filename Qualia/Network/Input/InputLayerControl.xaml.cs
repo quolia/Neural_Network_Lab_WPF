@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Qualia.Network.Base;
@@ -19,7 +20,7 @@ public sealed partial class InputLayerControl : LayerBaseControl
     {
         InitializeComponent();
 
-        this.SetConfigParams(new()
+        this.SetConfigParams(new List<IConfigParam>
         {
             CtlInputInitial0
                 .Initialize(defaultValue: 0),
@@ -54,7 +55,7 @@ public sealed partial class InputLayerControl : LayerBaseControl
         RefreshContent();
     }
 
-    public void RefreshContent()
+    private void RefreshContent()
     {
         CtlContent.Content = null;
         CtlContent.Content = CtlNeurons;
@@ -70,7 +71,7 @@ public sealed partial class InputLayerControl : LayerBaseControl
         OnChanged(action);
     }
 
-    public override bool IsInput => true;
+    public override bool IsInputLayerControl => true;
 
     public double Initial0 => CtlInputInitial0.Value;
     public double Initial1 => CtlInputInitial1.Value;
@@ -106,7 +107,7 @@ public sealed partial class InputLayerControl : LayerBaseControl
         return AddBias(biasNeuronid);
     }
 
-    public NeuronBaseControl AddBias(long biasNeuronId)
+    private NeuronBaseControl AddBias(long biasNeuronId)
     {
         InputBiasControl neuron = new(biasNeuronId, this.GetConfig(), this.GetUIHandler(), this);
 

@@ -73,12 +73,6 @@ public sealed partial class OutputNeuronControl : NeuronBaseControl
         this.GetConfigParams().ForEach(param => param.LoadConfig());
     }
 
-    private void Neuron_OnChanged(ApplyAction action)
-    {
-        action.Param = Notification.ParameterChanged.NetworkUpdated;
-        OnChanged(action);
-    }
-
     public override void SetOrdinalNumber(int number)
     {
         CtlNumber.Text = Converter.IntToText(number);
@@ -97,5 +91,11 @@ public sealed partial class OutputNeuronControl : NeuronBaseControl
     public override void RemoveFromConfig()
     {
         this.GetConfigParams().ForEach(param => param.RemoveFromConfig());
+    }
+    
+    private void Neuron_OnChanged(ApplyAction action)
+    {
+        action.Param = Notification.ParameterChanged.NetworkUpdated;
+        OnChanged(action);
     }
 }

@@ -113,24 +113,25 @@ public sealed partial class NetworkControl : BaseUserControl
 
         ActionManager.Instance.Unlock();
 
-        if (layerId == Constants.UnknownId)
+        if (layerId != Constants.UnknownId)
         {
-            ApplyAction action = new(this, Notification.ParameterChanged.NeuronsAdded)
-            {
-                Cancel = (isRunning) =>
-                {
-                    hiddenLayer.RemoveFromConfig();
-                    CtlTabsLayers.Items.Remove(tabItem);
-                    CtlTabsLayers.SelectedItem = selectedItem;
-                    ResetLayersTabsNames();
-
-                    this.InvokeUIHandler(new(this, Notification.ParameterChanged.NetworkUpdated));
-                }
-            };
-
-
-            this.InvokeUIHandler(action);
+            return hiddenLayer;
         }
+
+        ApplyAction action = new(this, Notification.ParameterChanged.NeuronsAdded)
+        {
+            Cancel = (isRunning) =>
+            {
+                hiddenLayer.RemoveFromConfig();
+                CtlTabsLayers.Items.Remove(tabItem);
+                CtlTabsLayers.SelectedItem = selectedItem;
+                ResetLayersTabsNames();
+
+                this.InvokeUIHandler(new(this, Notification.ParameterChanged.NetworkUpdated));
+            }
+        };
+
+        this.InvokeUIHandler(action);
 
         return hiddenLayer;
     }
@@ -140,11 +141,11 @@ public sealed partial class NetworkControl : BaseUserControl
         var layers = GetLayersControls();
         for (var i = 0; i < layers.Count; ++i)
         {
-            if (layers[i].IsInput)
+            if (layers[i].IsInputLayerControl)
             {
                 CtlTabsLayers.Tab(i).Header = $"Input ({layers[i].Neurons.Count})";
             }
-            else if (layers[i].IsOutput)
+            else if (layers[i].IsOutputLayerControl)
             {
                 CtlTabsLayers.Tab(i).Header = $"Output ({layers[i].Neurons.Count})";
             }
@@ -248,7 +249,7 @@ public sealed partial class NetworkControl : BaseUserControl
         CtlTabInput.Content = scroll;
         scroll.ScrollChanged += _inputLayer.Scroll_OnChanged;
 
-        _outputLayer = new(outputLayerId, this.GetConfig(), OnChanged);
+        _outputLayer = new OutputLayerControl(outputLayerId, this.GetConfig(), OnChanged);
         scroll = new()
         {
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -290,29 +291,31 @@ public sealed partial class NetworkControl : BaseUserControl
 
     public void RemoveLayer()
     {
-        if (MessageBoxResult.OK == System.Windows.MessageBox.Show($"Would you really like to remove layer L{CtlTabsLayers.SelectedIndex}?",
+        if (MessageBoxResult.OK != System.Windows.MessageBox.Show($"Would you really like to remove layer L{CtlTabsLayers.SelectedIndex}?",
                 "Confirm",
                 MessageBoxButton.OKCancel))
         {
-            var selectedLayer = SelectedLayer;
-            var selectedItem = CtlTabsLayers.SelectedItem;
-            var index = CtlTabsLayers.SelectedIndex;
-            CtlTabsLayers.Items.Remove(selectedItem);
-            ResetLayersTabsNames();
-
-            ApplyAction action = new(this, Notification.ParameterChanged.NeuronsRemoved)
-            {
-                Apply = (isRunning) => selectedLayer.RemoveFromConfig(),
-                Cancel = (isRunning) =>
-                {
-                    CtlTabsLayers.Items.Insert(index, selectedItem);
-                    CtlTabsLayers.SelectedItem = selectedItem;
-                    ResetLayersTabsNames();
-                }
-            };
-
-            this.InvokeUIHandler(action);
+            return;
         }
+
+        var selectedLayer = SelectedLayer;
+        var selectedItem = CtlTabsLayers.SelectedItem;
+        var index = CtlTabsLayers.SelectedIndex;
+        CtlTabsLayers.Items.Remove(selectedItem);
+        ResetLayersTabsNames();
+
+        ApplyAction action = new(this, Notification.ParameterChanged.NeuronsRemoved)
+        {
+            Apply = (isRunning) => selectedLayer.RemoveFromConfig(),
+            Cancel = (isRunning) =>
+            {
+                CtlTabsLayers.Items.Insert(index, selectedItem);
+                CtlTabsLayers.SelectedItem = selectedItem;
+                ResetLayersTabsNames();
+            }
+        };
+
+        this.InvokeUIHandler(action);
     }
 
     public unsafe NetworkDataModel CreateNetworkDataModel(TaskFunction taskFunction, bool isCopy)
@@ -397,11 +400,13 @@ public sealed partial class NetworkControl : BaseUserControl
             }
         }
 
-        if (!isCopy)
+        if (isCopy)
         {
-            var copy = CreateNetworkDataModel(taskFunction, true);
-            network.SetCopy(copy);
+            return network;
         }
+        
+        var copy = CreateNetworkDataModel(taskFunction, true);
+        network.SetCopy(copy);
 
         return network;
     }

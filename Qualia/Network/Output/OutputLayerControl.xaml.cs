@@ -29,13 +29,13 @@ public sealed partial class OutputLayerControl : LayerBaseControl
         RefreshContent();
     }
 
-    public void RefreshContent()
+    private void RefreshContent()
     {
         CtlContent.Content = null;
         CtlContent.Content = CtlNeurons;
     }
 
-    public override bool IsOutput => true;
+    public override bool IsOutputLayerControl => true;
 
     private void MenuAddNeuron_OnClick(object sender, EventArgs e)
     {

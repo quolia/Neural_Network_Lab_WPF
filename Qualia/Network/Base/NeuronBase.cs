@@ -36,30 +36,30 @@ public abstract partial class NeuronBaseControl : BaseUserControl
     {
         _parentLayer = parentLayer;
 
-        ContextMenu = new();
+        ContextMenu = new ContextMenu();
         ContextMenu.Opened += ContextMenu_OnOpened;
 
-        _menuAdd = new() { Header = "Add Neuron" };
+        _menuAdd = new MenuItem { Header = "Add Neuron" };
         ContextMenu.Items.Add(_menuAdd);
         _menuAdd.Click += AddNeuron_OnClick;
 
-        _menuClone = new() { Header = "Clone Neuron" };
+        _menuClone = new MenuItem { Header = "Clone Neuron" };
         ContextMenu.Items.Add(_menuClone);
         _menuClone.Click += CloneNeuron_OnClick;
 
-        _menuRemove = new() { Header = "Remove Neuron..." };
+        _menuRemove = new MenuItem { Header = "Remove Neuron..." };
         ContextMenu.Items.Add(_menuRemove);
         _menuRemove.Click += RemoveNeuron_OnClick;
 
-        _menuCopyParamsToSelectedNeurons = new() { Header = "Copy parameters to selected neurons" };
+        _menuCopyParamsToSelectedNeurons = new MenuItem { Header = "Copy parameters to selected neurons" };
         ContextMenu.Items.Add(_menuCopyParamsToSelectedNeurons);
         _menuCopyParamsToSelectedNeurons.Click += CopyParamsToSelected_OnClick;
 
-        _menuSelectAll = new() { Header = "Select all" };
+        _menuSelectAll = new MenuItem { Header = "Select all" };
         ContextMenu.Items.Add(_menuSelectAll);
         _menuSelectAll.Click += SelectAll_OnClick;
 
-        _menuDeselectAll = new() { Header = "Deselect all" };
+        _menuDeselectAll = new MenuItem { Header = "Deselect all" };
         ContextMenu.Items.Add(_menuDeselectAll);
         _menuDeselectAll.Click += DeselectAll_OnClick;
 
