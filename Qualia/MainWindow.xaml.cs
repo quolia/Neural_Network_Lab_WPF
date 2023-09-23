@@ -242,6 +242,11 @@ public sealed partial class Main : WindowResizeControl, IDisposable
     private bool _notify;
     private void NotifyUIChanged(ApplyAction action)
     {
+        if (action == null)
+        {
+            throw new InvalidOperationException("Action is null.");
+        }
+        
         var param = action.Param;
 
         if (param == Notification.ParameterChanged.Unknown)
@@ -257,11 +262,6 @@ public sealed partial class Main : WindowResizeControl, IDisposable
         try
         {
             _notify = true;
-
-            if (action == null)
-            {
-                throw new InvalidOperationException("Action is null.");
-            }
 
             var manager = ActionManager.Instance;
 
