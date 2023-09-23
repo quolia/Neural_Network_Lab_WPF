@@ -120,13 +120,14 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
             neuron.Error = CostFunction.Derivative(this, neuron) * neuron.ActivationFunction.Derivative(neuron.X, neuron.Activation, neuron.ActivationFunctionParam);
             neuron = neuron.Next;
         }
-
+        
         var layer = lastLayer;
         var finalLayer = IsAdjustFirstLayerWeights ? Layers.First : Layers.First.Next;
 
         while (layer != finalLayer)
         {
             neuron = layer.Neurons.First;
+            
             ForwardNeuron AxW;
             while (neuron != null)
             {
@@ -137,27 +138,9 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
                     if (prevNeuron.Activation != 0)
                     {
                         prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
+                        AxW.Weight.Weight += neuron.Error * prevNeuron.Activation * LearningRate;
                     }
 
-                    AxW = AxW.Next;
-                }
-
-                neuron = neuron.Next;
-            }
-
-            // update weights
-
-            neuron = layer.Neurons.First;
-            while (neuron != null)
-            {
-                AxW = neuron.WeightsToPreviousLayer.First;
-                while (AxW != null)
-                {
-                    if (AxW.Neuron.Activation != 0)
-                    {
-                        AxW.Weight.Weight += neuron.Error * AxW.Neuron.Activation * LearningRate;
-                    }
-                        
                     AxW = AxW.Next;
                 }
 

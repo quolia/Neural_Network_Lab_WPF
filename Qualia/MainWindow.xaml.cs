@@ -32,7 +32,6 @@ public sealed partial class Main : WindowResizeControl, IDisposable
     private NetworksManager _networksManager;
 
     private Stopwatch _startTime;
-    private long _rounds;
 
     private volatile bool _isRunning;
     private volatile bool _isPaused;
@@ -48,7 +47,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
 
         CtlNoSleepLabel.Visibility = Visibility.Collapsed;
 
-        this.SetConfigParams(new List<IConfigParam>
+        this.SetConfigParams(new()
         {
             CtlSettings,
 
@@ -64,11 +63,11 @@ public sealed partial class Main : WindowResizeControl, IDisposable
 
     private void SetTitle(string fileName)
     {
-        Title = $"Networks - {fileName}";
+        Title = $"Networks - {fileName} ";
 #if DEBUG
-        Title += " (DEBUG)";
+        Title += "(DEBUG)";
 #else
-        Title += " (RELEASE)";
+        Title += "(RELEASE)";
 #endif
     }
 
@@ -717,10 +716,9 @@ public sealed partial class Main : WindowResizeControl, IDisposable
         GC.Collect();
         GC.WaitForPendingFinalizers();
 
-        _rounds = 0;
         _startTime = Stopwatch.StartNew();
 
-        _runNetworksThread = new(new ParameterizedThreadStart(RunNetworks))
+        _runNetworksThread = new(RunNetworks)
         {
             Name = "RunNetworks",
             Priority = ThreadPriority.Highest,
@@ -729,7 +727,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
         _runNetworksThread.SetApartmentState(ApartmentState.MTA);
         _runNetworksThread.Start(new object[] { Threads.Processor.None });
 
-        _timeThread = new(new ThreadStart(RunTimer))
+        _timeThread = new(RunTimer)
         {
             Name = "RunTimer",
             Priority = ThreadPriority.Normal,
@@ -751,8 +749,10 @@ public sealed partial class Main : WindowResizeControl, IDisposable
         Threads.SetThreadPriority(ThreadPriorityLevel.TimeCritical);
 
         Settings settings = null;
+        LoopsLimit[] loopLimits = null;
+        
+        long rounds = 0;
         var currentLoopLimit = 0;
-        var loopLimits = new LoopsLimit[3];
 
         var isErrorMatrixRendering = false;
         var isNetworksRendering = false;
@@ -773,7 +773,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
                 Thread.Sleep(_pauseSleepIntervalMilliseconds);
                 continue;
             }
-
+            
             swCurrentPureRoundsPerSecond.Restart();
 
             lock (Locker.ApplyChanges)
@@ -867,7 +867,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
                 swCurrentPureRoundsPerSecond.Stop();
                 swCurrentMiscCodeTime.Restart();
 
-                _rounds += currentLoopLimit;
+                rounds += currentLoopLimit;
 
                 foreach ( var t in loopLimits )
                 {
@@ -889,7 +889,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
 
                         var statistics = network.Statistics;
 
-                        statistics.Rounds = _rounds;
+                        statistics.Rounds = rounds;
                         statistics.TotalTicksElapsed = totalTicksElapsed;
                         statistics.CostSumTotal += statistics.CostSum;
 
