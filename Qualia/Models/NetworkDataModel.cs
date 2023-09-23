@@ -137,6 +137,11 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
                     var prevNeuron = AxW.Neuron;
                     if (prevNeuron.Activation != 0)
                     {
+                        // It's possible to swap these two lines of code.
+                        // Error-first gives 100% accuracy on 14.62 M rounds.
+                        // Weight-first gives 100% accuracy on 14.68 M rounds. 
+                        // Experiment: DotsCount 784_21_21_21.
+                        
                         prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
                         AxW.Weight.Weight += neuron.Error * prevNeuron.Activation * LearningRate;
                     }
