@@ -66,8 +66,17 @@ public partial class NeuronControl : NeuronBaseControl
 
     public override string Label => null;
 
-    public override double PositiveTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
-    public override double NegativeTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
+    public override double PositiveTargetValue
+    {
+        get => throw new InvalidOperationException("Hidden neuron has no target value.");
+        set => throw new InvalidOperationException("Hidden neuron has no target value.");
+    }
+
+    public override double NegativeTargetValue
+    {
+        get => throw new InvalidOperationException("Hidden neuron has no target value.");
+        set => throw new InvalidOperationException("Hidden neuron has no target value.");
+    }
 
     // IConfigParam
 

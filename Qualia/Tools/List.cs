@@ -37,7 +37,7 @@ public sealed class ListX<T>(int capacity) where T : ListXNode<T>
     {
         if (node == null)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Cannot remove null object.");
         }
 
         var index = IndexOf(node);

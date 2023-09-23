@@ -219,7 +219,7 @@ public sealed class NetworksManager
         var network = NetworkModels.Find(n => n.VisualId == newNetwork.VisualId);
         if (network == null)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Cannot find generated network model with the given VisualId.");
         }
 
         var ind = NetworkModels.IndexOf(network);

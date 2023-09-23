@@ -223,7 +223,7 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
 
         public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged) => s_control.SetOnChangeEvent(onChanged);
 
-        public void InvalidateValue() => throw new InvalidOperationException();
+        public void InvalidateValue() => throw new InvalidOperationException("Task function cannot be invalidated.");
     }
 
     public sealed class CrossCount : ITaskControl
@@ -1002,7 +1002,7 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
 
         public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged) => s_control.SetOnChangeEvent(onChanged);
 
-        public void InvalidateValue() => throw new InvalidOperationException();
+        public void InvalidateValue() => throw new InvalidOperationException("Task function cannot be invalidated.");
     }
 
 
@@ -1131,6 +1131,6 @@ public unsafe class TaskFunction : BaseFunction<TaskFunction>
 
         public void SetOnChangeEvent(ActionManager.ApplyActionDelegate onChanged) => s_control.SetOnChangeEvent(onChanged);
 
-        public void InvalidateValue() => throw new InvalidOperationException();
+        public void InvalidateValue() => throw new InvalidOperationException("Task function cannot be invalidated.");
     }
 }

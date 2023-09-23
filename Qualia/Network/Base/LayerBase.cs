@@ -88,7 +88,7 @@ public abstract partial class LayerBaseControl : BaseUserControl
     {
         if (GetType() != newLayer.GetType())
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Could not copy the layer to a layer of different type.");
         }
 
         var newNeuronsCount = newLayer.Neurons.Count;

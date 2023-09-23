@@ -72,7 +72,7 @@ public class ActionManager
             {
                 if (!_applyActions.ToList().Contains(action))
                 {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("The action has been removed from actions list.");
                 }
 
                 action.Execute(isForRunning);
@@ -105,7 +105,7 @@ public class ActionManager
             {
                 if (!_instantActions.ToList().Contains(action))
                 {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("The action has been removed from actions list.");
                 }
 
                 action.ExecuteInstant(isRunning);
@@ -115,7 +115,7 @@ public class ActionManager
             actions = _instantActions.ToList();
             if (actions.Any())
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Not all instant actions were executed in one loop.");
             }
         }
 
@@ -140,7 +140,7 @@ public class ActionManager
             {
                 if (!_cancelActions.ToList().Contains(action))
                 {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("The action has been removed from actions list.");
                 }
 
                 if (!prevCancelActions.Any(x => x.Sender == action.Sender && action.Sender is TextBox))
@@ -155,7 +155,7 @@ public class ActionManager
             actions = _cancelActions.ToList();
             if (actions.Any())
             {
-                throw new InvalidOperationException(); // this could be if cancel action creates another cancel action
+                throw new InvalidOperationException("Not all instant actions were executed in one loop."); // this could be if cancel action creates another cancel action
             }
         }
 

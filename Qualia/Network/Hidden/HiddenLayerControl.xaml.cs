@@ -36,7 +36,7 @@ public sealed partial class HiddenLayerControl : LayerBaseControl
 
     public override void SetConfig(Config config)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Hidden layer has no config.");
     }
 
     public override bool IsValid()
@@ -60,7 +60,7 @@ public sealed partial class HiddenLayerControl : LayerBaseControl
 
     public override void InvalidateValue()
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Hidden layer cannot be invalidated.");
     }
 
     //

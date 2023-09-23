@@ -18,12 +18,21 @@ public sealed partial class InputNeuronControl : NeuronBaseControl
 
     public override string Label => null;
 
-    public override double PositiveTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
-    public override double NegativeTargetValue { get => throw new InvalidOperationException(); set => throw new InvalidOperationException(); }
+    public override double PositiveTargetValue
+    {
+        get => throw new InvalidOperationException("Input neuron has no target value");
+        set => throw new InvalidOperationException("Input neuron has no target value");
+    }
+
+    public override double NegativeTargetValue
+    {
+        get => throw new InvalidOperationException("Input neuron has no target value");
+        set => throw new InvalidOperationException("Input neuron has no target value");
+    }
 
     public override void SetOrdinalNumber(int number)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Input neuron has no ordinal number.");
     }
 
     // IConfigParam
@@ -32,12 +41,12 @@ public sealed partial class InputNeuronControl : NeuronBaseControl
 
     public override void SaveConfig()
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Input neuron has no config.");
     }
 
     public override void RemoveFromConfig()
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Input neuron has no config.");
     }
 
     //

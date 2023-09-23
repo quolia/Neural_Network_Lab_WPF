@@ -246,7 +246,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
 
         if (param == Notification.ParameterChanged.Unknown)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Unknown parameter of UI action.");
         }
 
         if (_notify)
@@ -260,7 +260,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
 
             if (action == null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Action is null.");
             }
 
             var manager = ActionManager.Instance;
@@ -439,7 +439,7 @@ public sealed partial class Main : WindowResizeControl, IDisposable
                     break;
                 // Default handler.
                 default:
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("Unhandled action.");
             }
 
             manager.Add(action);

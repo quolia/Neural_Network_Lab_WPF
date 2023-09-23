@@ -71,7 +71,7 @@ public sealed partial class NetworkControl : BaseUserControl
     {
         if (action.Param == Notification.ParameterChanged.Unknown)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Network control cannot pass an action with unknown parameter.");
         }
 
         this.InvokeUIHandler(action);

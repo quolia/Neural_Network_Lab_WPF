@@ -137,7 +137,7 @@ public sealed class SelectorControl : ComboBox, IConfigParam
         this.SetUIHandler(onChanged);
     }
 
-    public void InvalidateValue() => throw new InvalidOperationException();
+    public void InvalidateValue() => throw new InvalidOperationException("Selector value cannot be invalidated.");
 
     //
 

@@ -87,7 +87,7 @@ public sealed class BoolValueControl : CheckBox, IConfigParam
         this.SetUIHandler(onChanged);
     }
 
-    public void InvalidateValue() => throw new InvalidOperationException();
+    public void InvalidateValue() => throw new InvalidOperationException("Boolean value cannot be invalidated.");
 
     //
 

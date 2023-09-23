@@ -144,7 +144,7 @@ public sealed partial class InputLayerControl : LayerBaseControl
     {
         if (layer is not InputLayerControl newLayer)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Cannot copy input layer to a layer of different type.");
         }
 
         newLayer.CtlInputInitial0.Value = CtlInputInitial0.Value;
@@ -173,12 +173,12 @@ public sealed partial class InputLayerControl : LayerBaseControl
 
     public override void SetConfig(Config config)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Input layer has no config.");
     }
 
     public override void InvalidateValue()
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Input layer cannot be invalidated");
     }
 
     //
