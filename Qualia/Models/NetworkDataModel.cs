@@ -124,11 +124,12 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
         var layer = lastLayer;
         var finalLayer = IsAdjustFirstLayerWeights ? Layers.First : Layers.First.Next;
 
+        ForwardNeuron AxW;
+        
         while (layer != finalLayer)
         {
             neuron = layer.Neurons.First;
             
-            ForwardNeuron AxW;
             while (neuron != null)
             {
                 AxW = neuron.WeightsToPreviousLayer.First;
@@ -137,13 +138,11 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
                     var prevNeuron = AxW.Neuron;
                     if (prevNeuron.Activation != 0)
                     {
-                        // It's possible to swap these two lines of code.
-                        // Error-first gives 100% accuracy on 14.62 M rounds.
-                        // Weight-first gives 100% accuracy on 14.68 M rounds. 
+                        // You can swap these two lines of code and see what happens.
                         // Experiment: DotsCount 784_21_21_21.
-                        
+
                         prevNeuron.Error += neuron.Error * AxW.Weight.Weight * prevNeuron.ActivationFunction.Derivative(prevNeuron.X, prevNeuron.Activation, prevNeuron.ActivationFunctionParam);
-                        AxW.Weight.Weight += neuron.Error * prevNeuron.Activation * LearningRate;
+                        AxW.Weight.Weight += prevNeuron.Activation * neuron.Error * LearningRate;                        
                     }
 
                     AxW = AxW.Next;
