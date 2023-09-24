@@ -96,7 +96,11 @@ public sealed unsafe class NetworkDataModel : ListXNode<NetworkDataModel>
                 var AxW = nextLayerNeuron.WeightsToPreviousLayer.First;
                 while (AxW != null)
                 {
-                    sum += AxW.AxW;
+                    if (AxW.Neuron.Activation > 0)
+                    {
+                        sum += AxW.AxW;
+                    }
+
                     AxW = AxW.Next;
                 }
 
