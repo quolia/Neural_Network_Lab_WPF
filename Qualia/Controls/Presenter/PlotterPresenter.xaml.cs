@@ -234,7 +234,7 @@ public sealed partial class PlotterPresenter : BaseUserControl
     private void RenderData(PlotterStatistics.PlotPointsList pointsData,
         in Color color,
         GetPointDelegate getPoint,
-        bool isRect)
+        bool isDrawingCost)
     {
         if (pointsData == null || !pointsData.Any())
         {
@@ -258,7 +258,7 @@ public sealed partial class PlotterPresenter : BaseUserControl
             ref var fromPoint = ref getPoint(pointsData, prevPointData, ticks);
             CtlDataCanvas.DrawLine(pen, ref fromPoint, ref point);
 
-            if (isRect)
+            if (isDrawingCost)
             {
                 CtlDataCanvas.DrawRectangle(pen.Brush,
                     pen,
@@ -275,6 +275,17 @@ public sealed partial class PlotterPresenter : BaseUserControl
 
             prevPointData = pointData;
         }
+
+        // Draw plotter labels "Percent" and "Cost".
+        FormattedText textPercent = new(isDrawingCost ? "Cost" : "Percent", Culture.Current,
+            FlowDirection.LeftToRight,
+            _fontLabels,
+            9,
+            Draw.GetBrush(in ColorsX.Tomato),
+            RenderSettings.PixelsPerDip);
+        
+        ref var lastPoint = ref getPoint(pointsData, lastPointData, ticks);
+        CtlDataCanvas.DrawText(textPercent, ref Points.Get(lastPoint.X - (isDrawingCost ? 25 : 40), lastPoint.Y + 5));
     }
 
     private void DrawLabel(PlotterStatistics.PlotPointsList pointsData,
