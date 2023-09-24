@@ -29,16 +29,17 @@
                            x:Name="CtlNumber"
                            Text="1"
                            HorizontalAlignment="Right"
-                           VerticalAlignment="Top" />
+                           VerticalAlignment="Top"
+                           Padding="0" />
 
-        <values:TextControl Grid.Row="1"
+        <values:TextControl Grid.Row="0"
                            Grid.ColumnSpan="2"
                            Text="Activation function:" />
         
         <values:SelectorControl Grid.Row="2"
-                               Grid.RowSpan="2"
-                               Grid.ColumnSpan="2"
-                               x:Name="CtlActivationFunction" />
+                                                                                                   Grid.RowSpan="2"
+                                                                                                   Grid.ColumnSpan="2"
+                                                                                                   x:Name="CtlActivationFunction" />
         
         <values:TextControl Grid.Row="2"
                            Grid.Column="2"
